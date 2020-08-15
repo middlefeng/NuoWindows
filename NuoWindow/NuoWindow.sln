@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NuoWindow", "NuoWindow\NuoWindow.vcxproj", "{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}.Debug|x64.ActiveCfg = Debug|x64
+		{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}.Debug|x64.Build.0 = Debug|x64
+		{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}.Debug|x86.ActiveCfg = Debug|Win32
+		{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}.Debug|x86.Build.0 = Debug|Win32
+		{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}.Release|x64.ActiveCfg = Release|x64
+		{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}.Release|x64.Build.0 = Release|x64
+		{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}.Release|x86.ActiveCfg = Release|Win32
+		{38C3A3A2-EF46-4020-9DA9-B12B2A49D831}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {04CC1CC1-1422-4208-9B09-68EEDE97FCE7}
+	EndGlobalSection
+EndGlobal
