@@ -2,7 +2,7 @@
 //
 
 #include "framework.h"
-#include "NuoWindow.h"
+#include "NuoApp.h"
 
 #define MAX_LOADSTRING 100
 
