@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="NuoWindowsFoundation">
+      <UniqueIdentifier>{981d0a0c-7414-42a4-b5c2-0b583192ac8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -27,14 +30,14 @@
     <ClInclude Include="NuoApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NuoWindow.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoAppInstance.h">
+      <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
-    <ClInclude Include="NuoAppInstance.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h">
+      <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
-    <ClInclude Include="NuoStrings.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h">
+      <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -54,14 +57,14 @@
     <ClCompile Include="NuoApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NuoWindow.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoAppInstance.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
-    <ClCompile Include="NuoAppInstance.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoStrings.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
-    <ClCompile Include="NuoStrings.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

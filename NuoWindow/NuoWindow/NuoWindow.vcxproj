@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -142,19 +143,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoAppInstance.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoApp.h" />
-    <ClInclude Include="NuoAppInstance.h" />
-    <ClInclude Include="NuoStrings.h" />
-    <ClInclude Include="NuoWindow.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoAppInstance.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoStrings.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp" />
     <ClCompile Include="NuoApp.cpp" />
-    <ClCompile Include="NuoAppInstance.cpp" />
-    <ClCompile Include="NuoStrings.cpp" />
-    <ClCompile Include="NuoWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc" />
