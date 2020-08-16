@@ -2,9 +2,11 @@
 #include "NuoWindow.h"
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
+#include "NuoMenu.h"
 
 #include <Windows.h>
 
+#include "resource.h"
 
 
 static wchar_t kClassName[100];// = L"NuoWindowClass";
@@ -16,7 +18,6 @@ static const int kWindowPtr = GWLP_USERDATA;
 
 
 extern LRESULT CALLBACK NuoWindowProc(HWND, UINT, WPARAM, LPARAM);
-extern LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
 LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -24,6 +25,7 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     {
     case WM_COMMAND:
     {
+        break;
     }
     case WM_DESTROY:
     {
@@ -74,6 +76,14 @@ void NuoWindow::SetIcon(const int icon)
     HICON hIcon = LoadIcon(NuoAppInstance::GetInstance()->Instance(),
                            MAKEINTRESOURCE(icon));
     SendMessage(_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+}
+
+
+void NuoWindow::SetMenu(const PNuoMenuBar& menu)
+{
+    _menu = menu;
+
+    ::SetMenu(_hWnd, _menu->Handle());
 }
 
 

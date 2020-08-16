@@ -5,6 +5,7 @@
 #include "NuoApp.h"
 #include "NuoAppInstance.h";
 #include "NuoWindow.h"
+#include "NuoMenu.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -19,6 +20,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     NuoWindow::RegisterClass();
 
     NuoWindow* window = new NuoWindow("  Nuo Window");
+
+    PNuoMenuBar menu = std::make_shared<NuoMenuBar>();
+    PNuoMenu fileMenu = std::make_shared<NuoMenu>("  &File ");
+    PNuoMenuItem exitItem = std::make_shared<NuoMenuItem>(IDM_EXIT, "E&xit");
+    fileMenu->AppenMenuItem(exitItem);
+    fileMenu->Update();
+    menu->AppendMenu(fileMenu);
+    menu->Update();
+    window->SetMenu(menu);
 
     window->SetIcon(IDI_NUOWINDOW);
     window->Show();
