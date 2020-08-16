@@ -27,6 +27,7 @@ public:
 
 	void Show();
 	void Update();
+	void SetIcon(const int icon);
 
 	void SetOnDestroy(SimpleFunc func);
 

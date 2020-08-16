@@ -20,6 +20,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     NuoWindow* window = new NuoWindow("  Nuo Window");
 
+    window->SetIcon(IDI_NUOWINDOW);
     window->Show();
     window->Update();
 

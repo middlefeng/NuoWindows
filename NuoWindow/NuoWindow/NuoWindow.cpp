@@ -69,6 +69,14 @@ void NuoWindow::Update()
 }
 
 
+void NuoWindow::SetIcon(const int icon)
+{
+    HICON hIcon = LoadIcon(NuoAppInstance::GetInstance()->Instance(),
+                           MAKEINTRESOURCE(icon));
+    SendMessage(_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+}
+
+
 void NuoWindow::OnDestroy()
 {
     _onDestroy();
