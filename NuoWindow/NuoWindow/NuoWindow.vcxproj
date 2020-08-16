@@ -144,11 +144,17 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoApp.h" />
+    <ClInclude Include="NuoAppInstance.h" />
+    <ClInclude Include="NuoStrings.h" />
+    <ClInclude Include="NuoWindow.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoApp.cpp" />
+    <ClCompile Include="NuoAppInstance.cpp" />
+    <ClCompile Include="NuoStrings.cpp" />
+    <ClCompile Include="NuoWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc" />

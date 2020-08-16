@@ -27,6 +27,15 @@
     <ClInclude Include="NuoApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NuoWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NuoAppInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NuoStrings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
@@ -43,6 +52,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NuoWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NuoAppInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NuoStrings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
