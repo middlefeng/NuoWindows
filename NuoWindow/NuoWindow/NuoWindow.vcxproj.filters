@@ -39,6 +39,9 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
@@ -61,6 +64,9 @@
       <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
     <ClCompile Include="..\NuoWindowsFoundation\NuoStrings.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoMenu.cpp">
       <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
     <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp">

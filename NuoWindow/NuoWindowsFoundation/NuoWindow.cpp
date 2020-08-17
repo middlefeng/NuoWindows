@@ -2,9 +2,11 @@
 #include "NuoWindow.h"
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
+#include "NuoMenu.h"
 
 #include <Windows.h>
 
+#include "resource.h"
 
 
 static wchar_t kClassName[100];// = L"NuoWindowClass";
@@ -16,7 +18,6 @@ static const int kWindowPtr = GWLP_USERDATA;
 
 
 extern LRESULT CALLBACK NuoWindowProc(HWND, UINT, WPARAM, LPARAM);
-extern LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
 LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -24,6 +25,17 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     {
     case WM_COMMAND:
     {
+        int wmId = LOWORD(wParam);
+
+        bool processed = false;
+
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        processed = window->OnCommand(wmId);
+
+        if (!processed)
+            return DefWindowProc(hWnd, message, wParam, lParam);
+
+        break;
     }
     case WM_DESTROY:
     {
@@ -32,7 +44,6 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         if (window)
         {
             window->OnDestroy();
-            delete window;
         }
         break;
     }
@@ -56,6 +67,13 @@ NuoWindow::NuoWindow(const std::string& title)
     SetWindowLongPtr(_hWnd, kWindowPtr, (LONG_PTR)this);
 }
 
+NuoWindow::~NuoWindow()
+{
+    // window destroy is handled by the OnDestroy()
+    //
+    _ASSERT(_hWnd == 0);
+}
+
 
 void NuoWindow::Show()
 {
@@ -77,9 +95,36 @@ void NuoWindow::SetIcon(const int icon)
 }
 
 
+void NuoWindow::SetMenu(const PNuoMenuBar& menu)
+{
+    _menu = menu;
+
+    ::SetMenu(_hWnd, _menu->Handle());
+}
+
+
+bool NuoWindow::OnCommand(int id)
+{
+    bool processed = false;
+
+    if (_menu)
+        processed = _menu->DoAction(id);
+
+    return processed;
+}
+
+
+void NuoWindow::Destroy()
+{
+    ::DestroyWindow(_hWnd);
+    _hWnd = 0;
+}
+
+
 void NuoWindow::OnDestroy()
 {
     _onDestroy();
+    _hWnd = 0;
 }
 
 
@@ -107,10 +152,6 @@ void NuoWindow::RegisterClass()
     wcex.lpszMenuName = 0;
     wcex.lpszClassName = L"NuoWindowClass";
     wcex.hIconSm = 0;
-
-    
-
-    //return RegisterClassExW(&wcex);
 
     RegisterClassEx(&wcex);
 }
