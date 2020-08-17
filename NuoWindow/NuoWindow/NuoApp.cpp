@@ -19,7 +19,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     NuoAppInstance::Init(hInstance, nCmdShow);
     NuoWindow::RegisterClass();
 
-    NuoWindow* window = new NuoWindow("  Nuo Window");
+    PNuoWindow window = std::make_shared<NuoWindow>("  Nuo Window");
 
     PNuoMenuBar menu = std::make_shared<NuoMenuBar>();
     PNuoMenu fileMenu = std::make_shared<NuoMenu>("  &File ");
@@ -30,14 +30,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     menu->Update();
     window->SetMenu(menu);
 
+    auto exitFunc = []()
+    {
+        NuoAppInstance::Exit();
+    };
+
+    std::weak_ptr<NuoWindow> weakWindow = window;
+
+    window->SetOnDestroy(exitFunc);
+    exitItem->SetAction([weakWindow](PNuoMenuItem)
+        {
+            PNuoWindow aWindow = weakWindow.lock();
+
+            if (aWindow)
+                aWindow->Destroy();
+        });
+
     window->SetIcon(IDI_NUOWINDOW);
     window->Show();
     window->Update();
-
-    window->SetOnDestroy([]()
-        {
-            NuoAppInstance::Exit();
-        });
 
     MSG msg;
 

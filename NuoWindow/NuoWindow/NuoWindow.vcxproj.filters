@@ -36,10 +36,10 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
-    <ClInclude Include="NuoMenu.h">
+    <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h">
+    <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
   </ItemGroup>

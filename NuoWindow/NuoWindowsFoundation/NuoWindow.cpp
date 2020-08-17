@@ -25,6 +25,16 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     {
     case WM_COMMAND:
     {
+        int wmId = LOWORD(wParam);
+
+        bool processed = false;
+
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        processed = window->OnCommand(wmId);
+
+        if (!processed)
+            return DefWindowProc(hWnd, message, wParam, lParam);
+
         break;
     }
     case WM_DESTROY:
@@ -34,7 +44,6 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         if (window)
         {
             window->OnDestroy();
-            delete window;
         }
         break;
     }
@@ -56,6 +65,13 @@ NuoWindow::NuoWindow(const std::string& title)
                           CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
     SetWindowLongPtr(_hWnd, kWindowPtr, (LONG_PTR)this);
+}
+
+NuoWindow::~NuoWindow()
+{
+    // window destroy is handled by the OnDestroy()
+    //
+    _ASSERT(_hWnd == 0);
 }
 
 
@@ -87,9 +103,28 @@ void NuoWindow::SetMenu(const PNuoMenuBar& menu)
 }
 
 
+bool NuoWindow::OnCommand(int id)
+{
+    bool processed = false;
+
+    if (_menu)
+        processed = _menu->DoAction(id);
+
+    return processed;
+}
+
+
+void NuoWindow::Destroy()
+{
+    ::DestroyWindow(_hWnd);
+    _hWnd = 0;
+}
+
+
 void NuoWindow::OnDestroy()
 {
     _onDestroy();
+    _hWnd = 0;
 }
 
 
@@ -117,10 +152,6 @@ void NuoWindow::RegisterClass()
     wcex.lpszMenuName = 0;
     wcex.lpszClassName = L"NuoWindowClass";
     wcex.hIconSm = 0;
-
-    
-
-    //return RegisterClassExW(&wcex);
 
     RegisterClassEx(&wcex);
 }

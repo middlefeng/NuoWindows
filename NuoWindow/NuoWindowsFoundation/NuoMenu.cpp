@@ -42,6 +42,21 @@ HMENU NuoMenuBar::Handle() const
 }
 
 
+bool NuoMenuBar::DoAction(int id)
+{
+	for (PNuoMenu menu : _menus)
+	{
+		if (menu->HasID(id))
+		{
+			menu->DoActionForID(id);
+			return true;
+		}
+
+		return false;
+	}
+}
+
+
 NuoMenu::NuoMenu(const std::string& title)
 	: _title(title)
 {
@@ -57,7 +72,7 @@ NuoMenu::~NuoMenu()
 
 void NuoMenu::AppenMenuItem(const PNuoMenuItem& item)
 {
-	_items.push_back(item);
+	_items.insert(std::make_pair(item->ID(), item));
 }
 
 
@@ -67,14 +82,16 @@ void NuoMenu::Update()
 	for (int i = 0; i < count; ++i)
 		RemoveMenu(_hMenu, i, MF_BYPOSITION);
 
-	for (PNuoMenuItem item : _items)
+	for (auto item : _items)
 	{
-		switch (item->MenuType())
+		PNuoMenuItem menuItem = item.second;
+
+		switch (menuItem->MenuType())
 		{
 		case NuoMenuItem::kMenuItem_String:
 		{
-			std::wstring wtext = StringToUTF16(item->Text());
-			AppendMenu(_hMenu, MF_STRING, item->ID(), wtext.c_str());
+			std::wstring wtext = StringToUTF16(menuItem->Text());
+			AppendMenu(_hMenu, MF_STRING, menuItem->ID(), wtext.c_str());
 			break;
 		}
 		case NuoMenuItem::kMenuItem_Separator:
@@ -98,6 +115,24 @@ std::string NuoMenu::Title() const
 HMENU NuoMenu::Handle() const
 {
 	return _hMenu;
+}
+
+
+bool NuoMenu::HasID(int id) const
+{
+	return _items.find(id) != _items.end();
+}
+
+
+void NuoMenu::DoActionForID(int id)
+{
+	auto item = _items.find(id);
+
+	if (item != _items.end())
+	{
+		PNuoMenuItem menuItem = item->second;
+		menuItem->DoAction();
+	}
 }
 
 
@@ -131,4 +166,17 @@ std::string NuoMenuItem::Text() const
 int NuoMenuItem::ID() const
 {
 	return _id;
+}
+
+
+void NuoMenuItem::SetAction(MenuAction action)
+{
+	_action = action;
+}
+
+
+
+void NuoMenuItem::DoAction()
+{
+	_action(this->shared_from_this());
 }

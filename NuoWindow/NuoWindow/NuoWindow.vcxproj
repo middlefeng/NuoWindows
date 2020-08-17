@@ -144,11 +144,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\NuoWindowsFoundation\NuoAppInstance.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoApp.h" />
-    <ClInclude Include="NuoMenu.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

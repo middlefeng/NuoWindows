@@ -26,17 +26,23 @@ class NuoWindow
 public:
 
 	NuoWindow(const std::string& title);
+	virtual ~NuoWindow();
 
 	static void RegisterClass();
 
 	virtual void OnDestroy();
+	virtual bool OnCommand(int id);
 
 	void Show();
 	void Update();
 	void SetIcon(const int icon);
 	void SetMenu(const PNuoMenuBar& menu);
 
+	void Destroy();
 	void SetOnDestroy(SimpleFunc func);
 
 };
+
+
+typedef std::shared_ptr<NuoWindow> PNuoWindow;
 
