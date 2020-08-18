@@ -1,4 +1,4 @@
-// NuoWindow.cpp : Defines the entry point for the application.
+﻿// NuoWindow.cpp : Defines the entry point for the application.
 //
 
 #include "framework.h"
@@ -6,6 +6,7 @@
 #include "NuoAppInstance.h";
 #include "NuoWindow.h"
 #include "NuoMenu.h"
+#include "NuoDialog.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -22,11 +23,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     PNuoWindow window = std::make_shared<NuoWindow>("  Nuo Window");
 
     PNuoMenuBar menu = std::make_shared<NuoMenuBar>();
+    
     PNuoMenu fileMenu = std::make_shared<NuoMenu>("  &File ");
     PNuoMenuItem exitItem = std::make_shared<NuoMenuItem>(IDM_EXIT, "E&xit");
     fileMenu->AppenMenuItem(exitItem);
     fileMenu->Update();
+
+    PNuoMenu aboutMenu = std::make_shared<NuoMenu>(" &About ");
+    PNuoMenuItem aboutItem = std::make_shared<NuoMenuItem>(IDM_ABOUT, "About");
+    aboutMenu->AppenMenuItem(aboutItem);
+    aboutMenu->Update();
+
     menu->AppendMenu(fileMenu);
+    menu->AppendMenu(aboutMenu);
     menu->Update();
     window->SetMenu(menu);
 
@@ -44,6 +53,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             if (aWindow)
                 aWindow->Destroy();
+        });
+    aboutItem->SetAction([window](PNuoMenuItem)
+        {
+            NuoDialog dlg("About");
+            dlg.SetPosition(100, 100, 300, 300);
+            dlg.DoModal(window);
         });
 
     window->SetIcon(IDI_NUOWINDOW);

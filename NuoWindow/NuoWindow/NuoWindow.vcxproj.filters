@@ -42,9 +42,18 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoDialog.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
+    <ClInclude Include="FoundationResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="FoundationResource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -70,6 +79,9 @@
       <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
     <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoDialog.cpp">
       <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
   </ItemGroup>

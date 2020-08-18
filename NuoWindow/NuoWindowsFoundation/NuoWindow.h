@@ -33,6 +33,8 @@ public:
 	virtual void OnDestroy();
 	virtual bool OnCommand(int id);
 
+	HWND Handle() const;
+
 	void Show();
 	void Update();
 	void SetIcon(const int icon);

@@ -51,9 +51,9 @@ bool NuoMenuBar::DoAction(int id)
 			menu->DoActionForID(id);
 			return true;
 		}
-
-		return false;
 	}
+
+	return false;
 }
 
 

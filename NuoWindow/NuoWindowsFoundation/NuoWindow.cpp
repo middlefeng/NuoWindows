@@ -103,6 +103,12 @@ void NuoWindow::SetMenu(const PNuoMenuBar& menu)
 }
 
 
+HWND NuoWindow::Handle() const
+{
+    return _hWnd;
+}
+
+
 bool NuoWindow::OnCommand(int id)
 {
     bool processed = false;
