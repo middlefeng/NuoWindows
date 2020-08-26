@@ -20,10 +20,14 @@ static INT_PTR CALLBACK DialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
-			EndDialog(hDlg, LOWORD(wParam));
+			PostQuitMessage(0);
 			return (INT_PTR)TRUE;
 		}
 		break;
+
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		return (INT_PTR)TRUE;
 	}
 
 	return (INT_PTR)false;
@@ -31,7 +35,7 @@ static INT_PTR CALLBACK DialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 
 
 NuoDialog::NuoDialog(const std::string& title)
-	: _title(title)
+	: _title(title), _hDlg(0)
 {
 }
 
@@ -76,5 +80,8 @@ void NuoDialog::DoModal(const PNuoWindow& parent)
 		}
 	}
 
+	EndDialog(_hDlg, (INT_PTR)0);
 	EnableWindow(parent->Handle(), true);
+
+	_hDlg = 0;
 }

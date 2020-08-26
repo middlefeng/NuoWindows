@@ -109,6 +109,15 @@ HWND NuoWindow::Handle() const
 }
 
 
+NuoRect<long> NuoWindow::Position()
+{
+    RECT rect;
+
+    GetWindowRect(_hWnd, &rect);
+    return NuoRect<long>(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+}
+
+
 bool NuoWindow::OnCommand(int id)
 {
     bool processed = false;

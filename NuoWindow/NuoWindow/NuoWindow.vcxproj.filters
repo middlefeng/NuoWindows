@@ -48,6 +48,12 @@
     <ClInclude Include="FoundationResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NuoRect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoRect.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
@@ -82,6 +88,12 @@
       <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
     <ClCompile Include="..\NuoWindowsFoundation\NuoDialog.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="NuoRect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoRect.cpp">
       <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
   </ItemGroup>

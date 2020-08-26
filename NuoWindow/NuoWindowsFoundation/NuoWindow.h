@@ -7,6 +7,8 @@
 #include <functional>
 #include <memory>
 
+#include "NuoRect.h"
+
 
 typedef std::function<void(void)> SimpleFunc;
 
@@ -39,6 +41,8 @@ public:
 	void Update();
 	void SetIcon(const int icon);
 	void SetMenu(const PNuoMenuBar& menu);
+
+	NuoRect<long> Position();
 
 	void Destroy();
 	void SetOnDestroy(SimpleFunc func);
