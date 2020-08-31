@@ -26,4 +26,7 @@ public:
 	void SetPosition(const NuoRect<long>& pos);
 	void SetPosition(long x, long y, long cx, long cy);
 	void DoModal(const PNuoWindow& parent);
+
+	virtual void UpdateLayout();
+
 };

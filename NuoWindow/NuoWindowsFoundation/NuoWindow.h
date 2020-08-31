@@ -19,6 +19,9 @@ typedef std::shared_ptr<NuoMenuBar> PNuoMenuBar;
 
 class NuoWindow
 {
+
+protected:
+
 	HWND _hWnd;
 	PNuoMenuBar _menu;
 

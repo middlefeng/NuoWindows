@@ -92,3 +92,8 @@ void NuoDialog::DoModal(const PNuoWindow& parent)
 
 	_hDlg = 0;
 }
+
+void NuoDialog::UpdateLayout()
+{
+
+}

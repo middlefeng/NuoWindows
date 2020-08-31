@@ -54,6 +54,12 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoMonitorScale.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
+    <ClInclude Include="resource2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoControl.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
@@ -94,6 +100,9 @@
       <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
     <ClCompile Include="..\NuoWindowsFoundation\NuoMonitorScale.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoControl.cpp">
       <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
   </ItemGroup>
