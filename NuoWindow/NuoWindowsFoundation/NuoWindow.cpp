@@ -109,7 +109,7 @@ HWND NuoWindow::Handle() const
 }
 
 
-NuoRect<long> NuoWindow::Position()
+NuoRect<long> NuoWindow::PositionDevice()
 {
     RECT rect;
 

@@ -42,7 +42,8 @@ public:
 	void SetIcon(const int icon);
 	void SetMenu(const PNuoMenuBar& menu);
 
-	NuoRect<long> Position();
+	NuoRect<long> PositionDevice();
+	float ScaleFactor();
 
 	void Destroy();
 	void SetOnDestroy(SimpleFunc func);

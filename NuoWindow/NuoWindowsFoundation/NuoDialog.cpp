@@ -4,6 +4,7 @@
 
 #include "NuoStrings.h"
 #include "NuoAppInstance.h"
+#include "NuoMonitorScale.h"
 
 #include "FoundationResource.h"
 
@@ -35,13 +36,19 @@ static INT_PTR CALLBACK DialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 
 
 NuoDialog::NuoDialog(const std::string& title)
-	: _title(title), _hDlg(0)
+	: _title(title), _hDlg(0),
+	  _x(0), _y(0), _cx(0), _cy(0)
 {
 }
 
 
+void NuoDialog::SetPosition(const NuoRect<long>& pos)
+{
+	SetPosition(pos.X(), pos.Y(), pos.W(), pos.H());
+}
 
-void NuoDialog::SetPosition(short x, short y, short cx, short cy)
+
+void NuoDialog::SetPosition(long x, long y, long cx, long cy)
 {
 	_x = x; _y = y;
 	_cx = cx;

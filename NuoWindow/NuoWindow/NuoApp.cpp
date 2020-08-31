@@ -3,10 +3,11 @@
 
 #include "framework.h"
 #include "NuoApp.h"
-#include "NuoAppInstance.h";
+#include "NuoAppInstance.h"
 #include "NuoWindow.h"
 #include "NuoMenu.h"
 #include "NuoDialog.h"
+#include "NuoMonitorScale.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -56,8 +57,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         });
     aboutItem->SetAction([window](PNuoMenuItem)
         {
+            auto windowPos = window->PositionDevice();
+            double scale = MonitorScale<long>(windowPos.TL());
+
+            auto dialogPos = windowPos;
+            dialogPos.SetX(dialogPos.X() + (long)(60 * scale));
+            dialogPos.SetY(dialogPos.Y() + (long)(60 * scale));
+            dialogPos.SetW((long)(500 * scale));
+            dialogPos.SetH((long)(400 * scale));
+
             NuoDialog dlg("About");
-            dlg.SetPosition(100, 100, 300, 300);
+            dlg.SetPosition(dialogPos);
             dlg.DoModal(window);
         });
 

@@ -12,10 +12,10 @@ class NuoDialog
 {
 	std::string _title;
 
-	short _x;
-	short _y;
-	short _cx;
-	short _cy;
+	long _x;
+	long _y;
+	long _cx;
+	long _cy;
 
 	HWND _hDlg;
 
@@ -23,6 +23,7 @@ public:
 
 	NuoDialog(const std::string& title);
 
-	void SetPosition(short x, short y, short cx, short cy);
+	void SetPosition(const NuoRect<long>& pos);
+	void SetPosition(long x, long y, long cx, long cy);
 	void DoModal(const PNuoWindow& parent);
 };
