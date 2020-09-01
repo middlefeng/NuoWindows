@@ -13,7 +13,7 @@ static wchar_t kClassName[100];// = L"NuoWindowClass";
 
 
 
-static const int kWindowPtr = GWLP_USERDATA;
+extern const int kWindowPtr = GWLP_USERDATA;
 
 
 
@@ -52,6 +52,11 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     }
 
     return 0;
+}
+
+
+NuoWindow::NuoWindow()
+{
 }
 
 
@@ -118,6 +123,12 @@ NuoRect<long> NuoWindow::PositionDevice()
 }
 
 
+void NuoWindow::SetPositionDevice(const NuoRect<long>& pos)
+{
+    SetWindowPos(_hWnd, HWND_TOPMOST, pos.X(), pos.Y(), pos.W(), pos.H(), SWP_SHOWWINDOW);
+}
+
+
 bool NuoWindow::OnCommand(int id)
 {
     bool processed = false;
@@ -129,8 +140,19 @@ bool NuoWindow::OnCommand(int id)
 }
 
 
+void NuoWindow::Detach()
+{
+    _hWnd = 0;
+}
+
+
 void NuoWindow::Destroy()
 {
+    for (auto child : _children)
+        child->Detach();
+
+    _children.clear();
+
     ::DestroyWindow(_hWnd);
     _hWnd = 0;
 }
@@ -146,6 +168,12 @@ void NuoWindow::OnDestroy()
 void NuoWindow::SetOnDestroy(SimpleFunc func)
 {
     _onDestroy = func;
+}
+
+
+void NuoWindow::Add(const PNuoWindow& child)
+{
+    _children.insert(child);
 }
 
 

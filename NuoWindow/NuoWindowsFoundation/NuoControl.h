@@ -13,10 +13,6 @@
 
 class NuoControl : public NuoWindow
 {
-	HWND _hWnd;
-
-	std::string _title;
-	SimpleFunc _onDestroy;
 
 public:
 
@@ -26,5 +22,5 @@ public:
 };
 
 
-typedef std::shared_ptr<NuoWindow> PNuoWindow;
+typedef std::shared_ptr<NuoControl> PNuoControl;
 

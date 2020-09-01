@@ -5,9 +5,11 @@
 #include "NuoApp.h"
 #include "NuoAppInstance.h"
 #include "NuoWindow.h"
+#include "NuoButton.h"
 #include "NuoMenu.h"
-#include "NuoDialog.h"
 #include "NuoMonitorScale.h"
+
+#include "AppAboutDialog.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -63,12 +65,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             auto dialogPos = windowPos;
             dialogPos.SetX(dialogPos.X() + (long)(60 * scale));
             dialogPos.SetY(dialogPos.Y() + (long)(60 * scale));
-            dialogPos.SetW((long)(500 * scale));
-            dialogPos.SetH((long)(400 * scale));
+            dialogPos.SetW((long)(800 * scale));
+            dialogPos.SetH((long)(600 * scale));
 
-            NuoDialog dlg("About");
-            dlg.SetPosition(dialogPos);
-            dlg.DoModal(window);
+            PAppAboutDialog dlg = std::make_shared<AppAboutDialog>("About");
+            dlg->SetPosition(dialogPos);
+            dlg->DoModal(window);
         });
 
     window->SetIcon(IDI_NUOWINDOW);

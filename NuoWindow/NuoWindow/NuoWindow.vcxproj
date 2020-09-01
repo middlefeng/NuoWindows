@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\NuoWindowsFoundation\NuoAppInstance.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoButton.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoControl.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoDialog.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoRect.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h" />
+    <ClInclude Include="AppAboutDialog.h" />
     <ClInclude Include="FoundationResource.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoApp.h" />
@@ -161,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\NuoWindowsFoundation\NuoAppInstance.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoButton.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoControl.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoDialog.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMenu.cpp" />
@@ -168,6 +171,7 @@
     <ClCompile Include="..\NuoWindowsFoundation\NuoRect.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoStrings.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp" />
+    <ClCompile Include="AppAboutDialog.cpp" />
     <ClCompile Include="NuoApp.cpp" />
   </ItemGroup>
   <ItemGroup>

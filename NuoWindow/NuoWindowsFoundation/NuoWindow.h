@@ -4,11 +4,14 @@
 #include <Windows.h>
 
 #include <string>
+#include <set>
 #include <functional>
 #include <memory>
 
 #include "NuoRect.h"
 
+
+extern const int kWindowPtr;
 
 typedef std::function<void(void)> SimpleFunc;
 
@@ -16,8 +19,11 @@ typedef std::function<void(void)> SimpleFunc;
 class NuoMenuBar;
 typedef std::shared_ptr<NuoMenuBar> PNuoMenuBar;
 
+class NuoWindow;
+typedef std::shared_ptr<NuoWindow> PNuoWindow;
 
-class NuoWindow
+
+class NuoWindow : public std::enable_shared_from_this<NuoWindow>
 {
 
 protected:
@@ -28,8 +34,11 @@ protected:
 	std::string _title;
 	SimpleFunc _onDestroy;
 
+	std::set<PNuoWindow> _children;
+
 public:
 
+	NuoWindow();
 	NuoWindow(const std::string& title);
 	virtual ~NuoWindow();
 
@@ -46,13 +55,16 @@ public:
 	void SetMenu(const PNuoMenuBar& menu);
 
 	NuoRect<long> PositionDevice();
+	void SetPositionDevice(const NuoRect<long>& pos);
 	float ScaleFactor();
 
+	void Detach();
 	void Destroy();
 	void SetOnDestroy(SimpleFunc func);
+
+	void Add(const PNuoWindow& child);
 
 };
 
 
-typedef std::shared_ptr<NuoWindow> PNuoWindow;
 

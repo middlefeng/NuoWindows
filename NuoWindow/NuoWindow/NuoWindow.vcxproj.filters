@@ -60,6 +60,12 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoControl.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoButton.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
+    <ClInclude Include="AppAboutDialog.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
@@ -104,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="..\NuoWindowsFoundation\NuoControl.cpp">
       <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoButton.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="AppAboutDialog.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

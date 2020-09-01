@@ -36,9 +36,10 @@ static INT_PTR CALLBACK DialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 
 
 NuoDialog::NuoDialog(const std::string& title)
-	: _title(title), _hDlg(0),
-	  _x(0), _y(0), _cx(0), _cy(0)
+	: _x(0), _y(0), _cx(0), _cy(0)
 {
+	_title = title;
+	_hWnd = 0;
 }
 
 
@@ -56,20 +57,19 @@ void NuoDialog::SetPosition(long x, long y, long cx, long cy)
 }
 
 
-static const int kWindowPtr = GWLP_USERDATA;
-
-
 void NuoDialog::DoModal(const PNuoWindow& parent)
 {
-	_hDlg = CreateDialogParam(NuoAppInstance::GetInstance()->Instance(),
+	_hWnd = CreateDialogParam(NuoAppInstance::GetInstance()->Instance(),
 							  MAKEINTRESOURCE(IDD_DIALOG_FOUNDATION), parent->Handle(), DialogProc, 0);
 
-	SetWindowLongPtr(_hDlg, kWindowPtr, (LONG_PTR)this);
+	SetWindowLongPtr(_hWnd, kWindowPtr, (LONG_PTR)this);
 
 	std::wstring wtitle = StringToUTF16(_title);
-	SetWindowText(_hDlg, wtitle.c_str());
-	SetWindowPos(_hDlg, HWND_TOPMOST, _x, _y, _cx, _cy, SWP_SHOWWINDOW);
-	ShowWindow(_hDlg, SW_SHOW);
+	SetWindowText(_hWnd, wtitle.c_str());
+	SetWindowPos(_hWnd, HWND_TOPMOST, _x, _y, _cx, _cy, SWP_SHOWWINDOW);
+	ShowWindow(_hWnd, SW_SHOW);
+
+	UpdateLayout();
 
 	EnableWindow(parent->Handle(), false);
 
@@ -80,20 +80,19 @@ void NuoDialog::DoModal(const PNuoWindow& parent)
 		if (ret == -1) /* error found */
 			break;
 
-		if (!IsDialogMessage(_hDlg, &msg))
+		if (!IsDialogMessage(_hWnd, &msg))
 		{
 			TranslateMessage(&msg); /* translate virtual-key messages */
 			DispatchMessage(&msg);  /* send it to dialog procedure */
 		}
 	}
 
-	EndDialog(_hDlg, (INT_PTR)0);
+	EndDialog(_hWnd, (INT_PTR)0);
 	EnableWindow(parent->Handle(), true);
 
-	_hDlg = 0;
+	_hWnd = 0;
 }
 
 void NuoDialog::UpdateLayout()
 {
-
 }

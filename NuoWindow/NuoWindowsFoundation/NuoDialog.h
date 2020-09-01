@@ -8,16 +8,12 @@
 #include <string>
 
 
-class NuoDialog
+class NuoDialog : public NuoWindow
 {
-	std::string _title;
-
 	long _x;
 	long _y;
 	long _cx;
 	long _cy;
-
-	HWND _hDlg;
 
 public:
 
