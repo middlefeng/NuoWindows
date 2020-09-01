@@ -15,6 +15,7 @@ public:
 	AppAboutDialog(const std::string& title);
 	virtual ~AppAboutDialog();
 
+	virtual void InitDialog() override;
 	virtual void UpdateLayout() override;
 
 };

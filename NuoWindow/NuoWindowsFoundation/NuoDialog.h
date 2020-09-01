@@ -8,6 +8,8 @@
 #include <string>
 
 
+class NuoDialogProc;
+
 class NuoDialog : public NuoWindow
 {
 	long _x;
@@ -23,6 +25,9 @@ public:
 	void SetPosition(long x, long y, long cx, long cy);
 	void DoModal(const PNuoWindow& parent);
 
+	virtual void InitDialog();
 	virtual void UpdateLayout();
+
+	friend NuoDialogProc;
 
 };

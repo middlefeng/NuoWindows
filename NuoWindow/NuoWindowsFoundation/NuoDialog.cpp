@@ -7,25 +7,37 @@
 #include "NuoMonitorScale.h"
 
 #include "FoundationResource.h"
+#include <assert.h>
 
 
+class NuoDialogProc
+{
+public:
+	static INT_PTR CALLBACK DialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+};
 
-static INT_PTR CALLBACK DialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+
+INT_PTR CALLBACK NuoDialogProc::DialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 	switch (message)
 	{
 	case WM_INITDIALOG:
+	{
+		NuoDialog* dialog = (NuoDialog*)lParam;
+		dialog->_hWnd = hDlg;
+		dialog->InitDialog();
 		return (INT_PTR)TRUE;
-
+	}
 	case WM_COMMAND:
+	{
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
 			PostQuitMessage(0);
 			return (INT_PTR)TRUE;
 		}
 		break;
-
+	}
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return (INT_PTR)TRUE;
@@ -59,14 +71,22 @@ void NuoDialog::SetPosition(long x, long y, long cx, long cy)
 
 void NuoDialog::DoModal(const PNuoWindow& parent)
 {
-	_hWnd = CreateDialogParam(NuoAppInstance::GetInstance()->Instance(),
-							  MAKEINTRESOURCE(IDD_DIALOG_FOUNDATION), parent->Handle(), DialogProc, 0);
+	assert(_hWnd == 0);
+
+	CreateDialogParam(NuoAppInstance::GetInstance()->Instance(),
+					  MAKEINTRESOURCE(IDD_DIALOG_FOUNDATION), parent->Handle(),
+				      NuoDialogProc::DialogProc, (LPARAM)this);
+
+	// _hWnd set in the WM_INIT...
+	//
+	assert(_hWnd);
 
 	SetWindowLongPtr(_hWnd, kWindowPtr, (LONG_PTR)this);
 
 	std::wstring wtitle = StringToUTF16(_title);
 	SetWindowText(_hWnd, wtitle.c_str());
 	SetWindowPos(_hWnd, HWND_TOPMOST, _x, _y, _cx, _cy, SWP_SHOWWINDOW);
+	
 	ShowWindow(_hWnd, SW_SHOW);
 
 	UpdateLayout();
@@ -91,6 +111,11 @@ void NuoDialog::DoModal(const PNuoWindow& parent)
 	EnableWindow(parent->Handle(), true);
 
 	_hWnd = 0;
+}
+
+
+void NuoDialog::InitDialog()
+{
 }
 
 void NuoDialog::UpdateLayout()

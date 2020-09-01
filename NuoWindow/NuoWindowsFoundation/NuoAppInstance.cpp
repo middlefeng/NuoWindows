@@ -20,6 +20,8 @@ NuoAppInstance* NuoAppInstance::GetInstance()
 void NuoAppInstance::Init(HINSTANCE hInstance, int cmdShow)
 {
 	gInstance = new NuoAppInstance(hInstance, cmdShow);
+
+	SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 }
 
 
