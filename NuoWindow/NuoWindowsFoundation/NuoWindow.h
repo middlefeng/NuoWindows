@@ -23,6 +23,16 @@ class NuoWindow;
 typedef std::shared_ptr<NuoWindow> PNuoWindow;
 
 
+class NuoFont
+{
+	HFONT _hFont;
+
+public:
+	NuoFont(HFONT _hFont);
+	HFONT Handle() const;
+};
+
+
 class NuoWindow : public std::enable_shared_from_this<NuoWindow>
 {
 
@@ -55,8 +65,11 @@ public:
 	void SetMenu(const PNuoMenuBar& menu);
 
 	NuoRect<long> PositionDevice();
-	void SetPositionDevice(const NuoRect<long>& pos);
+	void SetPositionDevice(const NuoRect<long>& pos, bool activate);
 	float ScaleFactor();
+
+	NuoFont Font();
+	void SetFont(const NuoFont& font);
 
 	void Detach();
 	void Destroy();

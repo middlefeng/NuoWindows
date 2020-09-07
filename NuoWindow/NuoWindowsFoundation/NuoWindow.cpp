@@ -4,7 +4,7 @@
 #include "NuoStrings.h"
 #include "NuoMenu.h"
 
-#include <Windows.h>
+#include <windows.h>
 
 #include "resource.h"
 
@@ -45,6 +45,20 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         {
             window->OnDestroy();
         }
+        break;
+    }
+    case WM_DPICHANGED:
+    {
+        // Resize the window
+        auto lprcNewScale = reinterpret_cast<RECT*>(lParam);
+        NuoRect<long> newPos(lprcNewScale->left, lprcNewScale->top,
+                             lprcNewScale->right - lprcNewScale->left,
+                             lprcNewScale->bottom - lprcNewScale->top);
+
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        if (window)
+            window->SetPositionDevice(newPos, false);
+
         break;
     }
     default:
@@ -123,9 +137,26 @@ NuoRect<long> NuoWindow::PositionDevice()
 }
 
 
-void NuoWindow::SetPositionDevice(const NuoRect<long>& pos)
+void NuoWindow::SetPositionDevice(const NuoRect<long>& pos, bool activate)
 {
-    SetWindowPos(_hWnd, HWND_TOPMOST, pos.X(), pos.Y(), pos.W(), pos.H(), SWP_SHOWWINDOW);
+    UINT flag = 0;
+    if (!activate)
+        flag = SWP_NOZORDER | SWP_NOACTIVATE;
+
+    SetWindowPos(_hWnd, HWND_NOTOPMOST, pos.X(), pos.Y(), pos.W(), pos.H(), flag);
+}
+
+
+NuoFont NuoWindow::Font()
+{
+    HFONT hFont = (HFONT)SendMessage(_hWnd, WM_GETFONT, 0, 0);
+    return NuoFont(hFont);
+}
+
+
+void NuoWindow::SetFont(const NuoFont& font)
+{
+    SendMessage(_hWnd, WM_SETFONT, (LPARAM)font.Handle(), TRUE);
 }
 
 
@@ -174,6 +205,18 @@ void NuoWindow::SetOnDestroy(SimpleFunc func)
 void NuoWindow::Add(const PNuoWindow& child)
 {
     _children.insert(child);
+}
+
+
+NuoFont::NuoFont(HFONT font)
+    : _hFont(font)
+{
+}
+
+
+HFONT NuoFont::Handle() const
+{
+    return _hFont;
 }
 
 

@@ -19,7 +19,7 @@ void NuoButton::Init()
     _hWnd = CreateWindow(L"BUTTON",     // Predefined class; Unicode assumed 
                          wtitle.c_str(),        // Button text 
                          WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_FLAT | BS_PUSHBUTTON,  // Styles 
-                         10, 10, 300, 40,      // Button height
+                         10, 10, 300, 40,       // Button height
                          parent->Handle(),      // Parent window
                          NULL,                  // No menu.
                          NuoAppInstance::GetInstance()->Instance(),

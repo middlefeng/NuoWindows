@@ -15,13 +15,22 @@ AppAboutDialog::~AppAboutDialog()
 
 void AppAboutDialog::InitDialog()
 {
-	NuoRect<long> pos(10, 10, 300, 100);
+	NuoRect<long> pos(50, 50, 188, 153);
 
-	_button = std::make_shared<NuoButton>(shared_from_this(), "Button");
+	_button = std::make_shared<NuoButton>(shared_from_this(), "Cancel");
 	_button->Init();
-	_button->SetPositionDevice(pos);
+	_button->SetPositionDevice(pos, false);
+
+	NuoFont font = Font();
+	_button->SetFont(font);
 }
 
 void AppAboutDialog::UpdateLayout()
 {
+	HWND okHwnd = GetDlgItem(_hWnd, IDOK);
+
+	RECT rect;
+	GetWindowRect(okHwnd, &rect);
+
+	SetFocus(okHwnd);
 }
