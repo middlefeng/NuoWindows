@@ -3,11 +3,19 @@
 
 #include "NuoStrings.h"
 #include "NuoAppInstance.h"
+#include "NuoDialog.h"
 
 
 NuoButton::NuoButton(const PNuoWindow& parent, const std::string& title)
-	: NuoControl(title), _parent(parent)
+	: NuoControl(title, parent)
 {
+}
+
+
+NuoButton::NuoButton(const PNuoDialog& parent, int controlID)
+    : NuoControl("", std::dynamic_pointer_cast<NuoWindow>(parent))
+{
+    _hWnd = GetDlgItem(parent->Handle(), controlID);
 }
 
 

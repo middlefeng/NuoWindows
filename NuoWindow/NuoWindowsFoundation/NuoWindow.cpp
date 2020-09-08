@@ -5,6 +5,7 @@
 #include "NuoMenu.h"
 
 #include <windows.h>
+#include <shellscalingapi.h>
 
 #include "resource.h"
 
@@ -70,12 +71,13 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
 
 NuoWindow::NuoWindow()
+    : _hWnd(0)
 {
 }
 
 
 NuoWindow::NuoWindow(const std::string& title)
-    : _title(title)
+    : _title(title), _hWnd(0)
 {
     std::wstring wtitle = StringToUTF16(title);
     HINSTANCE hInstance = NuoAppInstance::GetInstance()->Instance();
@@ -134,6 +136,23 @@ NuoRect<long> NuoWindow::PositionDevice()
 
     GetWindowRect(_hWnd, &rect);
     return NuoRect<long>(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+}
+
+
+NuoRect<long> NuoWindow::ClientRect()
+{
+    RECT rect;
+
+    GetClientRect(_hWnd, &rect);
+    return NuoRect<long>(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+}
+
+
+float NuoWindow::DPI()
+{
+    UINT scale = GetDpiForWindow(_hWnd);
+
+    return (double)scale / 100.0;
 }
 
 

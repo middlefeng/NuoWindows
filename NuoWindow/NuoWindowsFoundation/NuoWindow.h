@@ -64,9 +64,10 @@ public:
 	void SetIcon(const int icon);
 	void SetMenu(const PNuoMenuBar& menu);
 
-	NuoRect<long> PositionDevice();
+	virtual NuoRect<long> PositionDevice();
 	void SetPositionDevice(const NuoRect<long>& pos, bool activate);
-	float ScaleFactor();
+	NuoRect<long> ClientRect();
+	float DPI();
 
 	NuoFont Font();
 	void SetFont(const NuoFont& font);

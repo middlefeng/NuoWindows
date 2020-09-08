@@ -27,10 +27,5 @@ void AppAboutDialog::InitDialog()
 
 void AppAboutDialog::UpdateLayout()
 {
-	HWND okHwnd = GetDlgItem(_hWnd, IDOK);
-
-	RECT rect;
-	GetWindowRect(okHwnd, &rect);
-
-	SetFocus(okHwnd);
+	NuoDialog::UpdateLayout();
 }

@@ -7,18 +7,19 @@
 
 
 template <class T>
-double MonitorScale(const NuoPoint<T>& point)
+NuoPoint<T> MonitorDPI(const NuoPoint<T>& point)
 {
 	POINT pt;
 	pt.x = point.X();
 	pt.y = point.Y();
 
-	DEVICE_SCALE_FACTOR scale = SCALE_100_PERCENT;
-
+	UINT dpiX, dpiY;
 	HMONITOR monitor = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
-	GetScaleFactorForMonitor(monitor, &scale);
+	GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
 
-	double scaleF = (double)scale / 100.0;
+	NuoPoint<T> scaleF(1, 1);
+	scaleF.SetX((double)dpiX / 100.0);
+	scaleF.SetY((double)dpiY / 100.0);
 
 	return scaleF;
 }

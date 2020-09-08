@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
+#include <string>
 
 #include "NuoWindow.h"
 
-#include <string>
-
 
 class NuoDialogProc;
+class NuoButton;
 
 class NuoDialog : public NuoWindow
 {
@@ -16,6 +16,9 @@ class NuoDialog : public NuoWindow
 	long _y;
 	long _cx;
 	long _cy;
+
+	std::shared_ptr<NuoButton> _okButton;
+	std::shared_ptr<NuoButton> _cancelButton;
 
 public:
 
@@ -31,3 +34,6 @@ public:
 	friend NuoDialogProc;
 
 };
+
+
+typedef std::shared_ptr<NuoDialog> PNuoDialog;

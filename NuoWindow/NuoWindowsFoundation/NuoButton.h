@@ -11,10 +11,16 @@
 #include "NuoControl.h"
 
 
+class NuoDialog;
+typedef std::shared_ptr<NuoDialog> PNuoDialog;
+
+
 class NuoButton : public NuoControl
 {
 
-	std::weak_ptr<NuoWindow> _parent;
+protected:
+
+	NuoButton(const PNuoDialog& parent, int controlID);
 
 public:
 
@@ -22,6 +28,9 @@ public:
 	virtual ~NuoButton();
 
 	void Init();
+
+
+	friend NuoDialog;
 
 };
 

@@ -5,6 +5,7 @@
 #include "NuoStrings.h"
 #include "NuoAppInstance.h"
 #include "NuoMonitorScale.h"
+#include "NuoButton.h"
 
 #include "FoundationResource.h"
 #include <assert.h>
@@ -111,6 +112,8 @@ void NuoDialog::DoModal(const PNuoWindow& parent)
 	EnableWindow(parent->Handle(), true);
 
 	_hWnd = 0;
+	_okButton.reset();
+	_cancelButton.reset();
 }
 
 
@@ -120,4 +123,28 @@ void NuoDialog::InitDialog()
 
 void NuoDialog::UpdateLayout()
 {
+	assert(_okButton == nullptr && _cancelButton == nullptr);
+
+	PNuoDialog thisDialog = std::dynamic_pointer_cast<NuoDialog>(shared_from_this());
+	_okButton.reset(new NuoButton(thisDialog, IDOK));
+	_cancelButton.reset(new NuoButton(thisDialog, IDCANCEL));
+
+	NuoRect<long> okRect =_okButton->PositionDevice();
+	NuoRect<long> cancelRect = _cancelButton->PositionDevice();
+
+	NuoRect<long> dialogRect = ClientRect();
+	float scaleFactor = DPI();
+	float top = dialogRect.H() - 20 * scaleFactor - okRect.H();
+	float cancelLeft = dialogRect.W() - 20 * scaleFactor - cancelRect.W();
+	float okLeft = cancelLeft - 8 * scaleFactor - okRect.W();
+
+	okRect.SetX((long)okLeft);
+	cancelRect.SetX((long)cancelLeft);
+	okRect.SetY((long)top);
+	cancelRect.SetY((long)top);
+
+	_okButton->SetPositionDevice(okRect, false);
+	_cancelButton->SetPositionDevice(cancelRect, false);
+
+	_okButton->SetFocus();
 }

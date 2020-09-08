@@ -60,13 +60,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     aboutItem->SetAction([window](PNuoMenuItem)
         {
             auto windowPos = window->PositionDevice();
-            double scale = MonitorScale<long>(windowPos.TL());
+
+            NuoPoint<double> windowPosF(windowPos.X(), windowPos.Y());
+            auto scale = MonitorDPI<double>(windowPosF);
 
             auto dialogPos = windowPos;
-            dialogPos.SetX(dialogPos.X() + (long)(60 * scale));
-            dialogPos.SetY(dialogPos.Y() + (long)(60 * scale));
-            dialogPos.SetW((long)(800 * scale));
-            dialogPos.SetH((long)(600 * scale));
+            dialogPos.SetX(dialogPos.X() + (long)(60 * scale.X()));
+            dialogPos.SetY(dialogPos.Y() + (long)(60 * scale.Y()));
+            dialogPos.SetW((long)(300 * scale.X()));
+            dialogPos.SetH((long)(150 * scale.Y()));
 
             PAppAboutDialog dlg = std::make_shared<AppAboutDialog>("About");
             dlg->SetPosition(dialogPos);
