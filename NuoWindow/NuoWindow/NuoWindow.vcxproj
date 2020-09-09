@@ -121,6 +121,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;shcore.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -144,9 +145,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\NuoWindowsFoundation\NuoAppInstance.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoButton.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoControl.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoDialog.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoMonitorScale.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoRect.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h" />
+    <ClInclude Include="AppAboutDialog.h" />
+    <ClInclude Include="FoundationResource.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoApp.h" />
     <ClInclude Include="Resource.h" />
@@ -154,12 +162,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\NuoWindowsFoundation\NuoAppInstance.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoButton.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoControl.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoDialog.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMenu.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoMonitorScale.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoRect.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoStrings.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp" />
+    <ClCompile Include="AppAboutDialog.cpp" />
     <ClCompile Include="NuoApp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="FoundationResource.rc" />
     <ResourceCompile Include="NuoWindow.rc" />
   </ItemGroup>
   <ItemGroup>

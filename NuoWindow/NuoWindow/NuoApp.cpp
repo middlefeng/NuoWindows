@@ -1,11 +1,15 @@
-// NuoWindow.cpp : Defines the entry point for the application.
+﻿// NuoWindow.cpp : Defines the entry point for the application.
 //
 
 #include "framework.h"
 #include "NuoApp.h"
-#include "NuoAppInstance.h";
+#include "NuoAppInstance.h"
 #include "NuoWindow.h"
+#include "NuoButton.h"
 #include "NuoMenu.h"
+#include "NuoMonitorScale.h"
+
+#include "AppAboutDialog.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -22,11 +26,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     PNuoWindow window = std::make_shared<NuoWindow>("  Nuo Window");
 
     PNuoMenuBar menu = std::make_shared<NuoMenuBar>();
+    
     PNuoMenu fileMenu = std::make_shared<NuoMenu>("  &File ");
     PNuoMenuItem exitItem = std::make_shared<NuoMenuItem>(IDM_EXIT, "E&xit");
     fileMenu->AppenMenuItem(exitItem);
     fileMenu->Update();
+
+    PNuoMenu aboutMenu = std::make_shared<NuoMenu>(" &About ");
+    PNuoMenuItem aboutItem = std::make_shared<NuoMenuItem>(IDM_ABOUT, "About");
+    aboutMenu->AppenMenuItem(aboutItem);
+    aboutMenu->Update();
+
     menu->AppendMenu(fileMenu);
+    menu->AppendMenu(aboutMenu);
     menu->Update();
     window->SetMenu(menu);
 
@@ -44,6 +56,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             if (aWindow)
                 aWindow->Destroy();
+        });
+    aboutItem->SetAction([window](PNuoMenuItem)
+        {
+            auto windowPos = window->PositionDevice();
+
+            NuoPoint<double> windowPosF(windowPos.X(), windowPos.Y());
+            auto scale = MonitorDPI<double>(windowPosF);
+
+            auto dialogPos = windowPos;
+            dialogPos.SetX(dialogPos.X() + (long)(60 * scale.X()));
+            dialogPos.SetY(dialogPos.Y() + (long)(60 * scale.Y()));
+            dialogPos.SetW((long)(300 * scale.X()));
+            dialogPos.SetH((long)(150 * scale.Y()));
+
+            PAppAboutDialog dlg = std::make_shared<AppAboutDialog>("About");
+            dlg->SetPosition(dialogPos);
+            dlg->DoModal(window);
         });
 
     window->SetIcon(IDI_NUOWINDOW);

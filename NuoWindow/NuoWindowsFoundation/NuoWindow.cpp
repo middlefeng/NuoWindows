@@ -4,7 +4,8 @@
 #include "NuoStrings.h"
 #include "NuoMenu.h"
 
-#include <Windows.h>
+#include <windows.h>
+#include <shellscalingapi.h>
 
 #include "resource.h"
 
@@ -13,7 +14,7 @@ static wchar_t kClassName[100];// = L"NuoWindowClass";
 
 
 
-static const int kWindowPtr = GWLP_USERDATA;
+extern const int kWindowPtr = GWLP_USERDATA;
 
 
 
@@ -47,6 +48,20 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         }
         break;
     }
+    case WM_DPICHANGED:
+    {
+        // Resize the window
+        auto lprcNewScale = reinterpret_cast<RECT*>(lParam);
+        NuoRect<long> newPos(lprcNewScale->left, lprcNewScale->top,
+                             lprcNewScale->right - lprcNewScale->left,
+                             lprcNewScale->bottom - lprcNewScale->top);
+
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        if (window)
+            window->SetPositionDevice(newPos, false);
+
+        break;
+    }
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -55,8 +70,14 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 }
 
 
+NuoWindow::NuoWindow()
+    : _hWnd(0)
+{
+}
+
+
 NuoWindow::NuoWindow(const std::string& title)
-    : _title(title)
+    : _title(title), _hWnd(0)
 {
     std::wstring wtitle = StringToUTF16(title);
     HINSTANCE hInstance = NuoAppInstance::GetInstance()->Instance();
@@ -103,6 +124,61 @@ void NuoWindow::SetMenu(const PNuoMenuBar& menu)
 }
 
 
+HWND NuoWindow::Handle() const
+{
+    return _hWnd;
+}
+
+
+NuoRect<long> NuoWindow::PositionDevice()
+{
+    RECT rect;
+
+    GetWindowRect(_hWnd, &rect);
+    return NuoRect<long>(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+}
+
+
+NuoRect<long> NuoWindow::ClientRect()
+{
+    RECT rect;
+
+    GetClientRect(_hWnd, &rect);
+    return NuoRect<long>(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+}
+
+
+float NuoWindow::DPI()
+{
+    UINT scale = GetDpiForWindow(_hWnd);
+
+    return (double)scale / 100.0;
+}
+
+
+void NuoWindow::SetPositionDevice(const NuoRect<long>& pos, bool activate)
+{
+    UINT flag = 0;
+    if (!activate)
+        flag = SWP_NOZORDER | SWP_NOACTIVATE;
+
+    SetWindowPos(_hWnd, HWND_NOTOPMOST, pos.X(), pos.Y(), pos.W(), pos.H(), flag);
+}
+
+
+NuoFont NuoWindow::Font()
+{
+    HFONT hFont = (HFONT)SendMessage(_hWnd, WM_GETFONT, 0, 0);
+    return NuoFont(hFont);
+}
+
+
+void NuoWindow::SetFont(const NuoFont& font)
+{
+    SendMessage(_hWnd, WM_SETFONT, (LPARAM)font.Handle(), TRUE);
+}
+
+
 bool NuoWindow::OnCommand(int id)
 {
     bool processed = false;
@@ -114,8 +190,19 @@ bool NuoWindow::OnCommand(int id)
 }
 
 
+void NuoWindow::Detach()
+{
+    _hWnd = 0;
+}
+
+
 void NuoWindow::Destroy()
 {
+    for (auto child : _children)
+        child->Detach();
+
+    _children.clear();
+
     ::DestroyWindow(_hWnd);
     _hWnd = 0;
 }
@@ -131,6 +218,24 @@ void NuoWindow::OnDestroy()
 void NuoWindow::SetOnDestroy(SimpleFunc func)
 {
     _onDestroy = func;
+}
+
+
+void NuoWindow::Add(const PNuoWindow& child)
+{
+    _children.insert(child);
+}
+
+
+NuoFont::NuoFont(HFONT font)
+    : _hFont(font)
+{
+}
+
+
+HFONT NuoFont::Handle() const
+{
+    return _hFont;
 }
 
 
