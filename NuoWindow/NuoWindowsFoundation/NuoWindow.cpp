@@ -102,6 +102,12 @@ void NuoWindow::Show()
 }
 
 
+void NuoWindow::Hide()
+{
+    ::ShowWindow(_hWnd, SW_HIDE);
+}
+
+
 void NuoWindow::Update()
 {
     ::UpdateWindow(_hWnd);

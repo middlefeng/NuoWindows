@@ -15,14 +15,23 @@ AppAboutDialog::~AppAboutDialog()
 
 void AppAboutDialog::InitDialog()
 {
-	NuoRect<long> pos(50, 50, 188, 153);
+	NuoDialog::InitDialog();
 
-	_button = std::make_shared<NuoButton>(shared_from_this(), "Cancel");
-	_button->Init();
-	_button->SetPositionDevice(pos, false);
+	float dpi = DPI();
+	NuoRect<long> pos(20 * dpi, 20 * dpi, 98 * dpi, 15 * dpi);
 
-	NuoFont font = Font();
-	_button->SetFont(font);
+	_label = std::make_shared<NuoLabel>(shared_from_this());
+	_label->Init();
+	_label->SetText("Nuo Window");
+	_label->SetPositionDevice(pos, false);
+
+	pos.SetY(pos.Y() + pos.H() + 6 * dpi);
+	_labelCopyright = std::make_shared<NuoLabel>(shared_from_this());
+	_labelCopyright->Init();
+	_labelCopyright->SetText("Copyright (c) 2020");
+	_labelCopyright->SetPositionDevice(pos, false);
+
+	SetShowCancel(false);
 }
 
 void AppAboutDialog::UpdateLayout()

@@ -3,12 +3,14 @@
 
 #include "NuoDialog.h"
 #include "NuoButton.h"
+#include "NuoLabel.h"
 
 
 class AppAboutDialog : public NuoDialog
 {
 
-	PNuoButton _button;
+	PNuoLabel _label;
+	PNuoLabel _labelCopyright;
 
 public:
 

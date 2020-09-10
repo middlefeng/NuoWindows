@@ -63,6 +63,9 @@
     <ClInclude Include="AppAboutDialog.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoLabel.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="AppAboutDialog.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NuoWindowsFoundation\NuoLabel.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -60,6 +60,7 @@ public:
 	HWND Handle() const;
 
 	void Show();
+	void Hide();
 	void Update();
 	void SetIcon(const int icon);
 	void SetMenu(const PNuoMenuBar& menu);

@@ -49,7 +49,7 @@ INT_PTR CALLBACK NuoDialogProc::DialogProc(HWND hDlg, UINT message, WPARAM wPara
 
 
 NuoDialog::NuoDialog(const std::string& title)
-	: _x(0), _y(0), _cx(0), _cy(0)
+	: _x(0), _y(0), _cx(0), _cy(0), _showCancel(true)
 {
 	_title = title;
 	_hWnd = 0;
@@ -67,6 +67,12 @@ void NuoDialog::SetPosition(long x, long y, long cx, long cy)
 	_x = x; _y = y;
 	_cx = cx;
 	_cy = cy;
+}
+
+
+void NuoDialog::SetShowCancel(bool show)
+{
+	_showCancel = show;
 }
 
 
@@ -129,6 +135,9 @@ void NuoDialog::UpdateLayout()
 	_okButton.reset(new NuoButton(thisDialog, IDOK));
 	_cancelButton.reset(new NuoButton(thisDialog, IDCANCEL));
 
+	if (!_showCancel)
+		_cancelButton->Hide();
+
 	NuoRect<long> okRect =_okButton->PositionDevice();
 	NuoRect<long> cancelRect = _cancelButton->PositionDevice();
 
@@ -136,7 +145,7 @@ void NuoDialog::UpdateLayout()
 	float scaleFactor = DPI();
 	float top = dialogRect.H() - 20 * scaleFactor - okRect.H();
 	float cancelLeft = dialogRect.W() - 20 * scaleFactor - cancelRect.W();
-	float okLeft = cancelLeft - 8 * scaleFactor - okRect.W();
+	float okLeft = _showCancel ? cancelLeft - 8 * scaleFactor - okRect.W() : cancelLeft;
 
 	okRect.SetX((long)okLeft);
 	cancelRect.SetX((long)cancelLeft);
@@ -147,4 +156,8 @@ void NuoDialog::UpdateLayout()
 	_cancelButton->SetPositionDevice(cancelRect, false);
 
 	_okButton->SetFocus();
+
+	auto font = Font();
+	for (PNuoWindow child : _children)
+		child->SetFont(font);
 }

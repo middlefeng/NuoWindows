@@ -10,8 +10,8 @@ template <class T>
 NuoPoint<T> MonitorDPI(const NuoPoint<T>& point)
 {
 	POINT pt;
-	pt.x = point.X();
-	pt.y = point.Y();
+	pt.x = (LONG)point.X();
+	pt.y = (LONG)point.Y();
 
 	UINT dpiX, dpiY;
 	HMONITOR monitor = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);

@@ -20,6 +20,8 @@ class NuoDialog : public NuoWindow
 	std::shared_ptr<NuoButton> _okButton;
 	std::shared_ptr<NuoButton> _cancelButton;
 
+	bool _showCancel;
+
 public:
 
 	NuoDialog(const std::string& title);
@@ -30,6 +32,8 @@ public:
 
 	virtual void InitDialog();
 	virtual void UpdateLayout();
+
+	void SetShowCancel(bool show);
 
 	friend NuoDialogProc;
 
