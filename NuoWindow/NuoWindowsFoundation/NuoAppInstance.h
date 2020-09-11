@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include <string>
 
 class NuoAppInstance
 {
@@ -15,6 +16,7 @@ public:
 	static NuoAppInstance* GetInstance();
 
 	HINSTANCE Instance();
+	std::string ModulePath();
 	int CommandShow();
 	static void Exit();
 };

@@ -121,7 +121,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;shcore.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;shcore.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -148,6 +148,7 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoButton.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoControl.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoDialog.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoImage.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoLabel.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMonitorScale.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="..\NuoWindowsFoundation\NuoButton.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoControl.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoDialog.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoImage.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoLabel.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMenu.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMonitorScale.cpp" />
