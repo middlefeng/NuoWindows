@@ -3,6 +3,7 @@
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
 #include "NuoMenu.h"
+#include "NuoImage.h"
 
 #include <windows.h>
 #include <shellscalingapi.h>
@@ -114,14 +115,6 @@ void NuoWindow::Update()
 }
 
 
-void NuoWindow::SetIcon(const int icon)
-{
-    HICON hIcon = LoadIcon(NuoAppInstance::GetInstance()->Instance(),
-                           MAKEINTRESOURCE(icon));
-    SendMessage(_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
-}
-
-
 void NuoWindow::SetMenu(const PNuoMenuBar& menu)
 {
     _menu = menu;
@@ -182,6 +175,21 @@ NuoFont NuoWindow::Font()
 void NuoWindow::SetFont(const NuoFont& font)
 {
     SendMessage(_hWnd, WM_SETFONT, (LPARAM)font.Handle(), TRUE);
+}
+
+
+void NuoWindow::SetIcon(const PNuoIcon& icon)
+{
+    LPARAM lParam = (LPARAM)icon->Handle();
+
+    SendMessage(_hWnd, WM_SETICON, ICON_SMALL, lParam);
+    SendMessage(_hWnd, WM_SETICON, ICON_BIG, lParam);
+
+    HWND owner = GetWindow(_hWnd, GW_OWNER);
+    SendMessage(owner, WM_SETICON, ICON_SMALL, lParam);
+    SendMessage(owner, WM_SETICON, ICON_BIG, lParam);
+
+    _icon = icon;
 }
 
 

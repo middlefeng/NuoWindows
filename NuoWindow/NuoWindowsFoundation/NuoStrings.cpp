@@ -20,7 +20,7 @@ std::wstring StringToUTF16(const std::string& s)
 
 std::string StringToUTF8(const std::wstring& s)
 {
-	int size = WideCharToMultiByte(CP_UTF8, 0, s.c_str(), -1, nullptr, -1, nullptr, nullptr);
+	int size = WideCharToMultiByte(CP_UTF8, 0, s.c_str(), -1, nullptr, 0, nullptr, nullptr);
 	char* result = new char[size];
 
 	WideCharToMultiByte(CP_UTF8, 0, s.c_str(), -1, result, size, nullptr, nullptr);
@@ -29,4 +29,10 @@ std::string StringToUTF8(const std::wstring& s)
 	delete[] result;
 
 	return resultStr;
+}
+
+std::string RemoveLastPathComponent(const std::string& s)
+{
+	size_t delimitor = s.find_last_of("\\");
+	return s.substr(0, delimitor);
 }

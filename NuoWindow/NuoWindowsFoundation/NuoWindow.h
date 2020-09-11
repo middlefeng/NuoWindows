@@ -22,6 +22,9 @@ typedef std::shared_ptr<NuoMenuBar> PNuoMenuBar;
 class NuoWindow;
 typedef std::shared_ptr<NuoWindow> PNuoWindow;
 
+class NuoIcon;
+typedef std::shared_ptr<NuoIcon> PNuoIcon;
+
 
 class NuoFont
 {
@@ -45,6 +48,7 @@ protected:
 	SimpleFunc _onDestroy;
 
 	std::set<PNuoWindow> _children;
+	PNuoIcon _icon;
 
 public:
 
@@ -62,9 +66,9 @@ public:
 	void Show();
 	void Hide();
 	void Update();
-	void SetIcon(const int icon);
+	
 	void SetMenu(const PNuoMenuBar& menu);
-
+	void SetIcon(const PNuoIcon& icon);
 	virtual NuoRect<long> PositionDevice();
 	void SetPositionDevice(const NuoRect<long>& pos, bool activate);
 	NuoRect<long> ClientRect();

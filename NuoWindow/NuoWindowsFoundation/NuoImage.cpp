@@ -4,6 +4,7 @@
 
 #include <windows.h>
 #include <wincodec.h>
+#include <gdiplus.h>
 #include <sys/stat.h>
 #include <stdio.h>
 
@@ -23,12 +24,22 @@ static IStream* CreateStreamOnFile(const std::string path)
 
 	IStream* iStream = 0;
 	HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, fileState.st_size);
+    void* pGlobal = GlobalLock(hGlobal);
+    fread(pGlobal, fileState.st_size, 1, file);
+    GlobalUnlock(hGlobal);
+
+    fclose(file);
+
 	HRESULT result = CreateStreamOnHGlobal(hGlobal, true, &iStream);
-	if (!result)
+	if (result)
 	{
 		GlobalFree(hGlobal);
 		return 0;
 	}
+
+    Gdiplus::Bitmap bit(iStream);
+    HICON icon = 0;
+    auto hr = bit.GetHICON(&icon);
 
 	return iStream;
 }
@@ -136,6 +147,22 @@ static HBITMAP CreateHBITMAP(IWICBitmapSource* ipBitmap)
 }
 
 
+NuoImage::NuoImage()
+    : _hBitmap(0),
+      _iStream(0)
+{
+}
+
+
+NuoImage::~NuoImage()
+{
+    if (_hBitmap)
+        DeleteObject(_hBitmap);
+    if (_iStream)
+        _iStream->Release();
+}
+
+
 void NuoImage::Load(const std::string& path)
 {
     IStream* iStream = CreateStreamOnFile(path);
@@ -152,5 +179,37 @@ void NuoImage::Load(const std::string& path)
         _hBitmap = CreateHBITMAP(source);
     }
     while (0);
+
+    _iStream = iStream;
 }
 
+
+PNuoIcon NuoImage::Icon()
+{
+    Gdiplus::Bitmap gdiBitmap(_iStream);
+    HICON icon = 0;
+    HRESULT hr = gdiBitmap.GetHICON(&icon);
+
+    PNuoIcon result(new NuoIcon(icon));
+    return result;
+}
+
+
+NuoIcon::NuoIcon(HICON icon)
+    : _hIcon(icon)
+{
+}
+
+
+HICON NuoIcon::Handle() const
+{
+    return _hIcon;
+}
+
+
+
+NuoIcon::~NuoIcon()
+{
+    if (_hIcon)
+        DestroyIcon(_hIcon);
+}

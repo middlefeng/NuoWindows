@@ -8,6 +8,8 @@
 #include "NuoButton.h"
 #include "NuoMenu.h"
 #include "NuoMonitorScale.h"
+#include "NuoImage.h"
+#include "NuoStrings.h"
 
 #include "AppAboutDialog.h"
 
@@ -22,6 +24,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     NuoAppInstance::Init(hInstance, nCmdShow);
     NuoWindow::RegisterClass();
+
+    std::string appPath = NuoAppInstance::GetInstance()->ModulePath();
+    appPath = RemoveLastPathComponent(appPath);
+    std::string iconPath = appPath + "\\Nuclear.png";
+
+    NuoImage image;
+    image.Load(iconPath);
+    PNuoIcon icon = image.Icon();
 
     PNuoWindow window = std::make_shared<NuoWindow>("  Nuo Window");
 
@@ -75,9 +85,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             dlg->DoModal(window);
         });
 
-    window->SetIcon(IDI_NUOWINDOW);
     window->Show();
     window->Update();
+
+    window->SetIcon(icon);
+    icon.reset();
 
     MSG msg;
 
