@@ -8,10 +8,13 @@
 class NuoIcon;
 typedef std::shared_ptr<NuoIcon> PNuoIcon;
 
+class NuoStream;
+typedef std::shared_ptr<NuoStream> PNuoStream;
+
 class NuoImage : public std::enable_shared_from_this<NuoImage>
 {
 	HBITMAP _hBitmap;
-	IStream* _iStream;
+	PNuoStream _iStream;
 
 public:
 

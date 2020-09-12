@@ -1,6 +1,7 @@
 
 #include "NuoImage.h"
 #include "NuoStrings.h"
+#include "NuoFile.h"
 
 #include <windows.h>
 #include <wincodec.h>
@@ -11,38 +12,6 @@
 
 // code on https://faithlife.codes/blog/2008/09/displaying_a_splash_screen_with_c_part_i/
 
-
-static IStream* CreateStreamOnFile(const std::string path)
-{
-	std::wstring wpath = StringToUTF16(path);
-
-	FILE* file = 0;
-	_wfopen_s(&file, wpath.c_str(), L"rb");
-
-	struct _stat fileState;
-	_wstat(wpath.c_str(), &fileState);
-
-	IStream* iStream = 0;
-	HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, fileState.st_size);
-    void* pGlobal = GlobalLock(hGlobal);
-    fread(pGlobal, fileState.st_size, 1, file);
-    GlobalUnlock(hGlobal);
-
-    fclose(file);
-
-	HRESULT result = CreateStreamOnHGlobal(hGlobal, true, &iStream);
-	if (result)
-	{
-		GlobalFree(hGlobal);
-		return 0;
-	}
-
-    Gdiplus::Bitmap bit(iStream);
-    HICON icon = 0;
-    auto hr = bit.GetHICON(&icon);
-
-	return iStream;
-}
 
 
 static IWICBitmapSource* LoadBitmapFromStream(IStream* ipImageStream)
@@ -158,21 +127,20 @@ NuoImage::~NuoImage()
 {
     if (_hBitmap)
         DeleteObject(_hBitmap);
-    if (_iStream)
-        _iStream->Release();
 }
 
 
 void NuoImage::Load(const std::string& path)
 {
-    IStream* iStream = CreateStreamOnFile(path);
+    NuoFile imageFile(path);
+    PNuoStream stream = imageFile.Stream();
 
     do
     {
-        if (!iStream)
+        if (!stream)
             break;
 
-        auto source = LoadBitmapFromStream(iStream);
+        auto source = LoadBitmapFromStream(*stream);
         if (!source)
             break;
 
@@ -180,13 +148,16 @@ void NuoImage::Load(const std::string& path)
     }
     while (0);
 
-    _iStream = iStream;
+    _iStream = stream;
 }
 
 
 PNuoIcon NuoImage::Icon()
 {
-    Gdiplus::Bitmap gdiBitmap(_iStream);
+    if (!_iStream)
+        return nullptr;
+
+    Gdiplus::Bitmap gdiBitmap(*_iStream);
     HICON icon = 0;
     HRESULT hr = gdiBitmap.GetHICON(&icon);
 

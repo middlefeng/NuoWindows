@@ -148,6 +148,7 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoButton.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoControl.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoDialog.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoFile.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoImage.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoLabel.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="..\NuoWindowsFoundation\NuoButton.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoControl.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoDialog.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoFile.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoImage.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoLabel.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMenu.cpp" />
