@@ -33,6 +33,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     image.Load(iconPath);
     PNuoIcon icon = image.Icon();
 
+    std::string icoFilePath = appPath + "\\Nuclear.ico";
+    icon->Save(icoFilePath);
+
     PNuoWindow window = std::make_shared<NuoWindow>("  Nuo Window");
 
     PNuoMenuBar menu = std::make_shared<NuoMenuBar>();

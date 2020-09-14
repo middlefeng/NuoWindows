@@ -27,6 +27,7 @@ void NuoAppInstance::Init(HINSTANCE hInstance, int cmdShow)
 
 	SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 	CoInitializeEx(0, COINIT_MULTITHREADED);
+	OleInitialize(0);
 
 	ULONG_PTR token;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;

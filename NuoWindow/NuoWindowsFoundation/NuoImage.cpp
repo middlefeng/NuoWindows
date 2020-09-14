@@ -5,9 +5,11 @@
 
 #include <windows.h>
 #include <wincodec.h>
+#include <OleCtl.h>
 #include <gdiplus.h>
 #include <sys/stat.h>
 #include <stdio.h>
+#include <cassert>
 
 
 // code on https://faithlife.codes/blog/2008/09/displaying_a_splash_screen_with_c_part_i/
@@ -133,7 +135,7 @@ NuoImage::~NuoImage()
 void NuoImage::Load(const std::string& path)
 {
     NuoFile imageFile(path);
-    PNuoStream stream = imageFile.Stream();
+    PNuoReadStream stream = imageFile.ReadStream();
 
     do
     {
@@ -166,6 +168,187 @@ PNuoIcon NuoImage::Icon()
 }
 
 
+// code of saving ico file
+// https://stackoverflow.com/questions/2289894/how-can-i-save-hicon-to-an-ico-file
+
+struct ICONHEADER
+{
+    WORD idReserved; // must be 0
+    WORD idType; // 1 = ICON, 2 = CURSOR
+    WORD idCount; // number of images (and ICONDIRs)
+
+    // ICONDIR [1...n]
+    // ICONIMAGE [1...n]
+};
+
+struct ICONDIR
+{
+    BYTE bWidth;
+    BYTE bHeight;
+    BYTE bColorCount;
+    BYTE bReserved;
+    WORD wPlanes; // for cursors, this field = wXHotSpot
+    WORD wBitCount; // for cursors, this field = wYHotSpot
+    DWORD dwBytesInRes;
+    DWORD dwImageOffset; // file-offset to the start of ICONIMAGE
+
+};
+
+
+static void WriteIconHeader(NuoFile& file)
+{
+    ICONHEADER iconheader;
+    DWORD nWritten;
+
+    // Setup the icon header
+    iconheader.idReserved = 0; // Must be 0
+    iconheader.idType = 1; // Type 1 = ICON (type 2 = CURSOR)
+    iconheader.idCount = 1; // number of ICONDIRs
+
+    // Write the header to disk
+    file.Write(&iconheader, sizeof(iconheader));
+}
+
+static bool GetIconBitmapInfo(HICON hIcon, ICONINFO* pIconInfo, BITMAP* pbmpColor, BITMAP* pbmpMask)
+{
+    if (!GetIconInfo(hIcon, pIconInfo))
+        return false;
+
+    if (!GetObject(pIconInfo->hbmColor, sizeof(BITMAP), pbmpColor))
+        return false;
+
+    if (!GetObject(pIconInfo->hbmMask, sizeof(BITMAP), pbmpMask))
+        return false;
+
+    return true;
+}
+
+
+static UINT NumBitmapBytes(BITMAP* pBitmap)
+{
+    int nWidthBytes = pBitmap->bmWidthBytes;
+
+    // bitmap scanlines MUST be a multiple of 4 bytes when stored
+    // inside a bitmap resource, so round up if necessary
+    if (nWidthBytes & 3)
+        nWidthBytes = (nWidthBytes + 4) & ~3;
+
+    return nWidthBytes * pBitmap->bmHeight;
+}
+
+
+static void WriteIconImageHeader(NuoFile& file, BITMAP* pbmpColor, BITMAP* pbmpMask)
+{
+    BITMAPINFOHEADER biHeader;
+    DWORD nWritten;
+    UINT nImageBytes;
+
+    // calculate how much space the COLOR and MASK bitmaps take
+    nImageBytes = NumBitmapBytes(pbmpColor) + NumBitmapBytes(pbmpMask);
+
+    // write the ICONIMAGE to disk (first the BITMAPINFOHEADER)
+    ZeroMemory(&biHeader, sizeof(biHeader));
+
+    // Fill in only those fields that are necessary
+    biHeader.biSize = sizeof(biHeader);
+    biHeader.biWidth = pbmpColor->bmWidth;
+    biHeader.biHeight = pbmpColor->bmHeight * 2; // height of color+mono
+    biHeader.biPlanes = pbmpColor->bmPlanes;
+    biHeader.biBitCount = pbmpColor->bmBitsPixel;
+    biHeader.biSizeImage = nImageBytes;
+
+    // write the BITMAPINFOHEADER
+    file.Write(&biHeader, sizeof(biHeader));
+
+    // write the RGBQUAD color table (for 16 and 256 colour icons)
+    if (pbmpColor->bmBitsPixel == 2 || pbmpColor->bmBitsPixel == 8)
+    {
+        assert(false);
+    }
+}
+
+
+static UINT WriteIconData(NuoFile& file, HBITMAP hBitmap)
+{
+    BITMAP bmp;
+    int i;
+    BYTE* pIconData;
+
+    UINT nBitmapBytes;
+    DWORD nWritten;
+
+    GetObject(hBitmap, sizeof(BITMAP), &bmp);
+
+    nBitmapBytes = NumBitmapBytes(&bmp);
+    pIconData = (BYTE*)malloc(nBitmapBytes);
+
+    GetBitmapBits(hBitmap, nBitmapBytes, pIconData);
+
+    // bitmaps are stored inverted (vertically) when on disk..
+    // so write out each line in turn, starting at the bottom + working
+    // towards the top of the bitmap. Also, the bitmaps are stored in packed
+    // in memory - scanlines are NOT 32bit aligned, just 1-after-the-other
+    for (i = bmp.bmHeight - 1; i >= 0; i--)
+    {
+        // Write the bitmap scanline
+        file.Write(
+            pIconData + (i * bmp.bmWidthBytes), // calculate offset to the line
+            bmp.bmWidthBytes /* 1 line of BYTES */ );
+
+        // extend to a 32bit boundary (in the file) if necessary
+        if (bmp.bmWidthBytes & 3)
+        {
+            size_t paddingSize = 4 - bmp.bmWidthBytes;
+            DWORD padding = 0;
+            file.Write(&padding, paddingSize);
+        }
+    }
+
+    free(pIconData);
+
+    return nBitmapBytes;
+}
+
+
+static void WriteIconDirectoryEntry(NuoFile& file, int nIdx, HICON hIcon, UINT nImageOffset)
+{
+    ICONINFO iconInfo;
+    ICONDIR iconDir;
+
+    BITMAP bmpColor;
+    BITMAP bmpMask;
+
+    UINT nColorCount;
+    UINT nImageBytes;
+
+    GetIconBitmapInfo(hIcon, &iconInfo, &bmpColor, &bmpMask);
+
+    nImageBytes = NumBitmapBytes(&bmpColor) + NumBitmapBytes(&bmpMask);
+
+    if (bmpColor.bmBitsPixel >= 8)
+        nColorCount = 0;
+    else
+        nColorCount = 1 << (bmpColor.bmBitsPixel * bmpColor.bmPlanes);
+
+    // Create the ICONDIR structure
+    iconDir.bWidth = (BYTE)bmpColor.bmWidth;
+    iconDir.bHeight = (BYTE)bmpColor.bmHeight;
+    iconDir.bColorCount = nColorCount;
+    iconDir.bReserved = 0;
+    iconDir.wPlanes = bmpColor.bmPlanes;
+    iconDir.wBitCount = bmpColor.bmBitsPixel;
+    iconDir.dwBytesInRes = sizeof(BITMAPINFOHEADER) + nImageBytes;
+    iconDir.dwImageOffset = nImageOffset;
+
+    // Write to disk
+    file.Write(&iconDir, sizeof(iconDir));
+
+    // Free resources
+    DeleteObject(iconInfo.hbmColor);
+    DeleteObject(iconInfo.hbmMask);
+}
+
+
 NuoIcon::NuoIcon(HICON icon)
     : _hIcon(icon)
 {
@@ -175,6 +358,56 @@ NuoIcon::NuoIcon(HICON icon)
 HICON NuoIcon::Handle() const
 {
     return _hIcon;
+}
+
+
+void NuoIcon::Save16(const std::string& path)
+{
+    // Create the IPicture intrface
+    PICTDESC desc = { sizeof(PICTDESC) };
+    desc.picType = PICTYPE_ICON;
+    desc.icon.hicon = _hIcon;
+
+    IPicture* pPicture = 0;
+    HRESULT hr = OleCreatePictureIndirect(&desc, IID_IPicture, FALSE, (void**)&pPicture);
+    if (FAILED(hr))
+        return;
+
+    NuoFile file(path);
+    PNuoWriteStream wStream = std::make_shared<NuoWriteStream>();
+
+    LONG cbSize = 0;
+    pPicture->SaveAsFile(*wStream, true, &cbSize);
+
+    file.SaveStream(wStream, cbSize);
+}
+
+
+void NuoIcon::Save(const std::string& path)
+{
+    NuoFile file(path);
+
+    int imageOffset = 0;
+
+    WriteIconHeader(file);
+
+    imageOffset = sizeof(ICONHEADER) + sizeof(ICONDIR);
+    file.Seek(imageOffset);
+
+    ICONINFO iconInfo;
+    BITMAP bmpColor, bmpMask;
+
+    GetIconBitmapInfo(_hIcon, &iconInfo, &bmpColor, &bmpMask);
+    WriteIconImageHeader(file, &bmpColor, &bmpMask);
+
+    WriteIconData(file, iconInfo.hbmColor);
+    WriteIconData(file, iconInfo.hbmMask);
+
+    DeleteObject(iconInfo.hbmColor);
+    DeleteObject(iconInfo.hbmMask);
+
+    file.Seek(sizeof(ICONHEADER));
+    WriteIconDirectoryEntry(file, 0, _hIcon, imageOffset);
 }
 
 
