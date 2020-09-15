@@ -282,7 +282,8 @@ static UINT WriteIconData(NuoFile& file, HBITMAP hBitmap)
     nBitmapBytes = NumBitmapBytes(&bmp);
     pIconData = (BYTE*)malloc(nBitmapBytes);
 
-    GetBitmapBits(hBitmap, nBitmapBytes, pIconData);
+    LONG copied = GetBitmapBits(hBitmap, nBitmapBytes, pIconData);
+    assert(copied != 0);
 
     // bitmaps are stored inverted (vertically) when on disk..
     // so write out each line in turn, starting at the bottom + working
@@ -296,9 +297,10 @@ static UINT WriteIconData(NuoFile& file, HBITMAP hBitmap)
             bmp.bmWidthBytes /* 1 line of BYTES */ );
 
         // extend to a 32bit boundary (in the file) if necessary
-        if (bmp.bmWidthBytes & 3)
+        size_t remain = bmp.bmWidthBytes & 3;
+        if (remain)
         {
-            size_t paddingSize = 4 - bmp.bmWidthBytes;
+            size_t paddingSize = 4 - remain;
             DWORD padding = 0;
             file.Write(&padding, paddingSize);
         }
