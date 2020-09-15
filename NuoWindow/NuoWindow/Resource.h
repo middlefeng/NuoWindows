@@ -9,6 +9,8 @@
 #define IDD_ABOUTBOX			103
 #define IDM_ABOUT				104
 #define IDM_EXIT				105
+#define IDM_ICONTOOLS			201
+
 #define IDI_NUOWINDOW			107
 #define IDI_SMALL				108
 #define IDC_NUOWINDOW			109
