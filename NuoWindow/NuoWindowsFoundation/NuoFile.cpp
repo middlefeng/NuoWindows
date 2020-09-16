@@ -1,7 +1,7 @@
 #include "NuoStrings.h"
 
 #include <Windows.h>
-
+#include <cassert>
 
 
 #include "NuoFile.h"
@@ -27,12 +27,16 @@ PNuoStream NuoFile::Stream()
 
 		IStream* iStream = 0;
 		HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, fileState.st_size);
+
+		assert(hGlobal);
 		void* pGlobal = GlobalLock(hGlobal);
+
+		assert(pGlobal);
 		fread(pGlobal, fileState.st_size, 1, file);
 		GlobalUnlock(hGlobal);
 
 		HRESULT result = CreateStreamOnHGlobal(hGlobal, true, &iStream);
-		if (result)
+		if (result != S_OK)
 		{
 			GlobalFree(hGlobal);
 			return 0;

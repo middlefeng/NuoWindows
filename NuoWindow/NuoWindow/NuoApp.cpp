@@ -55,20 +55,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     menu->Update();
     window->SetMenu(menu);
 
-    auto exitFunc = []()
+    PIconWindow iconWindow;
+
+    auto exitFunc = [&iconWindow]()
     {
+        if (iconWindow)
+            iconWindow->Destroy();
+
         NuoAppInstance::Exit();
     };
 
     std::weak_ptr<NuoWindow> weakWindow = window;
 
-    PIconWindow iconWindow;
-    iconTools->SetAction([&iconWindow](PNuoMenuItem)
+    iconTools->SetAction([&iconWindow, weakWindow](PNuoMenuItem)
         {
             if (!iconWindow)
             {
-                iconWindow = std::make_shared<IconWindow>();
+                iconWindow = std::make_shared<IconWindow>(weakWindow.lock());
             }
+
+            iconWindow->SetPositionDevice(iconWindow->PreferredRect(), true);
 
             iconWindow->Show();
             iconWindow->Update();

@@ -5,8 +5,11 @@
 
 class IconWindow : public NuoWindow
 {
+	std::weak_ptr<NuoWindow> _appWindow;
+
 public:
-	IconWindow();
+	IconWindow(const PNuoWindow& appWindow);
+	NuoRect<long> PreferredRect() const;
 };
 
 
