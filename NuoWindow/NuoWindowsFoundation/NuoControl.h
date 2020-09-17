@@ -11,10 +11,20 @@
 #include "NuoWindow.h"
 
 
+enum NuoControlAutoPosition
+{
+	kNuoControl_NoneAuto,
+	kNuoControl_RT,
+	kNuoControl_RB,
+};
+
+
 class NuoControl : public NuoWindow
 {
 
 protected:
+
+	NuoControlAutoPosition _autoPosition;
 
 	std::weak_ptr<NuoWindow> _parent;
 
@@ -25,6 +35,11 @@ public:
 
 	void SetFocus();
 	virtual NuoRect<long> PositionDevice() override;
+
+	void SetAutoPosition(NuoControlAutoPosition autoPos);
+	NuoControlAutoPosition AutoPosition() const;
+
+	virtual NuoRect<long> AutoPositionDevice(float scale, NuoRect<long> parentBound);
 
 };
 

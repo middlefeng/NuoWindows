@@ -75,6 +75,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             }
 
             iconWindow->SetPositionDevice(iconWindow->PreferredRect(), true);
+            iconWindow->Init();
 
             iconWindow->Show();
             iconWindow->Update();
