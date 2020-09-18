@@ -72,7 +72,8 @@ NuoMenu::~NuoMenu()
 
 void NuoMenu::AppenMenuItem(const PNuoMenuItem& item)
 {
-	_items.insert(std::make_pair(item->ID(), item));
+	_items.push_back(item);
+	_itemsMap.insert(std::make_pair(item->ID(), item));
 }
 
 
@@ -84,7 +85,7 @@ void NuoMenu::Update()
 
 	for (auto item : _items)
 	{
-		PNuoMenuItem menuItem = item.second;
+		PNuoMenuItem menuItem = item;
 
 		switch (menuItem->MenuType())
 		{
@@ -120,15 +121,15 @@ HMENU NuoMenu::Handle() const
 
 bool NuoMenu::HasID(int id) const
 {
-	return _items.find(id) != _items.end();
+	return _itemsMap.find(id) != _itemsMap.end();
 }
 
 
 void NuoMenu::DoActionForID(int id)
 {
-	auto item = _items.find(id);
+	auto item = _itemsMap.find(id);
 
-	if (item != _items.end())
+	if (item != _itemsMap.end())
 	{
 		PNuoMenuItem menuItem = item->second;
 		menuItem->DoAction();

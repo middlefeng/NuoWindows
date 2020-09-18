@@ -40,7 +40,9 @@ class NuoMenu
 {
 	HMENU _hMenu;
 
-	std::map<int, PNuoMenuItem> _items;
+	std::vector<PNuoMenuItem> _items;
+	std::map<int, PNuoMenuItem> _itemsMap;
+
 	std::string _title;
 
 public:

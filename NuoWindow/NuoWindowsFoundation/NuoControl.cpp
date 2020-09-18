@@ -3,7 +3,7 @@
 
 
 NuoControl::NuoControl(const std::string& title, const PNuoWindow& parent)
-	: NuoWindow(), _parent(parent)
+	: NuoWindow(), _parent(parent), _autoPosition(kNuoControl_NoneAuto)
 {
 	_title = title;
 }
@@ -17,6 +17,18 @@ NuoControl::~NuoControl()
 void NuoControl::SetFocus()
 {
 	::SetFocus(_hWnd);
+}
+
+
+void NuoControl::SetAutoPosition(NuoControlAutoPosition autoPos)
+{
+	_autoPosition = autoPos;
+}
+
+
+NuoControlAutoPosition NuoControl::AutoPosition() const
+{
+	return _autoPosition;
 }
 
 
@@ -43,3 +55,34 @@ NuoRect<long> NuoControl::PositionDevice()
 
 	return result;
 }
+
+NuoRect<long> NuoControl::AutoPositionDevice(float scale, NuoRect<long> parentBound)
+{
+	static const long margin = (long)(20 * scale);
+
+	NuoRect<long> originalRect = PositionDevice();
+	NuoRect<long> result(0, 0, originalRect.W(), originalRect.H());
+
+	switch (_autoPosition)
+	{
+	case kNuoControl_NoneAuto:
+		break;
+	case kNuoControl_RB:
+	{
+		result.SetX(parentBound.W() - result.W() - margin);
+		result.SetY(parentBound.Y() - result.H() - margin);
+		break;
+	}
+	case kNuoControl_RT:
+	{
+		result.SetX(parentBound.W() - result.W() - margin);
+		result.SetY(margin);
+		break;
+	}
+	default:
+		break;
+	}
+
+	return result;
+}
+

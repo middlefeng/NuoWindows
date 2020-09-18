@@ -26,12 +26,27 @@ class NuoIcon;
 typedef std::shared_ptr<NuoIcon> PNuoIcon;
 
 
-class NuoFont
+class NuoFont : public std::enable_shared_from_this<NuoFont>
 {
 	HFONT _hFont;
 
+	std::string _name;
+	int _weight;
+	bool _isItalic;
+	bool _isLight;
+
+	bool _fontOwner;
+
 public:
 	NuoFont(HFONT _hFont);
+	NuoFont(int weight, const std::string& name);
+	~NuoFont();
+
+	void CreateFont();
+
+	void SetLight(bool b);
+	void SetItalic(bool b);
+
 	HFONT Handle() const;
 };
 
@@ -50,6 +65,8 @@ protected:
 	std::set<PNuoWindow> _children;
 	PNuoIcon _icon;
 
+	std::shared_ptr<NuoFont> _font;
+
 public:
 
 	NuoWindow();
@@ -60,6 +77,7 @@ public:
 
 	virtual void OnDestroy();
 	virtual bool OnCommand(int id);
+	virtual void OnSize(unsigned int x, unsigned int y);
 
 	HWND Handle() const;
 
@@ -74,8 +92,8 @@ public:
 	NuoRect<long> ClientRect();
 	float DPI();
 
-	NuoFont Font();
-	void SetFont(const NuoFont& font);
+	std::shared_ptr<NuoFont> Font();
+	void SetFont(const std::shared_ptr<NuoFont>& font);
 
 	void Detach();
 	void Destroy();

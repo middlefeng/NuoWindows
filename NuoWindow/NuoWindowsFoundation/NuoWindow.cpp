@@ -1,5 +1,7 @@
 
 #include "NuoWindow.h"
+
+#include "NuoControl.h"
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
 #include "NuoMenu.h"
@@ -36,6 +38,15 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
         if (!processed)
             return DefWindowProc(hWnd, message, wParam, lParam);
+
+        break;
+    }
+    case WM_SIZE:
+    {
+        UINT width = LOWORD(lParam);
+        UINT height = HIWORD(lParam);
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        window->OnSize(width, height);
 
         break;
     }
@@ -165,16 +176,18 @@ void NuoWindow::SetPositionDevice(const NuoRect<long>& pos, bool activate)
 }
 
 
-NuoFont NuoWindow::Font()
+std::shared_ptr<NuoFont> NuoWindow::Font()
 {
     HFONT hFont = (HFONT)SendMessage(_hWnd, WM_GETFONT, 0, 0);
-    return NuoFont(hFont);
+    return std::make_shared<NuoFont>(hFont);
 }
 
 
-void NuoWindow::SetFont(const NuoFont& font)
+void NuoWindow::SetFont(const std::shared_ptr<NuoFont>& font)
 {
-    SendMessage(_hWnd, WM_SETFONT, (LPARAM)font.Handle(), TRUE);
+    _font = font;
+
+    SendMessage(_hWnd, WM_SETFONT, (LPARAM)font->Handle(), TRUE);
 }
 
 
@@ -201,6 +214,20 @@ bool NuoWindow::OnCommand(int id)
         processed = _menu->DoAction(id);
 
     return processed;
+}
+
+
+void NuoWindow::OnSize(unsigned int x, unsigned int y)
+{
+    for (PNuoWindow child : _children)
+    {
+        NuoControl* control = dynamic_cast<NuoControl*>(child.get());
+        if (!control)
+            continue;
+
+        NuoRect<long> rect = control->AutoPositionDevice(DPI(), ClientRect());
+        control->SetPositionDevice(rect, false);
+    }
 }
 
 
@@ -242,14 +269,56 @@ void NuoWindow::Add(const PNuoWindow& child)
 
 
 NuoFont::NuoFont(HFONT font)
-    : _hFont(font)
+    : _hFont(font),
+      _fontOwner(false)
 {
+}
+
+
+NuoFont::NuoFont(int weight, const std::string& name)
+    : _weight(weight),
+      _name(name)
+{
+}
+
+NuoFont::~NuoFont()
+{
+    if (_hFont && _fontOwner)
+        DeleteObject(_hFont);
+}
+
+void NuoFont::SetLight(bool b)
+{
+    _isLight = b;
+}
+
+
+void NuoFont::SetItalic(bool b)
+{
+    _isItalic = b;
 }
 
 
 HFONT NuoFont::Handle() const
 {
     return _hFont;
+}
+
+
+void NuoFont::CreateFont()
+{
+    if (_hFont && _fontOwner)
+        DeleteObject(_hFont);
+
+    int flag = 0;
+    if (_isLight)
+        flag = FW_THIN | FW_LIGHT;
+
+    std::wstring wname = StringToUTF16(_name);
+    _hFont = ::CreateFont(_weight, 0, 0, 0, flag /* weight */,
+                          _isItalic /* non-italic */, 0, 0, 0, 0, 0, 0, 0, wname.c_str());
+
+    _fontOwner = true;
 }
 
 
