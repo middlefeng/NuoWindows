@@ -31,7 +31,7 @@ class NuoFont : public std::enable_shared_from_this<NuoFont>
 	HFONT _hFont;
 
 	std::string _name;
-	int _weight;
+	double _weight;
 	bool _isItalic;
 	bool _isLight;
 
@@ -39,10 +39,10 @@ class NuoFont : public std::enable_shared_from_this<NuoFont>
 
 public:
 	NuoFont(HFONT _hFont);
-	NuoFont(int weight, const std::string& name);
+	NuoFont(double weight, const std::string& name);
 	~NuoFont();
 
-	void CreateFont();
+	void CreateFont(float scale);
 
 	void SetLight(bool b);
 	void SetItalic(bool b);

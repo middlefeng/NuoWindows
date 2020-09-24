@@ -20,10 +20,10 @@ void IconWindow::Init()
 	_loadButton->SetAutoPosition(kNuoControl_RT);
 	_loadButton->SetPositionDevice(rect, false);
 
-	auto font = std::make_shared<NuoFont>(29, "MS Shell Dlg");
+	auto font = std::make_shared<NuoFont>(16, "MS Shell Dlg");
 	font->SetItalic(false);
 	font->SetLight(true);
-	font->CreateFont();
+	font->CreateFont(DPI());
 	_loadButton->SetFont(font);
 }
 

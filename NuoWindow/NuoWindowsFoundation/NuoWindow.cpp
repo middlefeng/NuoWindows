@@ -162,7 +162,7 @@ float NuoWindow::DPI()
 {
     UINT scale = GetDpiForWindow(_hWnd);
 
-    return (double)scale / 100.0;
+    return (float)scale / 100.0f;
 }
 
 
@@ -270,14 +270,19 @@ void NuoWindow::Add(const PNuoWindow& child)
 
 NuoFont::NuoFont(HFONT font)
     : _hFont(font),
-      _fontOwner(false)
+      _fontOwner(false),
+      _weight(0.0),
+      _isItalic(false),
+      _isLight(false)
 {
 }
 
 
-NuoFont::NuoFont(int weight, const std::string& name)
+NuoFont::NuoFont(double weight, const std::string& name)
     : _weight(weight),
-      _name(name)
+      _name(name),
+      _isItalic(false),
+      _isLight(false)
 {
 }
 
@@ -305,7 +310,7 @@ HFONT NuoFont::Handle() const
 }
 
 
-void NuoFont::CreateFont()
+void NuoFont::CreateFont(float scale)
 {
     if (_hFont && _fontOwner)
         DeleteObject(_hFont);
@@ -315,7 +320,7 @@ void NuoFont::CreateFont()
         flag = FW_THIN | FW_LIGHT;
 
     std::wstring wname = StringToUTF16(_name);
-    _hFont = ::CreateFont(_weight, 0, 0, 0, flag /* weight */,
+    _hFont = ::CreateFont((int)(_weight * scale), 0, 0, 0, flag /* weight */,
                           _isItalic /* non-italic */, 0, 0, 0, 0, 0, 0, 0, wname.c_str());
 
     _fontOwner = true;
