@@ -253,10 +253,10 @@ void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float ol
         float ratio = newDPI / oldDPI;
 
         NuoRect<long> rect = child->PositionDevice();
-        rect.SetX(rect.X() * ratio);
-        rect.SetY(rect.Y() * ratio);
-        rect.SetW(rect.W() * ratio);
-        rect.SetH(rect.H() * ratio);
+        rect.SetX((long)(rect.X() * ratio));
+        rect.SetY((long)(rect.Y() * ratio));
+        rect.SetW((long)(rect.W() * ratio));
+        rect.SetH((long)(rect.H() * ratio));
 
         NuoControl* control = dynamic_cast<NuoControl*>(child.get());
         if (control)
@@ -319,10 +319,12 @@ NuoFont::NuoFont(HFONT font)
 
 
 NuoFont::NuoFont(double weight, const std::string& name)
-    : _weight(weight),
+    : _hFont(0),
+      _weight(weight),
       _name(name),
       _isItalic(false),
-      _isLight(false)
+      _isLight(false),
+      _fontOwner(true)
 {
 }
 

@@ -59,7 +59,7 @@ protected:
 	HWND _hWnd;
 	PNuoMenuBar _menu;
 	bool _inDPIChange;
-	double _savedDPI;
+	float _savedDPI;
 
 	std::string _title;
 	SimpleFunc _onDestroy;
@@ -94,7 +94,6 @@ public:
 	void SetPositionDevice(const NuoRect<long>& pos, bool activate);
 	NuoRect<long> ClientRect();
 	float DPI() const;
-	float SavedDPI() const;
 
 	std::shared_ptr<NuoFont> Font();
 	void SetFont(const std::shared_ptr<NuoFont>& font);
@@ -106,6 +105,8 @@ public:
 	void Add(const PNuoWindow& child);
 
 private:
+
+	float SavedDPI() const;
 
 	static LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
