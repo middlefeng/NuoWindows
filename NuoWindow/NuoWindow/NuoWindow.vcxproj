@@ -153,6 +153,7 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoLabel.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMonitorScale.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoOpenFileDialog.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoRect.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="..\NuoWindowsFoundation\NuoLabel.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMenu.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMonitorScale.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoOpenFileDialog.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoRect.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoStrings.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp" />

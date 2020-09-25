@@ -2,6 +2,8 @@
 #include "IconWindow.h"
 #include <wingdi.h>
 
+#include "NuoOpenFileDialog.h"
+
 
 IconWindow::IconWindow(const PNuoWindow& appWindow)
 	: NuoWindow("Icon Tools"),
@@ -20,9 +22,12 @@ void IconWindow::Init()
 	_loadButton->SetAutoPosition(kNuoControl_RT);
 	_loadButton->SetPositionDevice(rect, false);
 
-	_loadButton->SetOnCommand([]()
+	_loadButton->SetOnCommand([this]()
 		{
-			
+			NuoOpenFileDialog dlg;
+			dlg.Open(this->shared_from_this());
+
+			std::string result = dlg.FilePath();
 		});
 
 	auto font = std::make_shared<NuoFont>(16, "MS Shell Dlg");
