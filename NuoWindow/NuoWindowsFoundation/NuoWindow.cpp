@@ -222,6 +222,13 @@ bool NuoWindow::OnCommand(int id)
     if (_menu)
         processed = _menu->DoAction(id);
 
+    for (PNuoWindow child : _children)
+    {
+        NuoControl* control = dynamic_cast<NuoControl*>(child.get());
+        if (control && control->ID() == id)
+            control->OnCommand();
+    }
+
     return processed;
 }
 

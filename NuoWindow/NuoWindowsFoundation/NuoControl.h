@@ -19,6 +19,9 @@ enum NuoControlAutoPosition
 };
 
 
+typedef std::function<void()> CommandFunc;
+
+
 class NuoControl : public NuoWindow
 {
 
@@ -27,6 +30,9 @@ protected:
 	NuoControlAutoPosition _autoPosition;
 
 	std::weak_ptr<NuoWindow> _parent;
+	int _id;
+
+	CommandFunc _commandFunc;
 
 public:
 
@@ -39,8 +45,12 @@ public:
 	void SetAutoPosition(NuoControlAutoPosition autoPos);
 	NuoControlAutoPosition AutoPosition() const;
 
+	int ID() const;
+
 	virtual NuoRect<long> AutoPositionDevice(float scale, NuoRect<long> parentBound);
 
+	virtual void OnCommand();
+	virtual void SetOnCommand(const CommandFunc& func);
 };
 
 

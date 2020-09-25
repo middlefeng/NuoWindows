@@ -3,7 +3,8 @@
 
 
 NuoControl::NuoControl(const std::string& title, const PNuoWindow& parent)
-	: NuoWindow(), _parent(parent), _autoPosition(kNuoControl_NoneAuto)
+	: NuoWindow(), _id(-1),
+	  _parent(parent), _autoPosition(kNuoControl_NoneAuto)
 {
 	_title = title;
 }
@@ -11,6 +12,12 @@ NuoControl::NuoControl(const std::string& title, const PNuoWindow& parent)
 
 NuoControl::~NuoControl()
 {
+}
+
+
+int NuoControl::ID() const
+{
+	return _id;
 }
 
 
@@ -86,3 +93,14 @@ NuoRect<long> NuoControl::AutoPositionDevice(float scale, NuoRect<long> parentBo
 	return result;
 }
 
+
+void NuoControl::OnCommand()
+{
+	_commandFunc();
+}
+
+
+void NuoControl::SetOnCommand(const CommandFunc& func)
+{
+	_commandFunc = func;
+}

@@ -16,9 +16,14 @@ void IconWindow::Init()
 	NuoRect<long> rect(0, 0, 120 * scale, 24 * scale);
 
 	_loadButton = std::make_shared<NuoButton>(shared_from_this(), "Load Icon ...");
-	_loadButton->Init();
+	_loadButton->Init(IDB_LOADICON);
 	_loadButton->SetAutoPosition(kNuoControl_RT);
 	_loadButton->SetPositionDevice(rect, false);
+
+	_loadButton->SetOnCommand([]()
+		{
+			
+		});
 
 	auto font = std::make_shared<NuoFont>(16, "MS Shell Dlg");
 	font->SetItalic(false);
