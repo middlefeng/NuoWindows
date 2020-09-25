@@ -58,6 +58,8 @@ protected:
 
 	HWND _hWnd;
 	PNuoMenuBar _menu;
+	bool _inDPIChange;
+	double _savedDPI;
 
 	std::string _title;
 	SimpleFunc _onDestroy;
@@ -78,6 +80,7 @@ public:
 	virtual void OnDestroy();
 	virtual bool OnCommand(int id);
 	virtual void OnSize(unsigned int x, unsigned int y);
+	virtual void OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI);
 
 	HWND Handle() const;
 
@@ -90,7 +93,8 @@ public:
 	virtual NuoRect<long> PositionDevice();
 	void SetPositionDevice(const NuoRect<long>& pos, bool activate);
 	NuoRect<long> ClientRect();
-	float DPI();
+	float DPI() const;
+	float SavedDPI() const;
 
 	std::shared_ptr<NuoFont> Font();
 	void SetFont(const std::shared_ptr<NuoFont>& font);
@@ -100,6 +104,10 @@ public:
 	void SetOnDestroy(SimpleFunc func);
 
 	void Add(const PNuoWindow& child);
+
+private:
+
+	static LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 };
 

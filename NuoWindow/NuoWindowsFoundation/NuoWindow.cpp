@@ -23,7 +23,7 @@ extern const int kWindowPtr = GWLP_USERDATA;
 
 extern LRESULT CALLBACK NuoWindowProc(HWND, UINT, WPARAM, LPARAM);
 
-LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -69,8 +69,10 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
                              lprcNewScale->bottom - lprcNewScale->top);
 
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        float oldDPI = window->SavedDPI();
+        float newDPI = window->DPI();
         if (window)
-            window->SetPositionDevice(newPos, false);
+            window->OnDPIChange(newPos, newDPI, oldDPI);
 
         break;
     }
@@ -83,19 +85,20 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
 
 NuoWindow::NuoWindow()
-    : _hWnd(0)
+    : _hWnd(0), _inDPIChange(false), _savedDPI(1.0)
 {
 }
 
 
 NuoWindow::NuoWindow(const std::string& title)
-    : _title(title), _hWnd(0)
+    : _title(title), _hWnd(0), _inDPIChange(false), _savedDPI(1.0)
 {
     std::wstring wtitle = StringToUTF16(title);
     HINSTANCE hInstance = NuoAppInstance::GetInstance()->Instance();
 
     _hWnd = CreateWindowW(kClassName, wtitle.c_str(), WS_OVERLAPPEDWINDOW,
                           CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+    _savedDPI = DPI();
 
     SetWindowLongPtr(_hWnd, kWindowPtr, (LONG_PTR)this);
 }
@@ -158,11 +161,17 @@ NuoRect<long> NuoWindow::ClientRect()
 }
 
 
-float NuoWindow::DPI()
+float NuoWindow::DPI() const
 {
     UINT scale = GetDpiForWindow(_hWnd);
 
     return (float)scale / 100.0f;
+}
+
+
+float NuoWindow::SavedDPI() const
+{
+    return _savedDPI;
 }
 
 
@@ -228,6 +237,37 @@ void NuoWindow::OnSize(unsigned int x, unsigned int y)
         NuoRect<long> rect = control->AutoPositionDevice(DPI(), ClientRect());
         control->SetPositionDevice(rect, false);
     }
+}
+
+
+void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI)
+{
+    if (_font)
+    {
+        _font->CreateFont(newDPI);
+        SendMessage(_hWnd, WM_SETFONT, (LPARAM)_font->Handle(), TRUE);
+    }
+
+    for (PNuoWindow child : _children)
+    {
+        float ratio = newDPI / oldDPI;
+
+        NuoRect<long> rect = child->PositionDevice();
+        rect.SetX(rect.X() * ratio);
+        rect.SetY(rect.Y() * ratio);
+        rect.SetW(rect.W() * ratio);
+        rect.SetH(rect.H() * ratio);
+
+        NuoControl* control = dynamic_cast<NuoControl*>(child.get());
+        if (control)
+            control->OnDPIChange(newRect, newDPI, oldDPI);
+
+        child->SetPositionDevice(rect, false);
+    }
+
+    SetPositionDevice(newRect, false);
+
+    _savedDPI = newDPI;
 }
 
 

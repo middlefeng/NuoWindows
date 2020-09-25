@@ -72,10 +72,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             if (!iconWindow)
             {
                 iconWindow = std::make_shared<IconWindow>(weakWindow.lock());
+                iconWindow->SetPositionDevice(iconWindow->PreferredRect(), true);
+                iconWindow->Init();
             }
-
-            iconWindow->SetPositionDevice(iconWindow->PreferredRect(), true);
-            iconWindow->Init();
 
             iconWindow->Show();
             iconWindow->Update();
