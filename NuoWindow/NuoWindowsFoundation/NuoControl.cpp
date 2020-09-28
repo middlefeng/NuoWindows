@@ -94,6 +94,20 @@ NuoRect<long> NuoControl::AutoPositionDevice(float scale, NuoRect<long> parentBo
 }
 
 
+
+void NuoControl::SetPosition(const NuoRect<long>& pos, bool activate)
+{
+	PNuoWindow parent = _parent.lock();
+	if (!parent)
+		return;
+
+	float dpi = parent->DPI();
+	auto devicePos = pos * dpi;
+
+	SetPositionDevice(devicePos, activate);
+}
+
+
 void NuoControl::OnCommand()
 {
 	_commandFunc();

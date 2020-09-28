@@ -45,6 +45,8 @@ public:
 	void SetAutoPosition(NuoControlAutoPosition autoPos);
 	NuoControlAutoPosition AutoPosition() const;
 
+	void SetPosition(const NuoRect<long>& pos, bool activate);
+
 	int ID() const;
 
 	virtual NuoRect<long> AutoPositionDevice(float scale, NuoRect<long> parentBound);
