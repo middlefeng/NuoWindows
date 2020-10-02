@@ -39,6 +39,19 @@ NuoControlAutoPosition NuoControl::AutoPosition() const
 }
 
 
+void NuoControl::SetPositionDevice(const NuoRect<long>& pos, bool activate)
+{
+	PNuoWindow parent = _parent.lock();
+	if (parent)
+	{
+		NuoRect<long> parentRect = parent->ClientRectDevice();
+		_parentMargin = parentRect - pos;
+	}
+
+	NuoWindow::SetPositionDevice(pos, activate);
+}
+
+
 NuoRect<long> NuoControl::PositionDevice()
 {
 	auto result = NuoWindow::PositionDevice();
@@ -102,6 +115,18 @@ NuoRect<long> NuoControl::AutoPositionDevice(float scale, NuoRect<long> parentBo
 	{
 	case kNuoControl_NoneAuto:
 		break;
+	case kNuoControl_LT_Stretch:
+	{
+		auto parent = _parent.lock();
+		NuoRect<long> parentRect = parent->ClientRectDevice();
+
+		result.SetX(margin);
+		result.SetY(margin);
+		result.SetW(parentRect.W() - result.X() - _parentMargin._right);
+		result.SetH(parentRect.H() - result.Y() - _parentMargin._bottom);
+
+		break;
+	}
 	case kNuoControl_RB:
 	{
 		result.SetX(parentBound.W() - result.W() - margin);

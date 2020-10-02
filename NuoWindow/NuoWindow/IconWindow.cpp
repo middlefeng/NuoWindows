@@ -3,6 +3,7 @@
 #include <wingdi.h>
 
 #include "NuoOpenFileDialog.h"
+#include "resource.h"
 
 
 IconWindow::IconWindow(const PNuoWindow& appWindow)
@@ -34,6 +35,13 @@ void IconWindow::Init()
 	font->SetLight(true);
 	font->CreateFont(DPI());
 	_loadButton->SetFont(font);
+
+	NuoRect<long> labelRect(0, 0, 100, 100);
+	_iconLabel = std::make_shared<NuoLabel>(shared_from_this());
+	_iconLabel->Init();
+	_iconLabel->SetAutoPosition(kNuoControl_LT_Stretch);
+	_iconLabel->SetPosition(labelRect, false);
+	_iconLabel->SetText("test");
 }
 
 

@@ -14,6 +14,7 @@
 enum NuoControlAutoPosition
 {
 	kNuoControl_NoneAuto,
+	kNuoControl_LT_Stretch,
 	kNuoControl_RT,
 	kNuoControl_RB,
 };
@@ -34,6 +35,8 @@ protected:
 
 	CommandFunc _commandFunc;
 
+	NuoInset<long> _parentMargin;
+
 public:
 
 	NuoControl(const std::string& title, const PNuoWindow& parent);
@@ -51,6 +54,7 @@ public:
 
 	int ID() const;
 
+	virtual void SetPositionDevice(const NuoRect<long>& pos, bool activate) override;
 	virtual NuoRect<long> AutoPositionDevice(float scale, NuoRect<long> parentBound);
 
 	virtual void OnCommand();

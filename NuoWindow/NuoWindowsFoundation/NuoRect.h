@@ -45,10 +45,30 @@ public:
 	void SetH(T h) { _cy = h; }
 
 	NuoPoint<T> TL() const { return NuoPoint<T>(_x, _y); }
-	NuoRect operator - (const NuoRect& other) const;
 	NuoRect operator * (const NuoPoint<T>& scale) const;
 	NuoRect operator * (float scale) const;
 	NuoRect<float> operator / (float scale) const;
+};
+
+
+
+template <class T>
+class NuoInset
+{
+
+public:
+
+	T _left;
+	T _top;
+	T _bottom;
+	T _right;
+
+	NuoInset();
+	NuoInset(const NuoInset& other);
+	NuoInset(T left, T top, T bottom, T right);
+
+	NuoInset& operator = (const NuoInset& other);
+
 };
 
 
@@ -81,18 +101,6 @@ NuoPoint<T>::NuoPoint(T x, T y)
 
 
 template <class T>
-NuoRect<T> NuoRect<T>::operator - (const NuoRect<T>& other) const
-{
-	NuoRect<T> result = *this;
-
-	result.SetX(result.X() - other.X());
-	result.SetY(result.Y() - other.Y());
-
-	return result;
-}
-
-
-template <class T>
 NuoRect<T> NuoRect<T>::operator * (const NuoPoint<T>& scale) const
 {
 	NuoRect<T> result = *this;
@@ -104,6 +112,64 @@ NuoRect<T> NuoRect<T>::operator * (const NuoPoint<T>& scale) const
 
 	return result;
 }
+
+
+
+template <class T>
+NuoInset<T>::NuoInset(T left, T top, T bottom, T right)
+	: _left(left),
+	  _top(top),
+	  _right(right),
+	  _bottom(bottom)
+{
+}
+
+
+template <class T>
+NuoInset<T>::NuoInset()
+	: _left(0),
+	  _top(0),
+	  _right(0),
+	  _bottom(0)
+{
+}
+
+
+template <class T>
+NuoInset<T>::NuoInset(const NuoInset<T>& other)
+	: _left(other._left),
+	  _top(other._top),
+	  _right(other._right),
+	  _bottom(other._bottom)
+{
+}
+
+
+template <class T>
+NuoInset<T>& NuoInset<T>::operator = (const NuoInset<T>& other)
+{
+	_left = other._left;
+	_top = other._top;
+	_bottom = other._bottom;
+	_right = other._right;
+
+	return *this;
+}
+
+
+template <class T>
+NuoInset<T> operator - (const NuoRect<T>& a, const NuoRect<T>& b)
+{
+	NuoInset<T> result(
+		a.X() - b.X(),
+		a.Y() - b.Y(),
+		a.X() + a.W() - b.X() - b.W(),
+		a.Y() + a.H() - b.Y() - b.H()
+	);
+
+	return result;
+}
+
 
 template <class T>
 NuoRect<T> NuoRect<T>::operator * (float scale) const
