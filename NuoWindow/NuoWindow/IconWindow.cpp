@@ -14,13 +14,12 @@ IconWindow::IconWindow(const PNuoWindow& appWindow)
 
 void IconWindow::Init()
 {
-	float scale = DPI();
-	NuoRect<long> rect(0, 0, 120 * scale, 24 * scale);
+	NuoRect<long> rect(0, 0, 120, 24);
 
 	_loadButton = std::make_shared<NuoButton>(shared_from_this(), "Load Icon ...");
 	_loadButton->Init(IDB_LOADICON);
 	_loadButton->SetAutoPosition(kNuoControl_RT);
-	_loadButton->SetPositionDevice(rect, false);
+	_loadButton->SetPosition(rect, false);
 
 	_loadButton->SetOnCommand([this]()
 		{

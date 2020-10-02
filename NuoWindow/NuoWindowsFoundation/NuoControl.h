@@ -41,6 +41,8 @@ public:
 
 	void SetFocus();
 	virtual NuoRect<long> PositionDevice() override;
+	virtual NuoRect<float> Position();
+	virtual void SetPosition(const NuoRect<float>& pos, bool activate);
 
 	void SetAutoPosition(NuoControlAutoPosition autoPos);
 	NuoControlAutoPosition AutoPosition() const;

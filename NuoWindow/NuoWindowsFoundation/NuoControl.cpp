@@ -63,6 +63,34 @@ NuoRect<long> NuoControl::PositionDevice()
 	return result;
 }
 
+
+NuoRect<float> NuoControl::Position()
+{
+	auto result = PositionDevice();
+
+	auto parent = _parent.lock();
+	if (parent)
+	{
+		float dpi = DPI();
+		return (result / dpi);
+	}
+
+	return result / 1.0;
+}
+
+
+void NuoControl::SetPosition(const NuoRect<float>& pos, bool activate)
+{
+	auto parent = _parent.lock();
+	if (!parent)
+		return;
+
+	auto posDevice = pos * DPI();
+	NuoRect<long> posLong(posDevice.X(), posDevice.Y(), posDevice.W(), posDevice.H());
+	SetPositionDevice(posLong, activate);
+}
+
+
 NuoRect<long> NuoControl::AutoPositionDevice(float scale, NuoRect<long> parentBound)
 {
 	static const long margin = (long)(20 * scale);

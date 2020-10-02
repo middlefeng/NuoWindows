@@ -141,7 +141,7 @@ void NuoDialog::UpdateLayout()
 	NuoRect<long> okRect =_okButton->PositionDevice();
 	NuoRect<long> cancelRect = _cancelButton->PositionDevice();
 
-	NuoRect<long> dialogRect = ClientRect();
+	NuoRect<long> dialogRect = ClientRectDevice();
 	float scaleFactor = DPI();
 	float top = dialogRect.H() - 20 * scaleFactor - okRect.H();
 	float cancelLeft = dialogRect.W() - 20 * scaleFactor - cancelRect.W();
