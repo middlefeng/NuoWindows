@@ -152,12 +152,21 @@ NuoRect<long> NuoWindow::PositionDevice()
 }
 
 
-NuoRect<long> NuoWindow::ClientRect()
+NuoRect<long> NuoWindow::ClientRectDevice()
 {
     RECT rect;
 
     GetClientRect(_hWnd, &rect);
     return NuoRect<long>(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+}
+
+
+NuoRect<float> NuoWindow::ClientRect()
+{
+    auto result = ClientRectDevice();
+    float dpi = DPI();
+
+    return result / dpi;
 }
 
 
@@ -241,7 +250,7 @@ void NuoWindow::OnSize(unsigned int x, unsigned int y)
         if (!control)
             continue;
 
-        NuoRect<long> rect = control->AutoPositionDevice(DPI(), ClientRect());
+        NuoRect<long> rect = control->AutoPositionDevice(DPI(), ClientRectDevice());
         control->SetPositionDevice(rect, false);
     }
 }
