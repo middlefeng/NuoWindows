@@ -31,6 +31,7 @@ class NuoRect
 
 public:
 
+	NuoRect();
 	NuoRect(T x, T y, T cx, T cy);
 
 	T X() const { return _x; }
@@ -46,9 +47,19 @@ public:
 	NuoPoint<T> TL() const { return NuoPoint<T>(_x, _y); }
 	NuoRect operator - (const NuoRect& other) const;
 	NuoRect operator * (const NuoPoint<T>& scale) const;
-
+	NuoRect operator * (float scale) const;
+	NuoRect<float> operator / (float scale) const;
 };
 
+
+template <class T>
+NuoRect<T>::NuoRect()
+	: _x(0),
+	  _y(0),
+      _cx(0),
+	  _cy(0)
+{
+}
 
 
 template <class T>
@@ -93,3 +104,31 @@ NuoRect<T> NuoRect<T>::operator * (const NuoPoint<T>& scale) const
 
 	return result;
 }
+
+template <class T>
+NuoRect<T> NuoRect<T>::operator * (float scale) const
+{
+	NuoRect<T> result = *this;
+
+	result.SetX(X() * scale);
+	result.SetY(Y() * scale);
+	result.SetW(W() * scale);
+	result.SetH(H() * scale);
+
+	return result;
+}
+
+
+template <class T>
+NuoRect<float> NuoRect<T>::operator / (float scale) const
+{
+	NuoRect<float> result;
+
+	result.SetX(X() / scale);
+	result.SetY(Y() / scale);
+	result.SetW(W() / scale);
+	result.SetH(H() / scale);
+
+	return result;
+}
+

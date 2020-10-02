@@ -27,7 +27,7 @@ public:
 	NuoButton(const PNuoWindow& parent, const std::string& title);
 	virtual ~NuoButton();
 
-	void Init();
+	void Init(int controlID);
 
 
 	friend NuoDialog;

@@ -11,6 +11,7 @@
 #include "NuoImage.h"
 #include "NuoStrings.h"
 
+#include "IconWindow.h"
 #include "AppAboutDialog.h"
 
 
@@ -42,6 +43,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     
     PNuoMenu fileMenu = std::make_shared<NuoMenu>("  &File ");
     PNuoMenuItem exitItem = std::make_shared<NuoMenuItem>(IDM_EXIT, "E&xit");
+    PNuoMenuItem iconTools = std::make_shared<NuoMenuItem>(IDM_ICONTOOLS, "Icon Tools ...");
+    fileMenu->AppenMenuItem(iconTools);
     fileMenu->AppenMenuItem(exitItem);
     fileMenu->Update();
 
@@ -55,12 +58,35 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     menu->Update();
     window->SetMenu(menu);
 
-    auto exitFunc = []()
+    PIconWindow iconWindow;
+
+    auto exitFunc = [&iconWindow]()
     {
+        if (iconWindow)
+            iconWindow->Destroy();
+
         NuoAppInstance::Exit();
     };
 
     std::weak_ptr<NuoWindow> weakWindow = window;
+
+    iconTools->SetAction([&iconWindow, weakWindow](PNuoMenuItem)
+        {
+            if (!iconWindow)
+            {
+                iconWindow = std::make_shared<IconWindow>(weakWindow.lock());
+                iconWindow->SetPositionDevice(iconWindow->PreferredRect(), true);
+                iconWindow->Init();
+            }
+
+            iconWindow->Show();
+            iconWindow->Update();
+            iconWindow->SetOnDestroy([&iconWindow]()
+                {
+                    iconWindow->Detach();
+                    iconWindow.reset();
+                });
+        });
 
     window->SetOnDestroy(exitFunc);
     exitItem->SetAction([weakWindow](PNuoMenuItem)

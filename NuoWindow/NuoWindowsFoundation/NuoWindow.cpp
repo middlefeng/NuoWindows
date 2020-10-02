@@ -1,5 +1,7 @@
 
 #include "NuoWindow.h"
+
+#include "NuoControl.h"
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
 #include "NuoMenu.h"
@@ -21,7 +23,7 @@ extern const int kWindowPtr = GWLP_USERDATA;
 
 extern LRESULT CALLBACK NuoWindowProc(HWND, UINT, WPARAM, LPARAM);
 
-LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -36,6 +38,15 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
         if (!processed)
             return DefWindowProc(hWnd, message, wParam, lParam);
+
+        break;
+    }
+    case WM_SIZE:
+    {
+        UINT width = LOWORD(lParam);
+        UINT height = HIWORD(lParam);
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        window->OnSize(width, height);
 
         break;
     }
@@ -58,8 +69,10 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
                              lprcNewScale->bottom - lprcNewScale->top);
 
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        float oldDPI = window->SavedDPI();
+        float newDPI = window->DPI();
         if (window)
-            window->SetPositionDevice(newPos, false);
+            window->OnDPIChange(newPos, newDPI, oldDPI);
 
         break;
     }
@@ -72,19 +85,20 @@ LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
 
 NuoWindow::NuoWindow()
-    : _hWnd(0)
+    : _hWnd(0), _inDPIChange(false), _savedDPI(1.0)
 {
 }
 
 
 NuoWindow::NuoWindow(const std::string& title)
-    : _title(title), _hWnd(0)
+    : _title(title), _hWnd(0), _inDPIChange(false), _savedDPI(1.0)
 {
     std::wstring wtitle = StringToUTF16(title);
     HINSTANCE hInstance = NuoAppInstance::GetInstance()->Instance();
 
     _hWnd = CreateWindowW(kClassName, wtitle.c_str(), WS_OVERLAPPEDWINDOW,
                           CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+    _savedDPI = DPI();
 
     SetWindowLongPtr(_hWnd, kWindowPtr, (LONG_PTR)this);
 }
@@ -138,7 +152,7 @@ NuoRect<long> NuoWindow::PositionDevice()
 }
 
 
-NuoRect<long> NuoWindow::ClientRect()
+NuoRect<long> NuoWindow::ClientRectDevice()
 {
     RECT rect;
 
@@ -147,11 +161,26 @@ NuoRect<long> NuoWindow::ClientRect()
 }
 
 
-float NuoWindow::DPI()
+NuoRect<float> NuoWindow::ClientRect()
+{
+    auto result = ClientRectDevice();
+    float dpi = DPI();
+
+    return result / dpi;
+}
+
+
+float NuoWindow::DPI() const
 {
     UINT scale = GetDpiForWindow(_hWnd);
 
-    return (double)scale / 100.0;
+    return (float)scale / 100.0f;
+}
+
+
+float NuoWindow::SavedDPI() const
+{
+    return _savedDPI;
 }
 
 
@@ -165,16 +194,18 @@ void NuoWindow::SetPositionDevice(const NuoRect<long>& pos, bool activate)
 }
 
 
-NuoFont NuoWindow::Font()
+std::shared_ptr<NuoFont> NuoWindow::Font()
 {
     HFONT hFont = (HFONT)SendMessage(_hWnd, WM_GETFONT, 0, 0);
-    return NuoFont(hFont);
+    return std::make_shared<NuoFont>(hFont);
 }
 
 
-void NuoWindow::SetFont(const NuoFont& font)
+void NuoWindow::SetFont(const std::shared_ptr<NuoFont>& font)
 {
-    SendMessage(_hWnd, WM_SETFONT, (LPARAM)font.Handle(), TRUE);
+    _font = font;
+
+    SendMessage(_hWnd, WM_SETFONT, (LPARAM)font->Handle(), TRUE);
 }
 
 
@@ -200,7 +231,59 @@ bool NuoWindow::OnCommand(int id)
     if (_menu)
         processed = _menu->DoAction(id);
 
+    for (PNuoWindow child : _children)
+    {
+        NuoControl* control = dynamic_cast<NuoControl*>(child.get());
+        if (control && control->ID() == id)
+            control->OnCommand();
+    }
+
     return processed;
+}
+
+
+void NuoWindow::OnSize(unsigned int x, unsigned int y)
+{
+    for (PNuoWindow child : _children)
+    {
+        NuoControl* control = dynamic_cast<NuoControl*>(child.get());
+        if (!control)
+            continue;
+
+        NuoRect<long> rect = control->AutoPositionDevice(DPI(), ClientRectDevice());
+        control->SetPositionDevice(rect, false);
+    }
+}
+
+
+void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI)
+{
+    if (_font)
+    {
+        _font->CreateFont(newDPI);
+        SendMessage(_hWnd, WM_SETFONT, (LPARAM)_font->Handle(), TRUE);
+    }
+
+    for (PNuoWindow child : _children)
+    {
+        float ratio = newDPI / oldDPI;
+
+        NuoRect<long> rect = child->PositionDevice();
+        rect.SetX((long)(rect.X() * ratio));
+        rect.SetY((long)(rect.Y() * ratio));
+        rect.SetW((long)(rect.W() * ratio));
+        rect.SetH((long)(rect.H() * ratio));
+
+        NuoControl* control = dynamic_cast<NuoControl*>(child.get());
+        if (control)
+            control->OnDPIChange(newRect, newDPI, oldDPI);
+
+        child->SetPositionDevice(rect, false);
+    }
+
+    SetPositionDevice(newRect, false);
+
+    _savedDPI = newDPI;
 }
 
 
@@ -242,14 +325,63 @@ void NuoWindow::Add(const PNuoWindow& child)
 
 
 NuoFont::NuoFont(HFONT font)
-    : _hFont(font)
+    : _hFont(font),
+      _fontOwner(false),
+      _weight(0.0),
+      _isItalic(false),
+      _isLight(false)
 {
+}
+
+
+NuoFont::NuoFont(double weight, const std::string& name)
+    : _hFont(0),
+      _weight(weight),
+      _name(name),
+      _isItalic(false),
+      _isLight(false),
+      _fontOwner(true)
+{
+}
+
+NuoFont::~NuoFont()
+{
+    if (_hFont && _fontOwner)
+        DeleteObject(_hFont);
+}
+
+void NuoFont::SetLight(bool b)
+{
+    _isLight = b;
+}
+
+
+void NuoFont::SetItalic(bool b)
+{
+    _isItalic = b;
 }
 
 
 HFONT NuoFont::Handle() const
 {
     return _hFont;
+}
+
+
+void NuoFont::CreateFont(float scale)
+{
+    if (_hFont && _fontOwner)
+        DeleteObject(_hFont);
+
+    int flag = 0;
+    if (_isLight)
+        flag = FW_THIN | FW_LIGHT;
+
+    std::wstring wname = StringToUTF16(_name);
+    _hFont = ::CreateFont((int)(_weight * scale), 0, 0, 0, flag /* weight */,
+                          _isItalic /* non-italic */, 0, 0, 0, 0, 0, 0, 0, wname.c_str());
+
+    _fontOwner = true;
 }
 
 
