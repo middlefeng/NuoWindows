@@ -15,7 +15,7 @@ IconWindow::IconWindow(const PNuoWindow& appWindow)
 
 void IconWindow::Init()
 {
-	NuoRect<long> rect(0, 0, 120, 24);
+	NuoRect<float> rect(0, 0, 120, 24);
 
 	_loadButton = std::make_shared<NuoButton>(shared_from_this(), "Load Icon ...");
 	_loadButton->Init(IDB_LOADICON);
@@ -36,12 +36,11 @@ void IconWindow::Init()
 	font->CreateFont(DPI());
 	_loadButton->SetFont(font);
 
-	NuoRect<long> labelRect(0, 0, 100, 100);
+	NuoInset<float> labelInset(30, 20, 35, 165);
 	_iconLabel = std::make_shared<NuoLabel>(shared_from_this());
 	_iconLabel->Init();
-	_iconLabel->SetAutoPosition(kNuoControl_LT_Stretch);
-	_iconLabel->SetPosition(labelRect, false);
-	_iconLabel->SetText("test");
+	_iconLabel->SetAutoPosition(kNuoControl_Stretch_ALL);
+	_iconLabel->SetMargin(labelInset);
 }
 
 

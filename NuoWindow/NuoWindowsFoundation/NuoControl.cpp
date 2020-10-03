@@ -39,17 +39,12 @@ NuoControlAutoPosition NuoControl::AutoPosition() const
 }
 
 
-void NuoControl::SetPositionDevice(const NuoRect<long>& pos, bool activate)
-{
-	PNuoWindow parent = _parent.lock();
-	if (parent)
-	{
-		NuoRect<long> parentRect = parent->ClientRectDevice();
-		_parentMargin = parentRect - pos;
-	}
 
-	NuoWindow::SetPositionDevice(pos, activate);
+void NuoControl::SetMargin(const NuoInset<float>& inset)
+{
+	_parentMargin = inset;
 }
+
 
 
 NuoRect<long> NuoControl::PositionDevice()
@@ -92,41 +87,40 @@ NuoRect<float> NuoControl::Position()
 }
 
 
-void NuoControl::SetPosition(const NuoRect<float>& pos, bool activate)
+NuoRect<float> NuoControl::AutoPosition()
 {
+	static const long margin = 20;
+
+	NuoRect<float> originalRect = Position();
+	NuoRect<float> result(0, 0, originalRect.W(), originalRect.H());
+
 	auto parent = _parent.lock();
 	if (!parent)
-		return;
+		return originalRect;
 
-	auto posDevice = pos * DPI();
-	NuoRect<long> posLong(posDevice.X(), posDevice.Y(), posDevice.W(), posDevice.H());
-	SetPositionDevice(posLong, activate);
-}
+	auto parentBound = parent->ClientRect();
 
+	if (_autoPosition & kNuoControl_Stretch)
+	{
+		if (_autoPosition & kNuoControl_Stretch_L)
+			result.SetX(_parentMargin._left);
+		
+		if (_autoPosition & kNuoControl_Stretch_T)
+			result.SetY(_parentMargin._top);
 
-NuoRect<long> NuoControl::AutoPositionDevice(float scale, NuoRect<long> parentBound)
-{
-	static const long margin = (long)(20 * scale);
+		if (_autoPosition & kNuoControl_Stretch_R)
+			result.SetW(parentBound.W() - _parentMargin._left - _parentMargin._right);
 
-	NuoRect<long> originalRect = PositionDevice();
-	NuoRect<long> result(0, 0, originalRect.W(), originalRect.H());
+		if (_autoPosition & kNuoControl_Stretch_B)
+			result.SetH(parentBound.H() - _parentMargin._top - _parentMargin._bottom);
+
+		return result;
+	}
 
 	switch (_autoPosition)
 	{
 	case kNuoControl_NoneAuto:
 		break;
-	case kNuoControl_LT_Stretch:
-	{
-		auto parent = _parent.lock();
-		NuoRect<long> parentRect = parent->ClientRectDevice();
-
-		result.SetX(margin);
-		result.SetY(margin);
-		result.SetW(parentRect.W() - result.X() - _parentMargin._right);
-		result.SetH(parentRect.H() - result.Y() - _parentMargin._bottom);
-
-		break;
-	}
 	case kNuoControl_RB:
 	{
 		result.SetX(parentBound.W() - result.W() - margin);
@@ -148,14 +142,15 @@ NuoRect<long> NuoControl::AutoPositionDevice(float scale, NuoRect<long> parentBo
 
 
 
-void NuoControl::SetPosition(const NuoRect<long>& pos, bool activate)
+void NuoControl::SetPosition(const NuoRect<float>& pos, bool activate)
 {
 	PNuoWindow parent = _parent.lock();
 	if (!parent)
 		return;
 
 	float dpi = parent->DPI();
-	auto devicePos = pos * dpi;
+	NuoRect<long> devicePos((long)(pos.X() * dpi), (long)(pos.Y() * dpi),
+							(long)(pos.W() * dpi), (long)(pos.H() * dpi));
 
 	SetPositionDevice(devicePos, activate);
 }

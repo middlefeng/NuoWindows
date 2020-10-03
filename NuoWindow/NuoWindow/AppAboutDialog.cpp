@@ -17,7 +17,7 @@ void AppAboutDialog::InitDialog()
 {
 	NuoDialog::InitDialog();
 
-	NuoRect<long> pos(20, 20, 98, 15);
+	NuoRect<float> pos(20, 20, 98, 15);
 
 	_label = std::make_shared<NuoLabel>(shared_from_this());
 	_label->Init();
