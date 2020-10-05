@@ -132,6 +132,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
+    NuoAppInstance::UnInit();
+
     return (int) msg.wParam;
 }
 

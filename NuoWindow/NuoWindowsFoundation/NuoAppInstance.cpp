@@ -7,6 +7,8 @@
 
 static NuoAppInstance* gInstance = nullptr;
 
+ULONG_PTR NuoAppInstance::_gdiToken = 0;
+
 
 NuoAppInstance::NuoAppInstance(HINSTANCE hInstance, int cmdShow)
 	: _instance(hInstance),
@@ -31,7 +33,17 @@ void NuoAppInstance::Init(HINSTANCE hInstance, int cmdShow)
 
 	ULONG_PTR token;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-	auto status = Gdiplus::GdiplusStartup(&token, &gdiplusStartupInput, NULL);
+	auto status = Gdiplus::GdiplusStartup(&_gdiToken, &gdiplusStartupInput, NULL);
+}
+
+
+void NuoAppInstance::UnInit()
+{
+	Gdiplus::GdiplusShutdown(_gdiToken);
+	_gdiToken = 0;
+
+	OleUninitialize();
+	CoUninitialize();
 }
 
 
