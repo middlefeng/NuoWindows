@@ -15,6 +15,7 @@ enum NuoControlAutoPosition
 {
 	kNuoControl_NoneAuto = 0x00,
 	kNuoControl_RT,
+	kNuoControl_R,
 	kNuoControl_RB,
 
 	kNuoControl_Stretch = 0x1000000,

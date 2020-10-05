@@ -3,7 +3,7 @@
 #include "NuoOpenFileDialog.h"
 
 
-NuoOpenFileDialog::NuoOpenFileDialog()
+NuoFileDialog::NuoFileDialog()
 {
 	memset(&_ofn, 0, sizeof(_ofn));
 
@@ -23,7 +23,7 @@ NuoOpenFileDialog::NuoOpenFileDialog()
 }
 
 
-void NuoOpenFileDialog::Open(const PNuoWindow& owner)
+void NuoFileDialog::Open(const PNuoWindow& owner)
 {
 	_ofn.hwndOwner = owner->Handle();
 
@@ -31,8 +31,16 @@ void NuoOpenFileDialog::Open(const PNuoWindow& owner)
 }
 
 
+void NuoFileDialog::Save(const PNuoWindow& owner)
+{
+	_ofn.hwndOwner = owner->Handle();
 
-std::string NuoOpenFileDialog::FilePath() const
+	GetSaveFileName(&_ofn);
+}
+
+
+
+std::string NuoFileDialog::FilePath() const
 {
 	std::wstring wfile(_ofn.lpstrFile);
 

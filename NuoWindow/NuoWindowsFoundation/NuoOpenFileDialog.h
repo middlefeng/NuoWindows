@@ -6,7 +6,7 @@
 #include "NuoWindow.h"
 
 
-class NuoOpenFileDialog
+class NuoFileDialog
 {
 
 	OPENFILENAME _ofn;
@@ -14,9 +14,10 @@ class NuoOpenFileDialog
 
 public:
 
-	NuoOpenFileDialog();
+	NuoFileDialog();
 
 	void Open(const PNuoWindow& owner);
+	void Save(const PNuoWindow& owner);
 	std::string FilePath() const;
 
 };

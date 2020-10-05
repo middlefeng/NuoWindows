@@ -12,6 +12,7 @@
 #define IDM_ICONTOOLS			201
 
 #define IDB_LOADICON			301
+#define IDB_SAVEICON			302
 
 #define IDI_NUOWINDOW			107
 #define IDI_SMALL				108

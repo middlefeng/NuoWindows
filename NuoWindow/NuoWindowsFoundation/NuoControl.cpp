@@ -127,6 +127,12 @@ NuoRect<float> NuoControl::AutoPosition()
 		result.SetY(parentBound.Y() - result.H() - margin);
 		break;
 	}
+	case kNuoControl_R:
+	{
+		result.SetX(parentBound.W() - result.W() - margin);
+		result.SetY(originalRect.Y());
+		break;
+	}
 	case kNuoControl_RT:
 	{
 		result.SetX(parentBound.W() - result.W() - margin);

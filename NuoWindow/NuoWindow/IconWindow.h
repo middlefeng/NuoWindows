@@ -10,6 +10,7 @@ class IconWindow : public NuoWindow
 {
 	std::weak_ptr<NuoWindow> _appWindow;
 	PNuoButton _loadButton;
+	PNuoButton _saveButton;
 	PNuoLabel _iconLabel;
 
 public:

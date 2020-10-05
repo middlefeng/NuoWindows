@@ -53,6 +53,12 @@ void NuoLabel::SetImage(const PNuoImage& image)
 }
 
 
+PNuoImage NuoLabel::Image() const
+{
+    return _image;
+}
+
+
 NuoLabel::~NuoLabel()
 {
     if (_hWnd)
