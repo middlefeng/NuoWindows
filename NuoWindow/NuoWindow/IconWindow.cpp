@@ -3,6 +3,8 @@
 #include <wingdi.h>
 
 #include "NuoOpenFileDialog.h"
+#include "NuoImage.h"
+
 #include "resource.h"
 
 
@@ -27,7 +29,12 @@ void IconWindow::Init()
 			NuoOpenFileDialog dlg;
 			dlg.Open(this->shared_from_this());
 
-			std::string result = dlg.FilePath();
+			std::string path = dlg.FilePath();
+
+			PNuoImage image = std::make_shared<NuoImage>();
+			image->Load(path, this->DPI() * 20);
+
+			this->_iconLabel->SetImage(image);
 		});
 
 	auto font = std::make_shared<NuoFont>(16, "MS Shell Dlg");
@@ -38,7 +45,7 @@ void IconWindow::Init()
 
 	NuoInset<float> labelInset(30, 20, 35, 165);
 	_iconLabel = std::make_shared<NuoLabel>(shared_from_this());
-	_iconLabel->Init();
+	_iconLabel->Init(true);
 	_iconLabel->SetAutoPosition(kNuoControl_Stretch_ALL);
 	_iconLabel->SetMargin(labelInset);
 }

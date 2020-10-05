@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <cassert>
+#include <vector>
 
 
 // code on https://faithlife.codes/blog/2008/09/displaying_a_splash_screen_with_c_part_i/
@@ -65,7 +66,37 @@ static IWICBitmapSource* LoadBitmapFromStream(IStream* ipImageStream)
 }
 
 
-static HBITMAP CreateHBITMAP(IWICBitmapSource* ipBitmap)
+static void BlendCheckerboard(void* buffer, size_t width, size_t height, size_t grid)
+{
+    const size_t cbStride = width * 4;
+
+    for (int row = 0; row < height; ++row)
+    {
+        for (int col = 0; col < width; ++col)
+        {
+            BYTE color = 255;
+            if ((col / grid) % 2 != (row / grid) % 2)
+                color = (BYTE)(255.0 * 0.8f);
+
+            BYTE* ptr = static_cast<BYTE*>(buffer);
+            ptr = ptr + row * cbStride + col * 4;
+
+            float alpha = ptr[3] / 255.0f;
+
+            int b = ptr[0];
+            int g = ptr[1];
+            int r = ptr[2];
+
+            ptr[0] = (BYTE)(b * alpha + color * (1 - alpha));
+            ptr[1] = (BYTE)(g * alpha + color * (1 - alpha));
+            ptr[2] = (BYTE)(r * alpha + color * (1 - alpha));
+            ptr[3] = 255;
+        }
+    }
+}
+
+
+static HBITMAP CreateHBITMAP(IWICBitmapSource* ipBitmap, int backgroundGrid)
 {
     // initialize return value
 
@@ -104,13 +135,23 @@ static HBITMAP CreateHBITMAP(IWICBitmapSource* ipBitmap)
 
         const UINT cbStride = width * 4;
         const UINT cbImage = cbStride * height;
-        if (FAILED(ipBitmap->CopyPixels(NULL, cbStride, cbImage, static_cast<BYTE*>(pvImageBits))))
+
+        std::vector<BYTE> buffer;
+        buffer.resize(cbImage);
+
+        if (FAILED(ipBitmap->CopyPixels(NULL, cbStride, cbImage, static_cast<BYTE*>(&buffer[0]))))
         {
             // couldn't extract image; delete HBITMAP
 
             DeleteObject(hbmp);
             hbmp = NULL;
+            break;
         }
+
+        if (backgroundGrid > 0)
+            BlendCheckerboard(&buffer[0], width, height, backgroundGrid);
+
+        memcpy(pvImageBits, (void*)(&buffer[0]), cbImage);
     }
     while (0);
 
@@ -132,7 +173,7 @@ NuoImage::~NuoImage()
 }
 
 
-void NuoImage::Load(const std::string& path)
+void NuoImage::Load(const std::string& path, int backgroundGrid)
 {
     NuoFile imageFile(path);
     PNuoReadStream stream = imageFile.ReadStream();
@@ -146,7 +187,7 @@ void NuoImage::Load(const std::string& path)
         if (!source)
             break;
 
-        _hBitmap = CreateHBITMAP(source);
+        _hBitmap = CreateHBITMAP(source, backgroundGrid);
     }
     while (0);
 
@@ -165,6 +206,12 @@ PNuoIcon NuoImage::Icon()
 
     PNuoIcon result(new NuoIcon(icon));
     return result;
+}
+
+
+NuoImage::operator HBITMAP () const
+{
+    return _hBitmap;
 }
 
 
@@ -198,7 +245,6 @@ struct ICONDIR
 static void WriteIconHeader(NuoFile& file)
 {
     ICONHEADER iconheader;
-    DWORD nWritten;
 
     // Setup the icon header
     iconheader.idReserved = 0; // Must be 0
@@ -240,7 +286,6 @@ static UINT NumBitmapBytes(BITMAP* pBitmap)
 static void WriteIconImageHeader(NuoFile& file, BITMAP* pbmpColor, BITMAP* pbmpMask)
 {
     BITMAPINFOHEADER biHeader;
-    DWORD nWritten;
     UINT nImageBytes;
 
     // calculate how much space the COLOR and MASK bitmaps take
@@ -273,9 +318,7 @@ static UINT WriteIconData(NuoFile& file, HBITMAP hBitmap)
     BITMAP bmp;
     int i;
     BYTE* pIconData;
-
     UINT nBitmapBytes;
-    DWORD nWritten;
 
     GetObject(hBitmap, sizeof(BITMAP), &bmp);
 

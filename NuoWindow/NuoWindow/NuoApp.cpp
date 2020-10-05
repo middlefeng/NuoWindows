@@ -31,7 +31,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     std::string iconPath = appPath + "\\Nuclear.png";
 
     NuoImage image;
-    image.Load(iconPath);
+    image.Load(iconPath, -1);
     PNuoIcon icon = image.Icon();
 
     std::string icoFilePath = appPath + "\\Nuclear.ico";

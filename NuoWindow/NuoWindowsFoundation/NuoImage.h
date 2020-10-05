@@ -21,10 +21,13 @@ public:
 	NuoImage();
 	~NuoImage();
 
-	void Load(const std::string& path);
+	void Load(const std::string& path, int backgroundGrid);
 	PNuoIcon Icon();
+	operator HBITMAP () const;
 
 };
+
+typedef std::shared_ptr<NuoImage> PNuoImage;
 
 
 class NuoIcon : public std::enable_shared_from_this<NuoIcon>
