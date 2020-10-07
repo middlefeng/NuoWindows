@@ -91,9 +91,10 @@ public:
 	void SetMenu(const PNuoMenuBar& menu);
 	void SetIcon(const PNuoIcon& icon);
 	virtual NuoRect<long> PositionDevice();
-	void SetPositionDevice(const NuoRect<long>& pos, bool activate);
+	virtual void SetPositionDevice(const NuoRect<long>& pos, bool activate);
 	NuoRect<long> ClientRectDevice();
 	NuoRect<float> ClientRect();
+
 	float DPI() const;
 
 	std::shared_ptr<NuoFont> Font();

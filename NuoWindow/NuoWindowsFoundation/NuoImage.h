@@ -8,23 +8,26 @@
 class NuoIcon;
 typedef std::shared_ptr<NuoIcon> PNuoIcon;
 
-class NuoStream;
-typedef std::shared_ptr<NuoStream> PNuoStream;
+class NuoReadStream;
+typedef std::shared_ptr<NuoReadStream> PNuoReadStream;
 
 class NuoImage : public std::enable_shared_from_this<NuoImage>
 {
 	HBITMAP _hBitmap;
-	PNuoStream _iStream;
+	PNuoReadStream _iStream;
 
 public:
 
 	NuoImage();
 	~NuoImage();
 
-	void Load(const std::string& path);
+	void Load(const std::string& path, int backgroundGrid);
 	PNuoIcon Icon();
+	operator HBITMAP () const;
 
 };
+
+typedef std::shared_ptr<NuoImage> PNuoImage;
 
 
 class NuoIcon : public std::enable_shared_from_this<NuoIcon>
@@ -38,6 +41,8 @@ public:
 	~NuoIcon();
 
 	HICON Handle() const;
+	void Save16(const std::string& path);
+	void Save(const std::string& path);
 
 	friend NuoImage;
 };

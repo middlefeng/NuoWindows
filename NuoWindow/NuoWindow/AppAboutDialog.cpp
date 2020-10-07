@@ -17,16 +17,16 @@ void AppAboutDialog::InitDialog()
 {
 	NuoDialog::InitDialog();
 
-	NuoRect<long> pos(20, 20, 98, 15);
+	NuoRect<float> pos(20, 20, 98, 15);
 
 	_label = std::make_shared<NuoLabel>(shared_from_this());
-	_label->Init();
+	_label->Init(false);
 	_label->SetText("Nuo Window");
 	_label->SetPosition(pos, false);
 
 	pos.SetY((pos.Y() + pos.H() + 6));
 	_labelCopyright = std::make_shared<NuoLabel>(shared_from_this());
-	_labelCopyright->Init();
+	_labelCopyright->Init(false);
 	_labelCopyright->SetText("Copyright (c) 2020");
 	_labelCopyright->SetPosition(pos, false);
 

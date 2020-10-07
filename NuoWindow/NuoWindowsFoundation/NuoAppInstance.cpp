@@ -7,6 +7,8 @@
 
 static NuoAppInstance* gInstance = nullptr;
 
+ULONG_PTR NuoAppInstance::_gdiToken = 0;
+
 
 NuoAppInstance::NuoAppInstance(HINSTANCE hInstance, int cmdShow)
 	: _instance(hInstance),
@@ -27,10 +29,21 @@ void NuoAppInstance::Init(HINSTANCE hInstance, int cmdShow)
 
 	SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 	CoInitializeEx(0, COINIT_MULTITHREADED);
+	OleInitialize(0);
 
 	ULONG_PTR token;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-	auto status = Gdiplus::GdiplusStartup(&token, &gdiplusStartupInput, NULL);
+	auto status = Gdiplus::GdiplusStartup(&_gdiToken, &gdiplusStartupInput, NULL);
+}
+
+
+void NuoAppInstance::UnInit()
+{
+	Gdiplus::GdiplusShutdown(_gdiToken);
+	_gdiToken = 0;
+
+	OleUninitialize();
+	CoUninitialize();
 }
 
 

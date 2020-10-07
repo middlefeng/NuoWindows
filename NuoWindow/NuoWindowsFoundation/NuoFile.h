@@ -4,13 +4,16 @@
 #include <memory>
 
 
-class NuoStream;
-typedef std::shared_ptr<NuoStream> PNuoStream;
+class NuoReadStream;
+typedef std::shared_ptr<NuoReadStream> PNuoReadStream;
+
+class NuoWriteStream;
+typedef std::shared_ptr<NuoWriteStream> PNuoWriteStream;
 
 
 class NuoFile : public std::enable_shared_from_this<NuoFile>
 {
-	PNuoStream _stream;
+	PNuoReadStream _stream;
 	FILE* _file;
 	std::string _path;
 
@@ -18,20 +21,41 @@ public:
 	NuoFile(const std::string& path);
 	~NuoFile();
 
-	PNuoStream Stream();
-	FILE* FileHandle();
+	void Write(void* buffer, size_t size);
+	void Seek(size_t pos);
+	size_t Position();
+
+	PNuoReadStream ReadStream();
+	void SaveStream(const PNuoWriteStream& stream, long size);
+	FILE* FileHandle(bool read);
 };
 
 
-class NuoStream : public std::enable_shared_from_this<NuoStream>
+class NuoReadStream : public std::enable_shared_from_this<NuoReadStream>
 {
 	IStream* _iStream;
-	NuoStream(IStream* iStream);
+	NuoReadStream(IStream* iStream);
 
 public:
 
-	~NuoStream();
+	~NuoReadStream();
 	operator IStream* ();
 
 	friend NuoFile;
 };
+
+
+class NuoWriteStream : public std::enable_shared_from_this<NuoWriteStream>
+{
+	IStream* _iStream;
+	HGLOBAL _hGlobal;
+	HGLOBAL GlobalBuffer();
+	
+public:
+
+	NuoWriteStream();
+	operator IStream* ();
+
+	friend NuoFile;
+};
+

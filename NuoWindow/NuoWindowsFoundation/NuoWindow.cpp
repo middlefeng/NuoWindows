@@ -250,8 +250,8 @@ void NuoWindow::OnSize(unsigned int x, unsigned int y)
         if (!control)
             continue;
 
-        NuoRect<long> rect = control->AutoPositionDevice(DPI(), ClientRectDevice());
-        control->SetPositionDevice(rect, false);
+        NuoRect<float> rect = control->AutoPosition();
+        control->SetPosition(rect, false);
     }
 }
 

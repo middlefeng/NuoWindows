@@ -31,8 +31,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     std::string iconPath = appPath + "\\Nuclear.png";
 
     NuoImage image;
-    image.Load(iconPath);
+    image.Load(iconPath, -1);
     PNuoIcon icon = image.Icon();
+
+    std::string icoFilePath = appPath + "\\Nuclear.ico";
+    icon->Save(icoFilePath);
 
     PNuoWindow window = std::make_shared<NuoWindow>("  Nuo Window");
 
@@ -128,6 +131,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
+
+    NuoAppInstance::UnInit();
 
     return (int) msg.wParam;
 }

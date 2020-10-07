@@ -3,7 +3,6 @@
 #include <windows.h>
 #include <shellscalingapi.h>
 
-#include <NuoWindow.h>
 
 
 template <class T>
