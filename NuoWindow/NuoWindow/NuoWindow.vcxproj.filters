@@ -78,6 +78,9 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoOpenFileDialog.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
+    <ClInclude Include="ListViewWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
@@ -143,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="..\NuoWindowsFoundation\NuoOpenFileDialog.cpp">
       <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="ListViewWindow.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -162,6 +162,7 @@
     <ClInclude Include="AppAboutDialog.h" />
     <ClInclude Include="FoundationResource.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ListViewWindow.h" />
     <ClInclude Include="NuoApp.h" />
     <ClInclude Include="IconWindow.h" />
     <ClInclude Include="Resource.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="..\NuoWindowsFoundation\NuoStrings.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp" />
     <ClCompile Include="AppAboutDialog.cpp" />
+    <ClCompile Include="ListViewWindow.cpp" />
     <ClCompile Include="NuoApp.cpp" />
     <ClCompile Include="IconWindow.cpp" />
   </ItemGroup>

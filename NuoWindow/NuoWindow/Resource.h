@@ -10,6 +10,7 @@
 #define IDM_ABOUT				104
 #define IDM_EXIT				105
 #define IDM_ICONTOOLS			201
+#define IDM_LISTVIEW			202
 
 #define IDB_LOADICON			301
 #define IDB_SAVEICON			302
