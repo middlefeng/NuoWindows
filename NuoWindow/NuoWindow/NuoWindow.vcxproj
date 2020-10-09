@@ -121,7 +121,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comdlg32.lib;kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;Shcore.lib;Windowscodecs.lib;gdiplus.lib;shcore.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comdlg32.lib;kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;Shcore.lib;comctl32.lib;Windowscodecs.lib;gdiplus.lib;shcore.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -142,7 +142,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comdlg32.lib;kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;Shcore.lib;Windowscodecs.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comdlg32.lib;kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;Shcore.lib;comctl32.lib;Windowscodecs.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -153,6 +153,7 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoFile.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoImage.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoLabel.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoListView.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoMonitorScale.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoOpenFileDialog.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="..\NuoWindowsFoundation\NuoFile.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoImage.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoLabel.cpp" />
+    <ClCompile Include="..\NuoWindowsFoundation\NuoListView.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMenu.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoMonitorScale.cpp" />
     <ClCompile Include="..\NuoWindowsFoundation\NuoOpenFileDialog.cpp" />
