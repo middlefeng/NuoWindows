@@ -1,9 +1,9 @@
 ﻿
 #include "ListViewWindow.h"
-#include <wingdi.h>
+//#include <wingdi.h>
+#include <CommCtrl.h>
 
 #include "NuoOpenFileDialog.h"
-#include "NuoImage.h"
 
 #include "resource.h"
 
@@ -35,6 +35,11 @@ void ListViewWindow::Init()
 			
 		});
 
+	NuoInset<float> listInset(30, 20, 35, 165);
+	_listView = std::make_shared<NuoListView>(shared_from_this());
+	_listView->Init(IDM_LISTVIEW);
+	_listView->SetAutoPosition(kNuoControl_Stretch_ALL);
+	_listView->SetMargin(listInset);
 }
 
 

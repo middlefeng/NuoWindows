@@ -3,6 +3,7 @@
 #include "NuoWindow.h"
 
 #include "NuoButton.h"
+#include "NuoListView.h"
 
 
 
@@ -10,6 +11,7 @@ class ListViewWindow : public NuoWindow
 {
 	std::weak_ptr<NuoWindow> _appWindow;
 	PNuoButton _loadButton;
+	PNuoListView _listView;
 
 public:
 	ListViewWindow(const PNuoWindow& appWindow);
