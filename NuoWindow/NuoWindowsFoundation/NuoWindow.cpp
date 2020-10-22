@@ -55,9 +55,17 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
 
         if (window)
-        {
             window->OnDestroy();
-        }
+
+        break;
+    }
+    case WM_PAINT:
+    {
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+
+        if (window)
+            window->OnPaint();
+
         break;
     }
     case WM_DPICHANGED:
@@ -221,6 +229,11 @@ void NuoWindow::SetIcon(const PNuoIcon& icon)
     SendMessage(owner, WM_SETICON, ICON_BIG, lParam);
 
     _icon = icon;
+}
+
+
+void NuoWindow::OnPaint()
+{
 }
 
 
