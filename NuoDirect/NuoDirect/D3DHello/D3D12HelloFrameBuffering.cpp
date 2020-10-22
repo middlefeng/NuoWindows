@@ -11,6 +11,7 @@
 
 //#include "stdafx.h"
 #include "D3D12HelloFrameBuffering.h"
+#include "NuoDirect/NuoDevice.h"
 
 D3D12HelloFrameBuffering::D3D12HelloFrameBuffering(UINT width, UINT height, std::wstring name) :
     DXSample(width, height, name),
@@ -94,7 +95,7 @@ void D3D12HelloFrameBuffering::LoadPipeline()
     ComPtr<IDXGISwapChain1> swapChain;
     ThrowIfFailed(factory->CreateSwapChainForHwnd(
         m_commandQueue.Get(),        // Swap chain needs the queue so that it can force a flush on it.
-        _hWnd,
+        _view->Handle(),
         &swapChainDesc,
         nullptr,
         nullptr,
@@ -102,7 +103,7 @@ void D3D12HelloFrameBuffering::LoadPipeline()
         ));
 
     // This sample does not support fullscreen transitions.
-    ThrowIfFailed(factory->MakeWindowAssociation(_hWnd, DXGI_MWA_NO_ALT_ENTER));
+    ThrowIfFailed(factory->MakeWindowAssociation(_view->Handle(), DXGI_MWA_NO_ALT_ENTER));
 
     ThrowIfFailed(swapChain.As(&m_swapChain));
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();

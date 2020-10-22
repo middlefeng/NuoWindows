@@ -12,6 +12,7 @@
 #pragma once
 
 #include "DXSample.h"
+#include "NuoDirect/NuoDirectView.h"
 
 using namespace DirectX;
 
@@ -26,7 +27,7 @@ class D3D12HelloFrameBuffering : public DXSample
 {
 public:
 
-    HWND _hWnd;
+    PNuoDirectView _view;
 
     D3D12HelloFrameBuffering(UINT width, UINT height, std::wstring name);
 
