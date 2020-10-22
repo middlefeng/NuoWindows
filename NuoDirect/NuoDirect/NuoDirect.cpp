@@ -5,7 +5,9 @@
 #include "NuoDirect.h"
 
 #include "NuoAppInstance.h"
+
 #include "NuoDirectWindow.h"
+#include "DirectView.h"
 
 #include "D3DHello/D3D12HelloFrameBuffering.h"
 
@@ -24,11 +26,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     NuoWindow::RegisterClass();
 
     PNuoDirectWindow window = std::make_shared<NuoDirectWindow>("  Nuo Direct");
+    window->Init();
 
-    sample._hWnd = window->Handle();
+    sample._hWnd = window->DXView()->Handle();
     sample.OnInit();
 
-    window->SetOnPaint([&sample]()
+    window->DXView()->SetOnPaint([&sample]()
         {
             sample.OnUpdate();
             sample.OnRender();

@@ -160,12 +160,14 @@
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoOpenFileDialog.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoRect.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoStrings.h" />
+    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindow\FoundationResource.h" />
     <ClInclude Include="D3DHello\D3D12HelloFrameBuffering.h" />
     <ClInclude Include="D3DHello\d3dx12.h" />
     <ClInclude Include="D3DHello\DXSample.h" />
     <ClInclude Include="D3DHello\DXSampleHelper.h" />
+    <ClInclude Include="DirectView.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoDirect.h" />
     <ClInclude Include="NuoDirectWindow.h" />
@@ -186,9 +188,11 @@
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoOpenFileDialog.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoRect.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoStrings.cpp" />
+    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.cpp" />
     <ClCompile Include="D3DHello\D3D12HelloFrameBuffering.cpp" />
     <ClCompile Include="D3DHello\DXSample.cpp" />
+    <ClCompile Include="DirectView.cpp" />
     <ClCompile Include="NuoDirect.cpp" />
     <ClCompile Include="NuoDirectWindow.cpp" />
   </ItemGroup>

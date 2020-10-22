@@ -96,6 +96,12 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.h">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectView.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -151,6 +157,12 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.cpp">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectView.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

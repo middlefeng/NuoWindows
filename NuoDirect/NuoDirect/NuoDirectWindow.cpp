@@ -13,14 +13,23 @@ NuoDirectWindow::NuoDirectWindow(const std::string& title)
 }
 
 
-void NuoDirectWindow::OnPaint()
+void NuoDirectWindow::Init()
 {
-	_onPaint();
+	_dxView = std::make_shared<DirectView>(shared_from_this());
+	Add(_dxView);
+
+	NuoInset<float> margin(0, 0, 0, 200);
+	_dxView->SetAutoPosition(kNuoControl_Stretch_ALL);
+	_dxView->SetMargin(margin);
 }
 
 
-
-void NuoDirectWindow::SetOnPaint(std::function<void()> onPaint)
+void NuoDirectWindow::OnPaint()
 {
-	_onPaint = onPaint;
+}
+
+
+PDirectView NuoDirectWindow::DXView()
+{
+	return _dxView;
 }

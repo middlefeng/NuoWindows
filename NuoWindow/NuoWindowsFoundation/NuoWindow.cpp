@@ -13,7 +13,7 @@
 #include "Resource.h"
 
 
-static wchar_t kClassName[100];// = L"NuoWindowClass";
+wchar_t kClassName[100];
 
 
 
@@ -46,7 +46,9 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
         UINT width = LOWORD(lParam);
         UINT height = HIWORD(lParam);
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
-        window->OnSize(width, height);
+
+        if (window)
+            window->OnSize(width, height);
 
         break;
     }
@@ -320,7 +322,9 @@ void NuoWindow::Destroy()
 
 void NuoWindow::OnDestroy()
 {
-    _onDestroy();
+    if (_onDestroy)
+        _onDestroy();
+
     _hWnd = 0;
 }
 

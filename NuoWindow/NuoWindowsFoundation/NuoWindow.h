@@ -12,6 +12,7 @@
 
 
 extern const int kWindowPtr;
+extern wchar_t kClassName[];
 
 typedef std::function<void(void)> SimpleFunc;
 
