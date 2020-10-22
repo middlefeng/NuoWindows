@@ -10,7 +10,7 @@
 #include <windows.h>
 #include <shellscalingapi.h>
 
-#include "resource.h"
+#include "Resource.h"
 
 
 static wchar_t kClassName[100];// = L"NuoWindowClass";
