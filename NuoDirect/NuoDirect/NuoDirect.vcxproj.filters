@@ -16,6 +16,9 @@
     <Filter Include="NuoWindowsFoundation">
       <UniqueIdentifier>{0ef0063a-8675-41fe-8275-6f3eaf111c7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="D3DHello">
+      <UniqueIdentifier>{a7621712-3b35-4ae1-8663-20a73b5dc297}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -72,6 +75,18 @@
     <ClInclude Include="..\..\NuoWindow\NuoWindow\FoundationResource.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
+    <ClInclude Include="D3DHello\D3D12HelloFrameBuffering.h">
+      <Filter>D3DHello</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DHello\DXSample.h">
+      <Filter>D3DHello</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DHello\DXSampleHelper.h">
+      <Filter>D3DHello</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DHello\d3dx12.h">
+      <Filter>D3DHello</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -115,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.cpp">
       <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DHello\D3D12HelloFrameBuffering.cpp">
+      <Filter>D3DHello</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DHello\DXSample.cpp">
+      <Filter>D3DHello</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

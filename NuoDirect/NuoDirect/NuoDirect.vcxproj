@@ -93,7 +93,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,7 +111,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -125,7 +125,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,7 +143,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -161,6 +161,10 @@
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoStrings.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindow\FoundationResource.h" />
+    <ClInclude Include="D3DHello\D3D12HelloFrameBuffering.h" />
+    <ClInclude Include="D3DHello\d3dx12.h" />
+    <ClInclude Include="D3DHello\DXSample.h" />
+    <ClInclude Include="D3DHello\DXSampleHelper.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoDirect.h" />
     <ClInclude Include="Resource.h" />
@@ -180,6 +184,8 @@
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoRect.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoStrings.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.cpp" />
+    <ClCompile Include="D3DHello\D3D12HelloFrameBuffering.cpp" />
+    <ClCompile Include="D3DHello\DXSample.cpp" />
     <ClCompile Include="NuoDirect.cpp" />
   </ItemGroup>
   <ItemGroup>
