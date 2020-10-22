@@ -19,6 +19,9 @@
     <Filter Include="D3DHello">
       <UniqueIdentifier>{a7621712-3b35-4ae1-8663-20a73b5dc297}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoDirect">
+      <UniqueIdentifier>{c494ec5a-be83-4081-a9af-f2c640995150}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -90,6 +93,9 @@
     <ClInclude Include="NuoDirectWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -142,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="NuoDirectWindow.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
