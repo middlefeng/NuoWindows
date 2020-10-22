@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NuoWindow.h"
-#include "NuoView.h"
+#include "NuoDirect/NuoDirectView.h"
 #include <functional>
 
 
@@ -9,7 +9,7 @@ class DirectView;
 typedef std::shared_ptr<DirectView> PDirectView;
 
 
-class DirectView : public NuoView
+class DirectView : public NuoDirectView
 {
 
 	std::function<void()> _onPaint;

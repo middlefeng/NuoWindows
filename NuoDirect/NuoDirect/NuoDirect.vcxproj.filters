@@ -102,6 +102,12 @@
     <ClInclude Include="DirectView.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandQueue.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -163,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="DirectView.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandQueue.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

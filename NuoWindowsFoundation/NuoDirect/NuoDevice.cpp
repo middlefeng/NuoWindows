@@ -62,6 +62,7 @@ std::set<PNuoDevice> NuoDevice::Devices()
                  PNuoDevice device = std::make_shared<NuoDevice>();
                  device->_dxDevice = dxDevice;
                  device->_dxDesc = desc1;
+                 device->_dxFactor = factory6;
 
                  _devices.insert(device);
              }
@@ -77,3 +78,16 @@ std::string NuoDevice::Name()
 {
     return StringToUTF8(_dxDesc.Description);
 }
+
+
+ID3D12Device* NuoDevice::DxDevice() const
+{
+    return _dxDevice.Get();
+}
+
+
+IDXGIFactory6* NuoDevice::DxFactory() const
+{
+    return _dxFactor.Get();
+}
+

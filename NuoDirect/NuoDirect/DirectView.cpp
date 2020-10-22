@@ -8,7 +8,7 @@
 
 
 DirectView::DirectView(const PNuoWindow& parent)
-	: NuoView(parent)
+	: NuoDirectView(parent)
 {
 }
 
