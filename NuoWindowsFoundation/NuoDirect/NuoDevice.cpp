@@ -1,13 +1,16 @@
 ﻿
 
 #include "NuoDevice.h"
+#include "NuoStrings.h"
 
-#include <dxgi1_6.h>
+
+std::set<PNuoDevice> NuoDevice::_devices;
 
 
 std::set<PNuoDevice> NuoDevice::Devices()
 {
-	std::set<PNuoDevice> result;
+    if (_devices.size())
+        return _devices;
 
 	UINT dxgiFactoryFlags = 0;
 
@@ -50,17 +53,27 @@ std::set<PNuoDevice> NuoDevice::Devices()
              if (found == DXGI_ERROR_NOT_FOUND)
                  break;
 
+             DXGI_ADAPTER_DESC1 desc1;
+             adapter->GetDesc1(&desc1);
+
              Microsoft::WRL::ComPtr<ID3D12Device> dxDevice;
              if (SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), &dxDevice)))
              {
                  PNuoDevice device = std::make_shared<NuoDevice>();
                  device->_dxDevice = dxDevice;
+                 device->_dxDesc = desc1;
 
-                 result.insert(device);
+                 _devices.insert(device);
              }
         }
     }
     while (false);
 
-	return result;
+	return _devices;
+}
+
+
+std::string NuoDevice::Name()
+{
+    return StringToUTF8(_dxDesc.Description);
 }
