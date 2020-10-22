@@ -5,7 +5,9 @@
 #include "NuoDirect.h"
 
 #include "NuoAppInstance.h"
-#include "NuoWindow.h"
+#include "NuoDirectWindow.h"
+
+#include "D3DHello/D3D12HelloFrameBuffering.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -16,10 +18,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+    D3D12HelloFrameBuffering sample(1280, 720, L"D3D12 Hello Frame Buffering");
+
     NuoAppInstance::Init(hInstance, nCmdShow);
     NuoWindow::RegisterClass();
 
-    PNuoWindow window = std::make_shared<NuoWindow>("  Nuo Direct");
+    PNuoDirectWindow window = std::make_shared<NuoDirectWindow>("  Nuo Direct");
+
+    sample._hWnd = window->Handle();
+    sample.OnInit();
+
+    window->SetOnPaint([&sample]()
+        {
+            sample.OnUpdate();
+            sample.OnRender();
+        });
 
     auto exitFunc = []()
     {

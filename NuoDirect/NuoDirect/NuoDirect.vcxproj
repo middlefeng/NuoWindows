@@ -167,6 +167,7 @@
     <ClInclude Include="D3DHello\DXSampleHelper.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoDirect.h" />
+    <ClInclude Include="NuoDirectWindow.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -187,6 +188,7 @@
     <ClCompile Include="D3DHello\D3D12HelloFrameBuffering.cpp" />
     <ClCompile Include="D3DHello\DXSample.cpp" />
     <ClCompile Include="NuoDirect.cpp" />
+    <ClCompile Include="NuoDirectWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\NuoWindow\NuoWindow\FoundationResource.rc" />
