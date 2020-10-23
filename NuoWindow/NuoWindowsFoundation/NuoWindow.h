@@ -79,6 +79,7 @@ public:
 
 	virtual void OnDestroy();
 	virtual bool OnCommand(int id);
+	virtual void OnPaint();
 	virtual void OnSize(unsigned int x, unsigned int y);
 	virtual void OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI);
 
