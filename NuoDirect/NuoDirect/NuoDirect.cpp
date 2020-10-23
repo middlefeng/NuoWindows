@@ -28,7 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     PNuoDirectWindow window = std::make_shared<NuoDirectWindow>("  Nuo Direct");
     window->Init();
 
-    sample._hWnd = window->DXView()->Handle();
+    sample._view = window->DXView();
     sample.OnInit();
 
     window->DXView()->SetOnPaint([&sample]()

@@ -32,81 +32,8 @@ void D3D12HelloFrameBuffering::OnInit()
 // Load the rendering pipeline dependencies.
 void D3D12HelloFrameBuffering::LoadPipeline()
 {
-    UINT dxgiFactoryFlags = 0;
-
-#if defined(_DEBUG)
-    // Enable the debug layer (requires the Graphics Tools "optional feature").
-    // NOTE: Enabling the debug layer after device creation will invalidate the active device.
-    {
-        ComPtr<ID3D12Debug> debugController;
-        if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-        {
-            debugController->EnableDebugLayer();
-
-            // Enable additional debug layers.
-            dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
-        }
-    }
-#endif
-
-    ComPtr<IDXGIFactory4> factory;
-    ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
-
-    if (m_useWarpDevice)
-    {
-        ComPtr<IDXGIAdapter> warpAdapter;
-        ThrowIfFailed(factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)));
-
-        ThrowIfFailed(D3D12CreateDevice(
-            warpAdapter.Get(),
-            D3D_FEATURE_LEVEL_11_0,
-            IID_PPV_ARGS(&m_device)
-            ));
-    }
-    else
-    {
-        ComPtr<IDXGIAdapter1> hardwareAdapter;
-        GetHardwareAdapter(factory.Get(), &hardwareAdapter);
-
-        ThrowIfFailed(D3D12CreateDevice(
-            hardwareAdapter.Get(),
-            D3D_FEATURE_LEVEL_11_0,
-            IID_PPV_ARGS(&m_device)
-            ));
-    }
-
-    // Describe and create the command queue.
-    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
-    ThrowIfFailed(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue)));
-
-    // Describe and create the swap chain.
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-    swapChainDesc.BufferCount = FrameCount;
-    swapChainDesc.Width = m_width;
-    swapChainDesc.Height = m_height;
-    swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    swapChainDesc.SampleDesc.Count = 1;
-
-    ComPtr<IDXGISwapChain1> swapChain;
-    ThrowIfFailed(factory->CreateSwapChainForHwnd(
-        m_commandQueue.Get(),        // Swap chain needs the queue so that it can force a flush on it.
-        _view->Handle(),
-        &swapChainDesc,
-        nullptr,
-        nullptr,
-        &swapChain
-        ));
-
-    // This sample does not support fullscreen transitions.
-    ThrowIfFailed(factory->MakeWindowAssociation(_view->Handle(), DXGI_MWA_NO_ALT_ENTER));
-
-    ThrowIfFailed(swapChain.As(&m_swapChain));
-    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+    PNuoDevice device = _view->CommandQueue()->Device();
+    m_frameIndex = _view->SwapChain()->CurrentBackBufferIndex();
 
     // Create descriptor heaps.
     {
@@ -115,9 +42,9 @@ void D3D12HelloFrameBuffering::LoadPipeline()
         rtvHeapDesc.NumDescriptors = FrameCount;
         rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
         rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        ThrowIfFailed(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap)));
+        ThrowIfFailed(device->DxDevice()->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap)));
 
-        m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+        m_rtvDescriptorSize = device->DxDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     }
 
     // Create frame resources.
@@ -127,11 +54,11 @@ void D3D12HelloFrameBuffering::LoadPipeline()
         // Create a RTV and a command allocator for each frame.
         for (UINT n = 0; n < FrameCount; n++)
         {
-            ThrowIfFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])));
-            m_device->CreateRenderTargetView(m_renderTargets[n].Get(), nullptr, rtvHandle);
+            ThrowIfFailed(_view->SwapChain()->DxChain()->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])));
+            device->DxDevice()->CreateRenderTargetView(m_renderTargets[n].Get(), nullptr, rtvHandle);
             rtvHandle.Offset(1, m_rtvDescriptorSize);
 
-            ThrowIfFailed(m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocators[n])));
+            ThrowIfFailed(device->DxDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocators[n])));
         }
     }
 }
@@ -139,6 +66,8 @@ void D3D12HelloFrameBuffering::LoadPipeline()
 // Load the sample assets.
 void D3D12HelloFrameBuffering::LoadAssets()
 {
+    PNuoDevice device = _view->CommandQueue()->Device();
+
     // Create an empty root signature.
     {
         CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
@@ -147,7 +76,7 @@ void D3D12HelloFrameBuffering::LoadAssets()
         ComPtr<ID3DBlob> signature;
         ComPtr<ID3DBlob> error;
         ThrowIfFailed(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error));
-        ThrowIfFailed(m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature)));
+        ThrowIfFailed(device->DxDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature)));
     }
 
     // Create the pipeline state, which includes compiling and loading shaders.
@@ -187,11 +116,11 @@ void D3D12HelloFrameBuffering::LoadAssets()
         psoDesc.NumRenderTargets = 1;
         psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
         psoDesc.SampleDesc.Count = 1;
-        ThrowIfFailed(m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)));
+        ThrowIfFailed(device->DxDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)));
     }
 
     // Create the command list.
-    ThrowIfFailed(m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocators[m_frameIndex].Get(), m_pipelineState.Get(), IID_PPV_ARGS(&m_commandList)));
+    ThrowIfFailed(device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocators[m_frameIndex].Get(), m_pipelineState.Get(), IID_PPV_ARGS(&m_commandList)));
 
     // Command lists are created in the recording state, but there is nothing
     // to record yet. The main loop expects it to be closed, so close it now.
@@ -213,7 +142,7 @@ void D3D12HelloFrameBuffering::LoadAssets()
         // recommended. Every time the GPU needs it, the upload heap will be marshalled 
         // over. Please read up on Default Heap usage. An upload heap is used here for 
         // code simplicity and because there are very few verts to actually transfer.
-        ThrowIfFailed(m_device->CreateCommittedResource(
+        ThrowIfFailed(device->DxDevice()->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
             D3D12_HEAP_FLAG_NONE,
             &CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
@@ -236,7 +165,7 @@ void D3D12HelloFrameBuffering::LoadAssets()
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     {
-        ThrowIfFailed(m_device->CreateFence(m_fenceValues[m_frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
+        ThrowIfFailed(device->DxDevice()->CreateFence(m_fenceValues[m_frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
         m_fenceValues[m_frameIndex]++;
 
         // Create an event handle to use for frame synchronization.
@@ -261,15 +190,18 @@ void D3D12HelloFrameBuffering::OnUpdate()
 // Render the scene.
 void D3D12HelloFrameBuffering::OnRender()
 {
+    PNuoCommandQueue queue = _view->CommandQueue();
+    PNuoSwapChain swapChain = _view->SwapChain();
+
     // Record all the commands we need to render the scene into the command list.
     PopulateCommandList();
 
     // Execute the command list.
     ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
-    m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+    queue->DxQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
     // Present the frame.
-    ThrowIfFailed(m_swapChain->Present(1, 0));
+    ThrowIfFailed(swapChain->DxChain()->Present(1, 0));
 
     MoveToNextFrame();
 }
@@ -322,8 +254,10 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
 // Wait for pending GPU work to complete.
 void D3D12HelloFrameBuffering::WaitForGpu()
 {
+    PNuoCommandQueue queue = _view->CommandQueue();
+
     // Schedule a Signal command in the queue.
-    ThrowIfFailed(m_commandQueue->Signal(m_fence.Get(), m_fenceValues[m_frameIndex]));
+    ThrowIfFailed(queue->DxQueue()->Signal(m_fence.Get(), m_fenceValues[m_frameIndex]));
 
     // Wait until the fence has been processed.
     ThrowIfFailed(m_fence->SetEventOnCompletion(m_fenceValues[m_frameIndex], m_fenceEvent));
@@ -336,15 +270,18 @@ void D3D12HelloFrameBuffering::WaitForGpu()
 // Prepare to render the next frame.
 void D3D12HelloFrameBuffering::MoveToNextFrame()
 {
+    PNuoCommandQueue queue = _view->CommandQueue();
+    PNuoSwapChain swapChain = _view->SwapChain();
+
     // Schedule a Signal command in the queue.
     const UINT64 currentFenceValue = m_fenceValues[m_frameIndex];
-    ThrowIfFailed(m_commandQueue->Signal(m_fence.Get(), currentFenceValue));
+    ThrowIfFailed(queue->DxQueue()->Signal(m_fence.Get(), currentFenceValue));
 
     // Update the frame index.
-    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+    m_frameIndex = swapChain->CurrentBackBufferIndex();
     
     DXGI_SWAP_CHAIN_DESC desc;
-    m_swapChain->GetDesc(&desc);
+    swapChain->DxChain()->GetDesc(&desc);
 
     //DXGI_SWAP_CHAIN_DESC desc;
     //m_swapChain->GetDesc(&desc);

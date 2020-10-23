@@ -30,19 +30,27 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
     
     if (swapChain)
         swapChain.As(&_swapChain);
+
+    factory->MakeWindowAssociation(view->Handle(), DXGI_MWA_NO_ALT_ENTER);
+}
+
+
+unsigned int NuoSwapChain::CurrentBackBufferIndex()
+{
+    return _swapChain->GetCurrentBackBufferIndex();
+}
+
+
+IDXGISwapChain3* NuoSwapChain::DxChain() const
+{
+    return _swapChain.Get();
 }
 
 
 
 NuoDirectView::NuoDirectView(const PNuoWindow& parent)
 	: NuoView(parent)
-{   
-}
-
-
-void NuoDirectView::SetCommandQueue(const PNuoCommandQueue& queue)
 {
-    _commandQueue = queue;
 }
 
 
@@ -52,11 +60,13 @@ PNuoCommandQueue NuoDirectView::CommandQueue() const
 }
 
 
-void NuoDirectView::CreateSwapChain(unsigned int frameCount,
+void NuoDirectView::CreateSwapChain(const PNuoDevice& device,
+                                    unsigned int frameCount,
                                     unsigned int w, unsigned int h)
 {
     PNuoDirectView view = std::dynamic_pointer_cast<NuoDirectView>(shared_from_this());
 
+    _commandQueue = std::make_shared<NuoCommandQueue>(device);
     _swapChain = std::make_shared<NuoSwapChain>(view, frameCount, w, h);
 }
 

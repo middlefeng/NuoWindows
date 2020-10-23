@@ -32,6 +32,10 @@ public:
 	NuoSwapChain(const PNuoDirectView& view,
 				 unsigned int frameCount,
 				 unsigned int w, unsigned int h);
+
+	// TODO:
+	unsigned int CurrentBackBufferIndex();
+	IDXGISwapChain3* DxChain() const;
 };
 
 
@@ -48,11 +52,16 @@ public:
 
 	NuoDirectView(const PNuoWindow& parent);
 
-	void SetCommandQueue(const PNuoCommandQueue& queue);
 	PNuoCommandQueue CommandQueue() const;
 
-	void CreateSwapChain(unsigned int frameCount,
+	void CreateSwapChain(const PNuoDevice& device,
+						 unsigned int frameCount,
 						 unsigned int w, unsigned int h);
+
+	//TODO:
+	PNuoSwapChain SwapChain() {
+		return _swapChain;
+	}
 
 };
 
