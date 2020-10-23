@@ -74,9 +74,32 @@ std::set<PNuoDevice> NuoDevice::Devices()
 }
 
 
-std::string NuoDevice::Name()
+std::string NuoDevice::Name() const
 {
     return StringToUTF8(_dxDesc.Description);
+}
+
+
+unsigned int NuoDevice::RenderTargetDescriptorHandleIncrementSize() const
+{
+    return _dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+}
+
+
+
+PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount) const
+{
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+
+    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+    rtvHeapDesc.NumDescriptors = frameCount;
+    rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+    heap->_size = frameCount;
+    _dxDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&heap->_heap));
+
+    return heap;
 }
 
 

@@ -12,6 +12,7 @@
 
 #include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoCommandQueue.h"
+#include "NuoDirect/NuoResourceSwapChain.h"
 
 
 
@@ -27,11 +28,15 @@ class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
 	WPNuoDevice _device;
 	WPNuoDirectView _view;
 
+	PNuoResourceSwapChain _buffer;
+
 public:
 
 	NuoSwapChain(const PNuoDirectView& view,
 				 unsigned int frameCount,
 				 unsigned int w, unsigned int h);
+
+	PNuoResourceSwapChain Buffer();
 
 	// TODO:
 	unsigned int CurrentBackBufferIndex();

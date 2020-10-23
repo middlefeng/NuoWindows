@@ -8,6 +8,9 @@
 #include <dxgi1_6.h>
 #include <wrl.h>
 
+#include "NuoDirect/NuoDescriptorHeap.h"
+
+
 class NuoDevice;
 typedef std::shared_ptr<NuoDevice> PNuoDevice;
 typedef std::weak_ptr<NuoDevice> WPNuoDevice;
@@ -26,7 +29,9 @@ public:
 
 	static std::set<PNuoDevice> Devices();
 
-	std::string Name();
+	std::string Name() const;
+	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
+	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount) const;
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;

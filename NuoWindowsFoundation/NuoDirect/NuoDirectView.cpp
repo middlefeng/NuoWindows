@@ -32,6 +32,26 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
         swapChain.As(&_swapChain);
 
     factory->MakeWindowAssociation(view->Handle(), DXGI_MWA_NO_ALT_ENTER);
+
+    std::vector<PNuoResource> buffers;
+    for (unsigned int i = 0; i < frameCount; ++i)
+    {
+        Microsoft::WRL::ComPtr<ID3D12Resource> dxResource = nullptr;
+        _swapChain->GetBuffer(i, IID_PPV_ARGS(&dxResource));
+
+        PNuoResource buffer = std::make_shared<NuoResource>();
+        buffer->_dxResources = dxResource;
+
+        buffers.push_back(buffer);
+    }
+
+    _buffer = std::make_shared<NuoResourceSwapChain>(buffers);
+}
+
+
+PNuoResourceSwapChain NuoSwapChain::Buffer()
+{
+    return _buffer;
 }
 
 
