@@ -27,6 +27,7 @@ public:
 	NuoResourceSwapChain(const std::vector<PNuoResource>& resources);
 	
 	PNuoResource operator [] (unsigned int inFlight);
+	size_t Count() const;
 
 };
 

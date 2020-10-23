@@ -16,7 +16,7 @@ typedef std::shared_ptr<NuoDevice> PNuoDevice;
 typedef std::weak_ptr<NuoDevice> WPNuoDevice;
 
 
-class NuoDevice
+class NuoDevice : public std::enable_shared_from_this<NuoDevice>
 {
 
 	Microsoft::WRL::ComPtr<ID3D12Device> _dxDevice;
@@ -31,7 +31,7 @@ public:
 
 	std::string Name() const;
 	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
-	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount) const;
+	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;

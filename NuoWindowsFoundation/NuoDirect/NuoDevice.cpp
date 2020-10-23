@@ -87,7 +87,7 @@ unsigned int NuoDevice::RenderTargetDescriptorHandleIncrementSize() const
 
 
 
-PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount) const
+PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 {
     PNuoDescriptorHeap heap(new NuoDescriptorHeap());
 
@@ -97,6 +97,7 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount) co
     rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
     heap->_size = frameCount;
+    heap->_device = shared_from_this();
     _dxDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&heap->_heap));
 
     return heap;

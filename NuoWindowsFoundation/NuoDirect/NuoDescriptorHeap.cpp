@@ -4,6 +4,8 @@
 #include "NuoDevice.h"
 
 
+
+
 D3D12_CPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxRenderTargetView(unsigned int inFlight)
 {
     PNuoDevice device = _device.lock();

@@ -31,14 +31,12 @@ class NuoRenderTargetSwapChain
 public:
 
 	NuoRenderTargetSwapChain(const PNuoDevice& device,
-							 const PNuoResourceSwapChain& renderTargets,
-							 unsigned int frameCount);
+							 const PNuoResourceSwapChain& renderTargets);
 	
 private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DxRenderTargetView(unsigned int inFlight);
 
-	//size_t _descriptorSize;
-	//size_t DescriptorSize();
+	friend class NuoDirectView;
 };
 

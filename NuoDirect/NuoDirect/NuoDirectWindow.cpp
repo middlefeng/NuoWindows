@@ -30,7 +30,7 @@ void NuoDirectWindow::Init()
 	NuoInset<float> margin(0, 0, 0, 200);
 	_dxView->SetAutoPosition(kNuoControl_Stretch_ALL);
 	_dxView->SetMargin(margin);
-	_dxView->CreateSwapChain(currentDevice, 2, 1280, 720);
+	_dxView->CreateSwapChain(currentDevice, 3, 1280, 720);
 }
 
 

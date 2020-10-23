@@ -46,12 +46,19 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
     }
 
     _buffer = std::make_shared<NuoResourceSwapChain>(buffers);
+    _rtvSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), _buffer));
 }
 
 
 PNuoResourceSwapChain NuoSwapChain::Buffer()
 {
     return _buffer;
+}
+
+
+PNuoRenderTargetSwapChain NuoSwapChain::RenderTargetViews()
+{
+    return _rtvSwapChain;
 }
 
 
@@ -89,5 +96,20 @@ void NuoDirectView::CreateSwapChain(const PNuoDevice& device,
     _commandQueue = std::make_shared<NuoCommandQueue>(device);
     _swapChain = std::make_shared<NuoSwapChain>(view, frameCount, w, h);
 }
+
+
+PNuoResource NuoDirectView::RenderTarget(unsigned int inFlight)
+{
+    PNuoResourceSwapChain buffers = _swapChain->Buffer();
+    return (*buffers)[inFlight];
+}
+
+
+D3D12_CPU_DESCRIPTOR_HANDLE NuoDirectView::RenderTargetView(unsigned int inFlight)
+{
+    auto rtvSwapChain = _swapChain->RenderTargetViews();
+    return rtvSwapChain->DxRenderTargetView(inFlight);
+}
+
 
 

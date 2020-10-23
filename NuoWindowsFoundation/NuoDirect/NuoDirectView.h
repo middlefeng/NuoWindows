@@ -13,6 +13,7 @@
 #include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoCommandQueue.h"
 #include "NuoDirect/NuoResourceSwapChain.h"
+#include "NuoDirect/NuoRenderTargetSwapChain.h"
 
 
 
@@ -29,6 +30,7 @@ class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
 	WPNuoDirectView _view;
 
 	PNuoResourceSwapChain _buffer;
+	PNuoRenderTargetSwapChain _rtvSwapChain;
 
 public:
 
@@ -37,6 +39,7 @@ public:
 				 unsigned int w, unsigned int h);
 
 	PNuoResourceSwapChain Buffer();
+	PNuoRenderTargetSwapChain RenderTargetViews();
 
 	// TODO:
 	unsigned int CurrentBackBufferIndex();
@@ -62,6 +65,9 @@ public:
 	void CreateSwapChain(const PNuoDevice& device,
 						 unsigned int frameCount,
 						 unsigned int w, unsigned int h);
+
+	PNuoResource RenderTarget(unsigned int inFlight);
+	D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetView(unsigned int inFlight);
 
 	//TODO:
 	PNuoSwapChain SwapChain() {

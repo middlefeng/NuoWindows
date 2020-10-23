@@ -108,6 +108,18 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandQueue.h">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResource.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTargetSwapChain.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDescriptorHeap.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -174,6 +186,18 @@
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandQueue.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResource.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTargetSwapChain.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDescriptorHeap.cpp">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,12 +6,11 @@
 
 
 NuoRenderTargetSwapChain::NuoRenderTargetSwapChain(const PNuoDevice& device,
-                                                   const PNuoResourceSwapChain& renderTargets,
-                                                   unsigned int frameCount)
+                                                   const PNuoResourceSwapChain& renderTargets)
     : _device(device),
       _resources(renderTargets)
 {
-    _rtvHeap = device->CreateRenderTargetHeap(frameCount);
+    _rtvHeap = device->CreateRenderTargetHeap(_resources->Count());
 
     /*D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
     rtvHeapDesc.NumDescriptors = frameCount;
@@ -22,7 +21,7 @@ NuoRenderTargetSwapChain::NuoRenderTargetSwapChain(const PNuoDevice& device,
 
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(_rtvHeap->GetCPUDescriptorHandleForHeapStart());*/
 
-    for (UINT n = 0; n < frameCount; n++)
+    for (UINT n = 0; n < _resources->Count(); n++)
     {
         D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = DxRenderTargetView(n);
         device->DxDevice()->CreateRenderTargetView((*_resources)[n]->DxResource(), nullptr, rtvHandle);
