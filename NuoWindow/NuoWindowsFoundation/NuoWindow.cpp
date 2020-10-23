@@ -63,10 +63,15 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
     }
     case WM_PAINT:
     {
+        PAINTSTRUCT lc;
+        BeginPaint(hWnd, &lc);
+
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
 
         if (window)
             window->OnPaint();
+
+        EndPaint(hWnd, &lc);
 
         break;
     }
