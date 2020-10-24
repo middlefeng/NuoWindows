@@ -22,31 +22,7 @@ typedef std::shared_ptr<NuoDirectView> PNuoDirectView;
 typedef std::weak_ptr<NuoDirectView> WPNuoDirectView;
 
 
-
-class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
-{
-	Microsoft::WRL::ComPtr<IDXGISwapChain3> _swapChain;
-	WPNuoDevice _device;
-	WPNuoDirectView _view;
-
-	PNuoResourceSwapChain _buffer;
-	PNuoRenderTargetSwapChain _rtvSwapChain;
-
-public:
-
-	NuoSwapChain(const PNuoDirectView& view,
-				 unsigned int frameCount,
-				 unsigned int w, unsigned int h);
-
-	PNuoResourceSwapChain Buffer();
-	PNuoRenderTargetSwapChain RenderTargetViews();
-
-	// TODO:
-	unsigned int CurrentBackBufferIndex();
-	IDXGISwapChain3* DxChain() const;
-};
-
-
+class NuoSwapChain;
 typedef std::shared_ptr<NuoSwapChain> PNuoSwapChain;
 
 
@@ -69,10 +45,13 @@ public:
 	PNuoResource RenderTarget(unsigned int inFlight);
 	D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetView(unsigned int inFlight);
 
+	void Present();
+	unsigned int CurrentBackBufferIndex();
+
 	//TODO:
-	PNuoSwapChain SwapChain() {
+	/*PNuoSwapChain SwapChain() {
 		return _swapChain;
-	}
+	}*/
 
 };
 

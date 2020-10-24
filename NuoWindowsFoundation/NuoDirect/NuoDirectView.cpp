@@ -5,11 +5,39 @@
 
 
 
+class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
+{
+    Microsoft::WRL::ComPtr<IDXGISwapChain3> _swapChain;
+    WPNuoDevice _device;
+    WPNuoDirectView _view;
+
+    PNuoResourceSwapChain _buffer;
+    PNuoRenderTargetSwapChain _rtvSwapChain;
+
+    int _currentBackBufferIndex;
+
+public:
+
+    NuoSwapChain(const PNuoDirectView& view,
+        unsigned int frameCount,
+        unsigned int w, unsigned int h);
+
+    PNuoResourceSwapChain Buffer();
+    PNuoRenderTargetSwapChain RenderTargetViews();
+
+    void Present();
+
+    // TODO:
+    unsigned int CurrentBackBufferIndex();
+    IDXGISwapChain3* DxChain() const;
+};
+
 
 NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
                            unsigned int frameCount,
                            unsigned int w, unsigned int h)
-    : _view(view)
+    : _view(view),
+      _currentBackBufferIndex(-1)
 {
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
     swapChainDesc.BufferCount = frameCount;
@@ -64,7 +92,17 @@ PNuoRenderTargetSwapChain NuoSwapChain::RenderTargetViews()
 
 unsigned int NuoSwapChain::CurrentBackBufferIndex()
 {
-    return _swapChain->GetCurrentBackBufferIndex();
+    if (_currentBackBufferIndex < 0)
+        _currentBackBufferIndex = _swapChain->GetCurrentBackBufferIndex();
+
+    return _currentBackBufferIndex;
+}
+
+
+void NuoSwapChain::Present()
+{
+    _swapChain->Present(1, 0);
+    _currentBackBufferIndex = -1;
 }
 
 
@@ -109,6 +147,18 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoDirectView::RenderTargetView(unsigned int inFligh
 {
     auto rtvSwapChain = _swapChain->RenderTargetViews();
     return rtvSwapChain->DxRenderTargetView(inFlight);
+}
+
+
+void NuoDirectView::Present()
+{
+    _swapChain->Present();
+}
+
+
+unsigned int NuoDirectView::CurrentBackBufferIndex()
+{
+    return _swapChain->CurrentBackBufferIndex();
 }
 
 

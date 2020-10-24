@@ -33,7 +33,7 @@ void D3D12HelloFrameBuffering::OnInit()
 void D3D12HelloFrameBuffering::LoadPipeline()
 {
     PNuoDevice device = _view->CommandQueue()->Device();
-    m_frameIndex = _view->SwapChain()->CurrentBackBufferIndex();
+    m_frameIndex = _view->CurrentBackBufferIndex();
 
     // Create frame resources.
     {
@@ -173,8 +173,7 @@ void D3D12HelloFrameBuffering::OnUpdate()
 void D3D12HelloFrameBuffering::OnRender()
 {
     PNuoCommandQueue queue = _view->CommandQueue();
-    PNuoSwapChain swapChain = _view->SwapChain();
-
+    
     // Record all the commands we need to render the scene into the command list.
     PopulateCommandList();
 
@@ -183,9 +182,9 @@ void D3D12HelloFrameBuffering::OnRender()
     queue->DxQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
     // Present the frame.
-    ThrowIfFailed(swapChain->DxChain()->Present(1, 0));
+    _view->Present();
 
-    MoveToNextFrame();
+     MoveToNextFrame();
 }
 
 void D3D12HelloFrameBuffering::OnDestroy()
@@ -254,21 +253,14 @@ void D3D12HelloFrameBuffering::WaitForGpu()
 void D3D12HelloFrameBuffering::MoveToNextFrame()
 {
     PNuoCommandQueue queue = _view->CommandQueue();
-    PNuoSwapChain swapChain = _view->SwapChain();
 
     // Schedule a Signal command in the queue.
     const UINT64 currentFenceValue = m_fenceValues[m_frameIndex];
     ThrowIfFailed(queue->DxQueue()->Signal(m_fence.Get(), currentFenceValue));
 
     // Update the frame index.
-    m_frameIndex = swapChain->CurrentBackBufferIndex();
+    m_frameIndex = _view->CurrentBackBufferIndex();
     
-    DXGI_SWAP_CHAIN_DESC desc;
-    swapChain->DxChain()->GetDesc(&desc);
-
-    //DXGI_SWAP_CHAIN_DESC desc;
-    //m_swapChain->GetDesc(&desc);
-
     // If the next frame is not ready to be rendered yet, wait until it is ready.
     if (m_fence->GetCompletedValue() < m_fenceValues[m_frameIndex])
     {
