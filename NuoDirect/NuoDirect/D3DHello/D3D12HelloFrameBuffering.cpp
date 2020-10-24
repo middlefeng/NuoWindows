@@ -15,10 +15,10 @@
 
 D3D12HelloFrameBuffering::D3D12HelloFrameBuffering(UINT width, UINT height, std::wstring name) :
     DXSample(width, height, name),
-    m_frameIndex(0),
+    //m_frameIndex(0),
     m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)),
     m_scissorRect(0, 0, static_cast<LONG>(width), static_cast<LONG>(height)),
-    m_fenceValues{},
+    //m_fenceValues{},
     m_rtvDescriptorSize(0)
 {
 }
@@ -33,7 +33,7 @@ void D3D12HelloFrameBuffering::OnInit()
 void D3D12HelloFrameBuffering::LoadPipeline()
 {
     PNuoDevice device = _view->CommandQueue()->Device();
-    m_frameIndex = _view->CurrentBackBufferIndex();
+    //m_frameIndex = _view->CurrentBackBufferIndex();
 
     // Create frame resources.
     {
@@ -102,7 +102,7 @@ void D3D12HelloFrameBuffering::LoadAssets()
     }
 
     // Create the command list.
-    ThrowIfFailed(device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocators[m_frameIndex].Get(), m_pipelineState.Get(), IID_PPV_ARGS(&m_commandList)));
+    ThrowIfFailed(device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocators[_view->CurrentBackBufferIndex()].Get(), m_pipelineState.Get(), IID_PPV_ARGS(&m_commandList)));
 
     // Command lists are created in the recording state, but there is nothing
     // to record yet. The main loop expects it to be closed, so close it now.
@@ -147,7 +147,7 @@ void D3D12HelloFrameBuffering::LoadAssets()
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     {
-        ThrowIfFailed(device->DxDevice()->CreateFence(m_fenceValues[m_frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
+        /*ThrowIfFailed(device->DxDevice()->CreateFence(m_fenceValues[m_frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
         m_fenceValues[m_frameIndex]++;
 
         // Create an event handle to use for frame synchronization.
@@ -160,7 +160,9 @@ void D3D12HelloFrameBuffering::LoadAssets()
         // Wait for the command list to execute; we are reusing the same command 
         // list in our main loop but for now, we just want to wait for setup to 
         // complete before continuing.
-        WaitForGpu();
+        WaitForGpu();*/
+
+        _view->WaitForGPU();
     }
 }
 
@@ -182,18 +184,19 @@ void D3D12HelloFrameBuffering::OnRender()
     queue->DxQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
     // Present the frame.
-    _view->Present();
+    //_view->Present();
 
-     MoveToNextFrame();
+    // MoveToNextFrame();
+    _view->MoveToNextFrame();
 }
 
 void D3D12HelloFrameBuffering::OnDestroy()
 {
     // Ensure that the GPU is no longer referencing resources that are about to be
     // cleaned up by the destructor.
-    WaitForGpu();
+    _view->WaitForGPU();
 
-    CloseHandle(m_fenceEvent);
+    //CloseHandle(m_fenceEvent);
 }
 
 void D3D12HelloFrameBuffering::PopulateCommandList()
@@ -201,12 +204,12 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
     // Command list allocators can only be reset when the associated 
     // command lists have finished execution on the GPU; apps should use 
     // fences to determine GPU execution progress.
-    ThrowIfFailed(m_commandAllocators[m_frameIndex]->Reset());
+    ThrowIfFailed(m_commandAllocators[_view->CurrentBackBufferIndex()]->Reset());
 
     // However, when ExecuteCommandList() is called on a particular command 
     // list, that command list can then be reset at any time and must be before 
     // re-recording.
-    ThrowIfFailed(m_commandList->Reset(m_commandAllocators[m_frameIndex].Get(), m_pipelineState.Get()));
+    ThrowIfFailed(m_commandList->Reset(m_commandAllocators[_view->CurrentBackBufferIndex()].Get(), m_pipelineState.Get()));
 
     // Set necessary state.
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
@@ -214,10 +217,10 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
     m_commandList->RSSetScissorRects(1, &m_scissorRect);
 
     // Indicate that the back buffer will be used as a render target.
-    PNuoResource renderTarget = _view->RenderTarget(m_frameIndex);
+    PNuoResource renderTarget = _view->CurrentRenderTarget();
     m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->DxResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
-    auto rtvHandle = _view->RenderTargetView(m_frameIndex);
+    auto rtvHandle = _view->CurrentRenderTargetView();
     m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 
     // Record commands.
@@ -234,7 +237,7 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
 }
 
 // Wait for pending GPU work to complete.
-void D3D12HelloFrameBuffering::WaitForGpu()
+/*void D3D12HelloFrameBuffering::WaitForGpu()
 {
     PNuoCommandQueue queue = _view->CommandQueue();
 
@@ -270,4 +273,4 @@ void D3D12HelloFrameBuffering::MoveToNextFrame()
 
     // Set the fence value for the next frame.
     m_fenceValues[m_frameIndex] = currentFenceValue + 1;
-}
+}*/

@@ -3,29 +3,39 @@
 #include "NuoDirectView.h"
 #include "NuoDirect/NuoDevice.h"
 
+#include "NuoDirect/NuoResourceSwapChain.h"
+#include "NuoDirect/NuoRenderTargetSwapChain.h"
+#include "NuoDirect/NuoFenceSwapChain.h"
+
 
 
 class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
 {
     Microsoft::WRL::ComPtr<IDXGISwapChain3> _swapChain;
+    Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;
     WPNuoDevice _device;
     WPNuoDirectView _view;
 
+
     PNuoResourceSwapChain _buffer;
     PNuoRenderTargetSwapChain _rtvSwapChain;
+    PNuoFenceSwapChain _fence;
+    
 
     int _currentBackBufferIndex;
 
 public:
 
     NuoSwapChain(const PNuoDirectView& view,
-        unsigned int frameCount,
-        unsigned int w, unsigned int h);
+                 unsigned int frameCount,
+                 unsigned int w, unsigned int h);
 
     PNuoResourceSwapChain Buffer();
     PNuoRenderTargetSwapChain RenderTargetViews();
 
     void Present();
+    void WaitForGPU();
+    void MoveToNextFrame();
 
     // TODO:
     unsigned int CurrentBackBufferIndex();
@@ -75,6 +85,8 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
 
     _buffer = std::make_shared<NuoResourceSwapChain>(buffers);
     _rtvSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), _buffer));
+
+    _fence = device->CreateFenceSwapChain(frameCount);
 }
 
 
@@ -101,8 +113,22 @@ unsigned int NuoSwapChain::CurrentBackBufferIndex()
 
 void NuoSwapChain::Present()
 {
-    _swapChain->Present(1, 0);
+    _swapChain->Present(1 /* wait for v-sync */ , 0 /* not allow tearing */ );
     _currentBackBufferIndex = -1;
+}
+
+
+void NuoSwapChain::WaitForGPU()
+{
+    PNuoDirectView view = _view.lock();
+    _fence->WaitForGPU(view);
+}
+
+
+void NuoSwapChain::MoveToNextFrame()
+{
+    PNuoDirectView view = _view.lock();
+    _fence->MoveToNextFrame(view);
 }
 
 
@@ -143,6 +169,13 @@ PNuoResource NuoDirectView::RenderTarget(unsigned int inFlight)
 }
 
 
+PNuoResource NuoDirectView::CurrentRenderTarget()
+{
+    unsigned int current = _swapChain->CurrentBackBufferIndex();
+    return RenderTarget(current);
+}
+
+
 D3D12_CPU_DESCRIPTOR_HANDLE NuoDirectView::RenderTargetView(unsigned int inFlight)
 {
     auto rtvSwapChain = _swapChain->RenderTargetViews();
@@ -150,9 +183,28 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoDirectView::RenderTargetView(unsigned int inFligh
 }
 
 
+D3D12_CPU_DESCRIPTOR_HANDLE NuoDirectView::CurrentRenderTargetView()
+{
+    unsigned int current = _swapChain->CurrentBackBufferIndex();
+    return RenderTargetView(current);
+}
+
+
 void NuoDirectView::Present()
 {
     _swapChain->Present();
+}
+
+
+void NuoDirectView::WaitForGPU()
+{
+    _swapChain->WaitForGPU();
+}
+
+
+void NuoDirectView::MoveToNextFrame()
+{
+    _swapChain->MoveToNextFrame();
 }
 
 

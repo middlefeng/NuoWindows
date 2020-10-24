@@ -9,6 +9,7 @@
 #include <wrl.h>
 
 #include "NuoDirect/NuoDescriptorHeap.h"
+#include "NuoDirect/NuoFenceSwapChain.h"
 
 
 class NuoDevice;
@@ -32,6 +33,8 @@ public:
 	std::string Name() const;
 	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
 	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);
+
+	PNuoFenceSwapChain CreateFenceSwapChain(unsigned int frameCount);
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;

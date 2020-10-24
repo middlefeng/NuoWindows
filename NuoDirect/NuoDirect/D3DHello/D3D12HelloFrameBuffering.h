@@ -72,14 +72,14 @@ private:
     D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 
     // Synchronization objects.
-    UINT m_frameIndex;
-    HANDLE m_fenceEvent;
-    ComPtr<ID3D12Fence> m_fence;
-    UINT64 m_fenceValues[FrameCount];
+   // UINT m_frameIndex;
+    //HANDLE m_fenceEvent;
+    //ComPtr<ID3D12Fence> m_fence;
+    //UINT64 m_fenceValues[FrameCount];
 
     void LoadPipeline();
     void LoadAssets();
     void PopulateCommandList();
-    void MoveToNextFrame();
-    void WaitForGpu();
+    //void MoveToNextFrame();
+    //void WaitForGpu();
 };

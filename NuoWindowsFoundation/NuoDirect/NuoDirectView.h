@@ -12,8 +12,7 @@
 
 #include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoCommandQueue.h"
-#include "NuoDirect/NuoResourceSwapChain.h"
-#include "NuoDirect/NuoRenderTargetSwapChain.h"
+#include "NuoDirect/NuoResource.h"
 
 
 
@@ -43,15 +42,14 @@ public:
 						 unsigned int w, unsigned int h);
 
 	PNuoResource RenderTarget(unsigned int inFlight);
+	PNuoResource CurrentRenderTarget();
 	D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetView(unsigned int inFlight);
+	D3D12_CPU_DESCRIPTOR_HANDLE CurrentRenderTargetView();
 
 	void Present();
+	void WaitForGPU();
+	void MoveToNextFrame();
 	unsigned int CurrentBackBufferIndex();
-
-	//TODO:
-	/*PNuoSwapChain SwapChain() {
-		return _swapChain;
-	}*/
 
 };
 

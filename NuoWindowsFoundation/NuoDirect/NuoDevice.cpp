@@ -104,6 +104,18 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 }
 
 
+PNuoFenceSwapChain NuoDevice::CreateFenceSwapChain(unsigned int frameCount)
+{
+    PNuoFenceSwapChain result = std::make_shared<NuoFenceSwapChain>(frameCount);
+
+    auto value = result->_fenceValues[0];
+    _dxDevice->CreateFence(value, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&result->_fence));
+    result->_fenceValues[0] += 1;
+
+    return result;
+}
+
+
 ID3D12Device* NuoDevice::DxDevice() const
 {
     return _dxDevice.Get();

@@ -151,6 +151,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDescriptorHeap.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoFenceSwapChain.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTargetSwapChain.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResource.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDescriptorHeap.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoFenceSwapChain.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTargetSwapChain.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResource.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.cpp" />
