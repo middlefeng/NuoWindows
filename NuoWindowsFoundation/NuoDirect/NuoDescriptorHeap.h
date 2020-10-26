@@ -26,7 +26,7 @@ class NuoDescriptorHeap
 
 private:
 
-	NuoDescriptorHeap() {};
+	NuoDescriptorHeap() : _size(0) {};
 
 public:
 

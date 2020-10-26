@@ -74,6 +74,20 @@ std::set<PNuoDevice> NuoDevice::Devices()
 }
 
 
+void NuoDevice::EnableDebugInfoQueue()
+{
+#if defined(_DEBUG)
+    Microsoft::WRL::ComPtr<ID3D12InfoQueue> dxInfoQueue;
+    if (SUCCEEDED(_dxDevice.As(&dxInfoQueue)))
+    {
+        dxInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, TRUE);
+        dxInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
+        dxInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, TRUE);
+    }
+#endif
+}
+
+
 std::string NuoDevice::Name() const
 {
     return StringToUTF8(_dxDesc.Description);

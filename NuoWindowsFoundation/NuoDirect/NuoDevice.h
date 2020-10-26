@@ -30,6 +30,8 @@ public:
 
 	static std::set<PNuoDevice> Devices();
 
+	void EnableDebugInfoQueue();
+
 	std::string Name() const;
 	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
 	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);

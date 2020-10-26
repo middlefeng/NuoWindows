@@ -15,9 +15,6 @@ NuoDirectWindow::NuoDirectWindow(const std::string& title)
 
 void NuoDirectWindow::Init()
 {
-	_dxView = std::make_shared<DirectView>(shared_from_this());
-	Add(_dxView);
-
 	PNuoDevice currentDevice;
 	std::set<PNuoDevice> devices = NuoDevice::Devices();
 	for (auto device : devices)
@@ -27,10 +24,14 @@ void NuoDirectWindow::Init()
 			currentDevice = device;
 	}
 
+	currentDevice->EnableDebugInfoQueue();
+
+	_dxView = std::make_shared<DirectView>(currentDevice, shared_from_this());
+	Add(_dxView);
+
 	NuoInset<float> margin(0, 0, 0, 200);
 	_dxView->SetAutoPosition(kNuoControl_Stretch_ALL);
 	_dxView->SetMargin(margin);
-	_dxView->CreateSwapChain(currentDevice, 3, 1280, 720);
 }
 
 

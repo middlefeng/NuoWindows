@@ -33,12 +33,11 @@ class NuoDirectView : public NuoView
 
 public:
 
-	NuoDirectView(const PNuoWindow& parent);
+	NuoDirectView(const PNuoDevice& device, const PNuoWindow& parent);
 
 	PNuoCommandQueue CommandQueue() const;
 
-	void CreateSwapChain(const PNuoDevice& device,
-						 unsigned int frameCount,
+	void CreateSwapChain(unsigned int frameCount,
 						 unsigned int w, unsigned int h);
 
 	PNuoResource RenderTarget(unsigned int inFlight);
@@ -50,6 +49,10 @@ public:
 	void WaitForGPU();
 	void MoveToNextFrame();
 	unsigned int CurrentBackBufferIndex();
+	unsigned int BuffersCount();
+
+	virtual void OnSize(unsigned int x, unsigned int y) override;
+	virtual void OnDestroy() override;
 
 };
 

@@ -20,7 +20,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    D3D12HelloFrameBuffering sample(1280, 720, L"D3D12 Hello Frame Buffering");
+    D3D12HelloFrameBuffering sample(L"D3D12 Hello Frame Buffering");
 
     NuoAppInstance::Init(hInstance, nCmdShow);
     NuoWindow::RegisterClass();
@@ -29,12 +29,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     window->Init();
 
     sample._view = window->DXView();
-    sample.OnInit();
 
     window->DXView()->SetOnPaint([&sample]()
         {
             sample.OnUpdate();
             sample.OnRender();
+        });
+
+    bool inited = false;
+    window->DXView()->SetOnSize([&sample, &inited]()
+        {
+            if (!inited)
+            {
+                sample.OnInit();
+                inited = true;
+            }
+            else
+            {
+                sample.LoadAssets();
+            }
         });
 
     auto exitFunc = []()

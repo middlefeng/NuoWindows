@@ -13,13 +13,8 @@
 #include "D3D12HelloFrameBuffering.h"
 #include "NuoDirect/NuoDevice.h"
 
-D3D12HelloFrameBuffering::D3D12HelloFrameBuffering(UINT width, UINT height, std::wstring name) :
-    DXSample(width, height, name),
-    //m_frameIndex(0),
-    m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)),
-    m_scissorRect(0, 0, static_cast<LONG>(width), static_cast<LONG>(height)),
-    //m_fenceValues{},
-    m_rtvDescriptorSize(0)
+D3D12HelloFrameBuffering::D3D12HelloFrameBuffering(std::wstring name) :
+    DXSample(name)
 {
 }
 
@@ -33,12 +28,14 @@ void D3D12HelloFrameBuffering::OnInit()
 void D3D12HelloFrameBuffering::LoadPipeline()
 {
     PNuoDevice device = _view->CommandQueue()->Device();
-    //m_frameIndex = _view->CurrentBackBufferIndex();
 
+    unsigned int buffersCount = _view->BuffersCount();
+    m_commandAllocators.resize(buffersCount);
+    
     // Create frame resources.
     {
         // Create a RTV and a command allocator for each frame.
-        for (UINT n = 0; n < FrameCount; n++)
+        for (UINT n = 0; n < buffersCount; n++)
         {
             ThrowIfFailed(device->DxDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocators[n])));
         }
@@ -108,14 +105,17 @@ void D3D12HelloFrameBuffering::LoadAssets()
     // to record yet. The main loop expects it to be closed, so close it now.
     ThrowIfFailed(m_commandList->Close());
 
+    NuoRect<long> rect = _view->ClientRectDevice();
+    float aspectRatio = ((float)rect.W()) / ((float)rect.H());
+
     // Create the vertex buffer.
     {
         // Define the geometry for a triangle.
         Vertex triangleVertices[] =
         {
-            { { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-            { { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-            { { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+            { { 0.0f, 0.25f * aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+            { { 0.25f, -0.25f * aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+            { { -0.25f, -0.25f * aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
         };
 
         const UINT vertexBufferSize = sizeof(triangleVertices);
@@ -147,21 +147,6 @@ void D3D12HelloFrameBuffering::LoadAssets()
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     {
-        /*ThrowIfFailed(device->DxDevice()->CreateFence(m_fenceValues[m_frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
-        m_fenceValues[m_frameIndex]++;
-
-        // Create an event handle to use for frame synchronization.
-        m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        if (m_fenceEvent == nullptr)
-        {
-            ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
-        }
-
-        // Wait for the command list to execute; we are reusing the same command 
-        // list in our main loop but for now, we just want to wait for setup to 
-        // complete before continuing.
-        WaitForGpu();*/
-
         _view->WaitForGPU();
     }
 }
@@ -184,20 +169,9 @@ void D3D12HelloFrameBuffering::OnRender()
     queue->DxQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
     // Present the frame.
-    //_view->Present();
-
-    // MoveToNextFrame();
     _view->MoveToNextFrame();
 }
 
-void D3D12HelloFrameBuffering::OnDestroy()
-{
-    // Ensure that the GPU is no longer referencing resources that are about to be
-    // cleaned up by the destructor.
-    _view->WaitForGPU();
-
-    //CloseHandle(m_fenceEvent);
-}
 
 void D3D12HelloFrameBuffering::PopulateCommandList()
 {
@@ -211,10 +185,14 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
     // re-recording.
     ThrowIfFailed(m_commandList->Reset(m_commandAllocators[_view->CurrentBackBufferIndex()].Get(), m_pipelineState.Get()));
 
+    NuoRect<long> rect = _view->ClientRectDevice();
+    D3D12_VIEWPORT viewPort = { 0, 0, rect.W(), rect.H(), 1, 1 };
+    CD3DX12_RECT scissor(0, 0, rect.W(), rect.H());
+
     // Set necessary state.
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
-    m_commandList->RSSetViewports(1, &m_viewport);
-    m_commandList->RSSetScissorRects(1, &m_scissorRect);
+    m_commandList->RSSetViewports(1, &viewPort);
+    m_commandList->RSSetScissorRects(1, &scissor);
 
     // Indicate that the back buffer will be used as a render target.
     PNuoResource renderTarget = _view->CurrentRenderTarget();
@@ -235,42 +213,3 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
 
     ThrowIfFailed(m_commandList->Close());
 }
-
-// Wait for pending GPU work to complete.
-/*void D3D12HelloFrameBuffering::WaitForGpu()
-{
-    PNuoCommandQueue queue = _view->CommandQueue();
-
-    // Schedule a Signal command in the queue.
-    ThrowIfFailed(queue->DxQueue()->Signal(m_fence.Get(), m_fenceValues[m_frameIndex]));
-
-    // Wait until the fence has been processed.
-    ThrowIfFailed(m_fence->SetEventOnCompletion(m_fenceValues[m_frameIndex], m_fenceEvent));
-    WaitForSingleObjectEx(m_fenceEvent, INFINITE, FALSE);
-
-    // Increment the fence value for the current frame.
-    m_fenceValues[m_frameIndex]++;
-}
-
-// Prepare to render the next frame.
-void D3D12HelloFrameBuffering::MoveToNextFrame()
-{
-    PNuoCommandQueue queue = _view->CommandQueue();
-
-    // Schedule a Signal command in the queue.
-    const UINT64 currentFenceValue = m_fenceValues[m_frameIndex];
-    ThrowIfFailed(queue->DxQueue()->Signal(m_fence.Get(), currentFenceValue));
-
-    // Update the frame index.
-    m_frameIndex = _view->CurrentBackBufferIndex();
-    
-    // If the next frame is not ready to be rendered yet, wait until it is ready.
-    if (m_fence->GetCompletedValue() < m_fenceValues[m_frameIndex])
-    {
-        ThrowIfFailed(m_fence->SetEventOnCompletion(m_fenceValues[m_frameIndex], m_fenceEvent));
-        WaitForSingleObjectEx(m_fenceEvent, INFINITE, FALSE);
-    }
-
-    // Set the fence value for the next frame.
-    m_fenceValues[m_frameIndex] = currentFenceValue + 1;
-}*/

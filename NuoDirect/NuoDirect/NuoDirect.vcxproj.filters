@@ -123,6 +123,9 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoFenceSwapChain.h">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -204,6 +207,9 @@
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoFenceSwapChain.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
   </ItemGroup>

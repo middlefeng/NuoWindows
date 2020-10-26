@@ -7,6 +7,8 @@
 #include "NuoDirect/NuoRenderTargetSwapChain.h"
 #include "NuoDirect/NuoFenceSwapChain.h"
 
+#include <cassert>
+
 
 
 class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
@@ -33,13 +35,19 @@ public:
     PNuoResourceSwapChain Buffer();
     PNuoRenderTargetSwapChain RenderTargetViews();
 
+    void ResizeBuffer(unsigned int w, unsigned int h);
+
     void Present();
     void WaitForGPU();
     void MoveToNextFrame();
 
-    // TODO:
     unsigned int CurrentBackBufferIndex();
-    IDXGISwapChain3* DxChain() const;
+    unsigned int BuffersCount();
+
+private:
+
+    void UpdateBuffer();
+
 };
 
 
@@ -63,16 +71,46 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
 
     Microsoft::WRL::ComPtr<IDXGISwapChain1> swapChain;
     auto factory = device->DxFactory();
-    factory->CreateSwapChainForHwnd(queue->DxQueue(), view->Handle(),
-                                    &swapChainDesc, nullptr, nullptr, &swapChain);
+    HRESULT hr = factory->CreateSwapChainForHwnd(queue->DxQueue(), view->Handle(),
+                                                 &swapChainDesc, nullptr, nullptr, &swapChain);
+    assert(hr == S_OK);
     
     if (swapChain)
         swapChain.As(&_swapChain);
 
     factory->MakeWindowAssociation(view->Handle(), DXGI_MWA_NO_ALT_ENTER);
+    _fence = device->CreateFenceSwapChain(frameCount);
+
+    UpdateBuffer();
+}
+
+
+void NuoSwapChain::ResizeBuffer(unsigned int w, unsigned int h)
+{
+    PNuoDirectView view = _view.lock();
+    PNuoCommandQueue queue = view->CommandQueue();
+    PNuoDevice device = queue->Device();
+
+    unsigned int buffersCount = BuffersCount();
+
+    _buffer.reset();
+    _rtvSwapChain.reset();
+    _fence = device->CreateFenceSwapChain(buffersCount);
+    _currentBackBufferIndex = -1;
+
+    HRESULT hr = _swapChain->ResizeBuffers(buffersCount, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+    assert(hr == S_OK);
+
+    UpdateBuffer();
+}
+
+
+void NuoSwapChain::UpdateBuffer()
+{
+    unsigned int buffersCount = BuffersCount();
 
     std::vector<PNuoResource> buffers;
-    for (unsigned int i = 0; i < frameCount; ++i)
+    for (unsigned int i = 0; i < buffersCount; ++i)
     {
         Microsoft::WRL::ComPtr<ID3D12Resource> dxResource = nullptr;
         _swapChain->GetBuffer(i, IID_PPV_ARGS(&dxResource));
@@ -83,10 +121,11 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
         buffers.push_back(buffer);
     }
 
+    PNuoDirectView view = _view.lock();
+    PNuoCommandQueue queue = view->CommandQueue();
+
     _buffer = std::make_shared<NuoResourceSwapChain>(buffers);
     _rtvSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), _buffer));
-
-    _fence = device->CreateFenceSwapChain(frameCount);
 }
 
 
@@ -111,6 +150,15 @@ unsigned int NuoSwapChain::CurrentBackBufferIndex()
 }
 
 
+unsigned int NuoSwapChain::BuffersCount()
+{
+    DXGI_SWAP_CHAIN_DESC desc;
+    _swapChain->GetDesc(&desc);
+
+    return desc.BufferCount;
+}
+
+
 void NuoSwapChain::Present()
 {
     _swapChain->Present(1 /* wait for v-sync */ , 0 /* not allow tearing */ );
@@ -132,16 +180,12 @@ void NuoSwapChain::MoveToNextFrame()
 }
 
 
-IDXGISwapChain3* NuoSwapChain::DxChain() const
-{
-    return _swapChain.Get();
-}
 
-
-
-NuoDirectView::NuoDirectView(const PNuoWindow& parent)
+NuoDirectView::NuoDirectView(const PNuoDevice& device,
+                             const PNuoWindow& parent)
 	: NuoView(parent)
 {
+    _commandQueue = std::make_shared<NuoCommandQueue>(device);
 }
 
 
@@ -151,13 +195,10 @@ PNuoCommandQueue NuoDirectView::CommandQueue() const
 }
 
 
-void NuoDirectView::CreateSwapChain(const PNuoDevice& device,
-                                    unsigned int frameCount,
+void NuoDirectView::CreateSwapChain(unsigned int frameCount,
                                     unsigned int w, unsigned int h)
 {
     PNuoDirectView view = std::dynamic_pointer_cast<NuoDirectView>(shared_from_this());
-
-    _commandQueue = std::make_shared<NuoCommandQueue>(device);
     _swapChain = std::make_shared<NuoSwapChain>(view, frameCount, w, h);
 }
 
@@ -214,4 +255,32 @@ unsigned int NuoDirectView::CurrentBackBufferIndex()
 }
 
 
+unsigned int NuoDirectView::BuffersCount()
+{
+    return _swapChain->BuffersCount();
+}
+
+
+void NuoDirectView::OnSize(unsigned int x, unsigned int y)
+{
+    NuoRect<long> rect = ClientRectDevice();
+
+    if (_swapChain)
+    {
+        WaitForGPU();
+        _swapChain->ResizeBuffer(rect.W(), rect.H());
+    }
+    else
+    {
+        CreateSwapChain(3, rect.W(), rect.H());
+    }
+}
+
+
+void NuoDirectView::OnDestroy()
+{
+    WaitForGPU();
+
+    NuoControl::OnDestroy();
+}
 

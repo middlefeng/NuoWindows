@@ -13,15 +13,19 @@ class DirectView : public NuoDirectView
 {
 
 	std::function<void()> _onPaint;
+	std::function<void()> _onSize;
 
 public:
 
 	void Init();
 
-	DirectView(const PNuoWindow& parent);
-	virtual void OnPaint();
+	DirectView(const PNuoDevice& device, const PNuoWindow& parent);
+
+	virtual void OnPaint() override;
+	virtual void OnSize(unsigned int x, unsigned int y) override;
 
 	void SetOnPaint(std::function<void()> onPaint);
+	void SetOnSize(std::function<void()> onSize);
 
 };
 

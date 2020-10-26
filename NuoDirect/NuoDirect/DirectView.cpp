@@ -7,9 +7,17 @@
 #include "NuoAppInstance.h"
 
 
-DirectView::DirectView(const PNuoWindow& parent)
-	: NuoDirectView(parent)
+DirectView::DirectView(const PNuoDevice& device,
+					   const PNuoWindow& parent)
+	: NuoDirectView(device, parent)
 {
+}
+
+
+void DirectView::OnSize(unsigned int x, unsigned int y)
+{
+	NuoDirectView::OnSize(x, y);
+	_onSize();
 }
 
 
@@ -28,6 +36,12 @@ void DirectView::OnPaint()
 void DirectView::SetOnPaint(std::function<void()> onPaint)
 {
 	_onPaint = onPaint;
+}
+
+
+void DirectView::SetOnSize(std::function<void()> onSize)
+{
+	_onSize = onSize;
 }
 
 
