@@ -22,7 +22,6 @@ typedef std::weak_ptr<NuoRenderTargetSwapChain> WPNuoRenderTargetSwapChain;
 class NuoRenderTargetSwapChain
 {
 
-	//Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _rtvHeap;
 	PNuoDescriptorHeap _rtvHeap;
 
 	PNuoResourceSwapChain _resources;

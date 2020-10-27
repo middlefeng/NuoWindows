@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 
 class NuoReadStream;
@@ -23,7 +24,9 @@ public:
 
 	void Write(void* buffer, size_t size);
 	void Seek(size_t pos);
+	size_t Size();
 	size_t Position();
+	void ReadTo(std::vector<char>& content);
 
 	PNuoReadStream ReadStream();
 	void SaveStream(const PNuoWriteStream& stream, long size);

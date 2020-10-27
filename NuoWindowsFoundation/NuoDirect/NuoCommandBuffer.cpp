@@ -25,3 +25,13 @@ PNuoDevice NuoCommandSwapChain::Device() const
 {
 	return _device;
 }
+
+
+PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight)
+{
+	PNuoCommandBuffer buffer = std::make_shared<NuoCommandBuffer>();
+	buffer->_commandAllocator = _commandAllocators[inFlight];
+
+	return buffer;
+}
+
