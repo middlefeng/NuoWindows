@@ -7,23 +7,23 @@
 
 
 
-NuoCommandSwapChain::NuoCommandSwapChain(const PNuoDevice& device, unsigned int frameCount)
-	: _device(device)
+NuoCommandSwapChain::NuoCommandSwapChain(const PNuoCommandQueue& commandQueue, unsigned int frameCount)
+	: _commandQueue(commandQueue)
 {
 	_commandAllocators.resize(frameCount);
 	_commandBuffers.resize(frameCount);
 
 	for (UINT n = 0; n < frameCount; n++)
 	{
-		HRESULT hr = device->DxDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+		HRESULT hr = commandQueue->Device()->DxDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
 			IID_PPV_ARGS(&_commandAllocators[n]));
 		assert(hr == S_OK);
 	}
 }
 
-PNuoDevice NuoCommandSwapChain::Device() const
+PNuoCommandQueue NuoCommandSwapChain::CommandQueue() const
 {
-	return _device;
+	return _commandQueue;
 }
 
 
@@ -31,6 +31,7 @@ PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight
 {
 	PNuoCommandBuffer buffer = std::make_shared<NuoCommandBuffer>();
 	buffer->_commandAllocator = _commandAllocators[inFlight];
+	buffer->_inFlight = inFlight;
 
 	return buffer;
 }

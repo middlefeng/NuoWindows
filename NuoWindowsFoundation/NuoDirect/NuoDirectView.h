@@ -12,7 +12,9 @@
 
 #include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoCommandQueue.h"
+#include "NuoDirect/NuoCommandBuffer.h"
 #include "NuoDirect/NuoResource.h"
+#include "NuoDirect/NuoRenderTarget.h"
 
 
 
@@ -40,10 +42,9 @@ public:
 	void CreateSwapChain(unsigned int frameCount,
 						 unsigned int w, unsigned int h);
 
-	PNuoResource RenderTarget(unsigned int inFlight);
-	PNuoResource CurrentRenderTarget();
-	D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetView(unsigned int inFlight);
-	D3D12_CPU_DESCRIPTOR_HANDLE CurrentRenderTargetView();
+	PNuoRenderTarget RenderTarget(unsigned int inFlight);
+	PNuoRenderTarget CurrentRenderTarget();
+	PNuoCommandBuffer CreateCommandBuffer();
 
 	void Present();
 	void WaitForGPU();

@@ -22,8 +22,8 @@ PNuoResource NuoResourceSwapChain::operator [] (unsigned int inFlight)
 }
 
 
-size_t NuoResourceSwapChain::Count() const
+unsigned int NuoResourceSwapChain::Count() const
 {
-	return _resources.size();
+	return (unsigned int)_resources.size();
 }
 

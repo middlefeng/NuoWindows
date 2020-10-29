@@ -23,6 +23,19 @@ NuoRenderTargetSwapChain::NuoRenderTargetSwapChain(const PNuoDevice& device,
 }
 
 
+PNuoRenderTarget NuoRenderTargetSwapChain::RenderTarget(unsigned int inFlight)
+{
+    PNuoResource resource = (*_resources)[inFlight];
+    D3D12_CPU_DESCRIPTOR_HANDLE view = DxRenderTargetView(inFlight);
+
+    PNuoRenderTarget target = std::make_shared<NuoRenderTarget>();
+    target->_resource = resource;
+    target->_view = view;
+
+    return target;
+}
+
+
 D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTargetSwapChain::DxRenderTargetView(unsigned int inFlight)
 {
    return _rtvHeap->DxRenderTargetView(inFlight);

@@ -10,6 +10,7 @@
 
 #include "NuoDevice.h"
 #include "NuoResourceSwapChain.h"
+#include "NuoRenderTarget.h"
 #include "NuoDescriptorHeap.h"
 
 
@@ -31,6 +32,8 @@ public:
 
 	NuoRenderTargetSwapChain(const PNuoDevice& device,
 							 const PNuoResourceSwapChain& renderTargets);
+	
+	PNuoRenderTarget RenderTarget(unsigned int inFlight);
 	
 private:
 

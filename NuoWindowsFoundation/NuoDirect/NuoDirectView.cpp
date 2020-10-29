@@ -18,12 +18,11 @@ class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
     WPNuoDevice _device;
     WPNuoDirectView _view;
 
-
+    PNuoCommandSwapChain _commandSwapChain;
     PNuoResourceSwapChain _buffer;
     PNuoRenderTargetSwapChain _rtvSwapChain;
     PNuoFenceSwapChain _fence;
     
-
     int _currentBackBufferIndex;
 
 public:
@@ -34,6 +33,7 @@ public:
 
     PNuoResourceSwapChain Buffer();
     PNuoRenderTargetSwapChain RenderTargetViews();
+    PNuoCommandSwapChain CommandBuffers();
 
     void ResizeBuffer(unsigned int w, unsigned int h);
 
@@ -82,6 +82,8 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
     _fence = device->CreateFenceSwapChain(frameCount);
 
     UpdateBuffer();
+
+    _commandSwapChain = std::make_shared<NuoCommandSwapChain>(queue, frameCount);
 }
 
 
@@ -138,6 +140,12 @@ PNuoResourceSwapChain NuoSwapChain::Buffer()
 PNuoRenderTargetSwapChain NuoSwapChain::RenderTargetViews()
 {
     return _rtvSwapChain;
+}
+
+
+PNuoCommandSwapChain NuoSwapChain::CommandBuffers()
+{
+    return _commandSwapChain;
 }
 
 
@@ -203,31 +211,26 @@ void NuoDirectView::CreateSwapChain(unsigned int frameCount,
 }
 
 
-PNuoResource NuoDirectView::RenderTarget(unsigned int inFlight)
+
+PNuoRenderTarget NuoDirectView::RenderTarget(unsigned int inFlight)
 {
-    PNuoResourceSwapChain buffers = _swapChain->Buffer();
-    return (*buffers)[inFlight];
+    auto rtvSwapChain = _swapChain->RenderTargetViews();
+    return rtvSwapChain->RenderTarget(inFlight);
 }
 
 
-PNuoResource NuoDirectView::CurrentRenderTarget()
+PNuoRenderTarget NuoDirectView::CurrentRenderTarget()
 {
     unsigned int current = _swapChain->CurrentBackBufferIndex();
     return RenderTarget(current);
 }
 
 
-D3D12_CPU_DESCRIPTOR_HANDLE NuoDirectView::RenderTargetView(unsigned int inFlight)
+PNuoCommandBuffer NuoDirectView::CreateCommandBuffer()
 {
-    auto rtvSwapChain = _swapChain->RenderTargetViews();
-    return rtvSwapChain->DxRenderTargetView(inFlight);
-}
-
-
-D3D12_CPU_DESCRIPTOR_HANDLE NuoDirectView::CurrentRenderTargetView()
-{
+    auto commandBuffers = _swapChain->CommandBuffers();
     unsigned int current = _swapChain->CurrentBackBufferIndex();
-    return RenderTargetView(current);
+    return commandBuffers->CreateCommandBuffer(current);
 }
 
 

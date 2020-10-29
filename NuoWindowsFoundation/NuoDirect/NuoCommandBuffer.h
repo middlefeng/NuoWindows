@@ -9,6 +9,7 @@
 #include <wrl.h>
 
 #include "NuoDirect/NuoDevice.h"
+#include "NuoDirect/NuoCommandQueue.h"
 
 class NuoCommandSwapChain;
 typedef std::shared_ptr<NuoCommandSwapChain> PNuoCommandSwapChain;
@@ -23,16 +24,16 @@ typedef std::shared_ptr<NuoCommandEncoder> PNuoCommandEncoder;
 class NuoCommandSwapChain
 {
 
-	PNuoDevice _device;
+	PNuoCommandQueue _commandQueue;
 
 	std::vector<Microsoft::WRL::ComPtr<ID3D12CommandAllocator>> _commandAllocators;
 	std::vector<PNuoCommandBuffer> _commandBuffers;
 
 public:
 
-	NuoCommandSwapChain(const PNuoDevice& device, unsigned int frameCount);
+	NuoCommandSwapChain(const PNuoCommandQueue& commandQueue, unsigned int frameCount);
 
-	PNuoDevice Device() const;
+	PNuoCommandQueue CommandQueue() const;
 	PNuoCommandBuffer CreateCommandBuffer(unsigned int inFlight);
 
 };
@@ -40,10 +41,14 @@ public:
 
 class NuoCommandBuffer
 {
+	PNuoCommandQueue _commandQueue;
+
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
+	unsigned int _inFlight;
 
 public:
 
+	NuoCommandBuffer() = default;
 	PNuoCommandEncoder CreateEncoder();
 
 	friend class NuoCommandSwapChain;
@@ -52,7 +57,8 @@ public:
 
 class NuoCommandEncoder
 {
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
+	std::vector<Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>> m_commandList;
 
 public:
 
