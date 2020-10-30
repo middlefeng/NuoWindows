@@ -1,6 +1,8 @@
 #pragma once
 
 #include "NuoWindow.h"
+#include "NuoTimer.h"
+
 #include "NuoDirect/NuoDirectView.h"
 #include <functional>
 
@@ -14,6 +16,8 @@ class DirectView : public NuoDirectView
 
 	std::function<void()> _onPaint;
 	std::function<void()> _onSize;
+
+	PNuoTimer _refreshTimer;
 
 public:
 

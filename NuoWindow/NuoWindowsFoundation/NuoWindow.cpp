@@ -140,6 +140,7 @@ void NuoWindow::Hide()
 
 void NuoWindow::Update()
 {
+    ::InvalidateRect(_hWnd, NULL, true);
     ::UpdateWindow(_hWnd);
 }
 

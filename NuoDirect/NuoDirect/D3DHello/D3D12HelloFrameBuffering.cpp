@@ -12,6 +12,12 @@
 //#include "stdafx.h"
 #include "D3D12HelloFrameBuffering.h"
 #include "NuoDirect/NuoDevice.h"
+#include "NuoDirect/NuoShader.h"
+#include "NuoFile.h"
+#include "NuoStrings.h"
+
+#include <wrl.h>
+#include <dxcapi.h>
 
 D3D12HelloFrameBuffering::D3D12HelloFrameBuffering(std::wstring name) :
     DXSample(name)
@@ -47,21 +53,13 @@ void D3D12HelloFrameBuffering::LoadAssets()
 {
     PNuoDevice device = _view->CommandQueue()->Device();
 
-    // Create an empty root signature.
-    {
-        CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
-        rootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-        ComPtr<ID3DBlob> signature;
-        ComPtr<ID3DBlob> error;
-        ThrowIfFailed(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error));
-        ThrowIfFailed(device->DxDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature)));
-    }
+    _rootSignature = std::make_shared<NuoRootSignature>(device,
+                                                        std::vector<D3D12_ROOT_PARAMETER1>(),
+                                                        std::vector< D3D12_STATIC_SAMPLER_DESC>(),
+                                                        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     // Create the pipeline state, which includes compiling and loading shaders.
     {
-        ComPtr<ID3DBlob> vertexShader;
-        ComPtr<ID3DBlob> pixelShader;
 
 #if defined(_DEBUG)
         // Enable better shader debugging with the graphics debugging tools.
@@ -70,8 +68,16 @@ void D3D12HelloFrameBuffering::LoadAssets()
         UINT compileFlags = 0;
 #endif
 
-        ThrowIfFailed(D3DCompileFromFile(GetAssetFullPath(L"shaders.hlsl").c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr));
-        ThrowIfFailed(D3DCompileFromFile(GetAssetFullPath(L"shaders.hlsl").c_str(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr));
+        std::vector<char> vertexContent;
+        NuoFile vertexSource(StringToUTF8(GetAssetFullPath(L"shaders.hlsl")));
+        vertexSource.ReadTo(vertexContent);
+        PNuoShader vertexShader = std::make_shared<NuoShader>(vertexContent.data(), "vertex", NuoShader::kNuoShader_Vertex, "VSMain");
+
+        std::vector<char> pixelxContent;
+        NuoFile pixelSource(StringToUTF8(GetAssetFullPath(L"shaders.hlsl")));
+        pixelSource.ReadTo(pixelxContent);
+        PNuoShader pixelShader = std::make_shared<NuoShader>(pixelxContent.data(), "pixel", NuoShader::kNuoShader_Pixel, "PSMain");
+        
 
         // Define the vertex input layout.
         D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -83,9 +89,9 @@ void D3D12HelloFrameBuffering::LoadAssets()
         // Describe and create the graphics pipeline state object (PSO).
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-        psoDesc.pRootSignature = m_rootSignature.Get();
-        psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader.Get());
-        psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader.Get());
+        psoDesc.pRootSignature = _rootSignature->DxSignature();
+        psoDesc.VS = vertexShader->ByteCode();// CD3DX12_SHADER_BYTECODE(vertexShader.Get());
+        psoDesc.PS = pixelShader->ByteCode(); // CD3DX12_SHADER_BYTECODE(pixelShader.Get());
         psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDesc.DepthStencilState.DepthEnable = FALSE;
@@ -95,7 +101,7 @@ void D3D12HelloFrameBuffering::LoadAssets()
         psoDesc.NumRenderTargets = 1;
         psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
         psoDesc.SampleDesc.Count = 1;
-        ThrowIfFailed(device->DxDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)));
+        HRESULT hr = (device->DxDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)));
     }
 
     // Create the command list.
@@ -190,26 +196,26 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
     CD3DX12_RECT scissor(0, 0, rect.W(), rect.H());
 
     // Set necessary state.
-    m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
+    m_commandList->SetGraphicsRootSignature(_rootSignature->DxSignature());
     m_commandList->RSSetViewports(1, &viewPort);
     m_commandList->RSSetScissorRects(1, &scissor);
 
     // Indicate that the back buffer will be used as a render target.
-    PNuoResource renderTarget = _view->CurrentRenderTarget();
-    m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->DxResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+    PNuoRenderTarget renderTarget = _view->CurrentRenderTarget();
+    m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->Resource()->DxResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
-    auto rtvHandle = _view->CurrentRenderTargetView();
-    m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    auto view = renderTarget->View();
+    m_commandList->OMSetRenderTargets(1, &view, FALSE, nullptr);
 
     // Record commands.
     const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-    m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+    m_commandList->ClearRenderTargetView(view, clearColor, 0, nullptr);
     m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->DrawInstanced(3, 1, 0, 0);
 
     // Indicate that the back buffer will now be used to present.
-    m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->DxResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+    m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->Resource()->DxResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
     ThrowIfFailed(m_commandList->Close());
 }

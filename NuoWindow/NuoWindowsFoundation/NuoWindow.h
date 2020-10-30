@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "NuoRect.h"
+#include "NuoTimer.h"
 
 
 extern const int kWindowPtr;

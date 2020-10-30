@@ -11,6 +11,10 @@ DirectView::DirectView(const PNuoDevice& device,
 					   const PNuoWindow& parent)
 	: NuoDirectView(device, parent)
 {
+	/*_refreshTimer = std::make_shared<NuoTimer>(1000 / 60, [this](NuoTimer*)
+		{
+			this->Update();
+		});*/
 }
 
 
@@ -28,6 +32,9 @@ void DirectView::Init()
 
 void DirectView::OnPaint()
 {
+	OutputDebugString(L"On Paint.\n");
+
+
 	_onPaint();
 }
 

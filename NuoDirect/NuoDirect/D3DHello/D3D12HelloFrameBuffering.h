@@ -13,6 +13,7 @@
 
 #include "DXSample.h"
 #include "NuoDirect/NuoDirectView.h"
+#include "NuoDirect/NuoSignature.h"
 
 using namespace DirectX;
 
@@ -45,9 +46,11 @@ private:
 
     // Pipeline objects.
     std::vector<ComPtr<ID3D12CommandAllocator>> m_commandAllocators;
-    ComPtr<ID3D12RootSignature> m_rootSignature;
+    // ComPtr<ID3D12RootSignature> m_rootSignature;
     ComPtr<ID3D12PipelineState> m_pipelineState;
     ComPtr<ID3D12GraphicsCommandList> m_commandList;
+
+    PNuoRootSignature _rootSignature;
     
     // App resources.
     ComPtr<ID3D12Resource> m_vertexBuffer;
