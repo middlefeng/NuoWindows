@@ -9,6 +9,7 @@
 #include <wrl.h>
 
 #include "NuoDirect/NuoDevice.h"
+#include "NuoDirect/NuoPipelineState.h"
 #include "NuoDirect/NuoCommandQueue.h"
 
 class NuoCommandSwapChain;
@@ -39,30 +40,51 @@ public:
 };
 
 
-class NuoCommandBuffer
+class NuoRenderInFlight
+{
+protected:
+	unsigned int _inFlight;
+
+public:
+	virtual unsigned int InFlight();
+};
+
+
+class NuoCommandBuffer : public NuoRenderInFlight
 {
 	PNuoCommandQueue _commandQueue;
 
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
-	unsigned int _inFlight;
 
 public:
 
 	NuoCommandBuffer() = default;
-	PNuoCommandEncoder CreateEncoder();
+	PNuoCommandEncoder CreateRenderPassEncoder();
 
 	friend class NuoCommandSwapChain;
 };
 
 
-class NuoCommandEncoder
+class NuoRenderTarget;
+typedef std::shared_ptr<NuoRenderTarget> PNuoRenderTarget;
+
+
+
+class NuoCommandEncoder : public NuoRenderInFlight
 {
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
-	std::vector<Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>> m_commandList;
+	std::vector<Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>> _commandList;
+
+	PNuoCommandQueue _commandQueue;
+	PNuoRenderTarget _renderTarget;
 
 public:
 
+	void SetPipeline(const PNuoPipelineState& pipeline);
+	void EndEncoding();
+
 	friend class NuoCommandBuffer;
+	friend class NuoRenderTarget;
 };
 
 

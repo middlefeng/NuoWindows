@@ -10,6 +10,7 @@
 
 #include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoResource.h"
+#include "NuoDirect/NuoCommandBuffer.h"
 
 
 
@@ -19,13 +20,14 @@ typedef std::weak_ptr<NuoRenderTarget> WPNuoRenderTarget;
 
 
 
-class NuoRenderTarget
+class NuoRenderTarget : public std::enable_shared_from_this<NuoRenderTarget>
 {
 
 	PNuoResource _resource;
 	D3D12_CPU_DESCRIPTOR_HANDLE _view;
 
 	unsigned int _encoderCount;
+	PNuoCommandEncoder _renderPassEncoder;
 
 public:
 
@@ -33,6 +35,9 @@ public:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE View();
 	PNuoResource Resource();
+
+	PNuoCommandEncoder RetainRenderPassEncoder(const PNuoCommandBuffer& commandBuffer);
+	void ReleaseRenderPassEncoder();
 
 	friend class NuoRenderTargetSwapChain;
 };

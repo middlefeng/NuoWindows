@@ -29,13 +29,14 @@ class NuoPipelineState
 public:
 
 	NuoPipelineState(const PNuoDevice& device,
-					 D3D12_PRIMITIVE_TOPOLOGY_TYPE format,
+					 DXGI_FORMAT format,
 					 const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 				  	 const PNuoShader& vertex,
 					 const PNuoShader& pixel,
 					 const PNuoRootSignature& rootSignature);
 
-	
 
+	ID3D12PipelineState* DxPipeline() const;
+	
 };
 

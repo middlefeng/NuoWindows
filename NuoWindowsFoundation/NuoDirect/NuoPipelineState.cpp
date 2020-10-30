@@ -8,7 +8,7 @@
 
 
 NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
-								   D3D12_PRIMITIVE_TOPOLOGY_TYPE format,
+                                   DXGI_FORMAT format,
                                    const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 								   const PNuoShader& vertex,
 								   const PNuoShader& pixel,
@@ -59,10 +59,16 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
     psoDesc.SampleMask = UINT_MAX;
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
     psoDesc.NumRenderTargets = 1;
-    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    psoDesc.RTVFormats[0] = format;
     psoDesc.SampleDesc.Count = 1;
 
     HRESULT hr = device->DxDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&_dxPipelineState));
     assert(hr == S_OK);
+}
+
+
+ID3D12PipelineState* NuoPipelineState::DxPipeline() const
+{
+    return _dxPipelineState.Get();
 }
 
