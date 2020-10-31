@@ -93,6 +93,7 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	commandList->ResourceBarrier(1, &barrier);
 
+	commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, nullptr);
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	_commandList.push_back(commandList);

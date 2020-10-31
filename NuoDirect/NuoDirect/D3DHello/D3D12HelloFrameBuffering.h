@@ -45,10 +45,6 @@ private:
         XMFLOAT4 color;
     };
 
-    // Pipeline objects.
-    ComPtr<ID3D12GraphicsCommandList> m_commandList;
-
-    PNuoRootSignature _rootSignature;
     PNuoPipelineState _pipeline;
     
     // App resources.

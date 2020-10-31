@@ -34,7 +34,7 @@ void D3D12HelloFrameBuffering::LoadAssets()
 {
     PNuoDevice device = _view->CommandQueue()->Device();
 
-    _rootSignature = std::make_shared<NuoRootSignature>(device,
+    auto rootSignature = std::make_shared<NuoRootSignature>(device,
                                                         std::vector<D3D12_ROOT_PARAMETER1>(),
                                                         std::vector< D3D12_STATIC_SAMPLER_DESC>(),
                                                         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
@@ -67,15 +67,8 @@ void D3D12HelloFrameBuffering::LoadAssets()
             { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
         };
 
-        _pipeline = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM, inputElementDescs, vertexShader, pixelShader, _rootSignature);
+        _pipeline = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM, inputElementDescs, vertexShader, pixelShader, rootSignature);
     }
-
-    // Create the command list.
-    ThrowIfFailed(device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _view->CurrentCommandAllocator()/* m_commandAllocators[_view->CurrentBackBufferIndex()].Get()*/, nullptr, IID_PPV_ARGS(&m_commandList)));
-
-    // Command lists are created in the recording state, but there is nothing
-    // to record yet. The main loop expects it to be closed, so close it now.
-    ThrowIfFailed(m_commandList->Close());
 
     PNuoRenderTarget renderTarget = _view->CurrentRenderTarget();
     PNuoCommandBuffer commandBuffer = _view->CreateCommandBuffer();
@@ -160,10 +153,6 @@ void D3D12HelloFrameBuffering::OnRender()
     // Record all the commands we need to render the scene into the command list.
     PopulateCommandList();
 
-    // Execute the command list.
-    ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
-    queue->DxQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-
     // Present the frame.
     _view->MoveToNextFrame();
 }
@@ -174,31 +163,22 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
     // Command list allocators can only be reset when the associated 
     // command lists have finished execution on the GPU; apps should use 
     // fences to determine GPU execution progress.
-    ThrowIfFailed(_view->CurrentCommandAllocator()/*m_commandAllocators[_view->CurrentBackBufferIndex()]*/->Reset());
+    // ThrowIfFailed(_view->CurrentCommandAllocator()/*m_commandAllocators[_view->CurrentBackBufferIndex()]*/->Reset());
 
     // However, when ExecuteCommandList() is called on a particular command 
     // list, that command list can then be reset at any time and must be before 
     // re-recording.
-    ThrowIfFailed(m_commandList->Reset(_view->CurrentCommandAllocator()/*m_commandAllocators[_view->CurrentBackBufferIndex()].Get()*/, _pipeline->DxPipeline()));
+    // ThrowIfFailed(m_commandList->Reset(_view->CurrentCommandAllocator()/*m_commandAllocators[_view->CurrentBackBufferIndex()].Get()*/, _pipeline->DxPipeline()));
+    PNuoRenderTarget target = _view->CurrentRenderTarget();
+    PNuoCommandBuffer commandBuffer = _view->CreateCommandBuffer();
+    PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
-    NuoRect<long> rect = _view->ClientRectDevice();
-    D3D12_VIEWPORT viewPort = { 0, 0, rect.W(), rect.H(), 1, 1 };
-    CD3DX12_RECT scissor(0, 0, rect.W(), rect.H());
+    encoder->SetPipeline(_pipeline);
+    encoder->UseDefaultViewPort();
+    auto m_commandList = encoder->CommandList();
 
-    // Indicate that the back buffer will be used as a render target.
-    PNuoRenderTarget renderTarget = _view->CurrentRenderTarget();
-    m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->Resource()->DxResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-    // Set necessary state.
-    m_commandList->SetGraphicsRootSignature(_rootSignature->DxSignature());
-    m_commandList->RSSetViewports(1, &viewPort);
-    m_commandList->RSSetScissorRects(1, &scissor);
-
+    auto view = target->View();
     
-
-    auto view = renderTarget->View();
-    m_commandList->OMSetRenderTargets(1, &view, FALSE, nullptr);
-
     // Record commands.
     const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
     m_commandList->ClearRenderTargetView(view, clearColor, 0, nullptr);
@@ -206,8 +186,6 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->DrawInstanced(3, 1, 0, 0);
 
-    // Indicate that the back buffer will now be used to present.
-    m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->Resource()->DxResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
-
-    ThrowIfFailed(m_commandList->Close());
+    target->ReleaseRenderPassEncoder();
+    commandBuffer->Commit();
 }
