@@ -1,6 +1,7 @@
 ﻿
 
 #include "NuoCommandBuffer.h"
+#include "NuoRenderTarget.h"
 
 #include <windows.h>
 #include <cassert>
@@ -57,20 +58,61 @@ PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 {
 	if (_commandList.size())
-		EndEncoding();
+	{
+		auto lastBuffer = *(_commandList.end() - 1);
+		lastBuffer->Close();
+	}
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
 	PNuoDevice device = _commandQueue->Device();
 	device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _commandAllocator.Get(),
 										  pipeline->DxPipeline(), IID_PPV_ARGS(&commandList));
 
+	commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
+
+	D3D12_RESOURCE_BARRIER barrier;
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = _renderTarget->Resource()->DxResource();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	commandList->ResourceBarrier(1, &barrier);
+
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	_commandList.push_back(commandList);
 }
+
+
+void NuoCommandEncoder::UseDefaultViewPort()
+{
+	auto currentBuffer = *(_commandList.end() - 1);
+	PNuoResource resource = _renderTarget->Resource();
+
+	D3D12_VIEWPORT viewPort = { 0, 0, (float)resource->Width(), (float)resource->Height(), 0, 1 };
+	D3D12_RECT scissor = { 0, 0, resource->Width(), resource->Height() };
+	currentBuffer->RSSetViewports(1, &viewPort);
+	currentBuffer->RSSetScissorRects(1, &scissor);
+}
+
+
+//void NuoCommandEncoder::
 
 
 void NuoCommandEncoder::EndEncoding()
 {
 	auto lastBuffer = *(_commandList.end() - 1);
+
+	D3D12_RESOURCE_BARRIER barrier;
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = _renderTarget->Resource()->DxResource();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	lastBuffer->ResourceBarrier(1, &barrier);
+
 	lastBuffer->Close();
 }
 

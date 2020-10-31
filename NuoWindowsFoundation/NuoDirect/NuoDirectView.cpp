@@ -118,7 +118,7 @@ void NuoSwapChain::UpdateBuffer()
         _swapChain->GetBuffer(i, IID_PPV_ARGS(&dxResource));
 
         PNuoResource buffer = std::make_shared<NuoResource>();
-        buffer->_dxResources = dxResource;
+        buffer->SetResource(dxResource);
 
         buffers.push_back(buffer);
     }

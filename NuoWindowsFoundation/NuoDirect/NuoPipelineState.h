@@ -37,6 +37,7 @@ public:
 
 
 	ID3D12PipelineState* DxPipeline() const;
+	ID3D12RootSignature* DxRootSignature() const;
 	
 };
 

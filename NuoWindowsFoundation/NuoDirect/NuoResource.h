@@ -17,11 +17,17 @@ class NuoResource
 {
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> _dxResources;
+	D3D12_RESOURCE_DESC _desc;
+
+	void SetResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource);
 
 public:
 
 	NuoResource();
 	ID3D12Resource* DxResource() const;
+
+	unsigned long Width() const;
+	unsigned long Height() const;
 
 	friend class NuoSwapChain;
 

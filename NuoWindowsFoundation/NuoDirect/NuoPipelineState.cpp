@@ -72,3 +72,10 @@ ID3D12PipelineState* NuoPipelineState::DxPipeline() const
     return _dxPipelineState.Get();
 }
 
+
+ID3D12RootSignature* NuoPipelineState::DxRootSignature() const
+{
+    return _rootSignature->DxSignature();
+}
+
+

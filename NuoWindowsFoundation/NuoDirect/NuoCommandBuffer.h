@@ -81,6 +81,7 @@ class NuoCommandEncoder : public NuoRenderInFlight
 public:
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
+	void UseDefaultViewPort();
 	void EndEncoding();
 
 	friend class NuoCommandBuffer;
