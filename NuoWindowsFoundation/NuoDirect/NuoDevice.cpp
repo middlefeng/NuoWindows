@@ -121,6 +121,18 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 }
 
 
+PNuoResource NuoDevice::CreateBuffer(void* data, size_t size)
+{
+    return CreateBufferInternal(data, size);
+}
+
+
+PNuoResource NuoDevice::CreateBuffer(size_t size)
+{
+    return CreateBufferInternal(nullptr, size);
+}
+
+
 PNuoResource NuoDevice::CreateBufferInternal(void* data, size_t size)
 {
     D3D12_HEAP_PROPERTIES heapProps;

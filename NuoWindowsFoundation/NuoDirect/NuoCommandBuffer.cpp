@@ -61,9 +61,18 @@ PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 void NuoCommandEncoder::CopyResource(const PNuoResource& src, const PNuoResource& dst)
 {
 	auto commandList = *(_commandList.end() - 1);
-	commandList->CopyResource(src->DxResource(), dst->DxResource());
+	commandList->CopyResource(dst->DxResource(), src->DxResource());
 
-	//commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_vertexBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	ResourceBarrier(dst, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
+}
+
+
+void NuoCommandBuffer::CopyResource(const PNuoResource& src, const PNuoResource& dst)
+{
+	PNuoCommandEncoder encoder = CreateRenderPassEncoder();
+	encoder->SetPipeline(nullptr);
+	encoder->CopyResource(src, dst);
+	encoder->EndEncoding();
 }
 
 

@@ -41,6 +41,7 @@ public:
 
 	PNuoFenceSwapChain CreateFenceSwapChain(unsigned int frameCount);
 	PNuoResource CreateBuffer(void* data, size_t size);
+	PNuoResource CreateBuffer(size_t size);
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;

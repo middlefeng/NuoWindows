@@ -48,7 +48,7 @@ private:
     PNuoPipelineState _pipeline;
     
     // App resources.
-    ComPtr<ID3D12Resource> m_vertexBuffer;
+    PNuoResource _vertexBuffer;
     D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 
     void LoadAssets();
