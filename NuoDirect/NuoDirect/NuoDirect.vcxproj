@@ -93,8 +93,12 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;dxcompiler.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+      <ShaderType>Library</ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -111,8 +115,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;dxcompiler.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+      <ShaderType>Library</ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -125,8 +133,12 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;dxcompiler.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+      <ShaderType>Library</ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -143,8 +155,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;dxcompiler.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderModel>2.0</ShaderModel>
+      <ShaderType>Library</ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h" />
@@ -153,9 +169,13 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoFenceSwapChain.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoPipelineState.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTarget.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTargetSwapChain.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResource.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoAppInstance.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoButton.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoControl.h" />
@@ -168,6 +188,7 @@
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoOpenFileDialog.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoRect.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoStrings.h" />
+    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindow\FoundationResource.h" />
@@ -189,9 +210,18 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoFenceSwapChain.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoPipelineState.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTarget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTargetSwapChain.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResource.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoAppInstance.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoButton.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoControl.cpp" />
@@ -204,6 +234,7 @@
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoOpenFileDialog.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoRect.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoStrings.cpp" />
+    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.cpp" />
     <ClCompile Include="D3DHello\D3D12HelloFrameBuffering.cpp" />
@@ -219,6 +250,30 @@
   <ItemGroup>
     <Image Include="NuoDirect.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="pshader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">6.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shaders.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">6.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">6.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

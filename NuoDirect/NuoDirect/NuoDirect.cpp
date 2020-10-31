@@ -39,15 +39,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     bool inited = false;
     window->DXView()->SetOnSize([&sample, &inited]()
         {
-            if (!inited)
-            {
-                sample.OnInit();
-                inited = true;
-            }
-            else
-            {
-                sample.LoadAssets();
-            }
+            sample.OnInit();
         });
 
     auto exitFunc = []()

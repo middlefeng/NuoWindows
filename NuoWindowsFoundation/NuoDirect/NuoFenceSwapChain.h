@@ -9,6 +9,9 @@
 #include <wrl.h>
 
 
+class NuoCommandQueue;
+typedef std::shared_ptr<NuoCommandQueue> PNuoCommandQueue;
+
 class NuoDirectView;
 typedef std::shared_ptr<NuoDirectView> PNuoDirectView;
 
@@ -33,6 +36,7 @@ public:
 	~NuoFenceSwapChain();
 
 	void WaitForGPU(const PNuoDirectView& view);
+	void WaitForGPU(const PNuoCommandQueue& commandQueue);
 	void MoveToNextFrame(const PNuoDirectView& view);
 
 	friend class NuoDevice;

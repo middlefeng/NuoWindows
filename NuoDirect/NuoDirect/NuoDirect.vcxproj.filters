@@ -126,6 +126,21 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoPipelineState.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTarget.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -212,6 +227,21 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoPipelineState.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTarget.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.cpp">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoDirect.rc">
@@ -228,5 +258,13 @@
     <Image Include="NuoDirect.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="pshader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

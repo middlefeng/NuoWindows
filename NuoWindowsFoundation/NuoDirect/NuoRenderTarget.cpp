@@ -35,6 +35,7 @@ PNuoCommandEncoder NuoRenderTarget::RetainRenderPassEncoder(const PNuoCommandBuf
 	PNuoCommandEncoder encoder = commandBuffer->CreateRenderPassEncoder();
 	encoder->_renderTarget = shared_from_this();
 
+	_encoderCount += 1;
 	_renderPassEncoder = encoder;
 
 	return encoder;

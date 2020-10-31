@@ -26,26 +26,7 @@ D3D12HelloFrameBuffering::D3D12HelloFrameBuffering(std::wstring name) :
 
 void D3D12HelloFrameBuffering::OnInit()
 {
-    LoadPipeline();
     LoadAssets();
-}
-
-// Load the rendering pipeline dependencies.
-void D3D12HelloFrameBuffering::LoadPipeline()
-{
-    PNuoDevice device = _view->CommandQueue()->Device();
-
-    unsigned int buffersCount = _view->BuffersCount();
-    m_commandAllocators.resize(buffersCount);
-    
-    // Create frame resources.
-    {
-        // Create a RTV and a command allocator for each frame.
-        for (UINT n = 0; n < buffersCount; n++)
-        {
-            ThrowIfFailed(device->DxDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocators[n])));
-        }
-    }
 }
 
 // Load the sample assets.
@@ -80,39 +61,31 @@ void D3D12HelloFrameBuffering::LoadAssets()
         
 
         // Define the vertex input layout.
-        D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
+        std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
         {
             { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
             { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
         };
 
-        // Describe and create the graphics pipeline state object (PSO).
-        D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-        psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-        psoDesc.pRootSignature = _rootSignature->DxSignature();
-        psoDesc.VS = vertexShader->ByteCode();// CD3DX12_SHADER_BYTECODE(vertexShader.Get());
-        psoDesc.PS = pixelShader->ByteCode(); // CD3DX12_SHADER_BYTECODE(pixelShader.Get());
-        psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-        psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-        psoDesc.DepthStencilState.DepthEnable = FALSE;
-        psoDesc.DepthStencilState.StencilEnable = FALSE;
-        psoDesc.SampleMask = UINT_MAX;
-        psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-        psoDesc.NumRenderTargets = 1;
-        psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-        psoDesc.SampleDesc.Count = 1;
-        HRESULT hr = (device->DxDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)));
+        _pipeline = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM, inputElementDescs, vertexShader, pixelShader, _rootSignature);
     }
 
     // Create the command list.
-    ThrowIfFailed(device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocators[_view->CurrentBackBufferIndex()].Get(), m_pipelineState.Get(), IID_PPV_ARGS(&m_commandList)));
+    ThrowIfFailed(device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _view->CurrentCommandAllocator()/* m_commandAllocators[_view->CurrentBackBufferIndex()].Get()*/, nullptr, IID_PPV_ARGS(&m_commandList)));
 
     // Command lists are created in the recording state, but there is nothing
     // to record yet. The main loop expects it to be closed, so close it now.
     ThrowIfFailed(m_commandList->Close());
 
+    PNuoRenderTarget renderTarget = _view->CurrentRenderTarget();
+    PNuoCommandBuffer commandBuffer = _view->CreateCommandBuffer();
+    PNuoCommandEncoder encoder = renderTarget->RetainRenderPassEncoder(commandBuffer);
+    encoder->SetPipeline(nullptr);
+
     NuoRect<long> rect = _view->ClientRectDevice();
     float aspectRatio = ((float)rect.W()) / ((float)rect.H());
+
+    ComPtr<ID3D12Resource> intermediate;
 
     // Create the vertex buffer.
     {
@@ -136,14 +109,30 @@ void D3D12HelloFrameBuffering::LoadAssets()
             &CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
             D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr,
-            IID_PPV_ARGS(&m_vertexBuffer)));
+            IID_PPV_ARGS(&intermediate)));
 
         // Copy the triangle data to the vertex buffer.
         UINT8* pVertexDataBegin;
         CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
-        ThrowIfFailed(m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)));
+        ThrowIfFailed(intermediate->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)));
         memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));
-        m_vertexBuffer->Unmap(0, nullptr);
+        intermediate->Unmap(0, nullptr);
+
+        ThrowIfFailed(device->DxDevice()->CreateCommittedResource(
+            &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+            D3D12_HEAP_FLAG_NONE,
+            &CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+            D3D12_RESOURCE_STATE_COPY_DEST,
+            nullptr,
+            IID_PPV_ARGS(&m_vertexBuffer)));
+
+        ComPtr<ID3D12GraphicsCommandList> commandList;
+        commandList = encoder->CommandList();
+        commandList->CopyResource(m_vertexBuffer.Get(), intermediate.Get());
+        commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_vertexBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+        
+        renderTarget->ReleaseRenderPassEncoder();
+        commandBuffer->Commit();
 
         // Initialize the vertex buffer view.
         m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
@@ -153,7 +142,8 @@ void D3D12HelloFrameBuffering::LoadAssets()
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     {
-        _view->WaitForGPU();
+        PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
+        fence->WaitForGPU(_view->CommandQueue());
     }
 }
 
@@ -184,25 +174,27 @@ void D3D12HelloFrameBuffering::PopulateCommandList()
     // Command list allocators can only be reset when the associated 
     // command lists have finished execution on the GPU; apps should use 
     // fences to determine GPU execution progress.
-    ThrowIfFailed(m_commandAllocators[_view->CurrentBackBufferIndex()]->Reset());
+    ThrowIfFailed(_view->CurrentCommandAllocator()/*m_commandAllocators[_view->CurrentBackBufferIndex()]*/->Reset());
 
     // However, when ExecuteCommandList() is called on a particular command 
     // list, that command list can then be reset at any time and must be before 
     // re-recording.
-    ThrowIfFailed(m_commandList->Reset(m_commandAllocators[_view->CurrentBackBufferIndex()].Get(), m_pipelineState.Get()));
+    ThrowIfFailed(m_commandList->Reset(_view->CurrentCommandAllocator()/*m_commandAllocators[_view->CurrentBackBufferIndex()].Get()*/, _pipeline->DxPipeline()));
 
     NuoRect<long> rect = _view->ClientRectDevice();
     D3D12_VIEWPORT viewPort = { 0, 0, rect.W(), rect.H(), 1, 1 };
     CD3DX12_RECT scissor(0, 0, rect.W(), rect.H());
+
+    // Indicate that the back buffer will be used as a render target.
+    PNuoRenderTarget renderTarget = _view->CurrentRenderTarget();
+    m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->Resource()->DxResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
     // Set necessary state.
     m_commandList->SetGraphicsRootSignature(_rootSignature->DxSignature());
     m_commandList->RSSetViewports(1, &viewPort);
     m_commandList->RSSetScissorRects(1, &scissor);
 
-    // Indicate that the back buffer will be used as a render target.
-    PNuoRenderTarget renderTarget = _view->CurrentRenderTarget();
-    m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->Resource()->DxResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+    
 
     auto view = renderTarget->View();
     m_commandList->OMSetRenderTargets(1, &view, FALSE, nullptr);

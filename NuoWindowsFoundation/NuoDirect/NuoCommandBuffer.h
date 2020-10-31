@@ -27,6 +27,7 @@ class NuoCommandSwapChain
 
 	PNuoCommandQueue _commandQueue;
 
+public: // TODO
 	std::vector<Microsoft::WRL::ComPtr<ID3D12CommandAllocator>> _commandAllocators;
 	std::vector<PNuoCommandBuffer> _commandBuffers;
 
@@ -53,6 +54,7 @@ public:
 class NuoCommandBuffer : public NuoRenderInFlight
 {
 	PNuoCommandQueue _commandQueue;
+	std::vector<PNuoCommandEncoder> _encoders;
 
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
 
@@ -60,6 +62,7 @@ public:
 
 	NuoCommandBuffer() = default;
 	PNuoCommandEncoder CreateRenderPassEncoder();
+	void Commit();
 
 	friend class NuoCommandSwapChain;
 };
@@ -83,6 +86,17 @@ public:
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void UseDefaultViewPort();
 	void EndEncoding();
+
+
+	// TODO;
+	ID3D12GraphicsCommandList* CommandList()
+	{
+		return (_commandList.end() - 1)->Get();
+	}
+
+private:
+
+	void Commit();
 
 	friend class NuoCommandBuffer;
 	friend class NuoRenderTarget;

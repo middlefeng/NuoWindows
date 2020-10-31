@@ -46,6 +46,9 @@ public:
 	PNuoRenderTarget CurrentRenderTarget();
 	PNuoCommandBuffer CreateCommandBuffer();
 
+	// TODO:
+	ID3D12CommandAllocator* CurrentCommandAllocator();
+
 	void Present();
 	void WaitForGPU();
 	void MoveToNextFrame();

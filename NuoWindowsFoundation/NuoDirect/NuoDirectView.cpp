@@ -14,10 +14,11 @@
 class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
 {
     Microsoft::WRL::ComPtr<IDXGISwapChain3> _swapChain;
-    Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;
+    Microsoft::WRL::ComPtr<ID3D12Fence> _dxFence;
     WPNuoDevice _device;
     WPNuoDirectView _view;
 
+public:
     PNuoCommandSwapChain _commandSwapChain;
     PNuoResourceSwapChain _buffer;
     PNuoRenderTargetSwapChain _rtvSwapChain;
@@ -261,6 +262,11 @@ unsigned int NuoDirectView::CurrentBackBufferIndex()
 unsigned int NuoDirectView::BuffersCount()
 {
     return _swapChain->BuffersCount();
+}
+
+ID3D12CommandAllocator* NuoDirectView::CurrentCommandAllocator()
+{
+    return _swapChain->_commandSwapChain->_commandAllocators[CurrentBackBufferIndex()].Get();
 }
 
 

@@ -5,6 +5,8 @@
 #include "NuoDirectView.h"
 #include "NuoCommandQueue.h"
 
+#include <cassert>
+
 
 NuoFenceSwapChain::NuoFenceSwapChain(unsigned int frameCount)
 {
@@ -33,6 +35,22 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoDirectView& view)
 
     // Increment the fence value for the current frame.
     _fenceValues[currentBufferIndex]++;
+}
+
+
+void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue)
+{
+    assert(_fenceValues.size() == 1);
+
+    // Schedule a Signal command in the queue.
+    commandQueue->DxQueue()->Signal(_fence.Get(), _fenceValues[0]);
+
+    // Wait until the fence has been processed.
+    _fence->SetEventOnCompletion(_fenceValues[0], _fenceEvent);
+    WaitForSingleObjectEx(_fenceEvent, INFINITE, FALSE);
+
+    // Increment the fence value for the current frame.
+    _fenceValues[0] += 1;
 }
 
 

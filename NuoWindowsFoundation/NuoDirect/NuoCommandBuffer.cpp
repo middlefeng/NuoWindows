@@ -37,6 +37,7 @@ unsigned int NuoRenderInFlight::InFlight()
 PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight)
 {
 	PNuoCommandBuffer buffer = std::make_shared<NuoCommandBuffer>();
+	buffer->_commandQueue = _commandQueue;
 	buffer->_commandAllocator = _commandAllocators[inFlight];
 	buffer->_inFlight = inFlight;
 
@@ -51,7 +52,18 @@ PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 	result->_commandQueue = _commandQueue;
 	result->_inFlight = _inFlight;
 
+	_encoders.push_back(result);
+
 	return result;
+}
+
+
+void NuoCommandBuffer::Commit()
+{
+	for (auto encoder : _encoders)
+		encoder->Commit();
+
+	_encoders.clear();
 }
 
 
@@ -59,16 +71,18 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 {
 	if (_commandList.size())
 	{
-		auto lastBuffer = *(_commandList.end() - 1);
-		lastBuffer->Close();
+		EndEncoding();
 	}
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
 	PNuoDevice device = _commandQueue->Device();
-	device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _commandAllocator.Get(),
-										  pipeline->DxPipeline(), IID_PPV_ARGS(&commandList));
 
-	commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
+	auto dxPipeline = pipeline ? pipeline->DxPipeline() : nullptr;
+	device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _commandAllocator.Get(),
+										  dxPipeline, IID_PPV_ARGS(&commandList));
+
+	if (pipeline)
+		commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
 
 	D3D12_RESOURCE_BARRIER barrier;
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -97,9 +111,6 @@ void NuoCommandEncoder::UseDefaultViewPort()
 }
 
 
-//void NuoCommandEncoder::
-
-
 void NuoCommandEncoder::EndEncoding()
 {
 	auto lastBuffer = *(_commandList.end() - 1);
@@ -115,4 +126,15 @@ void NuoCommandEncoder::EndEncoding()
 
 	lastBuffer->Close();
 }
+
+
+void NuoCommandEncoder::Commit()
+{
+	std::vector<ID3D12CommandList*> commandList;
+	for (size_t i = 0; i < _commandList.size(); ++i)
+		commandList.push_back(_commandList[i].Get());
+
+	_commandQueue->DxQueue()->ExecuteCommandLists(_commandList.size(), &commandList[0]);
+}
+
 
