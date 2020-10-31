@@ -16,6 +16,9 @@ class NuoDevice;
 typedef std::shared_ptr<NuoDevice> PNuoDevice;
 typedef std::weak_ptr<NuoDevice> WPNuoDevice;
 
+class NuoResource;
+typedef std::shared_ptr<NuoResource> PNuoResource;
+
 
 class NuoDevice : public std::enable_shared_from_this<NuoDevice>
 {
@@ -37,9 +40,14 @@ public:
 	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);
 
 	PNuoFenceSwapChain CreateFenceSwapChain(unsigned int frameCount);
+	PNuoResource CreateBuffer(void* data, size_t size);
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;
+
+private:
+
+	PNuoResource CreateBufferInternal(void* data, size_t size);
 
 };
 

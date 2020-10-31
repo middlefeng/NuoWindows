@@ -70,9 +70,8 @@ void D3D12HelloFrameBuffering::LoadAssets()
         _pipeline = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM, inputElementDescs, vertexShader, pixelShader, rootSignature);
     }
 
-    PNuoRenderTarget renderTarget = _view->CurrentRenderTarget();
     PNuoCommandBuffer commandBuffer = _view->CreateCommandBuffer();
-    PNuoCommandEncoder encoder = renderTarget->RetainRenderPassEncoder(commandBuffer);
+    PNuoCommandEncoder encoder = commandBuffer->CreateRenderPassEncoder();
     encoder->SetPipeline(nullptr);
 
     NuoRect<long> rect = _view->ClientRectDevice();
@@ -124,7 +123,7 @@ void D3D12HelloFrameBuffering::LoadAssets()
         commandList->CopyResource(m_vertexBuffer.Get(), intermediate.Get());
         commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_vertexBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
         
-        renderTarget->ReleaseRenderPassEncoder();
+        encoder->EndEncoding();
         commandBuffer->Commit();
 
         // Initialize the vertex buffer view.

@@ -30,6 +30,7 @@ public:
 	unsigned long Height() const;
 
 	friend class NuoSwapChain;
+	friend class NuoDevice;
 
 };
 

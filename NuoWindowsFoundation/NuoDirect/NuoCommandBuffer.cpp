@@ -58,6 +58,15 @@ PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 }
 
 
+void NuoCommandEncoder::CopyResource(const PNuoResource& src, const PNuoResource& dst)
+{
+	auto commandList = *(_commandList.end() - 1);
+	commandList->CopyResource(src->DxResource(), dst->DxResource());
+
+	//commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_vertexBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+}
+
+
 void NuoCommandBuffer::Commit()
 {
 	for (auto encoder : _encoders)
@@ -81,22 +90,19 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 	device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _commandAllocator.Get(),
 										  dxPipeline, IID_PPV_ARGS(&commandList));
 
+	_commandList.push_back(commandList);
+
 	if (pipeline)
 		commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
 
-	D3D12_RESOURCE_BARRIER barrier;
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = _renderTarget->Resource()->DxResource();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	commandList->ResourceBarrier(1, &barrier);
+	if (_renderTarget)
+	{
+		ResourceBarrier(_renderTarget->Resource(),
+						D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, nullptr);
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	_commandList.push_back(commandList);
+		commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, nullptr);
+		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
 }
 
 
@@ -116,14 +122,12 @@ void NuoCommandEncoder::EndEncoding()
 {
 	auto lastBuffer = *(_commandList.end() - 1);
 
-	D3D12_RESOURCE_BARRIER barrier;
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = _renderTarget->Resource()->DxResource();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	lastBuffer->ResourceBarrier(1, &barrier);
+	if (_renderTarget)
+	{
+		ResourceBarrier(_renderTarget->Resource(),
+						D3D12_RESOURCE_STATE_RENDER_TARGET,
+						D3D12_RESOURCE_STATE_PRESENT);
+	}
 
 	lastBuffer->Close();
 }
@@ -136,6 +140,23 @@ void NuoCommandEncoder::Commit()
 		commandList.push_back(_commandList[i].Get());
 
 	_commandQueue->DxQueue()->ExecuteCommandLists(_commandList.size(), &commandList[0]);
+}
+
+
+void NuoCommandEncoder::ResourceBarrier(const PNuoResource& resource,
+									    D3D12_RESOURCE_STATES before,
+										D3D12_RESOURCE_STATES after)
+{
+	auto lastBuffer = *(_commandList.end() - 1);
+
+	D3D12_RESOURCE_BARRIER barrier;
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = resource->DxResource();
+	barrier.Transition.StateBefore = before;
+	barrier.Transition.StateAfter = after;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	lastBuffer->ResourceBarrier(1, &barrier);
 }
 
 

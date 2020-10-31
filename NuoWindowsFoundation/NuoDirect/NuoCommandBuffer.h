@@ -62,6 +62,7 @@ public:
 
 	NuoCommandBuffer() = default;
 	PNuoCommandEncoder CreateRenderPassEncoder();
+	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void Commit();
 
 	friend class NuoCommandSwapChain;
@@ -85,6 +86,7 @@ public:
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void UseDefaultViewPort();
+	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void EndEncoding();
 
 
@@ -97,6 +99,9 @@ public:
 private:
 
 	void Commit();
+	void ResourceBarrier(const PNuoResource& resource,
+						 D3D12_RESOURCE_STATES before,
+						 D3D12_RESOURCE_STATES after);
 
 	friend class NuoCommandBuffer;
 	friend class NuoRenderTarget;

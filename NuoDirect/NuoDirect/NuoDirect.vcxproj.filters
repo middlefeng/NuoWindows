@@ -141,6 +141,9 @@
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.cpp">
       <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

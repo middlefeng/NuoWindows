@@ -2,6 +2,9 @@
 
 #include "NuoDevice.h"
 #include "NuoStrings.h"
+#include "NuoResource.h"
+
+#include <cassert>
 
 
 std::set<PNuoDevice> NuoDevice::_devices;
@@ -115,6 +118,54 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
     _dxDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&heap->_heap));
 
     return heap;
+}
+
+
+PNuoResource NuoDevice::CreateBufferInternal(void* data, size_t size)
+{
+    D3D12_HEAP_PROPERTIES heapProps;
+    heapProps.Type = data ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT;
+    heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    heapProps.CreationNodeMask = 1;
+    heapProps.VisibleNodeMask = 1;
+
+    D3D12_RESOURCE_DESC resourceDesc;
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    resourceDesc.Alignment = 0;
+    resourceDesc.Width = size;
+    resourceDesc.Height = 1;
+    resourceDesc.DepthOrArraySize = 1;
+    resourceDesc.MipLevels = 1;
+    resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+    resourceDesc.SampleDesc.Count = 1;
+    resourceDesc.SampleDesc.Quality = 0;
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+    Microsoft::WRL::ComPtr<ID3D12Resource> intermediate;
+    HRESULT hr = _dxDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE,
+                                                    &resourceDesc,
+                                                    data ? D3D12_RESOURCE_STATE_GENERIC_READ : D3D12_RESOURCE_STATE_COPY_DEST,
+                                                    nullptr, IID_PPV_ARGS(&intermediate));
+    assert(hr == S_OK);
+
+    if (data)
+    {
+        // Copy the triangle data to the vertex buffer.
+        UINT8* pVertexDataBegin;
+        D3D12_RANGE readRange = { 0, 0 };        // We do not intend to read from this resource on the CPU.
+        hr = intermediate->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
+        memcpy(pVertexDataBegin, data, size);
+        intermediate->Unmap(0, nullptr);
+
+        assert(hr == S_OK);
+    }
+
+    PNuoResource resource = std::make_shared<NuoResource>();
+    resource->SetResource(intermediate);
+
+    return resource;
 }
 
 
