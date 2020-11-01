@@ -29,6 +29,16 @@ void NuoFile::Seek(size_t pos)
 }
 
 
+size_t NuoFile::Size()
+{
+	std::wstring wpath = StringToUTF16(_path);
+	struct _stat fileState;
+	_wstat(wpath.c_str(), &fileState);
+
+	return fileState.st_size;
+}
+
+
 size_t NuoFile::Position()
 {
 	return ftell(_file);
@@ -68,6 +78,19 @@ PNuoReadStream NuoFile::ReadStream()
 	}
 
 	return _stream;
+}
+
+void NuoFile::ReadTo(std::vector<char>& content)
+{
+	FILE* file = FileHandle(true);
+	if (!file)
+		return;
+
+	size_t fileSize = Size();
+	content.resize(fileSize + 1);
+	content[fileSize] = '\0';
+
+	fread(content.data(), 1, fileSize, file);
 }
 
 void NuoFile::SaveStream(const PNuoWriteStream& stream, long size)
