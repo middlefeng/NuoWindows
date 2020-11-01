@@ -1,34 +1,27 @@
 ﻿
 
-#include "NuoResource.h"
+#include "NuoVertexBuffer.h"
 
 
 
-/*NuoResource::NuoResource()
+NuoVertexBuffer::NuoVertexBuffer(const PNuoResource& buffer, size_t stride)
+	: _buffer(buffer)
 {
+	_vertexBufferView.BufferLocation = buffer->DxResource()->GetGPUVirtualAddress();
+	_vertexBufferView.SizeInBytes = buffer->Size();
+	_vertexBufferView.StrideInBytes = stride;
 }
 
 
-void NuoResource::SetResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource)
+D3D12_VERTEX_BUFFER_VIEW* NuoVertexBuffer::View()
 {
-	_dxResources = resource;
-	_desc = _dxResources->GetDesc();
+	return &_vertexBufferView;
 }
 
 
-unsigned long NuoResource::Width() const
+unsigned int NuoVertexBuffer::Count() const
 {
-	return _desc.Width;
+	return _vertexBufferView.SizeInBytes / _vertexBufferView.StrideInBytes;
 }
 
 
-unsigned long NuoResource::Height() const
-{
-	return _desc.Height;
-}
-
-
-ID3D12Resource* NuoResource::DxResource() const
-{
-	return _dxResources.Get();
-}*/

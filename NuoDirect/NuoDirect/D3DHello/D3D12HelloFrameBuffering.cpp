@@ -91,15 +91,12 @@ void D3D12HelloFrameBuffering::LoadAssets()
         const UINT vertexBufferSize = sizeof(triangleVertices);
 
         intermediate = device->CreateBuffer(triangleVertices, vertexBufferSize);
-        _vertexBuffer = device->CreateBuffer(vertexBufferSize);
+        auto vertexBuffer = device->CreateBuffer(vertexBufferSize);
         
-        commandBuffer->CopyResource(intermediate, _vertexBuffer);
+        commandBuffer->CopyResource(intermediate, vertexBuffer);
         commandBuffer->Commit();
 
-        // Initialize the vertex buffer view.
-        m_vertexBufferView.BufferLocation = _vertexBuffer->DxResource()->GetGPUVirtualAddress();
-        m_vertexBufferView.StrideInBytes = sizeof(Vertex);
-        m_vertexBufferView.SizeInBytes = vertexBufferSize;
+        _vertexBuffer = std::make_shared<NuoVertexBuffer>(vertexBuffer, sizeof(Vertex));
     }
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
@@ -129,31 +126,21 @@ void D3D12HelloFrameBuffering::OnRender()
 
 void D3D12HelloFrameBuffering::PopulateCommandList()
 {
-    // Command list allocators can only be reset when the associated 
-    // command lists have finished execution on the GPU; apps should use 
-    // fences to determine GPU execution progress.
-    // ThrowIfFailed(_view->CurrentCommandAllocator()/*m_commandAllocators[_view->CurrentBackBufferIndex()]*/->Reset());
-
-    // However, when ExecuteCommandList() is called on a particular command 
-    // list, that command list can then be reset at any time and must be before 
-    // re-recording.
-    // ThrowIfFailed(m_commandList->Reset(_view->CurrentCommandAllocator()/*m_commandAllocators[_view->CurrentBackBufferIndex()].Get()*/, _pipeline->DxPipeline()));
     PNuoRenderTarget target = _view->CurrentRenderTarget();
     PNuoCommandBuffer commandBuffer = _view->CreateCommandBuffer();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     encoder->SetPipeline(_pipeline);
     encoder->UseDefaultViewPort();
-    auto m_commandList = encoder->CommandList();
 
     auto view = target->View();
+    auto vertexBufferView = _vertexBuffer->View();
     
     // Record commands.
-    const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-    m_commandList->ClearRenderTargetView(view, clearColor, 0, nullptr);
-    m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-    m_commandList->DrawInstanced(3, 1, 0, 0);
+    
+    encoder->ClearTargetView(0.0f, 0.2f, 0.4f, 1.0f);
+    encoder->SetVertexBuffer(_vertexBuffer);
+    encoder->DrawInstanced(_vertexBuffer->Count(), 1);
 
     target->ReleaseRenderPassEncoder();
     commandBuffer->Commit();

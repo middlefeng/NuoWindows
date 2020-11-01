@@ -85,6 +85,15 @@ void NuoCommandBuffer::Commit()
 }
 
 
+void NuoCommandEncoder::ClearTargetView(float r, float g, float b, float a)
+{
+	auto commandList = *(_commandList.end() - 1);
+
+	const float clearColor[] = { r, g, b, a };
+	commandList->ClearRenderTargetView(_renderTarget->View(), clearColor, 0, nullptr);
+}
+
+
 void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 {
 	if (_commandList.size())
@@ -112,6 +121,22 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 		commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, nullptr);
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
+}
+
+
+void NuoCommandEncoder::SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer)
+{
+	auto commandList = *(_commandList.end() - 1);
+
+	commandList->IASetVertexBuffers(0, 1, vertexBuffer->View());
+}
+
+
+void NuoCommandEncoder::DrawInstanced(unsigned int vertexCount, unsigned int instance)
+{
+	auto commandList = *(_commandList.end() - 1);
+
+	commandList->DrawInstanced(vertexCount, instance, 0, 0);
 }
 
 

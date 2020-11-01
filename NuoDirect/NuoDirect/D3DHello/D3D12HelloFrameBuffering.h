@@ -15,6 +15,7 @@
 #include "NuoDirect/NuoDirectView.h"
 #include "NuoDirect/NuoSignature.h"
 #include "NuoDirect/NuoPipelineState.h"
+#include "NuoDirect/NuoVertexBuffer.h"
 
 using namespace DirectX;
 
@@ -48,8 +49,7 @@ private:
     PNuoPipelineState _pipeline;
     
     // App resources.
-    PNuoResource _vertexBuffer;
-    D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+    PNuoVertexBuffer _vertexBuffer;
 
     void LoadAssets();
     void PopulateCommandList();

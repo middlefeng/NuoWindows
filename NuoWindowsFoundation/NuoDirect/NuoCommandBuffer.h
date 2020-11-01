@@ -11,6 +11,7 @@
 #include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoPipelineState.h"
 #include "NuoDirect/NuoCommandQueue.h"
+#include "NuoDirect/NuoVertexBuffer.h"
 
 class NuoCommandSwapChain;
 typedef std::shared_ptr<NuoCommandSwapChain> PNuoCommandSwapChain;
@@ -85,16 +86,12 @@ class NuoCommandEncoder : public NuoRenderInFlight
 public:
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
+	void ClearTargetView(float r, float g, float b, float a);
+	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
+	void DrawInstanced(unsigned int vertexCount, unsigned int instance);
 	void UseDefaultViewPort();
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void EndEncoding();
-
-
-	// TODO;
-	ID3D12GraphicsCommandList* CommandList()
-	{
-		return (_commandList.end() - 1)->Get();
-	}
 
 private:
 

@@ -28,6 +28,7 @@ public:
 
 	unsigned long Width() const;
 	unsigned long Height() const;
+	size_t Size() const;
 
 	friend class NuoSwapChain;
 	friend class NuoDevice;

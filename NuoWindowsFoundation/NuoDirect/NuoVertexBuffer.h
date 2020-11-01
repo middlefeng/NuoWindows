@@ -22,9 +22,9 @@ class NuoVertexBuffer
 	
 public:
 
-	NuoVertexBuffer(const PNuoResource& buffer);
+	NuoVertexBuffer(const PNuoResource& buffer, size_t stride);
 	D3D12_VERTEX_BUFFER_VIEW* View();
 
-
+	unsigned int Count() const;
 };
 
