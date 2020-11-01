@@ -22,13 +22,13 @@ class NuoRootSignature
 	std::vector< D3D12_STATIC_SAMPLER_DESC> _samplers;
 
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> _signature;
+	D3D12_VERSIONED_ROOT_SIGNATURE_DESC _desc;
 
+	PNuoDevice _device;
 
 public:
 
 	NuoRootSignature(const PNuoDevice& device,
-					 const std::vector<D3D12_ROOT_PARAMETER1>& parameters,
-					 const std::vector< D3D12_STATIC_SAMPLER_DESC>& samplers,
 					 D3D12_ROOT_SIGNATURE_FLAGS flags);
 
 	ID3D12RootSignature* DxSignature();

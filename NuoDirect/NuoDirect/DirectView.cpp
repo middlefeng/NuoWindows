@@ -36,9 +36,7 @@ void DirectView::Init()
     PNuoDevice device = CommandQueue()->Device();
 
     auto rootSignature = std::make_shared<NuoRootSignature>(device,
-        std::vector<D3D12_ROOT_PARAMETER1>(),
-        std::vector< D3D12_STATIC_SAMPLER_DESC>(),
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+                                                            D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     // Create the pipeline state, which includes compiling and loading shaders.
     {
