@@ -9,8 +9,6 @@
 #include "NuoDirectWindow.h"
 #include "DirectView.h"
 
-#include "D3DHello/D3D12HelloFrameBuffering.h"
-
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                       _In_opt_ HINSTANCE hPrevInstance,
@@ -20,27 +18,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    D3D12HelloFrameBuffering sample(L"D3D12 Hello Frame Buffering");
-
     NuoAppInstance::Init(hInstance, nCmdShow);
     NuoWindow::RegisterClass();
 
     PNuoDirectWindow window = std::make_shared<NuoDirectWindow>("  Nuo Direct");
     window->Init();
-
-    sample._view = window->DXView();
-
-    window->DXView()->SetOnPaint([&sample]()
-        {
-            sample.OnUpdate();
-            sample.OnRender();
-        });
-
-    bool inited = false;
-    window->DXView()->SetOnSize([&sample, &inited]()
-        {
-            sample.OnInit();
-        });
 
     auto exitFunc = []()
     {
@@ -63,7 +45,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
-
 
     NuoAppInstance::UnInit();
 

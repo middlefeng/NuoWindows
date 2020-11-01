@@ -226,11 +226,11 @@ PNuoRenderTarget NuoDirectView::CurrentRenderTarget()
 }
 
 
-PNuoCommandBuffer NuoDirectView::CreateCommandBuffer()
+PNuoCommandBuffer NuoDirectView::CreateCommandBuffer(bool resetAllocator)
 {
     auto commandBuffers = _swapChain->CommandBuffers();
     unsigned int current = _swapChain->CurrentBackBufferIndex();
-    return commandBuffers->CreateCommandBuffer(current);
+    return commandBuffers->CreateCommandBuffer(current, resetAllocator);
 }
 
 
@@ -261,6 +261,22 @@ unsigned int NuoDirectView::CurrentBackBufferIndex()
 unsigned int NuoDirectView::BuffersCount()
 {
     return _swapChain->BuffersCount();
+}
+
+
+void NuoDirectView::Render(const PNuoCommandBuffer& commandBuffer)
+{
+
+}
+
+void NuoDirectView::OnPaint()
+{
+    PNuoCommandBuffer commandBuffer = CreateCommandBuffer(true);
+
+    Render(commandBuffer);
+    
+    commandBuffer->Commit();
+    MoveToNextFrame();
 }
 
 

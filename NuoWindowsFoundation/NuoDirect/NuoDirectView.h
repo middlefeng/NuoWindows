@@ -44,7 +44,7 @@ public:
 
 	PNuoRenderTarget RenderTarget(unsigned int inFlight);
 	PNuoRenderTarget CurrentRenderTarget();
-	PNuoCommandBuffer CreateCommandBuffer();
+	PNuoCommandBuffer CreateCommandBuffer(bool resetAllocator);
 
 	void Present();
 	void WaitForGPU();
@@ -52,6 +52,9 @@ public:
 	unsigned int CurrentBackBufferIndex();
 	unsigned int BuffersCount();
 
+	virtual void Render(const PNuoCommandBuffer& commandBuffer);
+
+	virtual void OnPaint() override;
 	virtual void OnSize(unsigned int x, unsigned int y) override;
 	virtual void OnDestroy() override;
 

@@ -193,10 +193,6 @@
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindow\FoundationResource.h" />
-    <ClInclude Include="D3DHello\D3D12HelloFrameBuffering.h" />
-    <ClInclude Include="D3DHello\d3dx12.h" />
-    <ClInclude Include="D3DHello\DXSample.h" />
-    <ClInclude Include="D3DHello\DXSampleHelper.h" />
     <ClInclude Include="DirectView.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoDirect.h" />
@@ -239,8 +235,6 @@
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.cpp" />
-    <ClCompile Include="D3DHello\D3D12HelloFrameBuffering.cpp" />
-    <ClCompile Include="D3DHello\DXSample.cpp" />
     <ClCompile Include="DirectView.cpp" />
     <ClCompile Include="NuoDirect.cpp" />
     <ClCompile Include="NuoDirectWindow.cpp" />
@@ -254,14 +248,6 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="pshader.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PSMain</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">6.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSMain</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
-    </FxCompile>
     <FxCompile Include="shaders.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSMain</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>

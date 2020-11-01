@@ -17,9 +17,6 @@ public:
 	NuoDirectWindow(const std::string& title);
 	virtual void OnPaint();
 
-	void SetOnPaint(std::function<void()> onPaint);
-	PDirectView DXView();
-
 };
 
 

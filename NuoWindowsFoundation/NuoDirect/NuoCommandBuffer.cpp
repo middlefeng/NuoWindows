@@ -34,12 +34,15 @@ unsigned int NuoRenderInFlight::InFlight()
 }
 
 
-PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight)
+PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight, bool resetAllocator)
 {
 	PNuoCommandBuffer buffer = std::make_shared<NuoCommandBuffer>();
 	buffer->_commandQueue = _commandQueue;
 	buffer->_commandAllocator = _commandAllocators[inFlight];
 	buffer->_inFlight = inFlight;
+
+	if (resetAllocator)
+		_commandAllocators[inFlight]->Reset();
 
 	return buffer;
 }
@@ -97,9 +100,7 @@ void NuoCommandEncoder::ClearTargetView(float r, float g, float b, float a)
 void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 {
 	if (_commandList.size())
-	{
 		EndEncoding();
-	}
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
 	PNuoDevice device = _commandQueue->Device();
@@ -174,6 +175,7 @@ void NuoCommandEncoder::Commit()
 		commandList.push_back(_commandList[i].Get());
 
 	_commandQueue->DxQueue()->ExecuteCommandLists(_commandList.size(), &commandList[0]);
+	_commandList.clear();
 }
 
 

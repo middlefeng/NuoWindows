@@ -39,8 +39,3 @@ void NuoDirectWindow::OnPaint()
 {
 }
 
-
-PDirectView NuoDirectWindow::DXView()
-{
-	return _dxView;
-}

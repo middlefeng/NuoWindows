@@ -37,7 +37,7 @@ public:
 	NuoCommandSwapChain(const PNuoCommandQueue& commandQueue, unsigned int frameCount);
 
 	PNuoCommandQueue CommandQueue() const;
-	PNuoCommandBuffer CreateCommandBuffer(unsigned int inFlight);
+	PNuoCommandBuffer CreateCommandBuffer(unsigned int inFlight, bool resetAllocator);
 
 };
 
@@ -60,6 +60,11 @@ class NuoCommandBuffer : public NuoRenderInFlight
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
 
 public:
+
+	~NuoCommandBuffer()
+	{
+
+	}
 
 	NuoCommandBuffer() = default;
 	PNuoCommandEncoder CreateRenderPassEncoder();
@@ -84,6 +89,11 @@ class NuoCommandEncoder : public NuoRenderInFlight
 	PNuoRenderTarget _renderTarget;
 
 public:
+
+	~NuoCommandEncoder()
+	{
+
+	}
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void ClearTargetView(float r, float g, float b, float a);

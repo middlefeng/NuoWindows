@@ -5,6 +5,7 @@
 
 #include "NuoDirect/NuoDirectView.h"
 #include <functional>
+#include <DirectXMath.h>
 
 
 class DirectView;
@@ -14,8 +15,17 @@ typedef std::shared_ptr<DirectView> PDirectView;
 class DirectView : public NuoDirectView
 {
 
-	std::function<void()> _onPaint;
-	std::function<void()> _onSize;
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 position;
+		
+		DirectX::XMFLOAT4 color;
+	};
+
+	PNuoPipelineState _pipeline;
+
+	// App resources.
+	PNuoVertexBuffer _vertexBuffer;
 
 	PNuoTimer _refreshTimer;
 
@@ -25,11 +35,8 @@ public:
 
 	DirectView(const PNuoDevice& device, const PNuoWindow& parent);
 
-	virtual void OnPaint() override;
+	virtual void Render(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void OnSize(unsigned int x, unsigned int y) override;
-
-	void SetOnPaint(std::function<void()> onPaint);
-	void SetOnSize(std::function<void()> onSize);
 
 };
 
