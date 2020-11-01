@@ -31,6 +31,8 @@ public:
 	NuoRootSignature(const PNuoDevice& device,
 					 D3D12_ROOT_SIGNATURE_FLAGS flags);
 
+	void AddConstant(size_t size, unsigned int register, unsigned int space, D3D12_SHADER_VISIBILITY visibility);
+
 	ID3D12RootSignature* DxSignature();
 };
 

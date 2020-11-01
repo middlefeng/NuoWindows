@@ -16,9 +16,6 @@
     <Filter Include="NuoWindowsFoundation">
       <UniqueIdentifier>{0ef0063a-8675-41fe-8275-6f3eaf111c7b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="D3DHello">
-      <UniqueIdentifier>{a7621712-3b35-4ae1-8663-20a73b5dc297}</UniqueIdentifier>
-    </Filter>
     <Filter Include="NuoWindowsFoundation\NuoDirect">
       <UniqueIdentifier>{c494ec5a-be83-4081-a9af-f2c640995150}</UniqueIdentifier>
     </Filter>

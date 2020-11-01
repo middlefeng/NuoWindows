@@ -97,6 +97,14 @@ void NuoCommandEncoder::ClearTargetView(float r, float g, float b, float a)
 }
 
 
+void NuoCommandEncoder::SetConstant(unsigned int index, size_t size, void* constant)
+{
+	auto commandList = *(_commandList.end() - 1);
+
+	commandList->SetGraphicsRoot32BitConstants(index, size / 4, constant, 0);
+}
+
+
 void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 {
 	if (_commandList.size())

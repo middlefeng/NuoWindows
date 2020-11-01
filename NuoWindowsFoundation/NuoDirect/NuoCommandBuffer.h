@@ -61,11 +61,6 @@ class NuoCommandBuffer : public NuoRenderInFlight
 
 public:
 
-	~NuoCommandBuffer()
-	{
-
-	}
-
 	NuoCommandBuffer() = default;
 	PNuoCommandEncoder CreateRenderPassEncoder();
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
@@ -90,10 +85,7 @@ class NuoCommandEncoder : public NuoRenderInFlight
 
 public:
 
-	~NuoCommandEncoder()
-	{
-
-	}
+	void SetConstant(unsigned int index, size_t size, void* constant);
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void ClearTargetView(float r, float g, float b, float a);

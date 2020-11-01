@@ -10,6 +10,14 @@
 
 #include <dxcapi.h>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
+
+
+
+struct InputParamType
+{
+    DirectX::XMFLOAT4 color;
+};
 
 
 DirectView::DirectView(const PNuoDevice& device,
@@ -37,6 +45,8 @@ void DirectView::Init()
 
     auto rootSignature = std::make_shared<NuoRootSignature>(device,
                                                             D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+    rootSignature->AddConstant(sizeof(InputParamType), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 
     // Create the pipeline state, which includes compiling and loading shaders.
     {
@@ -122,7 +132,11 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 
 	// Record commands.
 
+    InputParamType param;
+    param.color = { 1.0, 0.5, 0.0, 1.0 };
+
 	encoder->ClearTargetView(0.0f, 0.2f, 0.4f, 1.0f);
+    encoder->SetConstant(0, sizeof(InputParamType), &param);
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawInstanced(_vertexBuffer->Count(), 1);
 

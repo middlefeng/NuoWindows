@@ -9,6 +9,14 @@
 //
 //*********************************************************
 
+struct InputParamType
+{
+    float4 color;
+};
+
+ConstantBuffer<InputParamType> InputParam : register(b0);
+
+
 struct PSInput
 {
     float4 position : SV_POSITION;
@@ -27,7 +35,7 @@ PSInput VSMain(VSInput vsInput /*float4 position : POSITION, float4 color : COLO
     PSInput result;
 
     result.position = vsInput.position;
-    result.color = vsInput.color;
+    result.color = vsInput.color * InputParam.color;
 
     return result;
 }
