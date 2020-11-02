@@ -12,14 +12,23 @@
 #include "NuoDirect/NuoCommandBuffer.h"
 #include "NuoDirect/NuoCommandQueue.h"
 
+#include <DirectXMath.h>
+
 
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
 
+struct NuoModelViewProjection
+{
+	DirectX::XMMATRIX _mvpMatrix;
+};
+
+
 class NuoMesh
 {
 	virtual void Draw(const PNuoCommandEncoder& encoder) = 0;
+	virtual PNuoPipelineState PipelineState() = 0;
 };
 
 

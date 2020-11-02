@@ -40,6 +40,25 @@ NuoShader::NuoShader(const std::string& source,
 						   NULL, // pIncludeHandler
 						   &result); // ppResult
 
+#if defined(_DEBUG)
+	HRESULT status;
+	result->GetStatus(&status);
+
+	if (status != S_OK)
+	{
+		Microsoft::WRL::ComPtr<IDxcBlobEncoding> errorsBlob;
+		hr = result->GetErrorBuffer(&errorsBlob);
+		char message[1024];
+
+		if (SUCCEEDED(hr) && errorsBlob)
+		{
+			sprintf_s(message, "%s", (const char*)errorsBlob->GetBufferPointer());
+		}
+		
+		assert(false);
+	}
+#endif
+
 	result->GetResult(&_dxShaderBlob);
 }
 

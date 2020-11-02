@@ -22,7 +22,7 @@ struct NuoCubeMeshVertex
 class NuoCubeMesh : public NuoMeshBase<NuoCubeMeshVertex>
 {
 
-	
+	PNuoPipelineState _pipelineState;
 
 public:
 
@@ -33,6 +33,7 @@ public:
 			  float width, float height, float depth);
 
 	virtual void Draw(const PNuoCommandEncoder& encoder) override;
+	virtual PNuoPipelineState PipelineState() override;
 
 };
 
