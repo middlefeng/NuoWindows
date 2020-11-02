@@ -17,3 +17,9 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxRenderTargetView(unsigned int i
 }
 
 
+D3D12_CPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxHeapCPUHandle()
+{
+    return _heap->GetCPUDescriptorHandleForHeapStart();
+}
+
+

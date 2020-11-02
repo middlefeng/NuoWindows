@@ -31,6 +31,7 @@ private:
 public:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DxRenderTargetView(unsigned int inFlight);
+	D3D12_CPU_DESCRIPTOR_HANDLE DxHeapCPUHandle();
 
 	friend class NuoDevice;
 

@@ -122,12 +122,30 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 }
 
 
+PNuoDescriptorHeap NuoDevice::CreateDepthStencilHeap()
+{
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+    dsvHeapDesc.NumDescriptors = 1;
+    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+    heap->_size = 1;
+    heap->_device = shared_from_this();
+    _dxDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&heap->_heap));
+
+    return heap;
+}
+
+
 PNuoResource NuoDevice::CreateBuffer(void* data, size_t size)
 {
     return CreateBufferInternal(data, size, 1, 
                                 D3D12_RESOURCE_DIMENSION_BUFFER,
                                 DXGI_FORMAT_UNKNOWN,
                                 D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_STATE_GENERIC_READ,
                                 D3D12_RESOURCE_FLAG_NONE);
 }
 
@@ -138,7 +156,19 @@ PNuoResource NuoDevice::CreateBuffer(size_t size)
                                 D3D12_RESOURCE_DIMENSION_BUFFER,
                                 DXGI_FORMAT_UNKNOWN,
                                 D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_STATE_COPY_DEST,
                                 D3D12_RESOURCE_FLAG_NONE);
+}
+
+
+PNuoResource NuoDevice::CreateDepthStencil(size_t width, size_t height)
+{
+    return CreateBufferInternal(nullptr, width, height,
+                                D3D12_RESOURCE_DIMENSION_TEXTURE2D,
+                                DXGI_FORMAT_D32_FLOAT,
+                                D3D12_TEXTURE_LAYOUT_UNKNOWN,
+                                D3D12_RESOURCE_STATE_DEPTH_WRITE,
+                                D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 }
 
 
@@ -147,6 +177,7 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data,
                                              D3D12_RESOURCE_DIMENSION dimension,
                                              DXGI_FORMAT format,
                                              D3D12_TEXTURE_LAYOUT layout,
+                                             D3D12_RESOURCE_STATES state,
                                              D3D12_RESOURCE_FLAGS flags)
 {
     D3D12_HEAP_PROPERTIES heapProps;
@@ -159,8 +190,6 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data,
     D3D12_RESOURCE_DESC resourceDesc;
     resourceDesc.Dimension = dimension;
     resourceDesc.Alignment = 0;
-    resourceDesc.Width = width * height;
-    resourceDesc.Height = 1;
     resourceDesc.DepthOrArraySize = 1;
     resourceDesc.MipLevels = 1;
     resourceDesc.Format = format;
@@ -169,11 +198,31 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data,
     resourceDesc.Layout = layout;
     resourceDesc.Flags = flags;
 
+    if (dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D)
+    {
+        resourceDesc.Width = width;
+        resourceDesc.Height = height;
+    }
+    else
+    {
+        resourceDesc.Width = width * height;
+        resourceDesc.Height = 1;
+    }
+
+    D3D12_CLEAR_VALUE clearValue;
+    D3D12_CLEAR_VALUE* pClearValue = nullptr;
+    if (flags == D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)
+    {
+        pClearValue = &clearValue;
+        clearValue = {};
+        clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+        clearValue.DepthStencil = { 1.0f, 0 };
+    }
+
     Microsoft::WRL::ComPtr<ID3D12Resource> intermediate;
     HRESULT hr = _dxDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE,
-                                                    &resourceDesc,
-                                                    data ? D3D12_RESOURCE_STATE_GENERIC_READ : D3D12_RESOURCE_STATE_COPY_DEST,
-                                                    nullptr, IID_PPV_ARGS(&intermediate));
+                                                    &resourceDesc, state,
+                                                    pClearValue, IID_PPV_ARGS(&intermediate));
     assert(hr == S_OK);
 
     if (data)

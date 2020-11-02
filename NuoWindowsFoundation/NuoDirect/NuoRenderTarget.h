@@ -45,10 +45,6 @@ public:
 
 	friend class NuoRenderTargetSwapChain;
 
-private:
-
-	void CreateDepthStencil();
-
 };
 
 

@@ -18,6 +18,12 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::View()
 }
 
 
+D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::DepthView()
+{
+	return _depthView;
+}
+
+
 PNuoResource NuoRenderTarget::Resource()
 {
 	return _resource;
@@ -54,12 +60,6 @@ void NuoRenderTarget::ReleaseRenderPassEncoder()
 }
 
 
-void NuoRenderTarget::CreateDepthStencil()
-{
-	/*D3D12_CLEAR_VALUE optimizedClearValue = {};
-	optimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
-	optimizedClearValue.DepthStencil = { 1.0f, 0 };*/
-}
 
 
 
