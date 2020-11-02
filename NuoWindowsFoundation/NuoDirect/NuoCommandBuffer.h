@@ -28,9 +28,7 @@ class NuoCommandSwapChain
 
 	PNuoCommandQueue _commandQueue;
 
-public: // TODO
 	std::vector<Microsoft::WRL::ComPtr<ID3D12CommandAllocator>> _commandAllocators;
-	std::vector<PNuoCommandBuffer> _commandBuffers;
 
 public:
 
@@ -66,7 +64,10 @@ public:
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void Commit();
 
+	PNuoCommandQueue CommandQueue() const;
+
 	friend class NuoCommandSwapChain;
+	friend class NuoCommandQueue;
 };
 
 

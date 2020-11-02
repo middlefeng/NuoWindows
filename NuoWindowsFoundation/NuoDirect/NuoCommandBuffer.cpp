@@ -12,12 +12,11 @@ NuoCommandSwapChain::NuoCommandSwapChain(const PNuoCommandQueue& commandQueue, u
 	: _commandQueue(commandQueue)
 {
 	_commandAllocators.resize(frameCount);
-	_commandBuffers.resize(frameCount);
 
 	for (UINT n = 0; n < frameCount; n++)
 	{
 		HRESULT hr = commandQueue->Device()->DxDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
-			IID_PPV_ARGS(&_commandAllocators[n]));
+																				IID_PPV_ARGS(&_commandAllocators[n]));
 		assert(hr == S_OK);
 	}
 }
@@ -85,6 +84,12 @@ void NuoCommandBuffer::Commit()
 		encoder->Commit();
 
 	_encoders.clear();
+}
+
+
+PNuoCommandQueue NuoCommandBuffer::CommandQueue() const
+{
+	return _commandQueue;
 }
 
 

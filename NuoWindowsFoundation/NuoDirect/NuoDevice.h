@@ -48,7 +48,12 @@ public:
 
 private:
 
-	PNuoResource CreateBufferInternal(void* data, size_t size);
+	PNuoResource CreateBufferInternal(void* data,
+									  size_t width, size_t height,
+									  D3D12_RESOURCE_DIMENSION dimension,
+									  DXGI_FORMAT format,
+									  D3D12_TEXTURE_LAYOUT layout,
+									  D3D12_RESOURCE_FLAGS flags);
 
 };
 

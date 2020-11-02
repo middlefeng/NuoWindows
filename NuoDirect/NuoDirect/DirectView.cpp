@@ -83,7 +83,7 @@ void DirectView::Init()
     }
 
     PNuoResource intermediate;
-    PNuoCommandBuffer commandBuffer = CreateCommandBuffer(false);
+    PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     NuoRect<long> rect = ClientRectDevice();
     float aspectRatio = ((float)rect.W()) / ((float)rect.H());
@@ -100,21 +100,15 @@ void DirectView::Init()
             { { -0.25f, -0.25f * aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
         };
 
-        const UINT vertexBufferSize = sizeof(triangleVertices);
-
-        intermediate = device->CreateBuffer(triangleVertices, vertexBufferSize);
-        auto vertexBuffer = device->CreateBuffer(vertexBufferSize);
-
-        commandBuffer->CopyResource(intermediate, vertexBuffer);
+        _vertexBuffer = std::make_shared<NuoVertexBuffer>(commandBuffer, intermediate,
+                                                          triangleVertices, sizeof(triangleVertices), sizeof(Vertex));
         commandBuffer->Commit();
-
-        _vertexBuffer = std::make_shared<NuoVertexBuffer>(vertexBuffer, sizeof(Vertex));
     }
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     {
-        PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
-        fence->WaitForGPU(CommandQueue());
+       PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
+       fence->WaitForGPU(CommandQueue());
     }
 }
 

@@ -3,6 +3,7 @@
 #include "NuoDevice.h"
 #include "NuoStrings.h"
 #include "NuoResource.h"
+#include "NuoCommandBuffer.h"
 
 #include <cassert>
 
@@ -123,17 +124,30 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 
 PNuoResource NuoDevice::CreateBuffer(void* data, size_t size)
 {
-    return CreateBufferInternal(data, size);
+    return CreateBufferInternal(data, size, 1, 
+                                D3D12_RESOURCE_DIMENSION_BUFFER,
+                                DXGI_FORMAT_UNKNOWN,
+                                D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_FLAG_NONE);
 }
 
 
 PNuoResource NuoDevice::CreateBuffer(size_t size)
 {
-    return CreateBufferInternal(nullptr, size);
+    return CreateBufferInternal(nullptr, size, 1,
+                                D3D12_RESOURCE_DIMENSION_BUFFER,
+                                DXGI_FORMAT_UNKNOWN,
+                                D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_FLAG_NONE);
 }
 
 
-PNuoResource NuoDevice::CreateBufferInternal(void* data, size_t size)
+PNuoResource NuoDevice::CreateBufferInternal(void* data,
+                                             size_t width, size_t height,
+                                             D3D12_RESOURCE_DIMENSION dimension,
+                                             DXGI_FORMAT format,
+                                             D3D12_TEXTURE_LAYOUT layout,
+                                             D3D12_RESOURCE_FLAGS flags)
 {
     D3D12_HEAP_PROPERTIES heapProps;
     heapProps.Type = data ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT;
@@ -143,17 +157,17 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data, size_t size)
     heapProps.VisibleNodeMask = 1;
 
     D3D12_RESOURCE_DESC resourceDesc;
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    resourceDesc.Dimension = dimension;
     resourceDesc.Alignment = 0;
-    resourceDesc.Width = size;
+    resourceDesc.Width = width * height;
     resourceDesc.Height = 1;
     resourceDesc.DepthOrArraySize = 1;
     resourceDesc.MipLevels = 1;
-    resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+    resourceDesc.Format = format;
     resourceDesc.SampleDesc.Count = 1;
     resourceDesc.SampleDesc.Quality = 0;
-    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-    resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    resourceDesc.Layout = layout;
+    resourceDesc.Flags = flags;
 
     Microsoft::WRL::ComPtr<ID3D12Resource> intermediate;
     HRESULT hr = _dxDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE,
@@ -168,7 +182,7 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data, size_t size)
         UINT8* pVertexDataBegin;
         D3D12_RANGE readRange = { 0, 0 };        // We do not intend to read from this resource on the CPU.
         hr = intermediate->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
-        memcpy(pVertexDataBegin, data, size);
+        memcpy(pVertexDataBegin, data, width * height);
         intermediate->Unmap(0, nullptr);
 
         assert(hr == S_OK);

@@ -13,8 +13,11 @@
 class NuoCommandQueue;
 typedef std::shared_ptr<NuoCommandQueue> PNuoCommandQueue;
 
+class NuoCommandBuffer;
+typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
-class NuoCommandQueue
+
+class NuoCommandQueue : public std::enable_shared_from_this<NuoCommandQueue>
 {
 
 	PNuoDevice _device;
@@ -24,6 +27,7 @@ class NuoCommandQueue
 public:
 
 	NuoCommandQueue(const PNuoDevice& device);
+	PNuoCommandBuffer CreateCommandBuffer();
 
 	PNuoDevice Device() const;
 

@@ -26,6 +26,9 @@ class NuoRenderTarget : public std::enable_shared_from_this<NuoRenderTarget>
 	PNuoResource _resource;
 	D3D12_CPU_DESCRIPTOR_HANDLE _view;
 
+	PNuoResource _depthResource;
+	D3D12_CPU_DESCRIPTOR_HANDLE _depthView;
+
 	unsigned int _encoderCount;
 	PNuoCommandEncoder _renderPassEncoder;
 
@@ -34,12 +37,20 @@ public:
 	NuoRenderTarget();
 
 	D3D12_CPU_DESCRIPTOR_HANDLE View();
+	D3D12_CPU_DESCRIPTOR_HANDLE DepthView();
 	PNuoResource Resource();
 
 	PNuoCommandEncoder RetainRenderPassEncoder(const PNuoCommandBuffer& commandBuffer);
 	void ReleaseRenderPassEncoder();
 
 	friend class NuoRenderTargetSwapChain;
+
+private:
+
+	void CreateDepthStencil();
+
 };
+
+
 
 

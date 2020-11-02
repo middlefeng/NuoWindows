@@ -19,6 +19,9 @@
     <Filter Include="NuoWindowsFoundation\NuoDirect">
       <UniqueIdentifier>{c494ec5a-be83-4081-a9af-f2c640995150}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoMeshes">
+      <UniqueIdentifier>{be14c4a2-4875-4200-81a7-4f902973ce0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -129,6 +132,12 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -226,6 +235,12 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.cpp">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
