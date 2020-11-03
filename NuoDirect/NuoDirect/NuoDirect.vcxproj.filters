@@ -22,6 +22,9 @@
     <Filter Include="NuoWindowsFoundation\NuoMeshes">
       <UniqueIdentifier>{be14c4a2-4875-4200-81a7-4f902973ce0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoMath">
+      <UniqueIdentifier>{9677494b-6631-4f47-b11f-ad0ed2d2cc96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,6 +141,9 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMath\NuoVector.h">
+      <Filter>NuoWindowsFoundation\NuoMath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -241,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMath\NuoVector.cpp">
+      <Filter>NuoWindowsFoundation\NuoMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

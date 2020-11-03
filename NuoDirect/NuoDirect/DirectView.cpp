@@ -118,6 +118,7 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 	PNuoRenderTarget target = CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
+    encoder->SetClearColor(NuoVector4(0.0f, 0.2f, 0.4f, 1.0f));
 	encoder->SetPipeline(_pipeline);
     encoder->UseDefaultViewPort();
 
@@ -129,7 +130,6 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
     InputParamType param;
     param.color = { 1.0, 0.5, 0.0, 1.0 };
 
-	encoder->ClearTargetView(0.0f, 0.2f, 0.4f, 1.0f);
     encoder->SetConstant(0, sizeof(InputParamType), &param);
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawInstanced(_vertexBuffer->Count(), 1);

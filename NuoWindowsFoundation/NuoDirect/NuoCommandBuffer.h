@@ -13,6 +13,8 @@
 #include "NuoDirect/NuoCommandQueue.h"
 #include "NuoDirect/NuoVertexBuffer.h"
 
+#include "NuoMath/NuoVector.h"
+
 class NuoCommandSwapChain;
 typedef std::shared_ptr<NuoCommandSwapChain> PNuoCommandSwapChain;
 
@@ -84,12 +86,14 @@ class NuoCommandEncoder : public NuoRenderInFlight
 	PNuoCommandQueue _commandQueue;
 	PNuoRenderTarget _renderTarget;
 
+	NuoVector4 _clearColor;
+
 public:
 
+	void SetClearColor(const NuoVector4& color);
 	void SetConstant(unsigned int index, size_t size, void* constant);
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
-	void ClearTargetView(float r, float g, float b, float a);
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
 	void DrawInstanced(unsigned int vertexCount, unsigned int instance);
 	void UseDefaultViewPort();

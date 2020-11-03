@@ -93,13 +93,10 @@ PNuoCommandQueue NuoCommandBuffer::CommandQueue() const
 }
 
 
-void NuoCommandEncoder::ClearTargetView(float r, float g, float b, float a)
-{
-	auto commandList = *(_commandList.end() - 1);
 
-	const float clearColor[] = { r, g, b, a };
-	commandList->ClearRenderTargetView(_renderTarget->View(), clearColor, 0, nullptr);
-	commandList->ClearDepthStencilView(_renderTarget->DepthView(), D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
+void NuoCommandEncoder::SetClearColor(const NuoVector4& color)
+{
+	_clearColor = color;
 }
 
 
@@ -132,6 +129,9 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 	{
 		ResourceBarrier(_renderTarget->Resource(),
 						D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+		commandList->ClearRenderTargetView(_renderTarget->View(), _clearColor._float, 0, nullptr);
+		commandList->ClearDepthStencilView(_renderTarget->DepthView(), D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
 
 		commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, &_renderTarget->DepthView());
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

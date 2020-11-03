@@ -177,6 +177,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMath\NuoVector.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h" />
     <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoAppInstance.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMath\NuoVector.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp" />
     <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoAppInstance.cpp" />
