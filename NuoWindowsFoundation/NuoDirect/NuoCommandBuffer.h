@@ -78,6 +78,21 @@ typedef std::shared_ptr<NuoRenderTarget> PNuoRenderTarget;
 
 
 
+class NuoViewport
+{
+public:
+
+	D3D12_VIEWPORT _viewport;
+
+	NuoViewport();
+
+	NuoViewport(float topLeftX, float topLeftY,
+				float width, float height,
+				float minDepth, float maxDepth);
+};
+
+
+
 class NuoCommandEncoder : public NuoRenderInFlight
 {
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
@@ -87,16 +102,17 @@ class NuoCommandEncoder : public NuoRenderInFlight
 	PNuoRenderTarget _renderTarget;
 
 	NuoVector4 _clearColor;
+	NuoViewport _viewport;
 
 public:
 
 	void SetClearColor(const NuoVector4& color);
+	void SetViewport(const NuoViewport& viewport);
 	void SetConstant(unsigned int index, size_t size, void* constant);
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
 	void DrawInstanced(unsigned int vertexCount, unsigned int instance);
-	void UseDefaultViewPort();
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void EndEncoding();
 

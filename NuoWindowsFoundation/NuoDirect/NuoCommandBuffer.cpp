@@ -8,6 +8,21 @@
 
 
 
+NuoViewport::NuoViewport()
+{
+	_viewport = { 0, 0, 0, 0, 0, 1.0f };
+}
+
+
+NuoViewport::NuoViewport(float topLeftX, float topLeftY,
+				 		 float width, float height,
+						 float minDepth, float maxDepth)
+{
+	_viewport = { topLeftX, topLeftY, width, height, minDepth, maxDepth };
+}
+
+
+
 NuoCommandSwapChain::NuoCommandSwapChain(const PNuoCommandQueue& commandQueue, unsigned int frameCount)
 	: _commandQueue(commandQueue)
 {
@@ -100,6 +115,12 @@ void NuoCommandEncoder::SetClearColor(const NuoVector4& color)
 }
 
 
+void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
+{
+	_viewport = viewport;
+}
+
+
 void NuoCommandEncoder::SetConstant(unsigned int index, size_t size, void* constant)
 {
 	auto commandList = *(_commandList.end() - 1);
@@ -135,6 +156,18 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 
 		commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, &_renderTarget->DepthView());
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		D3D12_VIEWPORT viewport = _viewport._viewport;
+		if (viewport.Width == 0)
+		{
+			PNuoResource resource = _renderTarget->Resource();
+			viewport.Width = resource->Width();
+			viewport.Height = resource->Height();
+		}
+
+		D3D12_RECT scissor = { 0, 0, viewport.Width, viewport.Height };
+		commandList->RSSetViewports(1, &viewport);
+		commandList->RSSetScissorRects(1, &scissor);
 	}
 }
 
@@ -154,17 +187,6 @@ void NuoCommandEncoder::DrawInstanced(unsigned int vertexCount, unsigned int ins
 	commandList->DrawInstanced(vertexCount, instance, 0, 0);
 }
 
-
-void NuoCommandEncoder::UseDefaultViewPort()
-{
-	auto currentBuffer = *(_commandList.end() - 1);
-	PNuoResource resource = _renderTarget->Resource();
-
-	D3D12_VIEWPORT viewPort = { 0, 0, (float)resource->Width(), (float)resource->Height(), 0, 1 };
-	D3D12_RECT scissor = { 0, 0, resource->Width(), resource->Height() };
-	currentBuffer->RSSetViewports(1, &viewPort);
-	currentBuffer->RSSetScissorRects(1, &scissor);
-}
 
 
 void NuoCommandEncoder::EndEncoding()
