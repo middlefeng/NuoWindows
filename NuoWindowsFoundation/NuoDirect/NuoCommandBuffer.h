@@ -112,7 +112,7 @@ public:
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
-	void DrawInstanced(unsigned int vertexCount, unsigned int instance);
+	void DrawIndexed(unsigned int indiciesCount);
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void EndEncoding();
 

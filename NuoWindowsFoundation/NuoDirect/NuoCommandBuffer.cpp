@@ -177,14 +177,15 @@ void NuoCommandEncoder::SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer)
 	auto commandList = *(_commandList.end() - 1);
 
 	commandList->IASetVertexBuffers(0, 1, vertexBuffer->View());
+	commandList->IASetIndexBuffer(vertexBuffer->IndiciesView());
 }
 
 
-void NuoCommandEncoder::DrawInstanced(unsigned int vertexCount, unsigned int instance)
+void NuoCommandEncoder::DrawIndexed(unsigned int indiciesCount)
 {
 	auto commandList = *(_commandList.end() - 1);
 
-	commandList->DrawInstanced(vertexCount, instance, 0, 0);
+	commandList->DrawIndexedInstanced(indiciesCount, 1, 0, 0, 0);
 }
 
 

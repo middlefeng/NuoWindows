@@ -11,7 +11,8 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxRenderTargetView(unsigned int i
     PNuoDevice device = _device.lock();
 
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(_heap->GetCPUDescriptorHandleForHeapStart());
-    rtvHandle.ptr = (SIZE_T)((char*)rtvHandle.ptr + inFlight * device->RenderTargetDescriptorHandleIncrementSize());
+    SIZE_T offset = inFlight * device->RenderTargetDescriptorHandleIncrementSize();
+    rtvHandle.ptr = (SIZE_T)((char*)rtvHandle.ptr + offset);
 
     return rtvHandle;
 }

@@ -82,7 +82,7 @@ void DirectView::Init()
         _pipeline = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM, inputElementDescs, vertexShader, pixelShader, rootSignature);
     }
 
-    PNuoResource intermediate;
+    std::vector<PNuoResource> intermediate;
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     NuoRect<long> rect = ClientRectDevice();
@@ -100,8 +100,11 @@ void DirectView::Init()
             { { -0.25f, -0.25f * aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
         };
 
+        UINT32 indicies[] = { 0, 1, 2 };
+
         _vertexBuffer = std::make_shared<NuoVertexBuffer>(commandBuffer, intermediate,
-                                                          triangleVertices, sizeof(triangleVertices), sizeof(Vertex));
+                                                          triangleVertices, sizeof(triangleVertices), sizeof(Vertex),
+                                                          indicies, 3);
         commandBuffer->Commit();
     }
 
@@ -133,7 +136,7 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 
     encoder->SetConstant(0, sizeof(InputParamType), &param);
 	encoder->SetVertexBuffer(_vertexBuffer);
-	encoder->DrawInstanced(_vertexBuffer->Count(), 1);
+	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 
 	target->ReleaseRenderPassEncoder();
 }
