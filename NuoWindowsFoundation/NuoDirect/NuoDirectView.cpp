@@ -95,11 +95,15 @@ void NuoSwapChain::ResizeBuffer(unsigned int w, unsigned int h)
 
     unsigned int buffersCount = BuffersCount();
 
+    // release all resources assoicated to the swap chain to make the buffer
+    // resize possible.
+    //
     _buffer.reset();
     _rtvSwapChain.reset();
     _fence = device->CreateFenceSwapChain(buffersCount);
     _currentBackBufferIndex = -1;
-
+    _commandSwapChain.reset();
+    
     HRESULT hr = _swapChain->ResizeBuffers(buffersCount, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
     assert(hr == S_OK);
 
@@ -128,6 +132,7 @@ void NuoSwapChain::UpdateBuffer()
 
     _buffer = std::make_shared<NuoResourceSwapChain>(buffers);
     _rtvSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), _buffer));
+    _commandSwapChain = std::make_shared<NuoCommandSwapChain>(queue, buffersCount);
 }
 
 

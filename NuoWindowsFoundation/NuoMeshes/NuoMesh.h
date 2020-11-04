@@ -27,8 +27,9 @@ struct NuoModelViewProjection
 
 class NuoMesh
 {
+public:
+
 	virtual void Draw(const PNuoCommandEncoder& encoder) = 0;
-	virtual PNuoPipelineState PipelineState() = 0;
 };
 
 
@@ -45,17 +46,20 @@ public:
 	NuoMeshBase() = default;
 	
 	void Init(const PNuoCommandBuffer& commandBuffer,
-			  PNuoResource& intermediate,
-			  MeshVertex* buffer, size_t number);
+			  std::vector<PNuoResource>& intermediate,
+			  MeshVertex* buffer, size_t number,
+			  UINT* indiciesBuffer, size_t indiciesCount);
 
 };
 
 
 template <class MeshVertex>
 void NuoMeshBase<MeshVertex>::Init(const PNuoCommandBuffer& commandBuffer,
-		 						   PNuoResource& intermediate,
-								   MeshVertex* buffer, size_t number)
+		 						   std::vector<PNuoResource>& intermediate,
+								   MeshVertex* buffer, size_t number,
+								   UINT* indiciesBuffer, size_t indiciesCount)
 {
 	_vertexBuffer = std::make_shared<NuoVertexBuffer>(commandBuffer, intermediate,
-													  buffer, number * sizeof(MeshVertex), sizeof(MeshVertex));
+													  buffer, number * sizeof(MeshVertex), sizeof(MeshVertex),
+													  indiciesBuffer, indiciesCount);
 }

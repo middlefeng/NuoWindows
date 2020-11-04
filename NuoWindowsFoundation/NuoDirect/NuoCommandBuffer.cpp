@@ -26,6 +26,7 @@ NuoViewport::NuoViewport(float topLeftX, float topLeftY,
 NuoCommandSwapChain::NuoCommandSwapChain(const PNuoCommandQueue& commandQueue, unsigned int frameCount)
 	: _commandQueue(commandQueue)
 {
+	_inFlightBuffers.resize(frameCount);
 	_commandAllocators.resize(frameCount);
 
 	for (UINT n = 0; n < frameCount; n++)
@@ -50,10 +51,14 @@ unsigned int NuoRenderInFlight::InFlight()
 
 PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight, bool resetAllocator)
 {
+	_inFlightBuffers[inFlight].clear();
+
 	PNuoCommandBuffer buffer = std::make_shared<NuoCommandBuffer>();
 	buffer->_commandQueue = _commandQueue;
 	buffer->_commandAllocator = _commandAllocators[inFlight];
 	buffer->_inFlight = inFlight;
+
+	_inFlightBuffers[inFlight].push_back(buffer);
 
 	if (resetAllocator)
 		_commandAllocators[inFlight]->Reset();
@@ -107,7 +112,6 @@ void NuoCommandBuffer::Commit()
 	}
 
 	_commandQueue->DxQueue()->ExecuteCommandLists(commands.size(), commands.data());
-	_encoders.clear();
 }
 
 
@@ -156,13 +160,19 @@ void NuoCommandEncoder::SetRenderTarget(const PNuoRenderTarget& renderTarget)
 }
 
 
+void NuoCommandEncoder::SetRootSignature(const PNuoRootSignature& rootSignature)
+{
+	_rootSignature = rootSignature;
+	_commandList->SetGraphicsRootSignature(rootSignature->DxSignature());
+}
+
+
 void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 {
 	ID3D12PipelineState* dxPipeline = pipeline->DxPipeline();
 	
 	_commandList->SetPipelineState(dxPipeline);
 	_commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
-
 }
 
 

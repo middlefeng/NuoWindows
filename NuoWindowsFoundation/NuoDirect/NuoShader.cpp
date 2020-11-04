@@ -54,6 +54,9 @@ NuoShader::NuoShader(const std::string& source,
 		{
 			sprintf_s(message, "%s", (const char*)errorsBlob->GetBufferPointer());
 		}
+
+		std::wstring wstr = StringToUTF16(message);
+		OutputDebugString(wstr.c_str());
 		
 		assert(false);
 	}

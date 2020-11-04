@@ -32,6 +32,10 @@ class NuoCommandSwapChain
 
 	std::vector<Microsoft::WRL::ComPtr<ID3D12CommandAllocator>> _commandAllocators;
 
+	// to retain resources that GPU need in execution.
+	//
+	std::vector<std::vector<PNuoCommandBuffer>> _inFlightBuffers;
+
 public:
 
 	NuoCommandSwapChain(const PNuoCommandQueue& commandQueue, unsigned int frameCount);
@@ -99,6 +103,10 @@ class NuoCommandEncoder : public NuoRenderInFlight
 
 	PNuoRenderTarget _renderTarget;
 
+	// an initial root signature for common parameters
+	//
+	PNuoRootSignature _rootSignature;
+
 public:
 
 	void SetClearColor(const NuoVector4& color);
@@ -107,6 +115,7 @@ public:
 	
 	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
 
+	void SetRootSignature(const PNuoRootSignature& rootSignature);
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
 	void DrawIndexed(unsigned int indiciesCount);

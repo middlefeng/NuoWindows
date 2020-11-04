@@ -34,7 +34,7 @@ DirectView::DirectView(const PNuoDevice& device,
 void DirectView::OnSize(unsigned int x, unsigned int y)
 {
 	NuoDirectView::OnSize(x, y);
-	
+
     Init();
 }
 
@@ -85,6 +85,9 @@ void DirectView::Init()
     std::vector<PNuoResource> intermediate;
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
+    _mesh = std::make_shared<NuoCubeMesh>();
+    _mesh->Init(commandBuffer, intermediate, 2.0, 2.0, 2.0);
+
     NuoRect<long> rect = ClientRectDevice();
     float aspectRatio = ((float)rect.W()) / ((float)rect.H());
 
@@ -105,8 +108,9 @@ void DirectView::Init()
         _vertexBuffer = std::make_shared<NuoVertexBuffer>(commandBuffer, intermediate,
                                                           triangleVertices, sizeof(triangleVertices), sizeof(Vertex),
                                                           indicies, 3);
-        commandBuffer->Commit();
     }
+
+    commandBuffer->Commit();
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     {
@@ -133,10 +137,39 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 
     InputParamType param;
     param.color = { 1.0, 0.5, 0.0, 1.0 };
-
     encoder->SetConstant(0, sizeof(InputParamType), &param);
+
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
+
+    const DirectX::XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
+    DirectX::XMMATRIX modelMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(45));
+
+    using namespace DirectX;
+    const XMVECTOR eyePosition = XMVectorSet(0, 0, -10, 1);
+    const XMVECTOR focusPoint = XMVectorSet(0, 0, 0, 1);
+    const XMVECTOR upDirection = XMVectorSet(0, 1, 0, 0);
+    XMMATRIX viewMatrix = XMMatrixLookAtLH(eyePosition, focusPoint, upDirection);
+
+    float aspectRatio = target->Resource()->Width() / (float)target->Resource()->Height();
+    XMMATRIX projectionMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(70), aspectRatio, 0.1f, 100.0f);
+
+    XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, viewMatrix);
+    mvpMatrix = XMMatrixMultiply(mvpMatrix, projectionMatrix);
+
+    NuoModelViewProjection mvp = { mvpMatrix };
+
+    auto signature = std::make_shared<NuoRootSignature>(commandBuffer->CommandQueue()->Device(),
+        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+    
+    signature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+    encoder->SetRootSignature(signature);
+    signature.reset();
+    
+    encoder->SetConstant(0, sizeof(NuoModelViewProjection), &mvp);
+    
+    _mesh->Draw(encoder);
 
 	target->ReleaseRenderPassEncoder();
 }

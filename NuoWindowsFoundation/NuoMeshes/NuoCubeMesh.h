@@ -19,6 +19,10 @@ struct NuoCubeMeshVertex
 };
 
 
+class NuoCubeMesh;
+typedef std::shared_ptr<NuoCubeMesh> PNuoCubeMesh;
+
+
 class NuoCubeMesh : public NuoMeshBase<NuoCubeMeshVertex>
 {
 
@@ -29,11 +33,10 @@ public:
 	NuoCubeMesh() = default;
 
 	void Init(const PNuoCommandBuffer& commandBuffer,
-			  PNuoResource& intermediate,
+			  std::vector<PNuoResource>& intermediate,
 			  float width, float height, float depth);
 
 	virtual void Draw(const PNuoCommandEncoder& encoder) override;
-	virtual PNuoPipelineState PipelineState() override;
 
 };
 

@@ -4,6 +4,8 @@
 #include "NuoTimer.h"
 
 #include "NuoDirect/NuoDirectView.h"
+#include "NuoMeshes/NuoCubeMesh.h"
+
 #include <functional>
 #include <DirectXMath.h>
 
@@ -23,9 +25,9 @@ class DirectView : public NuoDirectView
 	};
 
 	PNuoPipelineState _pipeline;
-
-	// App resources.
 	PNuoVertexBuffer _vertexBuffer;
+
+	PNuoCubeMesh _mesh;
 
 	PNuoTimer _refreshTimer;
 
