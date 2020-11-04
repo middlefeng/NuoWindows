@@ -64,9 +64,14 @@ PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight
 
 PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 {
+	PNuoDevice device = _commandQueue->Device();
+
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
+	device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _commandAllocator.Get(),
+										  nullptr, IID_PPV_ARGS(&commandList));
+
 	PNuoCommandEncoder result = std::make_shared<NuoCommandEncoder>();
-	result->_commandAllocator = _commandAllocator;
-	result->_commandQueue = _commandQueue;
+	result->_commandList = commandList;
 	result->_inFlight = _inFlight;
 
 	_encoders.push_back(result);
@@ -77,8 +82,7 @@ PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 
 void NuoCommandEncoder::CopyResource(const PNuoResource& src, const PNuoResource& dst)
 {
-	auto commandList = *(_commandList.end() - 1);
-	commandList->CopyResource(dst->DxResource(), src->DxResource());
+	_commandList->CopyResource(dst->DxResource(), src->DxResource());
 
 	ResourceBarrier(dst, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
 }
@@ -87,7 +91,6 @@ void NuoCommandEncoder::CopyResource(const PNuoResource& src, const PNuoResource
 void NuoCommandBuffer::CopyResource(const PNuoResource& src, const PNuoResource& dst)
 {
 	PNuoCommandEncoder encoder = CreateRenderPassEncoder();
-	encoder->SetPipeline(nullptr);
 	encoder->CopyResource(src, dst);
 	encoder->EndEncoding();
 }
@@ -95,9 +98,15 @@ void NuoCommandBuffer::CopyResource(const PNuoResource& src, const PNuoResource&
 
 void NuoCommandBuffer::Commit()
 {
-	for (auto encoder : _encoders)
-		encoder->Commit();
+	std::vector<ID3D12CommandList*> commands;
 
+	for (auto encoder : _encoders)
+	{
+		ID3D12GraphicsCommandList* commandList = encoder->DxEncoder();
+		commands.push_back(commandList);
+	}
+
+	_commandQueue->DxQueue()->ExecuteCommandLists(commands.size(), commands.data());
 	_encoders.clear();
 }
 
@@ -111,108 +120,75 @@ PNuoCommandQueue NuoCommandBuffer::CommandQueue() const
 
 void NuoCommandEncoder::SetClearColor(const NuoVector4& color)
 {
-	_clearColor = color;
+	_commandList->ClearRenderTargetView(_renderTarget->View(), color._float, 0, nullptr);
+	_commandList->ClearDepthStencilView(_renderTarget->DepthView(), D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
 }
 
 
 void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
 {
-	_viewport = viewport;
+	D3D12_VIEWPORT viewport_ = viewport._viewport;
+	if (viewport_.Width == 0)
+	{
+		PNuoResource resource = _renderTarget->Resource();
+		viewport_.Width = resource->Width();
+		viewport_.Height = resource->Height();
+	}
+
+	D3D12_RECT scissor = { 0, 0, viewport_.Width, viewport_.Height };
+	_commandList->RSSetViewports(1, &viewport_);
+	_commandList->RSSetScissorRects(1, &scissor);
 }
 
 
 void NuoCommandEncoder::SetConstant(unsigned int index, size_t size, void* constant)
 {
-	auto commandList = *(_commandList.end() - 1);
+	_commandList->SetGraphicsRoot32BitConstants(index, size / 4, constant, 0);
+}
 
-	commandList->SetGraphicsRoot32BitConstants(index, size / 4, constant, 0);
+
+void NuoCommandEncoder::SetRenderTarget(const PNuoRenderTarget& renderTarget)
+{
+	_renderTarget = renderTarget;
+
+	_commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, &_renderTarget->DepthView());
+	_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 
 void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 {
-	if (_commandList.size())
-		EndEncoding();
+	ID3D12PipelineState* dxPipeline = pipeline->DxPipeline();
+	
+	_commandList->SetPipelineState(dxPipeline);
+	_commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
 
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
-	PNuoDevice device = _commandQueue->Device();
-
-	auto dxPipeline = pipeline ? pipeline->DxPipeline() : nullptr;
-	device->DxDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _commandAllocator.Get(),
-										  dxPipeline, IID_PPV_ARGS(&commandList));
-
-	_commandList.push_back(commandList);
-
-	if (pipeline)
-		commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
-
-	if (_renderTarget)
-	{
-		ResourceBarrier(_renderTarget->Resource(),
-						D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-		commandList->ClearRenderTargetView(_renderTarget->View(), _clearColor._float, 0, nullptr);
-		commandList->ClearDepthStencilView(_renderTarget->DepthView(), D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
-
-		commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, &_renderTarget->DepthView());
-		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		D3D12_VIEWPORT viewport = _viewport._viewport;
-		if (viewport.Width == 0)
-		{
-			PNuoResource resource = _renderTarget->Resource();
-			viewport.Width = resource->Width();
-			viewport.Height = resource->Height();
-		}
-
-		D3D12_RECT scissor = { 0, 0, viewport.Width, viewport.Height };
-		commandList->RSSetViewports(1, &viewport);
-		commandList->RSSetScissorRects(1, &scissor);
-	}
 }
 
 
 void NuoCommandEncoder::SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer)
 {
-	auto commandList = *(_commandList.end() - 1);
-
-	commandList->IASetVertexBuffers(0, 1, vertexBuffer->View());
-	commandList->IASetIndexBuffer(vertexBuffer->IndiciesView());
+	_commandList->IASetVertexBuffers(0, 1, vertexBuffer->View());
+	_commandList->IASetIndexBuffer(vertexBuffer->IndiciesView());
 }
 
 
 void NuoCommandEncoder::DrawIndexed(unsigned int indiciesCount)
 {
-	auto commandList = *(_commandList.end() - 1);
-
-	commandList->DrawIndexedInstanced(indiciesCount, 1, 0, 0, 0);
+	_commandList->DrawIndexedInstanced(indiciesCount, 1, 0, 0, 0);
 }
 
 
 
 void NuoCommandEncoder::EndEncoding()
 {
-	auto lastBuffer = *(_commandList.end() - 1);
-
-	if (_renderTarget)
-	{
-		ResourceBarrier(_renderTarget->Resource(),
-						D3D12_RESOURCE_STATE_RENDER_TARGET,
-						D3D12_RESOURCE_STATE_PRESENT);
-	}
-
-	lastBuffer->Close();
+	_commandList->Close();
 }
 
 
-void NuoCommandEncoder::Commit()
+ID3D12GraphicsCommandList* NuoCommandEncoder::DxEncoder()
 {
-	std::vector<ID3D12CommandList*> commandList;
-	for (size_t i = 0; i < _commandList.size(); ++i)
-		commandList.push_back(_commandList[i].Get());
-
-	_commandQueue->DxQueue()->ExecuteCommandLists(_commandList.size(), &commandList[0]);
-	_commandList.clear();
+	return _commandList.Get();
 }
 
 
@@ -220,8 +196,6 @@ void NuoCommandEncoder::ResourceBarrier(const PNuoResource& resource,
 									    D3D12_RESOURCE_STATES before,
 										D3D12_RESOURCE_STATES after)
 {
-	auto lastBuffer = *(_commandList.end() - 1);
-
 	D3D12_RESOURCE_BARRIER barrier;
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -229,7 +203,8 @@ void NuoCommandEncoder::ResourceBarrier(const PNuoResource& resource,
 	barrier.Transition.StateBefore = before;
 	barrier.Transition.StateAfter = after;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	lastBuffer->ResourceBarrier(1, &barrier);
+
+	_commandList->ResourceBarrier(1, &barrier);
 }
 
 

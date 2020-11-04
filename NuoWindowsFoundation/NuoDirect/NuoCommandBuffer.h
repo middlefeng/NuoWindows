@@ -95,20 +95,17 @@ public:
 
 class NuoCommandEncoder : public NuoRenderInFlight
 {
-	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
-	std::vector<Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>> _commandList;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> _commandList;
 
-	PNuoCommandQueue _commandQueue;
 	PNuoRenderTarget _renderTarget;
-
-	NuoVector4 _clearColor;
-	NuoViewport _viewport;
 
 public:
 
 	void SetClearColor(const NuoVector4& color);
 	void SetViewport(const NuoViewport& viewport);
 	void SetConstant(unsigned int index, size_t size, void* constant);
+	
+	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
@@ -118,10 +115,11 @@ public:
 
 private:
 
-	void Commit();
 	void ResourceBarrier(const PNuoResource& resource,
 						 D3D12_RESOURCE_STATES before,
 						 D3D12_RESOURCE_STATES after);
+
+	ID3D12GraphicsCommandList* DxEncoder();
 
 	friend class NuoCommandBuffer;
 	friend class NuoRenderTarget;
