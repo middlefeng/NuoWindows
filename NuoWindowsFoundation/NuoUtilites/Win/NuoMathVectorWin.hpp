@@ -51,12 +51,14 @@ template <>
 inline float NuoDistance(const NuoVector<float, 3>& v1, const NuoVector<float, 3>& v2)
 {
     NuoVector<float, 3> vector = v1 - v2;
-    float length = DirectX::XMVector3Length(vector._vector);
+    DirectX::XMVECTOR v = DirectX::XMLoadFloat3(&vector._vector);
+    DirectX::XMVECTORF32 result;
+    result.v = DirectX::XMVector3Length(v);
 
-    return simd::distance(v1._vector, v2._vector);
+    return result.f[0];
 }
 
-
+/*
 template <int itemCount>
 inline NuoVector<float, itemCount>
 operator / (const NuoVector<float, itemCount>& v, float div)
@@ -169,7 +171,7 @@ typedef NuoVector<float, 3> NuoVectorFloat3;
 typedef NuoVector<float, 2> NuoVectorFloat2;
 
 typedef NuoMatrix<float, 3> NuoMatrixFloat33;
-typedef NuoMatrix<float, 4> NuoMatrixFloat44;
+typedef NuoMatrix<float, 4> NuoMatrixFloat44;*/
 
 
 #endif /* NuoMathVectorMac_h */

@@ -36,4 +36,16 @@ public:
     typedef DirectX::XMFLOAT4X4 _matrixType;
 };
 
+
+inline DirectX::XMFLOAT3 operator - (const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
+{
+    DirectX::XMFLOAT3 result;
+    result.x = v1.x - v2.x;
+    result.y = v1.y - v2.y;
+    result.z = v1.z - v2.z;
+
+    return result;
+}
+
+
 #endif /* NuoMathVectorMac_h */
