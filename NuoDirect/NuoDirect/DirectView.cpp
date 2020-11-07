@@ -125,7 +125,7 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 	PNuoRenderTarget target = CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
-    encoder->SetClearColor(NuoVector4(0.0f, 0.2f, 0.4f, 1.0f));
+    encoder->SetClearColor(NuoVectorFloat4(0.0f, 0.2f, 0.4f, 1.0f));
     encoder->SetViewport(NuoViewport());
 
 	encoder->SetPipeline(_pipeline);

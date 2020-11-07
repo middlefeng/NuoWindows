@@ -22,8 +22,11 @@
     <Filter Include="NuoWindowsFoundation\NuoMeshes">
       <UniqueIdentifier>{be14c4a2-4875-4200-81a7-4f902973ce0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NuoWindowsFoundation\NuoMath">
-      <UniqueIdentifier>{9677494b-6631-4f47-b11f-ad0ed2d2cc96}</UniqueIdentifier>
+    <Filter Include="NuoWindowsFoundation\NuoUtilities">
+      <UniqueIdentifier>{3d356f69-7270-4c92-91b0-722172888add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoUtilities\Win">
+      <UniqueIdentifier>{e7da6a8f-5926-417b-a696-899948de7643}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -141,8 +144,14 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMath\NuoVector.h">
-      <Filter>NuoWindowsFoundation\NuoMath</Filter>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.h">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -248,8 +257,11 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMath\NuoVector.cpp">
-      <Filter>NuoWindowsFoundation\NuoMath</Filter>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

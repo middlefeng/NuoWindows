@@ -200,8 +200,8 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data,
 
     if (dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D)
     {
-        resourceDesc.Width = width;
-        resourceDesc.Height = height;
+        resourceDesc.Width = (UINT)width;
+        resourceDesc.Height = (UINT)height;
     }
     else
     {

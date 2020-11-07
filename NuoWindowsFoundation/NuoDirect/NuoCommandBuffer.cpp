@@ -122,9 +122,11 @@ PNuoCommandQueue NuoCommandBuffer::CommandQueue() const
 
 
 
-void NuoCommandEncoder::SetClearColor(const NuoVector4& color)
+void NuoCommandEncoder::SetClearColor(const NuoVectorFloat4& color)
 {
-	_commandList->ClearRenderTargetView(_renderTarget->View(), color._float, 0, nullptr);
+	float acolor[] = { color.x(), color.y(), color.z(), color.w() };
+
+	_commandList->ClearRenderTargetView(_renderTarget->View(), acolor, 0, nullptr);
 	_commandList->ClearDepthStencilView(_renderTarget->DepthView(), D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
 }
 
