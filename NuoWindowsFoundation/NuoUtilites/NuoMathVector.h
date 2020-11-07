@@ -83,19 +83,6 @@ inline float NuoVector<float, 3>::w() const
 
 
 template <>
-inline float NuoVector<float, 4>::w() const
-{
-    return _vector.w;
-}
-
-template <>
-inline void NuoVector<float, 4>::w(float w)
-{
-    _vector.w = w;
-}
-
-
-template <>
 inline NuoVector<float, 2>::NuoVector(float x, float y)
 {
     _vector.x = x;
@@ -111,15 +98,6 @@ inline NuoVector<float, 3>::NuoVector(float x, float y, float z)
     _vector.z = z;
 }
 
-
-template <>
-inline NuoVector<float, 4>::NuoVector(float x, float y, float z, float w)
-{
-    _vector.x = x;
-    _vector.y = y;
-    _vector.z = z;
-    _vector.w = w;
-}
 
 
 template <class itemType, int itemCount>
@@ -219,34 +197,11 @@ extern const NuoMatrix<float, 4> NuoMatrixFloat44Identity;
 extern const NuoMatrix<float, 3> NuoMatrixFloat34Identity;
 
 
-inline NuoMatrix<float, 4> NuoMatrixRotation(const NuoVector<float, 3>& axis, float angle)
-{
-    glm::vec3 gaxis(axis.x(), axis.y(), axis.z());
-    glm::mat4x4 gmat = glm::rotate(glm::mat4x4(1.0), -angle, gaxis);
-    
-    return ToMatrix(gmat);
-}
+NuoMatrix<float, 4> NuoMatrixRotation(const NuoVector<float, 3>& axis, float angle);
 
+NuoMatrix<float, 4> NuoMatrixRotation(float rotateX, float rotateY);
 
-inline NuoMatrix<float, 4> NuoMatrixRotation(float rotateX, float rotateY)
-{
-    NuoVector<float, 3> xAxis(1, 0, 0);
-    NuoVector<float, 3> yAxis(0, 1, 0);
-    const NuoMatrix<float, 4> xRot = NuoMatrixRotation(xAxis, rotateX);
-    const NuoMatrix<float, 4> yRot = NuoMatrixRotation(yAxis, rotateY);
-    
-    return xRot * yRot;
-}
-
-
-inline NuoMatrix<float, 4> NuoMatrixTranslation(const NuoVector<float, 3>& t)
-{
-    glm::vec3 gt(t.x(), t.y(), t.z());
-    glm::mat4x4 gmat = glm::translate(glm::mat4x4(1.0), gt);
-    
-    return ToMatrix(gmat);
-}
-
+NuoMatrix<float, 4> NuoMatrixTranslation(const NuoVector<float, 3>& t);
 
 inline NuoMatrix<float, 4> NuoMatrixRotationAppend(const NuoMatrix<float, 4>& start, float rotateX, float rotateY)
 {

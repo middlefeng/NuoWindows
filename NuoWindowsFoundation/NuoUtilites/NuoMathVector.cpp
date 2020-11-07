@@ -12,8 +12,7 @@
 
 NuoMatrix<float, 4> NuoMatrixScale(const NuoVector<float, 3>& scale)
 {
-    glm::mat4x4 gmat = glm::scale(glm::mat4x4(1.0), glm::vec3(scale.x(), scale.y(), scale.z()));
-    return ToMatrix(gmat);
+    return DirectX::XMMatrixScaling(scale.x(), scale.y(), scale.z());
 }
 
 
@@ -33,15 +32,16 @@ NuoMatrix<float, 4> NuoMatrixLookAt(const NuoVector<float, 3>& eye,
                                     const NuoVector<float, 3>& center,
                                     const NuoVector<float, 3>& up)
 {
-    glm::vec3 aeye(eye.x(), eye.y(), eye.z());
-    glm::vec3 acenter(center.x(), center.y(), center.z());
-    glm::vec3 aup(up.x(), up.y(), up.z());
+    DirectX::XMVECTOR aeye = NuoXMLoad(eye._vector);
+    DirectX::XMVECTOR acenter = NuoXMLoad(center._vector);
+    DirectX::XMVECTOR aup = NuoXMLoad(up._vector);
     
-    glm::mat4x4 gmat = glm::lookAt(aeye, acenter, aup);
-    return ToMatrix(gmat);
+    return DirectX::XMMatrixLookAtRH(aeye, acenter, aup);
 }
 
 
 
 const NuoMatrix<float, 4> NuoMatrixFloat44Identity;
 const NuoMatrix<float, 3> NuoMatrixFloat34Identity;
+
+
