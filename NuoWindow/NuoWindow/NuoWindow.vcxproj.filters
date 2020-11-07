@@ -16,6 +16,12 @@
     <Filter Include="NuoWindowsFoundation">
       <UniqueIdentifier>{981d0a0c-7414-42a4-b5c2-0b583192ac8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoUtilities">
+      <UniqueIdentifier>{fbd2b8e8-4773-41d9-9a12-52d7295eee59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoUtilities\Win">
+      <UniqueIdentifier>{b582a0c5-9236-46e0-a6ae-b235468b15b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -77,6 +83,15 @@
     </ClInclude>
     <ClInclude Include="..\NuoWindowsFoundation\NuoOpenFileDialog.h">
       <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.h">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +158,12 @@
     </ClCompile>
     <ClCompile Include="..\NuoWindowsFoundation\NuoOpenFileDialog.cpp">
       <Filter>NuoWindowsFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
