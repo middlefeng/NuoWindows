@@ -1,6 +1,7 @@
 struct ModelViewProjection
 {
     matrix MVP;
+    matrix NormalMatrix;
 };
 
 struct InputParamType
@@ -15,11 +16,13 @@ ConstantBuffer<InputParamType> InputParam : register(b1);
 struct VertexPosColor
 {
     float4 Position : POSITION;
+    float4 Normal   : NORMAL;
 };
 
 struct VertexShaderOutput
 {
 	float4 Color    : COLOR;
+    float4 Normal   : NORMAL;
     float4 Position : SV_Position;
 };
 

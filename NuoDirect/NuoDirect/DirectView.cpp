@@ -156,10 +156,11 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
     float aspectRatio = target->Resource()->Width() / (float)target->Resource()->Height();
     NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, XMConvertToRadians(70), 0.1f, 100.f);
 
-    NuoMatrixFloat44 mvpMatrix = modelMatrix * viewMatrix;
-    mvpMatrix = mvpMatrix * projectionMatrix;
+    NuoMatrixFloat44 mvpMatrix = viewMatrix * modelMatrix;
+    NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(mvpMatrix);
+    mvpMatrix = projectionMatrix * mvpMatrix;
 
-    NuoModelViewProjection mvp = { mvpMatrix._m };
+    NuoModelViewProjection mvp = { mvpMatrix._m, normalMatrix._m };
 
     auto signature = std::make_shared<NuoRootSignature>(commandBuffer->CommandQueue()->Device(),
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);

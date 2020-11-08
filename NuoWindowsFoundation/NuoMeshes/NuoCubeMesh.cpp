@@ -39,9 +39,37 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 		4, 0, 3, 4, 3, 7
 	};
 
+	std::vector<NuoCubeMeshVertex> verticesReindexed;
+	std::vector<UINT32> reindex;
+
+	for (size_t i = 0; i < indicies.size(); ++i)
+	{
+		reindex.push_back(i);
+		verticesReindexed.push_back(vertices[indicies[i]]);
+	}
+
+	size_t i = 0;
+	for (; i < 6; ++i)
+		verticesReindexed[i]._normal = DirectX::XMFLOAT4(0, 0, -1, 0);
+
+	for (; i < 12; ++i)
+		verticesReindexed[i]._normal = DirectX::XMFLOAT4(0, 0, 1, 0);
+
+	for (; i < 18; ++i)
+		verticesReindexed[i]._normal = DirectX::XMFLOAT4(-1, 0, 0, 0);
+
+	for (; i < 24; ++i)
+		verticesReindexed[i]._normal = DirectX::XMFLOAT4(1, 0, 0, 0);
+
+	for (; i < 30; ++i)
+		verticesReindexed[i]._normal = DirectX::XMFLOAT4(0, 1, 0, 0);
+	
+	for (; i < 36; ++i)
+		verticesReindexed[i]._normal = DirectX::XMFLOAT4(0, -1, 0, 0);
+
 	NuoMeshBase<NuoCubeMeshVertex>::Init(commandBuffer, intermediate,
-										 vertices.data(), vertices.size(),
-										 indicies.data(), indicies.size());
+		verticesReindexed.data(), verticesReindexed.size(),
+		reindex.data(), reindex.size());
 
 	std::string modulePath = RemoveLastPathComponent(NuoAppInstance::GetInstance()->ModulePath());
 	std::string vertexPath = modulePath + "\\" + "NuoCubeMesh_V.hlsl";
@@ -62,10 +90,12 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 																		 D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	rootSignature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 	rootSignature->AddConstant(sizeof(InputParamType), 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+	//rootSignature->AddConstant(12 * 4, 2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
 	_pipelineState = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM,

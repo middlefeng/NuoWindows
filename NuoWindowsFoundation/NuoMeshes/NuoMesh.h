@@ -22,6 +22,7 @@ typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 struct NuoModelViewProjection
 {
 	DirectX::XMMATRIX _mvpMatrix;
+	DirectX::XMMATRIX _normalMatrix;
 };
 
 
