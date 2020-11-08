@@ -142,6 +142,7 @@ public:
     typename _typeTrait::_matrixType _m;
     
     inline NuoMatrix();
+    inline NuoMatrix(const NuoMatrix<itemType, dimension - 1>& linearMat);
     
     inline typename _typeTrait::_vectorType& operator[] (size_t i);
     inline typename _typeTrait::_vectorType operator[] (size_t i) const;

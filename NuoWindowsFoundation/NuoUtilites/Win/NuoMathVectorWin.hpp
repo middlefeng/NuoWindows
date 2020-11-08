@@ -154,6 +154,17 @@ inline NuoMatrix<float, 4>::NuoMatrix()
     _m = DirectX::XMMatrixIdentity();
 }
 
+template<>
+inline NuoMatrix<float, 4>::NuoMatrix(const NuoMatrix<float, 3>& linearMat)
+{
+    const DirectX::XMFLOAT3X3& linearM = linearMat._m;
+    for (size_t i = 0; i < 3; ++i)
+        _m.r[i] = DirectX::XMVectorSet(linearM.m[i][0], linearM.m[i][1], linearM.m[i][2], 0.0f);
+
+    _m.r[3] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+
 template <>
 inline NuoMatrix<float, 3>::NuoMatrix()
 {
