@@ -111,7 +111,7 @@ void NuoCommandBuffer::Commit()
 		commands.push_back(commandList);
 	}
 
-	_commandQueue->DxQueue()->ExecuteCommandLists(commands.size(), commands.data());
+	_commandQueue->DxQueue()->ExecuteCommandLists((UINT)commands.size(), commands.data());
 }
 
 
@@ -133,15 +133,16 @@ void NuoCommandEncoder::SetClearColor(const NuoVectorFloat4& color)
 
 void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
 {
+	PNuoResource resource = _renderTarget->Resource();
+
 	D3D12_VIEWPORT viewport_ = viewport._viewport;
 	if (viewport_.Width == 0)
 	{
-		PNuoResource resource = _renderTarget->Resource();
-		viewport_.Width = resource->Width();
-		viewport_.Height = resource->Height();
+		viewport_.Width = (FLOAT)resource->Width();
+		viewport_.Height = (FLOAT)resource->Height();
 	}
 
-	D3D12_RECT scissor = { 0, 0, viewport_.Width, viewport_.Height };
+	D3D12_RECT scissor = { 0, 0, (LONG)resource->Width(), (LONG)resource->Height() };
 	_commandList->RSSetViewports(1, &viewport_);
 	_commandList->RSSetScissorRects(1, &scissor);
 }
@@ -149,7 +150,7 @@ void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
 
 void NuoCommandEncoder::SetConstant(unsigned int index, size_t size, void* constant)
 {
-	_commandList->SetGraphicsRoot32BitConstants(index, size / 4, constant, 0);
+	_commandList->SetGraphicsRoot32BitConstants(index, (UINT)size / 4, constant, 0);
 }
 
 
@@ -159,13 +160,6 @@ void NuoCommandEncoder::SetRenderTarget(const PNuoRenderTarget& renderTarget)
 
 	_commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, &_renderTarget->DepthView());
 	_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-
-void NuoCommandEncoder::SetRootSignature(const PNuoRootSignature& rootSignature)
-{
-	_rootSignature = rootSignature;
-	_commandList->SetGraphicsRootSignature(rootSignature->DxSignature());
 }
 
 

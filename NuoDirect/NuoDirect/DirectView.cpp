@@ -162,16 +162,12 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 
     NuoModelViewProjection mvp = { mvpMatrix._m, normalMatrix._m };
 
-    auto signature = std::make_shared<NuoRootSignature>(commandBuffer->CommandQueue()->Device(),
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
+    NuoMesh::CommonFunc commFunc = [&mvp](NuoCommandEncoder* encoder)
+    {
+        encoder->SetConstant(0, sizeof(NuoModelViewProjection), &mvp);
+    };
     
-    signature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-    encoder->SetRootSignature(signature);
-    signature.reset();
-    
-    encoder->SetConstant(0, sizeof(NuoModelViewProjection), &mvp);
-    
+    _mesh->DrawBegin(encoder, commFunc);
     _mesh->Draw(encoder);
 
 	target->ReleaseRenderPassEncoder();

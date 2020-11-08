@@ -44,7 +44,7 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 
 	for (size_t i = 0; i < indicies.size(); ++i)
 	{
-		reindex.push_back(i);
+		reindex.push_back((UINT32)i);
 		verticesReindexed.push_back(vertices[indicies[i]]);
 	}
 
@@ -107,10 +107,16 @@ void NuoCubeMesh::Draw(const PNuoCommandEncoder& encoder)
 {
 	InputParamType param;
 	param.color = { 1.0, 0.5, 0.0, 1.0 };
-	encoder->SetPipeline(_pipelineState);
+
 	encoder->SetConstant(1, sizeof(InputParamType), &param);
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
+}
+
+
+PNuoPipelineState NuoCubeMesh::PipelineState()
+{
+	return _pipelineState;
 }
 
 

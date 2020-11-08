@@ -3,6 +3,7 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <functional>
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -30,7 +31,12 @@ class NuoMesh
 {
 public:
 
+	typedef std::function<void(NuoCommandEncoder* encoder)> CommonFunc;
+
+	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc& func);
 	virtual void Draw(const PNuoCommandEncoder& encoder) = 0;
+
+	virtual PNuoPipelineState PipelineState() = 0;
 };
 
 

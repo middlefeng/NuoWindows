@@ -103,10 +103,6 @@ class NuoCommandEncoder : public NuoRenderInFlight
 
 	PNuoRenderTarget _renderTarget;
 
-	// an initial root signature for common parameters
-	//
-	PNuoRootSignature _rootSignature;
-
 public:
 
 	void SetClearColor(const NuoVectorFloat4& color);
@@ -115,7 +111,6 @@ public:
 	
 	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
 
-	void SetRootSignature(const PNuoRootSignature& rootSignature);
 	void SetPipeline(const PNuoPipelineState& pipeline);
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
 	void DrawIndexed(unsigned int indiciesCount);
