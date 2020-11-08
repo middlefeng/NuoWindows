@@ -33,7 +33,11 @@ NuoMatrix<float, 4> NuoMatrixLookAt(const NuoVector<float, 3>& eye,
                                     const NuoVector<float, 3>& up)
 {
     DirectX::XMVECTOR aeye = NuoXMLoad(eye._vector);
+    ((DirectX::XMVECTORF32*) &aeye)->f[3] = 1.0f;
+
     DirectX::XMVECTOR acenter = NuoXMLoad(center._vector);
+    ((DirectX::XMVECTORF32*) &acenter)->f[3] = 1.0f;
+
     DirectX::XMVECTOR aup = NuoXMLoad(up._vector);
     
     return DirectX::XMMatrixLookAtRH(aeye, acenter, aup);

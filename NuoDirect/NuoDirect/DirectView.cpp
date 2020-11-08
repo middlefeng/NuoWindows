@@ -142,22 +142,24 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 
-    const DirectX::XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
-    DirectX::XMMATRIX modelMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(45));
+    const NuoVectorFloat3 rotationAxis(0, 1, -1);
+    const NuoMatrixFloat44 modelMatrix = NuoMatrixRotation(rotationAxis, DirectX::XMConvertToRadians(-45));
 
     using namespace DirectX;
-    const XMVECTOR eyePosition = XMVectorSet(0, 0, -10, 1);
-    const XMVECTOR focusPoint = XMVectorSet(0, 0, 0, 1);
-    const XMVECTOR upDirection = XMVectorSet(0, 1, 0, 0);
-    XMMATRIX viewMatrix = XMMatrixLookAtLH(eyePosition, focusPoint, upDirection);
+    
+    const NuoVectorFloat3 eyePosition(0, 0, 10);
+    const NuoVectorFloat3 focusPoint(0, 0, 0);
+    const NuoVectorFloat3 upDirection(0, 1, 0);
+
+    auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
 
     float aspectRatio = target->Resource()->Width() / (float)target->Resource()->Height();
-    XMMATRIX projectionMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(70), aspectRatio, 0.1f, 100.0f);
+    NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, XMConvertToRadians(70), 0.1f, 100.f);
 
-    XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, viewMatrix);
-    mvpMatrix = XMMatrixMultiply(mvpMatrix, projectionMatrix);
+    NuoMatrixFloat44 mvpMatrix = modelMatrix * viewMatrix;
+    mvpMatrix = mvpMatrix * projectionMatrix;
 
-    NuoModelViewProjection mvp = { mvpMatrix };
+    NuoModelViewProjection mvp = { mvpMatrix._m };
 
     auto signature = std::make_shared<NuoRootSignature>(commandBuffer->CommandQueue()->Device(),
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
