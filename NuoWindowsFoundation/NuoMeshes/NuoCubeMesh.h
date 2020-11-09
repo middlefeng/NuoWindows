@@ -17,6 +17,7 @@ struct NuoCubeMeshVertex
 {
 	DirectX::XMFLOAT4 _position;
 	DirectX::XMFLOAT4 _normal;
+	DirectX::XMFLOAT4 _color;
 };
 
 

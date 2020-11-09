@@ -25,16 +25,16 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 					   std::vector<PNuoResource>& intermediate,
 					   float width, float height, float depth)
 {
-	std::vector<NuoCubeMeshVertex> vertices =
+	std::vector<DirectX::XMFLOAT4> vertices =
 	{
-		{ DirectX::XMFLOAT4(-width / 2.0f, -height / 2.0f, -depth / 2.0f, 1.0f) },
-		{ DirectX::XMFLOAT4(-width / 2.0f,  height / 2.0f, -depth / 2.0f, 1.0f) },
-		{ DirectX::XMFLOAT4( width / 2.0f,  height / 2.0f, -depth / 2.0f, 1.0f) },
-		{ DirectX::XMFLOAT4( width / 2.0f, -height / 2.0f, -depth / 2.0f, 1.0f) },
-		{ DirectX::XMFLOAT4(-width / 2.0f, -height / 2.0f,  depth / 2.0f, 1.0f) },
-		{ DirectX::XMFLOAT4(-width / 2.0f,  height / 2.0f,  depth / 2.0f, 1.0f) },
-		{ DirectX::XMFLOAT4( width / 2.0f,  height / 2.0f,  depth / 2.0f, 1.0f) },
-		{ DirectX::XMFLOAT4( width / 2.0f, -height / 2.0f,  depth / 2.0f, 1.0f) },
+		DirectX::XMFLOAT4(-width / 2.0f, -height / 2.0f, -depth / 2.0f, 1.0f),
+		DirectX::XMFLOAT4(-width / 2.0f,  height / 2.0f, -depth / 2.0f, 1.0f),
+		DirectX::XMFLOAT4( width / 2.0f,  height / 2.0f, -depth / 2.0f, 1.0f),
+		DirectX::XMFLOAT4( width / 2.0f, -height / 2.0f, -depth / 2.0f, 1.0f),
+		DirectX::XMFLOAT4(-width / 2.0f, -height / 2.0f,  depth / 2.0f, 1.0f),
+		DirectX::XMFLOAT4(-width / 2.0f,  height / 2.0f,  depth / 2.0f, 1.0f),
+		DirectX::XMFLOAT4( width / 2.0f,  height / 2.0f,  depth / 2.0f, 1.0f),
+		DirectX::XMFLOAT4( width / 2.0f, -height / 2.0f,  depth / 2.0f, 1.0f)
 	};
 
 	std::vector<UINT32> indicies =
@@ -53,8 +53,12 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 	for (size_t i = 0; i < indicies.size(); ++i)
 	{
 		reindex.push_back((UINT32)i);
-		verticesReindexed.push_back(vertices[indicies[i]]);
+		verticesReindexed.push_back(NuoCubeMeshVertex());
+		verticesReindexed[i]._position = vertices[indicies[i]];
+		verticesReindexed[i]._color = DirectX::XMFLOAT4(0.0, 0.0, 1.0, 0.0);
 	}
+
+	verticesReindexed[7]._color = DirectX::XMFLOAT4(1.0, 0.0, 0.0, 0.0);
 
 	size_t i = 0;
 	for (; i < 6; ++i)
@@ -103,7 +107,8 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
 	_pipelineState = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM,
