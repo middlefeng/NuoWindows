@@ -284,11 +284,13 @@
     <FxCompile Include="shaders.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_P.hlsl">
-      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.hlsl">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_P.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
