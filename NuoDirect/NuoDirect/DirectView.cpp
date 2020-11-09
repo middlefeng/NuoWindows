@@ -119,6 +119,14 @@ void DirectView::Init()
     }
 }
 
+struct Light
+{
+    DirectX::XMFLOAT4 direction;
+    DirectX::XMFLOAT4 ambientColor;
+    DirectX::XMFLOAT4 diffuseColor;
+    DirectX::XMFLOAT4 specularColor;
+};
+
 
 void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 {
@@ -142,8 +150,8 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 
-    const NuoVectorFloat3 rotationAxis(0, 1, -1);
-    const NuoMatrixFloat44 modelMatrix = NuoMatrixRotation(rotationAxis, DirectX::XMConvertToRadians(-45));
+    const NuoVectorFloat3 rotationAxis(0, 1, 0);
+    const NuoMatrixFloat44 modelMatrix = NuoMatrixRotation(rotationAxis, DirectX::XMConvertToRadians(15));
 
     using namespace DirectX;
     

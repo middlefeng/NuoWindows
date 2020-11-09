@@ -39,7 +39,7 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
 
     D3D12_RASTERIZER_DESC rasterizerDesc;
     rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-    rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+    rasterizerDesc.CullMode = D3D12_CULL_MODE_FRONT;
     rasterizerDesc.FrontCounterClockwise = FALSE;
     rasterizerDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
     rasterizerDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
@@ -90,6 +90,8 @@ ID3D12PipelineState* NuoPipelineState::DxPipeline() const
 
 ID3D12RootSignature* NuoPipelineState::DxRootSignature() const
 {
+    if (!_rootSignature)
+        return nullptr;
     return _rootSignature->DxSignature();
 }
 

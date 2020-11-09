@@ -12,6 +12,14 @@ struct InputParamType
 	DirectX::XMFLOAT4 color;
 };
 
+struct Light
+{
+	DirectX::XMFLOAT4 direction;
+	DirectX::XMFLOAT4 ambientColor;
+	DirectX::XMFLOAT4 diffuseColor;
+	DirectX::XMFLOAT4 specularColor;
+};
+
 
 void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 					   std::vector<PNuoResource>& intermediate,
@@ -90,7 +98,7 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 																		 D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	rootSignature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 	rootSignature->AddConstant(sizeof(InputParamType), 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	//rootSignature->AddConstant(12 * 4, 2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+	rootSignature->AddConstant(sizeof(Light), 2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
 	{
@@ -108,7 +116,18 @@ void NuoCubeMesh::Draw(const PNuoCommandEncoder& encoder)
 	InputParamType param;
 	param.color = { 1.0, 0.5, 0.0, 1.0 };
 
+
+	Light light =
+	{
+		//{1,0,0,0},
+		{ 0.13, 0.72, 0.68, 0 },
+		{ 0.05, 0.05, 0.05, 0 },
+		{ 0.9, 0.9, 0.9, 0 },
+		{ 1, 1, 1, 0 }
+	};
+
 	encoder->SetConstant(1, sizeof(InputParamType), &param);
+	encoder->SetConstant(2, sizeof(Light), &light);
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 }

@@ -168,6 +168,7 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 	ID3D12PipelineState* dxPipeline = pipeline->DxPipeline();
 	
 	_commandList->SetPipelineState(dxPipeline);
+	if (pipeline->DxRootSignature())
 	_commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
 }
 
