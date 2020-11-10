@@ -38,6 +38,10 @@ public:
 	std::string Name() const;
 	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
 	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);
+
+	unsigned int ConstantBufferDescriptorHandleIncrementSize() const;
+	PNuoDescriptorHeap CreateConstantBufferHeap(unsigned int frameCount);
+
 	PNuoDescriptorHeap CreateDepthStencilHeap();
 
 	PNuoFenceSwapChain CreateFenceSwapChain(unsigned int frameCount);

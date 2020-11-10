@@ -49,9 +49,28 @@ void NuoRootSignature::AddConstant(size_t size, unsigned int shaderRegister, uns
 	D3D12_ROOT_PARAMETER1 param;
 	param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	param.ShaderVisibility = visibility;
-	param.Constants.Num32BitValues = size / 4;
-	param.Constants.ShaderRegister = shaderRegister;
-	param.Constants.RegisterSpace = space;
+	param.Constants.Num32BitValues = (UINT)(size / 4);
+	param.Constants.ShaderRegister = (UINT)shaderRegister;
+	param.Constants.RegisterSpace = (UINT)space;
+
+	_parameters.push_back(param);
+
+	_desc.Desc_1_1.NumParameters = _parameters.size();
+	_desc.Desc_1_1.pParameters = _parameters.data();
+}
+
+
+void NuoRootSignature::AddRootConstantBuffer(unsigned int shaderRegister, unsigned int space,
+											 D3D12_SHADER_VISIBILITY visibility)
+{
+	_signature.Reset();
+
+	D3D12_ROOT_PARAMETER1 param;
+
+	param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	param.ShaderVisibility = visibility;
+	param.Descriptor.ShaderRegister = shaderRegister;
+	param.Descriptor.RegisterSpace = space;
 
 	_parameters.push_back(param);
 

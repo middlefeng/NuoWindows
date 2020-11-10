@@ -122,6 +122,29 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 }
 
 
+unsigned int NuoDevice::ConstantBufferDescriptorHandleIncrementSize() const
+{
+    return _dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+
+PNuoDescriptorHeap NuoDevice::CreateConstantBufferHeap(unsigned int frameCount)
+{
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+
+    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
+    cbvHeapDesc.NumDescriptors = frameCount;
+    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;;
+
+    heap->_size = frameCount;
+    heap->_device = shared_from_this();
+    _dxDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&heap->_heap));
+
+    return heap;
+}
+
+
 PNuoDescriptorHeap NuoDevice::CreateDepthStencilHeap()
 {
     PNuoDescriptorHeap heap(new NuoDescriptorHeap());

@@ -131,8 +131,8 @@ void NuoCubeMesh::Draw(const PNuoCommandEncoder& encoder)
 		{ 1, 1, 1, 0 }
 	};
 
-	encoder->SetConstant(1, sizeof(InputParamType), &param);
-	encoder->SetConstant(2, sizeof(Light), &light);
+	encoder->SetRootConstant(1, sizeof(InputParamType), &param);
+	encoder->SetRootConstant(2, sizeof(Light), &light);
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 }

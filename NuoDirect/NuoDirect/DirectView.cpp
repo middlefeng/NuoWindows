@@ -145,7 +145,7 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 
     InputParamType param;
     param.color = { 1.0, 0.5, 0.0, 1.0 };
-    encoder->SetConstant(0, sizeof(InputParamType), &param);
+    encoder->SetRootConstant(0, sizeof(InputParamType), &param);
 
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
@@ -172,7 +172,7 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 
     NuoMesh::CommonFunc commFunc = [&mvp](NuoCommandEncoder* encoder)
     {
-        encoder->SetConstant(0, sizeof(NuoModelViewProjection), &mvp);
+        encoder->SetRootConstant(0, sizeof(NuoModelViewProjection), &mvp);
     };
     
     _mesh->DrawBegin(encoder, commFunc);

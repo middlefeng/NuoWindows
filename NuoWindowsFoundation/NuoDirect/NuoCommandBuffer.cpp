@@ -1,7 +1,9 @@
 ﻿
 
 #include "NuoCommandBuffer.h"
+
 #include "NuoRenderTarget.h"
+#include "NuoResourceSwapChain.h"
 
 #include <windows.h>
 #include <cassert>
@@ -148,9 +150,16 @@ void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
 }
 
 
-void NuoCommandEncoder::SetConstant(unsigned int index, size_t size, void* constant)
+void NuoCommandEncoder::SetRootConstant(unsigned int index, size_t size, void* constant)
 {
 	_commandList->SetGraphicsRoot32BitConstants(index, (UINT)size / 4, constant, 0);
+}
+
+
+void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoResourceSwapChain& cb)
+{
+	const D3D12_GPU_VIRTUAL_ADDRESS addr = cb->GPUAddress(InFlight());
+	_commandList->SetGraphicsRootConstantBufferView(index, addr);
 }
 
 

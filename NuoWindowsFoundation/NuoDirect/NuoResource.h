@@ -18,17 +18,22 @@ class NuoResource
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> _dxResources;
 	D3D12_RESOURCE_DESC _desc;
+	void* _mapped;
 
 	void SetResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource);
 
 public:
 
 	NuoResource();
+	~NuoResource();
 	ID3D12Resource* DxResource() const;
 
 	unsigned long Width() const;
 	unsigned long Height() const;
-	size_t Size() const;
+	unsigned long Size() const;
+
+	void* Map();
+	void Unmap();
 
 	friend class NuoSwapChain;
 	friend class NuoDevice;

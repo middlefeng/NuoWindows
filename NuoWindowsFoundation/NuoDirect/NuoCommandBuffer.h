@@ -80,6 +80,9 @@ public:
 class NuoRenderTarget;
 typedef std::shared_ptr<NuoRenderTarget> PNuoRenderTarget;
 
+class NuoResourceSwapChain;
+typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
+
 
 
 class NuoViewport
@@ -107,7 +110,9 @@ public:
 
 	void SetClearColor(const NuoVectorFloat4& color);
 	void SetViewport(const NuoViewport& viewport);
-	void SetConstant(unsigned int index, size_t size, void* constant);
+
+	void SetRootConstant(unsigned int index, size_t size, void* constant);
+	void SetRootConstantBuffer(unsigned int index, const PNuoResourceSwapChain& cb);
 	
 	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
 
