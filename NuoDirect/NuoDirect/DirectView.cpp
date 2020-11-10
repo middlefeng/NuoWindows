@@ -103,7 +103,9 @@ void DirectView::Init()
             { { -0.25f, -0.25f * aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
         };
 
-        UINT32 indicies[] = { 0, 1, 2 };
+        // for right-hand and front cull.
+        //
+        UINT32 indicies[] = { 0, 2, 1 };
 
         _vertexBuffer = std::make_shared<NuoVertexBuffer>(commandBuffer, intermediate,
                                                           triangleVertices, sizeof(triangleVertices), sizeof(Vertex),
