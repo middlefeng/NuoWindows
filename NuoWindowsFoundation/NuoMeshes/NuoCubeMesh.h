@@ -29,6 +29,7 @@ class NuoCubeMesh : public NuoMeshBase<NuoCubeMeshVertex>
 {
 
 	PNuoPipelineState _pipelineState;
+	PNuoResourceSwapChain _light;
 
 public:
 

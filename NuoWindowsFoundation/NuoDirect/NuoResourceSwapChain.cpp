@@ -11,7 +11,7 @@ NuoResourceSwapChain::NuoResourceSwapChain(const PNuoDevice& device, unsigned in
 	_resources.resize(frameCount);
 
 	for (PNuoResource& resource : _resources)
-		resource = device->CreateBuffer(size);
+		resource = device->CreateUploadBuffer(size);
 }
 
 

@@ -2,6 +2,9 @@
 
 #include <Windows.h>
 
+#include <vector>
+#include <stdio.h>
+
 
 std::wstring StringToUTF16(const std::string& s)
 {
@@ -35,4 +38,15 @@ std::string RemoveLastPathComponent(const std::string& s)
 {
 	size_t delimitor = s.find_last_of("\\");
 	return s.substr(0, delimitor);
+}
+
+
+std::wstring ErrorMessage(ID3DBlob* errorBlob)
+{
+	std::vector<char> message;
+	message.resize(1024, '\0');
+
+	sprintf_s(message.data(), message.size() - 1, "%s", (const char*)errorBlob->GetBufferPointer());
+
+	return StringToUTF16(message.data());
 }

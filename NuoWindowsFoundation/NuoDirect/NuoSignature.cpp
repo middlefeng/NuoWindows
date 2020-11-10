@@ -71,6 +71,7 @@ void NuoRootSignature::AddRootConstantBuffer(unsigned int shaderRegister, unsign
 	param.ShaderVisibility = visibility;
 	param.Descriptor.ShaderRegister = shaderRegister;
 	param.Descriptor.RegisterSpace = space;
+	param.Descriptor.Flags = D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC_WHILE_SET_AT_EXECUTE;
 
 	_parameters.push_back(param);
 

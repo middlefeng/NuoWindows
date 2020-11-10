@@ -46,7 +46,8 @@ public:
 
 	PNuoFenceSwapChain CreateFenceSwapChain(unsigned int frameCount);
 	PNuoResource CreateBuffer(void* data, size_t size);
-	PNuoResource CreateBuffer(size_t size);
+	PNuoResource CreatePrivateBuffer(size_t size);
+	PNuoResource CreateUploadBuffer(size_t size);
 	PNuoResource CreateDepthStencil(size_t width, size_t height);
 
 	ID3D12Device* DxDevice() const;

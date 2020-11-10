@@ -14,7 +14,7 @@ NuoConstantBufferSwapChain::NuoConstantBufferSwapChain(const PNuoDevice& device,
 	resources.resize(size);
 
 	for (PNuoResource& resource : resources)
-		resource = device->CreateBuffer(size);
+		resource = device->CreateUploadBuffer(size);
 
 	_resources = std::make_shared<NuoResourceSwapChain>(resources);
 

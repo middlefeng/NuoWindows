@@ -2,7 +2,10 @@
 
 #include "NuoCubeMesh.h"
 #include "NuoAppInstance.h"
+
 #include "NuoDirect/NuoShader.h"
+#include "NuoDirect/NuoResourceSwapChain.h"
+
 #include "NuoStrings.h"
 #include "NuoFile.h"
 
@@ -102,7 +105,7 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 																		 D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	rootSignature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 	rootSignature->AddConstant(sizeof(InputParamType), 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	rootSignature->AddConstant(sizeof(Light), 2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+	rootSignature->AddRootConstantBuffer(2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
 	{
@@ -113,6 +116,8 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 
 	_pipelineState = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM,
 														inputElementDescs, vertexShader, pixelShader, rootSignature);
+
+	_light = std::make_shared<NuoResourceSwapChain>(device, 3, sizeof(Light));
 }
 
 
@@ -132,7 +137,10 @@ void NuoCubeMesh::Draw(const PNuoCommandEncoder& encoder)
 	};
 
 	encoder->SetRootConstant(1, sizeof(InputParamType), &param);
-	encoder->SetRootConstant(2, sizeof(Light), &light);
+
+	_light->UpdateResource(&light, sizeof(Light), encoder->InFlight());
+	encoder->SetRootConstantBuffer(2, _light);
+
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 }

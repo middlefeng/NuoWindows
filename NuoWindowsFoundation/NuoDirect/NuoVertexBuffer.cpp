@@ -14,13 +14,13 @@ NuoVertexBuffer::NuoVertexBuffer(const PNuoCommandBuffer& commandBuffer,
 	PNuoDevice device = commandBuffer->CommandQueue()->Device();
 
 	auto intermediate = device->CreateBuffer(data, size);
-	_buffer = device->CreateBuffer(size);
+	_buffer = device->CreatePrivateBuffer(size);
 	intermediatePool.push_back(intermediate);
 	commandBuffer->CopyResource(intermediate, _buffer);
 
 	const size_t indiciesBufferSize = indiciesCount * sizeof(UINT32);
 	intermediate = device->CreateBuffer(indicies, indiciesBufferSize);
-	_indicies = device->CreateBuffer(indiciesBufferSize);
+	_indicies = device->CreatePrivateBuffer(indiciesBufferSize);
 	intermediatePool.push_back(intermediate);
 	commandBuffer->CopyResource(intermediate, _indicies);
 

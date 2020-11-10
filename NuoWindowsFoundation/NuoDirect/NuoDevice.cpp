@@ -173,13 +173,24 @@ PNuoResource NuoDevice::CreateBuffer(void* data, size_t size)
 }
 
 
-PNuoResource NuoDevice::CreateBuffer(size_t size)
+PNuoResource NuoDevice::CreatePrivateBuffer(size_t size)
 {
     return CreateBufferInternal(nullptr, size, 1,
                                 D3D12_RESOURCE_DIMENSION_BUFFER,
                                 DXGI_FORMAT_UNKNOWN,
                                 D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
                                 D3D12_RESOURCE_STATE_COPY_DEST,
+                                D3D12_RESOURCE_FLAG_NONE);
+}
+
+
+PNuoResource NuoDevice::CreateUploadBuffer(size_t size)
+{
+    return CreateBufferInternal(nullptr, size, 1,
+                                D3D12_RESOURCE_DIMENSION_BUFFER,
+                                DXGI_FORMAT_UNKNOWN,
+                                D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_STATE_GENERIC_READ,
                                 D3D12_RESOURCE_FLAG_NONE);
 }
 
@@ -203,8 +214,10 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data,
                                              D3D12_RESOURCE_STATES state,
                                              D3D12_RESOURCE_FLAGS flags)
 {
+    bool forUpload = (state == D3D12_RESOURCE_STATE_GENERIC_READ);
+
     D3D12_HEAP_PROPERTIES heapProps;
-    heapProps.Type = data ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT;
+    heapProps.Type = forUpload ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT;
     heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
     heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
     heapProps.CreationNodeMask = 1;
