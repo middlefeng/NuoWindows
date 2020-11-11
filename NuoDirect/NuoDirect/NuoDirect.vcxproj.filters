@@ -19,6 +19,15 @@
     <Filter Include="NuoWindowsFoundation\NuoDirect">
       <UniqueIdentifier>{c494ec5a-be83-4081-a9af-f2c640995150}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoMeshes">
+      <UniqueIdentifier>{be14c4a2-4875-4200-81a7-4f902973ce0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoUtilities">
+      <UniqueIdentifier>{3d356f69-7270-4c92-91b0-722172888add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoUtilities\Win">
+      <UniqueIdentifier>{e7da6a8f-5926-417b-a696-899948de7643}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -129,6 +138,24 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.h">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoConstantBufferSwapChain.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -227,6 +254,21 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.cpp">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoConstantBufferSwapChain.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoDirect.rc">
@@ -248,5 +290,13 @@
     <FxCompile Include="shaders.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_P.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

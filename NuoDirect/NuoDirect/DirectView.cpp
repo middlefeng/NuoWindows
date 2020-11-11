@@ -24,17 +24,17 @@ DirectView::DirectView(const PNuoDevice& device,
 					   const PNuoWindow& parent)
 	: NuoDirectView(device, parent)
 {
-	_refreshTimer = std::make_shared<NuoTimer>(1000 / 60, [this](NuoTimer*)
+	/*_refreshTimer = std::make_shared<NuoTimer>(1000 / 60, [this](NuoTimer*)
 		{
 			this->Update();
-		});
+		});*/
 }
 
 
 void DirectView::OnSize(unsigned int x, unsigned int y)
 {
 	NuoDirectView::OnSize(x, y);
-	
+
     Init();
 }
 
@@ -82,8 +82,11 @@ void DirectView::Init()
         _pipeline = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM, inputElementDescs, vertexShader, pixelShader, rootSignature);
     }
 
-    PNuoResource intermediate;
-    PNuoCommandBuffer commandBuffer = CreateCommandBuffer(false);
+    std::vector<PNuoResource> intermediate;
+    PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
+
+    _mesh = std::make_shared<NuoCubeMesh>();
+    _mesh->Init(commandBuffer, intermediate, 2.0, 2.0, 2.0);
 
     NuoRect<long> rect = ClientRectDevice();
     float aspectRatio = ((float)rect.W()) / ((float)rect.H());
@@ -100,23 +103,31 @@ void DirectView::Init()
             { { -0.25f, -0.25f * aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
         };
 
-        const UINT vertexBufferSize = sizeof(triangleVertices);
+        // for right-hand and front cull.
+        //
+        UINT32 indicies[] = { 0, 2, 1 };
 
-        intermediate = device->CreateBuffer(triangleVertices, vertexBufferSize);
-        auto vertexBuffer = device->CreateBuffer(vertexBufferSize);
-
-        commandBuffer->CopyResource(intermediate, vertexBuffer);
-        commandBuffer->Commit();
-
-        _vertexBuffer = std::make_shared<NuoVertexBuffer>(vertexBuffer, sizeof(Vertex));
+        _vertexBuffer = std::make_shared<NuoVertexBuffer>(commandBuffer, intermediate,
+                                                          triangleVertices, sizeof(triangleVertices), sizeof(Vertex),
+                                                          indicies, 3);
     }
+
+    commandBuffer->Commit();
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     {
-        PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
-        fence->WaitForGPU(CommandQueue());
+       PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
+       fence->WaitForGPU(CommandQueue());
     }
 }
+
+struct Light
+{
+    DirectX::XMFLOAT4 direction;
+    DirectX::XMFLOAT4 ambientColor;
+    DirectX::XMFLOAT4 diffuseColor;
+    DirectX::XMFLOAT4 specularColor;
+};
 
 
 void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
@@ -124,8 +135,10 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 	PNuoRenderTarget target = CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
+    encoder->SetClearColor(NuoVectorFloat4(0.0f, 0.2f, 0.4f, 1.0f));
+    encoder->SetViewport(NuoViewport());
+
 	encoder->SetPipeline(_pipeline);
-    encoder->UseDefaultViewPort();
 
 	auto view = target->View();
 	auto vertexBufferView = _vertexBuffer->View();
@@ -134,14 +147,51 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 
     InputParamType param;
     param.color = { 1.0, 0.5, 0.0, 1.0 };
+    encoder->SetRootConstant(0, sizeof(InputParamType), &param);
 
-	encoder->ClearTargetView(0.0f, 0.2f, 0.4f, 1.0f);
-    encoder->SetConstant(0, sizeof(InputParamType), &param);
 	encoder->SetVertexBuffer(_vertexBuffer);
-	encoder->DrawInstanced(_vertexBuffer->Count(), 1);
+	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
+
+    const NuoVectorFloat3 eyePosition(0, 0, 10);
+    const NuoVectorFloat3 focusPoint(0, 0, 0);
+    const NuoVectorFloat3 upDirection(0, 1, 0);
+
+    auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
+
+    float aspectRatio = target->Resource()->Width() / (float)target->Resource()->Height();
+    NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(70), 0.1f, 100.f);
+
+    NuoMatrixFloat44 mvpMatrix = viewMatrix * _modelTransfer;
+    NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(mvpMatrix);
+    mvpMatrix = projectionMatrix * mvpMatrix;
+
+    NuoModelViewProjection mvp = { mvpMatrix._m, normalMatrix._m };
+
+    NuoMesh::CommonFunc commFunc = [&mvp](NuoCommandEncoder* encoder)
+    {
+        encoder->SetRootConstant(0, sizeof(NuoModelViewProjection), &mvp);
+    };
+    
+    _mesh->DrawBegin(encoder, commFunc);
+    _mesh->Draw(encoder);
 
 	target->ReleaseRenderPassEncoder();
 }
 
 
+void DirectView::OnMouseDown(short x, short y)
+{
+    EnableMouseDrag();
+    NuoDirectView::OnMouseDown(x, y);
+}
 
+
+void DirectView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
+{
+    float dx = deltaY * 0.002f * 3.14f;
+    float dy = deltaX * 0.002f * 3.14f;
+
+    _modelTransfer = NuoMatrixRotationAppend(_modelTransfer, dx, dy);
+
+    Update();
+}

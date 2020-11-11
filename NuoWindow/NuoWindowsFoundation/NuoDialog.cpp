@@ -107,7 +107,7 @@ void NuoDialog::DoModal(const PNuoWindow& parent)
 		if (ret == -1) /* error found */
 			break;
 
-		if (!IsDialogMessage(_hWnd, &msg))
+		if (IsDialogMessage(_hWnd, &msg))
 		{
 			TranslateMessage(&msg); /* translate virtual-key messages */
 			DispatchMessage(&msg);  /* send it to dialog procedure */

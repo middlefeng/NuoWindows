@@ -24,7 +24,9 @@ class NuoRenderTargetSwapChain
 {
 
 	PNuoDescriptorHeap _rtvHeap;
+	PNuoDescriptorHeap _dsvHeap;
 
+	PNuoResource _depthStencil;
 	PNuoResourceSwapChain _resources;
 	WPNuoDevice _device;
 
@@ -38,6 +40,7 @@ public:
 private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DxRenderTargetView(unsigned int inFlight);
+	D3D12_CPU_DESCRIPTOR_HANDLE DxDepthStencilView();
 
 	friend class NuoDirectView;
 };

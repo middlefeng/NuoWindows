@@ -8,6 +8,7 @@
 #include "NuoImage.h"
 
 #include <windows.h>
+#include <windowsx.h>
 #include <shellscalingapi.h>
 
 #include "Resource.h"
@@ -91,6 +92,33 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
 
         break;
     }
+    case WM_LBUTTONDOWN:
+    case WM_MOUSEMOVE:
+    case WM_LBUTTONUP:
+    {
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        if (window)
+        {
+            short x = GET_X_LPARAM(lParam);
+            short y = GET_Y_LPARAM(lParam);
+
+            switch (message)
+            {
+            case WM_LBUTTONDOWN:
+                window->OnMouseDown(x, y);
+                break;
+            case WM_MOUSEMOVE:
+                window->OnMouseMessage(x, y);
+                break;
+            case WM_LBUTTONUP:
+                window->OnMouseUp(x, y);
+                break;
+            default:
+                break;
+            }
+        }
+        break;
+    }
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -100,13 +128,13 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
 
 
 NuoWindow::NuoWindow()
-    : _hWnd(0), _inDPIChange(false), _savedDPI(1.0)
+    : _hWnd(0), _inDPIChange(false), _savedDPI(1.0), _inDragging(false)
 {
 }
 
 
 NuoWindow::NuoWindow(const std::string& title)
-    : _title(title), _hWnd(0), _inDPIChange(false), _savedDPI(1.0)
+    : _title(title), _hWnd(0), _inDPIChange(false), _savedDPI(1.0), _inDragging(false)
 {
     std::wstring wtitle = StringToUTF16(title);
     HINSTANCE hInstance = NuoAppInstance::GetInstance()->Instance();
@@ -142,6 +170,12 @@ void NuoWindow::Update()
 {
     ::InvalidateRect(_hWnd, NULL, true);
     ::UpdateWindow(_hWnd);
+}
+
+
+void NuoWindow::EnableMouseDrag()
+{
+    _inDragging = true;
 }
 
 
@@ -277,6 +311,56 @@ void NuoWindow::OnSize(unsigned int x, unsigned int y)
 }
 
 
+void NuoWindow::OnMouseMove(short x, short y)
+{
+}
+
+
+void NuoWindow::OnMouseDown(short x, short y)
+{
+    if (!_inDragging)
+        return;
+
+    SetCapture(_hWnd);
+
+    _mouseX = x;
+    _mouseY = y;
+
+    BOOL ret;
+    MSG msg;
+    while ((ret = GetMessage(&msg, 0, 0, 0)) != 0)
+    {
+        if (ret == -1) /* error found */
+            break;
+
+        if (msg.message == WM_MOUSEMOVE ||
+            msg.message == WM_LBUTTONUP ||
+            msg.message == WM_PAINT || msg.message == WM_TIMER)
+        {
+            TranslateMessage(&msg); /* translate virtual-key messages */
+            DispatchMessage(&msg);  /* send it to dialog procedure */
+        }
+    }
+}
+
+
+void NuoWindow::OnMouseDrag(short x, short y, short deltaX, short deltaY)
+{
+}
+
+
+void NuoWindow::OnMouseUp(short x, short y)
+{
+    if (_inDragging)
+    {
+        _inDragging = false;
+        ReleaseCapture();
+
+        PostQuitMessage(0);
+    }
+}
+
+
 void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI)
 {
     if (_font)
@@ -305,6 +389,25 @@ void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float ol
     SetPositionDevice(newRect, false);
 
     _savedDPI = newDPI;
+}
+
+
+void NuoWindow::OnMouseMessage(short x, short y)
+{
+    if (_inDragging)
+    {
+        short deltaX = x - _mouseX;
+        short deltaY = y - _mouseY;
+
+        _mouseX = x;
+        _mouseY = y;
+
+        OnMouseDrag(x, y, deltaX, deltaY);
+    }
+    else
+    {
+        OnMouseMove(x, y);
+    }
 }
 
 

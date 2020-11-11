@@ -3,6 +3,7 @@
 #include "NuoDevice.h"
 #include "NuoStrings.h"
 #include "NuoResource.h"
+#include "NuoCommandBuffer.h"
 
 #include <cassert>
 
@@ -121,45 +122,143 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 }
 
 
+unsigned int NuoDevice::ConstantBufferDescriptorHandleIncrementSize() const
+{
+    return _dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+
+PNuoDescriptorHeap NuoDevice::CreateConstantBufferHeap(unsigned int frameCount)
+{
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+
+    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
+    cbvHeapDesc.NumDescriptors = frameCount;
+    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;;
+
+    heap->_size = frameCount;
+    heap->_device = shared_from_this();
+    _dxDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&heap->_heap));
+
+    return heap;
+}
+
+
+PNuoDescriptorHeap NuoDevice::CreateDepthStencilHeap()
+{
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+    dsvHeapDesc.NumDescriptors = 1;
+    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+    heap->_size = 1;
+    heap->_device = shared_from_this();
+    _dxDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&heap->_heap));
+
+    return heap;
+}
+
+
 PNuoResource NuoDevice::CreateBuffer(void* data, size_t size)
 {
-    return CreateBufferInternal(data, size);
+    return CreateBufferInternal(data, size, 1, 
+                                D3D12_RESOURCE_DIMENSION_BUFFER,
+                                DXGI_FORMAT_UNKNOWN,
+                                D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_STATE_GENERIC_READ,
+                                D3D12_RESOURCE_FLAG_NONE);
 }
 
 
-PNuoResource NuoDevice::CreateBuffer(size_t size)
+PNuoResource NuoDevice::CreatePrivateBuffer(size_t size)
 {
-    return CreateBufferInternal(nullptr, size);
+    return CreateBufferInternal(nullptr, size, 1,
+                                D3D12_RESOURCE_DIMENSION_BUFFER,
+                                DXGI_FORMAT_UNKNOWN,
+                                D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_STATE_COPY_DEST,
+                                D3D12_RESOURCE_FLAG_NONE);
 }
 
 
-PNuoResource NuoDevice::CreateBufferInternal(void* data, size_t size)
+PNuoResource NuoDevice::CreateUploadBuffer(size_t size)
 {
+    return CreateBufferInternal(nullptr, size, 1,
+                                D3D12_RESOURCE_DIMENSION_BUFFER,
+                                DXGI_FORMAT_UNKNOWN,
+                                D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_STATE_GENERIC_READ,
+                                D3D12_RESOURCE_FLAG_NONE);
+}
+
+
+PNuoResource NuoDevice::CreateDepthStencil(size_t width, size_t height)
+{
+    return CreateBufferInternal(nullptr, width, height,
+                                D3D12_RESOURCE_DIMENSION_TEXTURE2D,
+                                DXGI_FORMAT_D32_FLOAT,
+                                D3D12_TEXTURE_LAYOUT_UNKNOWN,
+                                D3D12_RESOURCE_STATE_DEPTH_WRITE,
+                                D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+}
+
+
+PNuoResource NuoDevice::CreateBufferInternal(void* data,
+                                             size_t width, size_t height,
+                                             D3D12_RESOURCE_DIMENSION dimension,
+                                             DXGI_FORMAT format,
+                                             D3D12_TEXTURE_LAYOUT layout,
+                                             D3D12_RESOURCE_STATES state,
+                                             D3D12_RESOURCE_FLAGS flags)
+{
+    bool forUpload = (state == D3D12_RESOURCE_STATE_GENERIC_READ);
+
     D3D12_HEAP_PROPERTIES heapProps;
-    heapProps.Type = data ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT;
+    heapProps.Type = forUpload ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT;
     heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
     heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
     heapProps.CreationNodeMask = 1;
     heapProps.VisibleNodeMask = 1;
 
     D3D12_RESOURCE_DESC resourceDesc;
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    resourceDesc.Dimension = dimension;
     resourceDesc.Alignment = 0;
-    resourceDesc.Width = size;
-    resourceDesc.Height = 1;
     resourceDesc.DepthOrArraySize = 1;
     resourceDesc.MipLevels = 1;
-    resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+    resourceDesc.Format = format;
     resourceDesc.SampleDesc.Count = 1;
     resourceDesc.SampleDesc.Quality = 0;
-    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-    resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    resourceDesc.Layout = layout;
+    resourceDesc.Flags = flags;
+
+    if (dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D)
+    {
+        resourceDesc.Width = (UINT)width;
+        resourceDesc.Height = (UINT)height;
+    }
+    else
+    {
+        resourceDesc.Width = width * height;
+        resourceDesc.Height = 1;
+    }
+
+    D3D12_CLEAR_VALUE clearValue;
+    D3D12_CLEAR_VALUE* pClearValue = nullptr;
+    if (flags == D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)
+    {
+        pClearValue = &clearValue;
+        clearValue = {};
+        clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+        clearValue.DepthStencil = { 1.0f, 0 };
+    }
 
     Microsoft::WRL::ComPtr<ID3D12Resource> intermediate;
     HRESULT hr = _dxDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE,
-                                                    &resourceDesc,
-                                                    data ? D3D12_RESOURCE_STATE_GENERIC_READ : D3D12_RESOURCE_STATE_COPY_DEST,
-                                                    nullptr, IID_PPV_ARGS(&intermediate));
+                                                    &resourceDesc, state,
+                                                    pClearValue, IID_PPV_ARGS(&intermediate));
     assert(hr == S_OK);
 
     if (data)
@@ -168,7 +267,7 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data, size_t size)
         UINT8* pVertexDataBegin;
         D3D12_RANGE readRange = { 0, 0 };        // We do not intend to read from this resource on the CPU.
         hr = intermediate->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
-        memcpy(pVertexDataBegin, data, size);
+        memcpy(pVertexDataBegin, data, width * height);
         intermediate->Unmap(0, nullptr);
 
         assert(hr == S_OK);

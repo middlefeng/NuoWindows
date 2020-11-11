@@ -39,16 +39,29 @@ public:
 	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
 	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);
 
+	unsigned int ConstantBufferDescriptorHandleIncrementSize() const;
+	PNuoDescriptorHeap CreateConstantBufferHeap(unsigned int frameCount);
+
+	PNuoDescriptorHeap CreateDepthStencilHeap();
+
 	PNuoFenceSwapChain CreateFenceSwapChain(unsigned int frameCount);
 	PNuoResource CreateBuffer(void* data, size_t size);
-	PNuoResource CreateBuffer(size_t size);
+	PNuoResource CreatePrivateBuffer(size_t size);
+	PNuoResource CreateUploadBuffer(size_t size);
+	PNuoResource CreateDepthStencil(size_t width, size_t height);
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;
 
 private:
 
-	PNuoResource CreateBufferInternal(void* data, size_t size);
+	PNuoResource CreateBufferInternal(void* data,
+									  size_t width, size_t height,
+									  D3D12_RESOURCE_DIMENSION dimension,
+									  DXGI_FORMAT format,
+									  D3D12_TEXTURE_LAYOUT layout,
+									  D3D12_RESOURCE_STATES state,
+									  D3D12_RESOURCE_FLAGS flags);
 
 };
 

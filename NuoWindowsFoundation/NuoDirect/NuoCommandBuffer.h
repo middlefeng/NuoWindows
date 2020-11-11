@@ -13,6 +13,8 @@
 #include "NuoDirect/NuoCommandQueue.h"
 #include "NuoDirect/NuoVertexBuffer.h"
 
+#include "NuoMathVector.h"
+
 class NuoCommandSwapChain;
 typedef std::shared_ptr<NuoCommandSwapChain> PNuoCommandSwapChain;
 
@@ -28,9 +30,11 @@ class NuoCommandSwapChain
 
 	PNuoCommandQueue _commandQueue;
 
-public: // TODO
 	std::vector<Microsoft::WRL::ComPtr<ID3D12CommandAllocator>> _commandAllocators;
-	std::vector<PNuoCommandBuffer> _commandBuffers;
+
+	// to retain resources that GPU need in execution.
+	//
+	std::vector<std::vector<PNuoCommandBuffer>> _inFlightBuffers;
 
 public:
 
@@ -66,41 +70,65 @@ public:
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void Commit();
 
+	PNuoCommandQueue CommandQueue() const;
+
 	friend class NuoCommandSwapChain;
+	friend class NuoCommandQueue;
 };
 
 
 class NuoRenderTarget;
 typedef std::shared_ptr<NuoRenderTarget> PNuoRenderTarget;
 
+class NuoResourceSwapChain;
+typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
+
+
+
+class NuoViewport
+{
+public:
+
+	D3D12_VIEWPORT _viewport;
+
+	NuoViewport();
+
+	NuoViewport(float topLeftX, float topLeftY,
+				float width, float height,
+				float minDepth, float maxDepth);
+};
+
 
 
 class NuoCommandEncoder : public NuoRenderInFlight
 {
-	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> _commandAllocator;
-	std::vector<Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>> _commandList;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> _commandList;
 
-	PNuoCommandQueue _commandQueue;
 	PNuoRenderTarget _renderTarget;
 
 public:
 
-	void SetConstant(unsigned int index, size_t size, void* constant);
+	void SetClearColor(const NuoVectorFloat4& color);
+	void SetViewport(const NuoViewport& viewport);
+
+	void SetRootConstant(unsigned int index, size_t size, void* constant);
+	void SetRootConstantBuffer(unsigned int index, const PNuoResourceSwapChain& cb);
+	
+	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
 
 	void SetPipeline(const PNuoPipelineState& pipeline);
-	void ClearTargetView(float r, float g, float b, float a);
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
-	void DrawInstanced(unsigned int vertexCount, unsigned int instance);
-	void UseDefaultViewPort();
+	void DrawIndexed(unsigned int indiciesCount);
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void EndEncoding();
 
 private:
 
-	void Commit();
 	void ResourceBarrier(const PNuoResource& resource,
 						 D3D12_RESOURCE_STATES before,
 						 D3D12_RESOURCE_STATES after);
+
+	ID3D12GraphicsCommandList* DxEncoder();
 
 	friend class NuoCommandBuffer;
 	friend class NuoRenderTarget;

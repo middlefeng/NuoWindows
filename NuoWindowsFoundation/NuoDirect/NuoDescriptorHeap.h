@@ -30,7 +30,12 @@ private:
 
 public:
 
+	// CPU descriptor is used for both handle and view for render targets
+	//
 	D3D12_CPU_DESCRIPTOR_HANDLE DxRenderTargetView(unsigned int inFlight);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE DxConstantBufferHandle(unsigned int inFlight);
+	D3D12_CPU_DESCRIPTOR_HANDLE DxHeapCPUHandle();
 
 	friend class NuoDevice;
 

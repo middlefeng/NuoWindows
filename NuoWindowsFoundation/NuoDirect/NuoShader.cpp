@@ -19,7 +19,7 @@ NuoShader::NuoShader(const std::string& source,
 
 	uint32_t codePage = CP_UTF8;
 	Microsoft::WRL::ComPtr<IDxcBlobEncoding> sourceBlob;
-	hr = library->CreateBlobWithEncodingFromPinned(source.c_str(), source.size(), codePage, &sourceBlob);
+	hr = library->CreateBlobWithEncodingFromPinned(source.c_str(), (UINT32)source.size(), codePage, &sourceBlob);
 	assert(hr == S_OK);
 
 	std::wstring wName = StringToUTF16(name);
@@ -39,6 +39,28 @@ NuoShader::NuoShader(const std::string& source,
 						   NULL, 0, // pDefines, defineCount
 						   NULL, // pIncludeHandler
 						   &result); // ppResult
+
+#if defined(_DEBUG)
+	HRESULT status;
+	result->GetStatus(&status);
+
+	if (status != S_OK)
+	{
+		Microsoft::WRL::ComPtr<IDxcBlobEncoding> errorsBlob;
+		hr = result->GetErrorBuffer(&errorsBlob);
+		char message[1024];
+
+		if (SUCCEEDED(hr) && errorsBlob)
+		{
+			sprintf_s(message, "%s", (const char*)errorsBlob->GetBufferPointer());
+		}
+
+		std::wstring wstr = StringToUTF16(message);
+		OutputDebugString(wstr.c_str());
+		
+		assert(false);
+	}
+#endif
 
 	result->GetResult(&_dxShaderBlob);
 }

@@ -4,6 +4,8 @@
 #include "NuoTimer.h"
 
 #include "NuoDirect/NuoDirectView.h"
+#include "NuoMeshes/NuoCubeMesh.h"
+
 #include <functional>
 #include <DirectXMath.h>
 
@@ -23,11 +25,13 @@ class DirectView : public NuoDirectView
 	};
 
 	PNuoPipelineState _pipeline;
-
-	// App resources.
 	PNuoVertexBuffer _vertexBuffer;
 
+	PNuoCubeMesh _mesh;
+
 	PNuoTimer _refreshTimer;
+
+	NuoMatrixFloat44 _modelTransfer;
 
 public:
 
@@ -37,6 +41,9 @@ public:
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void OnSize(unsigned int x, unsigned int y) override;
+
+	virtual void OnMouseDown(short x, short y) override;
+	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY) override;
 
 };
 

@@ -5,7 +5,13 @@
 
 
 NuoResource::NuoResource()
+	: _mapped(nullptr)
 {
+}
+
+NuoResource::~NuoResource()
+{
+	Unmap();
 }
 
 
@@ -18,18 +24,40 @@ void NuoResource::SetResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource)
 
 unsigned long NuoResource::Width() const
 {
-	return _desc.Width;
+	return (unsigned long)_desc.Width;
 }
 
 
 unsigned long NuoResource::Height() const
 {
-	return _desc.Height;
+	return (unsigned long)_desc.Height;
 }
 
-size_t NuoResource::Size() const
+unsigned long NuoResource::Size() const
 {
-	return _desc.Width * _desc.Height;
+	return (unsigned long)(_desc.Width * _desc.Height);
+}
+
+
+void* NuoResource::Map()
+{
+	if (!_mapped)
+	{
+		D3D12_RANGE readRange = { 0, 0 };
+		_dxResources->Map(0, &readRange, &_mapped);
+	}
+
+	return _mapped;
+}
+
+
+void NuoResource::Unmap()
+{
+	if (!_mapped)
+		return;
+
+	_dxResources->Unmap(0, nullptr);
+	_mapped = nullptr;
 }
 
 

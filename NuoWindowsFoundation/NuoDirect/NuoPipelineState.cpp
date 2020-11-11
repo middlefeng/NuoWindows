@@ -21,9 +21,25 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
     psoDesc.VS = vertex->ByteCode();
     psoDesc.PS = pixel->ByteCode();
 
+    D3D12_DEPTH_STENCIL_DESC depthDesc;
+    depthDesc.DepthEnable = true;
+    depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+    depthDesc.StencilEnable = false;
+    depthDesc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+    depthDesc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
+    const D3D12_DEPTH_STENCILOP_DESC defaultStencilOp =
+    {
+        D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP,
+        D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS
+    };
+    depthDesc.FrontFace = defaultStencilOp; // both front and back facing polygons get the same treatment
+    depthDesc.BackFace = defaultStencilOp;
+    psoDesc.DepthStencilState = depthDesc;
+
     D3D12_RASTERIZER_DESC rasterizerDesc;
     rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-    rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+    rasterizerDesc.CullMode = D3D12_CULL_MODE_FRONT;
     rasterizerDesc.FrontCounterClockwise = FALSE;
     rasterizerDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
     rasterizerDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
@@ -54,12 +70,11 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
         blendDesc.RenderTarget[i] = renderTargetBlendDesc;
 
     psoDesc.BlendState = blendDesc;
-    psoDesc.DepthStencilState.DepthEnable = FALSE;
-    psoDesc.DepthStencilState.StencilEnable = FALSE;
     psoDesc.SampleMask = UINT_MAX;
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
     psoDesc.NumRenderTargets = 1;
     psoDesc.RTVFormats[0] = format;
+    psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
     psoDesc.SampleDesc.Count = 1;
 
     HRESULT hr = device->DxDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&_dxPipelineState));
@@ -75,6 +90,8 @@ ID3D12PipelineState* NuoPipelineState::DxPipeline() const
 
 ID3D12RootSignature* NuoPipelineState::DxRootSignature() const
 {
+    if (!_rootSignature)
+        return nullptr;
     return _rootSignature->DxSignature();
 }
 
