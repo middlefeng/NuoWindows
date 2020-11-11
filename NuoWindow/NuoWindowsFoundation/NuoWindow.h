@@ -61,6 +61,7 @@ protected:
 	HWND _hWnd;
 	PNuoMenuBar _menu;
 	bool _inDPIChange;
+	bool _inDragging;
 	float _savedDPI;
 
 	std::string _title;
@@ -83,6 +84,10 @@ public:
 	virtual bool OnCommand(int id);
 	virtual void OnPaint();
 	virtual void OnSize(unsigned int x, unsigned int y);
+	virtual void OnMouseMove(short x, short y);
+	virtual void OnMouseDown(short x, short y);
+	virtual void OnMouseDrag(short x, short y);
+	virtual void OnMouseUp(short x, short y);
 	virtual void OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI);
 
 	HWND Handle() const;
@@ -90,6 +95,8 @@ public:
 	void Show();
 	void Hide();
 	void Update();
+
+	void EnableMouseDrag();
 	
 	void SetMenu(const PNuoMenuBar& menu);
 	void SetIcon(const PNuoIcon& icon);
@@ -114,6 +121,8 @@ private:
 	float SavedDPI() const;
 
 	static LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+	void OnMouseMessage(short x, short y);
 
 };
 
