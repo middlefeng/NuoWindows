@@ -24,10 +24,10 @@ DirectView::DirectView(const PNuoDevice& device,
 					   const PNuoWindow& parent)
 	: NuoDirectView(device, parent)
 {
-	_refreshTimer = std::make_shared<NuoTimer>(1000 / 60, [this](NuoTimer*)
+	/*_refreshTimer = std::make_shared<NuoTimer>(1000 / 60, [this](NuoTimer*)
 		{
 			this->Update();
-		});
+		});*/
 }
 
 
@@ -152,11 +152,6 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 
-    const NuoVectorFloat3 rotationAxis(0, 1, 0);
-    const NuoMatrixFloat44 modelMatrix = NuoMatrixRotation(rotationAxis, DirectX::XMConvertToRadians(15));
-
-    using namespace DirectX;
-    
     const NuoVectorFloat3 eyePosition(0, 0, 10);
     const NuoVectorFloat3 focusPoint(0, 0, 0);
     const NuoVectorFloat3 upDirection(0, 1, 0);
@@ -164,9 +159,9 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
     auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
 
     float aspectRatio = target->Resource()->Width() / (float)target->Resource()->Height();
-    NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, XMConvertToRadians(70), 0.1f, 100.f);
+    NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(70), 0.1f, 100.f);
 
-    NuoMatrixFloat44 mvpMatrix = viewMatrix * modelMatrix;
+    NuoMatrixFloat44 mvpMatrix = viewMatrix * _modelTransfer;
     NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(mvpMatrix);
     mvpMatrix = projectionMatrix * mvpMatrix;
 
@@ -184,4 +179,19 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 }
 
 
+void DirectView::OnMouseDown(short x, short y)
+{
+    EnableMouseDrag();
+    NuoDirectView::OnMouseDown(x, y);
+}
 
+
+void DirectView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
+{
+    float dx = deltaY * 0.002f * 3.14f;
+    float dy = deltaX * 0.002f * 3.14f;
+
+    _modelTransfer = NuoMatrixRotationAppend(_modelTransfer, dx, dy);
+
+    Update();
+}

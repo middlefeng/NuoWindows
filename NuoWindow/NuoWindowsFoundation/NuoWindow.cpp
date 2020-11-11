@@ -313,9 +313,6 @@ void NuoWindow::OnSize(unsigned int x, unsigned int y)
 
 void NuoWindow::OnMouseMove(short x, short y)
 {
-    wchar_t message[256];
-    wsprintf(message, L"Mouse Move: %d, %d.\n", x, y);
-    OutputDebugString(message);
 }
 
 
@@ -326,6 +323,9 @@ void NuoWindow::OnMouseDown(short x, short y)
 
     SetCapture(_hWnd);
 
+    _mouseX = x;
+    _mouseY = y;
+
     BOOL ret;
     MSG msg;
     while ((ret = GetMessage(&msg, 0, 0, 0)) != 0)
@@ -334,7 +334,8 @@ void NuoWindow::OnMouseDown(short x, short y)
             break;
 
         if (msg.message == WM_MOUSEMOVE ||
-            msg.message == WM_LBUTTONUP)
+            msg.message == WM_LBUTTONUP ||
+            msg.message == WM_PAINT || msg.message == WM_TIMER)
         {
             TranslateMessage(&msg); /* translate virtual-key messages */
             DispatchMessage(&msg);  /* send it to dialog procedure */
@@ -343,11 +344,8 @@ void NuoWindow::OnMouseDown(short x, short y)
 }
 
 
-void NuoWindow::OnMouseDrag(short x, short y)
+void NuoWindow::OnMouseDrag(short x, short y, short deltaX, short deltaY)
 {
-    wchar_t message[256];
-    wsprintf(message, L"Mouse Drag: %d, %d.\n", x, y);
-    OutputDebugString(message);
 }
 
 
@@ -397,9 +395,19 @@ void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float ol
 void NuoWindow::OnMouseMessage(short x, short y)
 {
     if (_inDragging)
-        OnMouseDrag(x, y);
+    {
+        short deltaX = x - _mouseX;
+        short deltaY = y - _mouseY;
+
+        _mouseX = x;
+        _mouseY = y;
+
+        OnMouseDrag(x, y, deltaX, deltaY);
+    }
     else
+    {
         OnMouseMove(x, y);
+    }
 }
 
 

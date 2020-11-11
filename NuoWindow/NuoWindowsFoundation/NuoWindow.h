@@ -72,6 +72,9 @@ protected:
 
 	std::shared_ptr<NuoFont> _font;
 
+	short _mouseX;
+	short _mouseY;
+
 public:
 
 	NuoWindow();
@@ -86,7 +89,7 @@ public:
 	virtual void OnSize(unsigned int x, unsigned int y);
 	virtual void OnMouseMove(short x, short y);
 	virtual void OnMouseDown(short x, short y);
-	virtual void OnMouseDrag(short x, short y);
+	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY);
 	virtual void OnMouseUp(short x, short y);
 	virtual void OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI);
 
