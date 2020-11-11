@@ -195,7 +195,7 @@
     <ClCompile Include="IconWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="FoundationResource.rc" />
+    <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc" />
     <ResourceCompile Include="NuoWindow.rc" />
   </ItemGroup>
   <ItemGroup>

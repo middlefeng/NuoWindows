@@ -107,7 +107,7 @@
     <ResourceCompile Include="NuoWindow.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="FoundationResource.rc">
+    <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
