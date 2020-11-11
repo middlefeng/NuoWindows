@@ -7,7 +7,59 @@
 //
 
 #include "NuoModelBase.h"
+#include "NuoMaterial.h"
+
 #include <DirectXMath.h>
+
+
+std::shared_ptr<NuoModelBase> CreateModel(const NuoMeshOptions& options, const NuoMaterial& material,
+                                          const std::string& modelItemName)
+{
+    bool textured = options._textured && material.HasTextureDiffuse();
+
+    if (!textured && !options._basicMaterialized)
+    {
+        auto model = std::make_shared<NuoModelSimple>();
+        model->SetName(modelItemName);
+        return model;
+    }
+    /*else if (textured && !options._basicMaterialized)
+    {
+        auto model = std::make_shared<NuoModelTextured>();
+        model->SetName(modelItemName);
+        model->SetCheckTransparency(options._textureEmbedMaterialTransparency);
+        return model;
+    }
+    else if (textured && options._basicMaterialized)
+    {
+        if (material.HasTextureBump() && options._texturedBump)
+        {
+            auto model = std::make_shared<NuoModelMaterialedBumpedTextured>();
+            model->SetName(modelItemName);
+            model->SetCheckTransparency(true);
+            return model;
+        }
+        else
+        {
+            auto model = std::make_shared<NuoModelMaterialedTextured>();
+            model->SetName(modelItemName);
+            model->SetCheckTransparency(true);
+            return model;
+        }
+    }
+    else if (options._basicMaterialized)
+    {
+        auto model = std::make_shared<NuoModelMaterialed>();
+        model->SetName(modelItemName);
+        return model;
+    }
+    else
+    {
+        auto model = std::shared_ptr<NuoModelBase>();
+        return model;
+    }*/
+    return nullptr;
+}
 
 
 uint32_t* NuoModelBase::IndicesPtr()
@@ -46,5 +98,78 @@ NuoModelSimple::NuoModelSimple()
 
 
 void NuoModelSimple::AddTexCoord(size_t sourceIndex, const std::vector<float>& texCoordBuffer)
+{
+}
+
+
+
+void NuoModelSimple::AddMaterial(const NuoMaterial& material)
+{
+}
+
+
+
+void NuoModelSimple::GenerateTangents()
+{
+}
+
+
+void NuoModelSimple::SetTexturePathDiffuse(const std::string texPath)
+{
+}
+
+
+
+std::string NuoModelSimple::GetTexturePathDiffuse()
+{
+    return std::string();
+}
+
+
+void NuoModelSimple::SetTexturePathOpacity(const std::string texPath)
+{
+}
+
+
+std::string NuoModelSimple::GetTexturePathOpacity()
+{
+    return std::string();
+}
+
+
+void NuoModelSimple::SetTexturePathBump(const std::string texPath)
+{
+}
+
+
+std::string NuoModelSimple::GetTexturePathBump()
+{
+    return std::string();
+}
+
+
+
+NuoMaterial NuoModelSimple::GetMaterial(size_t primtiveIndex) const
+{
+    return NuoMaterial();
+}
+
+
+
+bool NuoModelSimple::HasTransparent()
+{
+    return false;
+}
+
+
+
+std::shared_ptr<NuoMaterial> NuoModelSimple::GetUnifiedMaterial()
+{
+    return nullptr;
+}
+
+
+
+void NuoModelSimple::UpdateBufferWithUnifiedMaterial()
 {
 }

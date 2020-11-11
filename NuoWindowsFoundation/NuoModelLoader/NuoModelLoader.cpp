@@ -6,7 +6,7 @@
 //  Copyright © 2016 middleware. All rights reserved.
 //
 
-#import "NuoModelLoader.h"
+#include "NuoModelLoader.h"
 
 #include "NuoModelBase.h"
 #include "NuoMaterial.h"

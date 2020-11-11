@@ -174,6 +174,12 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoader.h">
       <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.h">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshOptions.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -300,6 +306,9 @@
       <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoader.cpp">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.cpp">
       <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
     </ClCompile>
   </ItemGroup>

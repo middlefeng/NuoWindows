@@ -14,7 +14,22 @@
 #include <vector>
 #include <string>
 
+
+#include "NuoMeshes/NuoMeshOptions.h"
 #include "NuoUtilites/NuoMathVector.h"
+
+
+class NuoModelBase;
+class NuoMaterial;
+
+
+
+typedef std::shared_ptr<NuoModelBase> PNuoModelBase;
+
+
+
+PNuoModelBase CreateModel(const NuoMeshOptions& options, const NuoMaterial& material,
+                          const std::string& modelItemName);
 
 
 class NuoModelBase : public std::enable_shared_from_this<NuoModelBase>
@@ -28,13 +43,23 @@ public:
     virtual void AddPosition(size_t sourceIndex, const std::vector<float>& positionsBuffer) = 0;
     virtual void AddNormal(size_t sourceIndex, const std::vector<float>& normalBuffer) = 0;
     virtual void AddTexCoord(size_t sourceIndex, const std::vector<float>& texCoordBuffer) = 0;
+    virtual void AddMaterial(const NuoMaterial& material) = 0;
+
+    virtual void SetTexturePathDiffuse(const std::string texPath) = 0;
+    virtual std::string GetTexturePathDiffuse() = 0;
+    virtual void SetTexturePathOpacity(const std::string texPath) = 0;
+    virtual std::string GetTexturePathOpacity() = 0;
+    virtual void SetTexturePathBump(const std::string texPath) = 0;
+    virtual std::string GetTexturePathBump() = 0;
 
     virtual void GenerateIndices() = 0;
     virtual void GenerateNormals() = 0;
+    virtual void GenerateTangents() = 0;
 
     virtual size_t GetVerticesNumber() const = 0;
     virtual size_t GetIndicesNumber() const = 0;
     virtual NuoVectorFloat4 GetPosition(size_t index) = 0;
+    virtual NuoMaterial GetMaterial(size_t primtiveIndex) const = 0;
 
     virtual void* Ptr() = 0;
     virtual size_t Length() = 0;
@@ -43,6 +68,10 @@ public:
     virtual size_t IndicesCount();
 
     virtual const std::string& GetName() const = 0;
+
+    virtual bool HasTransparent() = 0;
+    virtual std::shared_ptr<NuoMaterial> GetUnifiedMaterial() = 0;
+    virtual void UpdateBufferWithUnifiedMaterial() = 0;
   
 };
 
@@ -98,6 +127,21 @@ public:
     NuoModelSimple();
 
     virtual void AddTexCoord(size_t sourceIndex, const std::vector<float>& texCoordBuffer) override;
+    virtual void AddMaterial(const NuoMaterial& material) override;
+
+    virtual void GenerateTangents() override;
+
+    virtual void SetTexturePathDiffuse(const std::string texPath) override;
+    virtual std::string GetTexturePathDiffuse() override;
+    virtual void SetTexturePathOpacity(const std::string texPath) override;
+    virtual std::string GetTexturePathOpacity() override;
+    virtual void SetTexturePathBump(const std::string texPath) override;
+    virtual std::string GetTexturePathBump() override;
+
+    virtual NuoMaterial GetMaterial(size_t primtiveIndex) const override;
+    virtual bool HasTransparent() override;
+    virtual std::shared_ptr<NuoMaterial> GetUnifiedMaterial() override;
+    virtual void UpdateBufferWithUnifiedMaterial() override;
 
 };
 

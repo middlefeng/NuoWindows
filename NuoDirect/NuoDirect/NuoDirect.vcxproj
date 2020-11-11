@@ -180,7 +180,9 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshOptions.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoader.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.h" />
@@ -234,6 +236,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoader.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.cc" />
