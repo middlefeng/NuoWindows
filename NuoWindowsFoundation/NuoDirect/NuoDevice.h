@@ -38,11 +38,16 @@ public:
 	std::string Name() const;
 	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
 	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);
+
+	unsigned int ConstantBufferDescriptorHandleIncrementSize() const;
+	PNuoDescriptorHeap CreateConstantBufferHeap(unsigned int frameCount);
+
 	PNuoDescriptorHeap CreateDepthStencilHeap();
 
 	PNuoFenceSwapChain CreateFenceSwapChain(unsigned int frameCount);
 	PNuoResource CreateBuffer(void* data, size_t size);
-	PNuoResource CreateBuffer(size_t size);
+	PNuoResource CreatePrivateBuffer(size_t size);
+	PNuoResource CreateUploadBuffer(size_t size);
 	PNuoResource CreateDepthStencil(size_t width, size_t height);
 
 	ID3D12Device* DxDevice() const;

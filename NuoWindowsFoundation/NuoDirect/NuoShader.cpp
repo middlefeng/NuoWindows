@@ -19,7 +19,7 @@ NuoShader::NuoShader(const std::string& source,
 
 	uint32_t codePage = CP_UTF8;
 	Microsoft::WRL::ComPtr<IDxcBlobEncoding> sourceBlob;
-	hr = library->CreateBlobWithEncodingFromPinned(source.c_str(), source.size(), codePage, &sourceBlob);
+	hr = library->CreateBlobWithEncodingFromPinned(source.c_str(), (UINT32)source.size(), codePage, &sourceBlob);
 	assert(hr == S_OK);
 
 	std::wstring wName = StringToUTF16(name);

@@ -122,6 +122,29 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 }
 
 
+unsigned int NuoDevice::ConstantBufferDescriptorHandleIncrementSize() const
+{
+    return _dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+
+PNuoDescriptorHeap NuoDevice::CreateConstantBufferHeap(unsigned int frameCount)
+{
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+
+    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
+    cbvHeapDesc.NumDescriptors = frameCount;
+    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;;
+
+    heap->_size = frameCount;
+    heap->_device = shared_from_this();
+    _dxDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&heap->_heap));
+
+    return heap;
+}
+
+
 PNuoDescriptorHeap NuoDevice::CreateDepthStencilHeap()
 {
     PNuoDescriptorHeap heap(new NuoDescriptorHeap());
@@ -150,13 +173,24 @@ PNuoResource NuoDevice::CreateBuffer(void* data, size_t size)
 }
 
 
-PNuoResource NuoDevice::CreateBuffer(size_t size)
+PNuoResource NuoDevice::CreatePrivateBuffer(size_t size)
 {
     return CreateBufferInternal(nullptr, size, 1,
                                 D3D12_RESOURCE_DIMENSION_BUFFER,
                                 DXGI_FORMAT_UNKNOWN,
                                 D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
                                 D3D12_RESOURCE_STATE_COPY_DEST,
+                                D3D12_RESOURCE_FLAG_NONE);
+}
+
+
+PNuoResource NuoDevice::CreateUploadBuffer(size_t size)
+{
+    return CreateBufferInternal(nullptr, size, 1,
+                                D3D12_RESOURCE_DIMENSION_BUFFER,
+                                DXGI_FORMAT_UNKNOWN,
+                                D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
+                                D3D12_RESOURCE_STATE_GENERIC_READ,
                                 D3D12_RESOURCE_FLAG_NONE);
 }
 
@@ -180,8 +214,10 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data,
                                              D3D12_RESOURCE_STATES state,
                                              D3D12_RESOURCE_FLAGS flags)
 {
+    bool forUpload = (state == D3D12_RESOURCE_STATE_GENERIC_READ);
+
     D3D12_HEAP_PROPERTIES heapProps;
-    heapProps.Type = data ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT;
+    heapProps.Type = forUpload ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT;
     heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
     heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
     heapProps.CreationNodeMask = 1;

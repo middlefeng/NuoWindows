@@ -165,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandQueue.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoConstantBufferSwapChain.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDescriptorHeap.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.h" />
@@ -208,6 +209,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandQueue.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoConstantBufferSwapChain.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDescriptorHeap.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDevice.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.cpp" />
