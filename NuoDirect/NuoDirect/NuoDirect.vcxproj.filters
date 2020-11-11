@@ -31,6 +31,9 @@
     <Filter Include="NuoWindowsFoundation\NuoUI">
       <UniqueIdentifier>{27c68041-9cc3-4b82-98e5-d515abee4f7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoModelLoader">
+      <UniqueIdentifier>{28cbea4e-3ea7-4c15-9a66-f21f5ac23a8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -156,6 +159,18 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.h">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.h">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.h">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.h">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelBoard.h">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NuoDirect.cpp">
@@ -268,6 +283,18 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.cpp">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.cpp">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.cc">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.cpp">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelBoard.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

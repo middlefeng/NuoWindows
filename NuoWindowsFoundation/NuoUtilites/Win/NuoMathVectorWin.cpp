@@ -8,6 +8,15 @@
 
 #include "NuoMathVector.h"
 
+DirectX::XMFLOAT3 operator + (const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
+{
+    DirectX::XMFLOAT3 result;
+    result.x = v1.x + v2.x;
+    result.y = v1.y + v2.y;
+    result.z = v1.z + v2.z;
+
+    return result;
+}
 
 DirectX::XMFLOAT3 operator - (const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
 {
@@ -27,6 +36,11 @@ DirectX::XMFLOAT3 operator - (const DirectX::XMFLOAT3& v)
     result.z = -v.z;
 
     return result;
+}
+
+DirectX::XMVECTOR operator + (const DirectX::XMVECTOR& v1, const DirectX::XMVECTOR& v2)
+{
+    return DirectX::XMVectorAdd(v1, v2);
 }
 
 DirectX::XMVECTOR operator - (const DirectX::XMVECTOR& v1, const DirectX::XMVECTOR& v2)
@@ -126,9 +140,12 @@ float NuoXMDot(const DirectX::XMVECTOR& v1, const DirectX::XMVECTOR& v2)
     return ((DirectX::XMVECTORF32*) & r)->f[0];
 }
 
-DirectX::XMVECTOR NuoXMCross(const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
+DirectX::XMFLOAT3 NuoXMCross(const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
 {
-    return DirectX::XMVector3Cross(NuoXMLoad(v1), NuoXMLoad(v2));
+    DirectX::XMVECTORF32 result;
+    result.v = DirectX::XMVector3Cross(NuoXMLoad(v1), NuoXMLoad(v2));
+
+    return DirectX::XMFLOAT3(result.f[0], result.f[1], result.f[2]);
 }
 
 DirectX::XMVECTOR NuoXMCross(const DirectX::XMVECTOR& v1, const DirectX::XMVECTOR& v2)

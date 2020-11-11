@@ -180,6 +180,9 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.h" />
@@ -196,6 +199,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoView.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelBoard.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp" />
     <ClInclude Include="DirectView.h" />
@@ -228,6 +232,9 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.cc" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.cpp" />
@@ -244,6 +251,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoView.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelBoard.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp" />
     <ClCompile Include="DirectView.cpp" />
     <ClCompile Include="NuoDirect.cpp" />

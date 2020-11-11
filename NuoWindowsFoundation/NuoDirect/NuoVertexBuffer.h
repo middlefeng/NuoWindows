@@ -32,7 +32,7 @@ public:
 	NuoVertexBuffer(const PNuoCommandBuffer& commandBuffer,
 					std::vector<PNuoResource>& intermediatePool,
 					void* data, size_t size, size_t stride,
-					void* indicies, size_t indiciesCount);
+					uint32_t* indicies, size_t idiciesCount);
 
 	NuoVertexBuffer(const PNuoResource& buffer, size_t stride);
 	D3D12_VERTEX_BUFFER_VIEW* View();

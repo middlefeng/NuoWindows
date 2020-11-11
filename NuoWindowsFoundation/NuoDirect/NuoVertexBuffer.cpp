@@ -9,7 +9,7 @@
 NuoVertexBuffer::NuoVertexBuffer(const PNuoCommandBuffer& commandBuffer,
 								 std::vector<PNuoResource>& intermediatePool,
 								 void* data, size_t size, size_t stride,
-								 void* indicies, size_t indiciesCount)
+								 uint32_t* indicies, size_t indiciesCount)
 {
 	PNuoDevice device = commandBuffer->CommandQueue()->Device();
 
@@ -18,7 +18,7 @@ NuoVertexBuffer::NuoVertexBuffer(const PNuoCommandBuffer& commandBuffer,
 	intermediatePool.push_back(intermediate);
 	commandBuffer->CopyResource(intermediate, _buffer);
 
-	const size_t indiciesBufferSize = indiciesCount * sizeof(UINT32);
+	const size_t indiciesBufferSize = indiciesCount * sizeof(uint32_t);
 	intermediate = device->CreateBuffer(indicies, indiciesBufferSize);
 	_indicies = device->CreatePrivateBuffer(indiciesBufferSize);
 	intermediatePool.push_back(intermediate);
