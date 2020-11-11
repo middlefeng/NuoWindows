@@ -11,8 +11,6 @@
 #include <windowsx.h>
 #include <shellscalingapi.h>
 
-#include "Resource.h"
-
 
 wchar_t kClassName[100];
 

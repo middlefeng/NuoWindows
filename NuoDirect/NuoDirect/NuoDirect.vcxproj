@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../NuoWindow/NuoWindow;../../NuoWindow/NuoWindowsFoundation;../../NuoWindowsFoundation;../../NuoWindowsFoundation/NuoUtilites;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../NuoWindowsFoundation;../../NuoWindowsFoundation/NuoUI;../../NuoWindowsFoundation/NuoUtilites;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../NuoWindow/NuoWindow;../../NuoWindow/NuoWindowsFoundation;../../NuoWindowsFoundation;../../NuoWindowsFoundation/NuoUtilites;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../NuoWindowsFoundation;../../NuoWindowsFoundation/NuoUI;../../NuoWindowsFoundation/NuoUtilites;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../NuoWindow/NuoWindow;../../NuoWindow/NuoWindowsFoundation;../../NuoWindowsFoundation;../../NuoWindowsFoundation/NuoUtilites;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../NuoWindowsFoundation;../../NuoWindowsFoundation/NuoUI;../../NuoWindowsFoundation/NuoUtilites;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,7 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../NuoWindow/NuoWindow;../../NuoWindow/NuoWindowsFoundation;../../NuoWindowsFoundation;../../NuoWindowsFoundation/NuoUtilites;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../NuoWindowsFoundation;../../NuoWindowsFoundation/NuoUI;../../NuoWindowsFoundation/NuoUtilites;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,25 +180,24 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoDialog.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoFile.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoImage.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoLabel.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMenu.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoOpenFileDialog.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoRect.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoStrings.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoTimer.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoView.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoAppInstance.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoButton.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoControl.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoDialog.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoFile.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoImage.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoLabel.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoMenu.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoMonitorScale.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoOpenFileDialog.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoRect.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoStrings.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.h" />
-    <ClInclude Include="..\..\NuoWindow\NuoWindow\FoundationResource.h" />
     <ClInclude Include="DirectView.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NuoDirect.h" />
@@ -229,29 +228,29 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoDialog.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoFile.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoImage.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoLabel.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMenu.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoOpenFileDialog.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoRect.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoStrings.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoTimer.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoView.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoAppInstance.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoButton.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoControl.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoDialog.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoFile.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoImage.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoLabel.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoMenu.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoMonitorScale.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoOpenFileDialog.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoRect.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoStrings.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoTimer.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoView.cpp" />
-    <ClCompile Include="..\..\NuoWindow\NuoWindowsFoundation\NuoWindow.cpp" />
     <ClCompile Include="DirectView.cpp" />
     <ClCompile Include="NuoDirect.cpp" />
     <ClCompile Include="NuoDirectWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\NuoWindow\NuoWindow\FoundationResource.rc" />
+    <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc" />
     <ResourceCompile Include="NuoDirect.rc" />
   </ItemGroup>
   <ItemGroup>
