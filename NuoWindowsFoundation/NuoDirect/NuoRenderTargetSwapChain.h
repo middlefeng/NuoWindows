@@ -28,6 +28,8 @@ class NuoRenderTargetSwapChain
 
 	PNuoResource _depthStencil;
 	PNuoResourceSwapChain _resources;
+	PNuoResourceSwapChain _sampleResources;
+	unsigned int _sampleCount;
 	WPNuoDevice _device;
 
 	std::vector<PNuoRenderTarget> _renderTargets;
@@ -35,7 +37,8 @@ class NuoRenderTargetSwapChain
 public:
 
 	NuoRenderTargetSwapChain(const PNuoDevice& device,
-							 const PNuoResourceSwapChain& renderTargets);
+							 const PNuoResourceSwapChain& renderTargets,
+							 unsigned int sampleCount);
 	
 	PNuoRenderTarget RenderTarget(unsigned int inFlight);
 	
@@ -43,6 +46,8 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DxRenderTargetView(unsigned int inFlight);
 	D3D12_CPU_DESCRIPTOR_HANDLE DxDepthStencilView();
+
+	void CreateSampleResources();
 
 	friend class NuoDirectView;
 };

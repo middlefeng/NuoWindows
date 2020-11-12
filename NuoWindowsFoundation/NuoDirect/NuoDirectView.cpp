@@ -131,7 +131,7 @@ void NuoSwapChain::UpdateBuffer()
     PNuoCommandQueue queue = view->CommandQueue();
 
     _buffer = std::make_shared<NuoResourceSwapChain>(buffers);
-    _rtvSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), _buffer));
+    _rtvSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), _buffer, 4));
     _commandSwapChain = std::make_shared<NuoCommandSwapChain>(queue, buffersCount);
 }
 

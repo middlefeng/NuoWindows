@@ -24,6 +24,7 @@ class NuoRenderTarget : public std::enable_shared_from_this<NuoRenderTarget>
 {
 
 	PNuoResource _resource;
+	PNuoResource _sampleResource;
 	D3D12_CPU_DESCRIPTOR_HANDLE _view;
 
 	PNuoResource _depthResource;

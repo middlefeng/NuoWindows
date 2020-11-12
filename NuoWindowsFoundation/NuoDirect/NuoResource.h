@@ -32,6 +32,8 @@ public:
 	unsigned long Height() const;
 	unsigned long Size() const;
 
+	DXGI_FORMAT Format() const;
+
 	void* Map();
 	void Unmap();
 

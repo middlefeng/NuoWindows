@@ -9,6 +9,8 @@
 #include "NuoStrings.h"
 #include "NuoFile.h"
 
+#include "NuoModelLoader/NuoModelLoader.h"
+
 
 struct InputParamType
 {
@@ -31,9 +33,21 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 	NuoModelBoard board(2.0, 2.0, 2.0);
 	board.CreateBuffer();
 
+	std::string path = NuoAppInstance::GetInstance()->ModulePath();
+	path = RemoveLastPathComponent(path);
+	path = path + "/uh60.obj";
+
+	NuoModelLoader loader;
+	loader.LoadModel(path);
+	std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
+
+	//NuoMeshBase<NuoItemSimple>::Init(commandBuffer, intermediate,
+	//								 (NuoItemSimple*)board.Ptr(), board.GetVerticesNumber(),
+	//								 board.IndicesPtr(), board.IndicesCount());
+
 	NuoMeshBase<NuoItemSimple>::Init(commandBuffer, intermediate,
-									 (NuoItemSimple*)board.Ptr(), board.GetVerticesNumber(),
-									 board.IndicesPtr(), board.IndicesCount());
+									 (NuoItemSimple*)model[0]->Ptr(), model[0]->GetVerticesNumber(),
+									 model[0]->IndicesPtr(), model[0]->IndicesCount());
 
 	std::string modulePath = RemoveLastPathComponent(NuoAppInstance::GetInstance()->ModulePath());
 	std::string vertexPath = modulePath + "\\" + "NuoCubeMesh_V.hlsl";

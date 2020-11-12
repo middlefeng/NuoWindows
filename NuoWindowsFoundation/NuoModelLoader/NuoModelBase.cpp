@@ -17,7 +17,7 @@ std::shared_ptr<NuoModelBase> CreateModel(const NuoMeshOptions& options, const N
 {
     bool textured = options._textured && material.HasTextureDiffuse();
 
-    if (!textured && !options._basicMaterialized)
+    //if (!textured && !options._basicMaterialized)
     {
         auto model = std::make_shared<NuoModelSimple>();
         model->SetName(modelItemName);

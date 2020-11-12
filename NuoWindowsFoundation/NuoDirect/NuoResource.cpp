@@ -39,6 +39,12 @@ unsigned long NuoResource::Size() const
 }
 
 
+DXGI_FORMAT NuoResource::Format() const
+{
+	return _desc.Format;
+}
+
+
 void* NuoResource::Map()
 {
 	if (!_mapped)
