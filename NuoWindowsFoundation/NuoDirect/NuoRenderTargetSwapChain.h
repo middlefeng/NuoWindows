@@ -22,33 +22,32 @@ typedef std::weak_ptr<NuoRenderTargetSwapChain> WPNuoRenderTargetSwapChain;
 
 class NuoRenderTargetSwapChain
 {
-
+	// back buffers of the _renderTarget are not managed by _renderTarget itself
+	// but by the swap-chain, so as the descriptor heap
+	//
+	// the heap is used only when _sampleCount is 1. when it is greater than 1,
+	// the direct render target is the sample buffer managed within the _renderTarget
+	// whose view is also managed from within.
+	//
 	PNuoDescriptorHeap _rtvHeap;
-	PNuoDescriptorHeap _dsvHeap;
-
-	PNuoResource _depthStencil;
-	PNuoResourceSwapChain _resources;
-	PNuoResourceSwapChain _sampleResources;
-	unsigned int _sampleCount;
+	PNuoResourceSwapChain _backBuffers;
 	WPNuoDevice _device;
+	PNuoRenderTarget _renderTarget;
 
-	std::vector<PNuoRenderTarget> _renderTargets;
+	unsigned int _sampleCount;
 
 public:
 
-	NuoRenderTargetSwapChain(const PNuoDevice& device,
-							 const PNuoResourceSwapChain& renderTargets,
+	NuoRenderTargetSwapChain(const PNuoDevice& device, DXGI_FORMAT format,
+							 const PNuoResourceSwapChain& backBuffers,
 							 unsigned int sampleCount);
 	
 	PNuoRenderTarget RenderTarget(unsigned int inFlight);
 	
 private:
 
+	// used only when _sampleCount is 1
+	//
 	D3D12_CPU_DESCRIPTOR_HANDLE DxRenderTargetView(unsigned int inFlight);
-	D3D12_CPU_DESCRIPTOR_HANDLE DxDepthStencilView();
-
-	void CreateSampleResources();
-
-	friend class NuoDirectView;
 };
 
