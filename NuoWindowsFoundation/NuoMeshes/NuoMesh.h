@@ -55,7 +55,7 @@ public:
 	void Init(const PNuoCommandBuffer& commandBuffer,
 			  std::vector<PNuoResource>& intermediate,
 			  MeshVertex* buffer, size_t number,
-			  UINT* indiciesBuffer, size_t indiciesCount);
+			  UINT32* indiciesBuffer, size_t indiciesCount);
 
 };
 
@@ -64,7 +64,7 @@ template <class MeshVertex>
 void NuoMeshBase<MeshVertex>::Init(const PNuoCommandBuffer& commandBuffer,
 		 						   std::vector<PNuoResource>& intermediate,
 								   MeshVertex* buffer, size_t number,
-								   UINT* indiciesBuffer, size_t indiciesCount)
+								   UINT32* indiciesBuffer, size_t indiciesCount)
 {
 	_vertexBuffer = std::make_shared<NuoVertexBuffer>(commandBuffer, intermediate,
 													  buffer, number * sizeof(MeshVertex), sizeof(MeshVertex),

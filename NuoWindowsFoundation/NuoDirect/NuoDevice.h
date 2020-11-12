@@ -48,7 +48,9 @@ public:
 	PNuoResource CreateBuffer(void* data, size_t size);
 	PNuoResource CreatePrivateBuffer(size_t size);
 	PNuoResource CreateUploadBuffer(size_t size);
-	PNuoResource CreateDepthStencil(size_t width, size_t height);
+	PNuoResource CreateDepthStencil(size_t width, size_t height, unsigned int sampleCount);
+	PNuoResource CreateTexture(DXGI_FORMAT format,
+							   unsigned int width, unsigned int height, unsigned int sampleCount);
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;
@@ -59,6 +61,7 @@ private:
 									  size_t width, size_t height,
 									  D3D12_RESOURCE_DIMENSION dimension,
 									  DXGI_FORMAT format,
+									  unsigned int sampleCount,
 									  D3D12_TEXTURE_LAYOUT layout,
 									  D3D12_RESOURCE_STATES state,
 									  D3D12_RESOURCE_FLAGS flags);

@@ -5,60 +5,54 @@
 
 
 
-NuoRenderTargetSwapChain::NuoRenderTargetSwapChain(const PNuoDevice& device,
-                                                   const PNuoResourceSwapChain& renderTargets)
+NuoRenderTargetSwapChain::NuoRenderTargetSwapChain(const PNuoDevice& device, DXGI_FORMAT format,
+                                                   const PNuoResourceSwapChain& backBuffers,
+                                                   unsigned int sampleCount)
     : _device(device),
-      _resources(renderTargets)
+      _backBuffers(backBuffers),
+      _sampleCount(sampleCount)
 {
-    _rtvHeap = device->CreateRenderTargetHeap(_resources->Count());
+    PNuoResource backBuffer = (*_backBuffers)[0];
+    auto w = backBuffer->Width();
+    auto h = backBuffer->Height();
 
-    for (UINT n = 0; n < _resources->Count(); n++)
+    _rtvHeap = device->CreateRenderTargetHeap(_backBuffers->Count());
+    _renderTarget = std::make_shared<NuoRenderTarget>(device, format,
+                                                      w, h, sampleCount, true, false);
+
+    if (sampleCount == 1)
     {
-        // retrieve the n-th handle from _rtvHeap
-        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = DxRenderTargetView(n);
+        for (UINT n = 0; n < _backBuffers->Count(); n++)
+        {
+            // retrieve the n-th handle from _rtvHeap
+            D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = DxRenderTargetView(n);
 
-        // create a rtv upon the handle for the n-th buffer in _resources
-        device->DxDevice()->CreateRenderTargetView((*_resources)[n]->DxResource(), nullptr, rtvHandle);
+            // create a rtv upon the handle for the n-th buffer in _resources
+            PNuoResource resource = (*_backBuffers)[n];
+
+            device->DxDevice()->CreateRenderTargetView(resource->DxResource(), nullptr, rtvHandle);
+        }
     }
-
-    _dsvHeap = device->CreateDepthStencilHeap();
-    _depthStencil = device->CreateDepthStencil((*_resources)[0]->Width(), (*_resources)[0]->Height());
-
-    D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
-    dsv.Format = DXGI_FORMAT_D32_FLOAT;
-    dsv.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-    dsv.Texture2D.MipSlice = 0;
-    dsv.Flags = D3D12_DSV_FLAG_NONE;
-
-    device->DxDevice()->CreateDepthStencilView(_depthStencil->DxResource(), &dsv, _dsvHeap->DxHeapCPUHandle());
 }
 
 
 PNuoRenderTarget NuoRenderTargetSwapChain::RenderTarget(unsigned int inFlight)
 {
-    PNuoResource resource = (*_resources)[inFlight];
-    D3D12_CPU_DESCRIPTOR_HANDLE view = DxRenderTargetView(inFlight);
+    D3D12_CPU_DESCRIPTOR_HANDLE view;
+    if (_sampleCount == 1)
+        view = DxRenderTargetView(inFlight);
 
-    PNuoRenderTarget target = std::make_shared<NuoRenderTarget>();
-    target->_resource = resource;
-    target->_view = view;
+    _renderTarget->SetBackBuffer((*_backBuffers)[inFlight], view);
 
-    target->_depthResource = _depthStencil;
-    target->_depthView = DxDepthStencilView();
-
-    return target;
+    return _renderTarget;
 }
 
 
 D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTargetSwapChain::DxRenderTargetView(unsigned int inFlight)
 {
-   return _rtvHeap->DxRenderTargetView(inFlight);
-}
+    assert(_sampleCount == 1);
 
-
-D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTargetSwapChain::DxDepthStencilView()
-{
-    return _dsvHeap->DxHeapCPUHandle();
+    return _rtvHeap->DxRenderTargetView(inFlight);
 }
 
 

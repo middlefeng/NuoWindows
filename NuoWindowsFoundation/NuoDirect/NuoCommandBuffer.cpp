@@ -135,16 +135,18 @@ void NuoCommandEncoder::SetClearColor(const NuoVectorFloat4& color)
 
 void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
 {
-	PNuoResource resource = _renderTarget->Resource();
+	PNuoResource renderBuffer = _renderTarget->RenderBuffer();
+	FLOAT w = renderBuffer->Width();
+	FLOAT h = renderBuffer->Height();
 
 	D3D12_VIEWPORT viewport_ = viewport._viewport;
 	if (viewport_.Width == 0)
 	{
-		viewport_.Width = (FLOAT)resource->Width();
-		viewport_.Height = (FLOAT)resource->Height();
+		viewport_.Width = w;
+		viewport_.Height = h;
 	}
 
-	D3D12_RECT scissor = { 0, 0, (LONG)resource->Width(), (LONG)resource->Height() };
+	D3D12_RECT scissor = { 0, 0, (LONG)w, (LONG)h };
 	_commandList->RSSetViewports(1, &viewport_);
 	_commandList->RSSetScissorRects(1, &scissor);
 }

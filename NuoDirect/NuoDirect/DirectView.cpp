@@ -28,6 +28,7 @@ DirectView::DirectView(const PNuoDevice& device,
 		{
 			this->Update();
 		});*/
+    Init();
 }
 
 
@@ -35,7 +36,7 @@ void DirectView::OnSize(unsigned int x, unsigned int y)
 {
 	NuoDirectView::OnSize(x, y);
 
-    Init();
+    //Init();
 }
 
 
@@ -135,31 +136,33 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 	PNuoRenderTarget target = CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
-    encoder->SetClearColor(NuoVectorFloat4(0.0f, 0.2f, 0.4f, 1.0f));
+    encoder->SetClearColor(NuoVectorFloat4(0.8f, 0.8f, 0.8f, 1.0f));
     encoder->SetViewport(NuoViewport());
 
-	encoder->SetPipeline(_pipeline);
+	//encoder->SetPipeline(_pipeline);
 
-	auto view = target->View();
-	auto vertexBufferView = _vertexBuffer->View();
+	//auto view = target->View();
+	//auto vertexBufferView = _vertexBuffer->View();
 
 	// Record commands.
 
-    InputParamType param;
-    param.color = { 1.0, 0.5, 0.0, 1.0 };
-    encoder->SetRootConstant(0, sizeof(InputParamType), &param);
+    //InputParamType param;
+    //param.color = { 1.0, 0.5, 0.0, 1.0 };
+    //encoder->SetRootConstant(0, sizeof(InputParamType), &param);
 
-	encoder->SetVertexBuffer(_vertexBuffer);
-	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
+	//encoder->SetVertexBuffer(_vertexBuffer);
+	//encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 
-    const NuoVectorFloat3 eyePosition(0, 0, 10);
+    const NuoVectorFloat3 eyePosition(0, 0, 30);
     const NuoVectorFloat3 focusPoint(0, 0, 0);
     const NuoVectorFloat3 upDirection(0, 1, 0);
 
     auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
 
-    float aspectRatio = target->Resource()->Width() / (float)target->Resource()->Height();
-    NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(70), 0.1f, 100.f);
+    const auto w = target->RenderBuffer()->Width();
+    const float h = (float)target->RenderBuffer()->Height();
+    const float aspectRatio = w / h;
+    NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(20), 0.1f, 100.f);
 
     NuoMatrixFloat44 mvpMatrix = viewMatrix * _modelTransfer;
     NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(mvpMatrix);

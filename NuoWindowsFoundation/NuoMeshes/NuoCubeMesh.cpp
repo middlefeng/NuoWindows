@@ -9,6 +9,8 @@
 #include "NuoStrings.h"
 #include "NuoFile.h"
 
+#include "NuoModelLoader/NuoModelLoader.h"
+
 
 struct InputParamType
 {
@@ -28,63 +30,24 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 					   std::vector<PNuoResource>& intermediate,
 					   float width, float height, float depth)
 {
-	std::vector<DirectX::XMFLOAT4> vertices =
-	{
-		DirectX::XMFLOAT4(-width / 2.0f, -height / 2.0f, -depth / 2.0f, 1.0f),
-		DirectX::XMFLOAT4(-width / 2.0f,  height / 2.0f, -depth / 2.0f, 1.0f),
-		DirectX::XMFLOAT4( width / 2.0f,  height / 2.0f, -depth / 2.0f, 1.0f),
-		DirectX::XMFLOAT4( width / 2.0f, -height / 2.0f, -depth / 2.0f, 1.0f),
-		DirectX::XMFLOAT4(-width / 2.0f, -height / 2.0f,  depth / 2.0f, 1.0f),
-		DirectX::XMFLOAT4(-width / 2.0f,  height / 2.0f,  depth / 2.0f, 1.0f),
-		DirectX::XMFLOAT4( width / 2.0f,  height / 2.0f,  depth / 2.0f, 1.0f),
-		DirectX::XMFLOAT4( width / 2.0f, -height / 2.0f,  depth / 2.0f, 1.0f)
-	};
+	NuoModelBoard board(2.0, 2.0, 2.0);
+	board.CreateBuffer();
 
-	std::vector<UINT32> indicies =
-	{
-		0, 1, 2, 0, 2, 3,
-		4, 6, 5, 4, 7, 6,
-		4, 5, 1, 4, 1, 0,
-		3, 2, 6, 3, 6, 7,
-		1, 5, 6, 1, 6, 2,
-		4, 0, 3, 4, 3, 7
-	};
+	std::string path = NuoAppInstance::GetInstance()->ModulePath();
+	path = RemoveLastPathComponent(path);
+	path = path + "/uh60.obj";
 
-	std::vector<NuoCubeMeshVertex> verticesReindexed;
-	std::vector<UINT32> reindex;
+	NuoModelLoader loader;
+	loader.LoadModel(path);
+	std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
 
-	for (size_t i = 0; i < indicies.size(); ++i)
-	{
-		reindex.push_back((UINT32)i);
-		verticesReindexed.push_back(NuoCubeMeshVertex());
-		verticesReindexed[i]._position = vertices[indicies[i]];
-		verticesReindexed[i]._color = DirectX::XMFLOAT4(0.0, 0.0, 1.0, 0.0);
-	}
+	//NuoMeshBase<NuoItemSimple>::Init(commandBuffer, intermediate,
+	//								 (NuoItemSimple*)board.Ptr(), board.GetVerticesNumber(),
+	//								 board.IndicesPtr(), board.IndicesCount());
 
-	verticesReindexed[7]._color = DirectX::XMFLOAT4(1.0, 0.0, 0.0, 0.0);
-
-	size_t i = 0;
-	for (; i < 6; ++i)
-		verticesReindexed[i]._normal = DirectX::XMFLOAT4(0, 0, -1, 0);
-
-	for (; i < 12; ++i)
-		verticesReindexed[i]._normal = DirectX::XMFLOAT4(0, 0, 1, 0);
-
-	for (; i < 18; ++i)
-		verticesReindexed[i]._normal = DirectX::XMFLOAT4(-1, 0, 0, 0);
-
-	for (; i < 24; ++i)
-		verticesReindexed[i]._normal = DirectX::XMFLOAT4(1, 0, 0, 0);
-
-	for (; i < 30; ++i)
-		verticesReindexed[i]._normal = DirectX::XMFLOAT4(0, 1, 0, 0);
-	
-	for (; i < 36; ++i)
-		verticesReindexed[i]._normal = DirectX::XMFLOAT4(0, -1, 0, 0);
-
-	NuoMeshBase<NuoCubeMeshVertex>::Init(commandBuffer, intermediate,
-		verticesReindexed.data(), verticesReindexed.size(),
-		reindex.data(), reindex.size());
+	NuoMeshBase<NuoItemSimple>::Init(commandBuffer, intermediate,
+									 (NuoItemSimple*)model[0]->Ptr(), model[0]->GetVerticesNumber(),
+									 model[0]->IndicesPtr(), model[0]->IndicesCount());
 
 	std::string modulePath = RemoveLastPathComponent(NuoAppInstance::GetInstance()->ModulePath());
 	std::string vertexPath = modulePath + "\\" + "NuoCubeMesh_V.hlsl";
@@ -111,7 +74,7 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		//{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
 	_pipelineState = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM,

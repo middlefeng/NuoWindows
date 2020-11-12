@@ -10,22 +10,15 @@
 #include <DirectXMath.h>
 
 #include "NuoMeshes/NuoMesh.h"
+#include "NuoUtilites/NuoModelBoard.h"
 
-
-
-struct NuoCubeMeshVertex
-{
-	DirectX::XMFLOAT4 _position;
-	DirectX::XMFLOAT4 _normal;
-	DirectX::XMFLOAT4 _color;
-};
 
 
 class NuoCubeMesh;
 typedef std::shared_ptr<NuoCubeMesh> PNuoCubeMesh;
 
 
-class NuoCubeMesh : public NuoMeshBase<NuoCubeMeshVertex>
+class NuoCubeMesh : public NuoMeshBase<NuoItemSimple>
 {
 
 	PNuoPipelineState _pipelineState;
