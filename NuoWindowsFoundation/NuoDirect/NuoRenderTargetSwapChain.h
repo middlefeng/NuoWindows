@@ -30,6 +30,8 @@ class NuoRenderTargetSwapChain
 	PNuoResourceSwapChain _resources;
 	WPNuoDevice _device;
 
+	std::vector<PNuoRenderTarget> _renderTargets;
+
 public:
 
 	NuoRenderTargetSwapChain(const PNuoDevice& device,

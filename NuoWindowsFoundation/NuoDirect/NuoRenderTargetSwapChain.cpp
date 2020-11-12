@@ -31,22 +31,28 @@ NuoRenderTargetSwapChain::NuoRenderTargetSwapChain(const PNuoDevice& device,
     dsv.Flags = D3D12_DSV_FLAG_NONE;
 
     device->DxDevice()->CreateDepthStencilView(_depthStencil->DxResource(), &dsv, _dsvHeap->DxHeapCPUHandle());
+
+    _renderTargets.resize(renderTargets->Count());
+    for (UINT n = 0; n < _resources->Count(); n++)
+    {
+        PNuoResource resource = (*_resources)[n];
+        D3D12_CPU_DESCRIPTOR_HANDLE view = DxRenderTargetView(n);
+
+        PNuoRenderTarget target = std::make_shared<NuoRenderTarget>();
+        target->_resource = resource;
+        target->_view = view;
+
+        target->_depthResource = _depthStencil;
+        target->_depthView = DxDepthStencilView();
+
+        _renderTargets[n] = target;
+    }
 }
 
 
 PNuoRenderTarget NuoRenderTargetSwapChain::RenderTarget(unsigned int inFlight)
 {
-    PNuoResource resource = (*_resources)[inFlight];
-    D3D12_CPU_DESCRIPTOR_HANDLE view = DxRenderTargetView(inFlight);
-
-    PNuoRenderTarget target = std::make_shared<NuoRenderTarget>();
-    target->_resource = resource;
-    target->_view = view;
-
-    target->_depthResource = _depthStencil;
-    target->_depthView = DxDepthStencilView();
-
-    return target;
+    return _renderTargets[inFlight];
 }
 
 
