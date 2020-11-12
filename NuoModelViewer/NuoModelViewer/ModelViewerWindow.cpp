@@ -7,13 +7,13 @@
 #include "NuoAppInstance.h"
 
 
-NuoDirectWindow::NuoDirectWindow(const std::string& title)
+ModelViewerWindow::ModelViewerWindow(const std::string& title)
 	: NuoWindow(title)
 {
 }
 
 
-void NuoDirectWindow::Init()
+void ModelViewerWindow::Init()
 {
 	PNuoDevice currentDevice;
 	std::set<PNuoDevice> devices = NuoDevice::Devices();
@@ -26,7 +26,7 @@ void NuoDirectWindow::Init()
 
 	currentDevice->EnableDebugInfoQueue();
 
-	_dxView = std::make_shared<DirectView>(currentDevice, shared_from_this());
+	_dxView = std::make_shared<ModelView>(currentDevice, shared_from_this());
 	Add(_dxView);
 
 	NuoInset<float> margin(0, 0, 0, 200);
@@ -35,7 +35,7 @@ void NuoDirectWindow::Init()
 }
 
 
-void NuoDirectWindow::OnPaint()
+void ModelViewerWindow::OnPaint()
 {
 }
 

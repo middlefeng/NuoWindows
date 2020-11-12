@@ -162,7 +162,7 @@
     <ClCompile Include="ModelViewerWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NuoDirect.cpp">
+    <ClCompile Include="ModelViewerMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -296,9 +296,6 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp">
       <Filter>NuoWindowsFoundation\NuoUtilites\Win</Filter>
     </ClInclude>
-    <ClInclude Include="NuoDirect.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ModelView.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -307,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelViewerMain.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

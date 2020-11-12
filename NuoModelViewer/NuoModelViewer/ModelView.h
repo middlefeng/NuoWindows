@@ -10,11 +10,11 @@
 #include <DirectXMath.h>
 
 
-class DirectView;
-typedef std::shared_ptr<DirectView> PDirectView;
+class ModelView;
+typedef std::shared_ptr<ModelView> PDirectView;
 
 
-class DirectView : public NuoDirectView
+class ModelView : public NuoDirectView
 {
 
 	struct Vertex
@@ -37,7 +37,7 @@ public:
 
 	void Init();
 
-	DirectView(const PNuoDevice& device, const PNuoWindow& parent);
+	ModelView(const PNuoDevice& device, const PNuoWindow& parent);
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void OnSize(unsigned int x, unsigned int y) override;

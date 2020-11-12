@@ -4,7 +4,7 @@
 #include "ModelView.h"
 #include <functional>
 
-class NuoDirectWindow : public NuoWindow
+class ModelViewerWindow : public NuoWindow
 {
 
 	std::function<void()> _onPaint;
@@ -14,11 +14,11 @@ public:
 
 	void Init();
 
-	NuoDirectWindow(const std::string& title);
+	ModelViewerWindow(const std::string& title);
 	virtual void OnPaint();
 
 };
 
 
 
-typedef std::shared_ptr<NuoDirectWindow> PNuoDirectWindow;
+typedef std::shared_ptr<ModelViewerWindow> PNuoDirectWindow;

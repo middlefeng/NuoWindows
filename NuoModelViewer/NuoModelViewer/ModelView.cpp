@@ -20,27 +20,21 @@ struct InputParamType
 };
 
 
-DirectView::DirectView(const PNuoDevice& device,
+ModelView::ModelView(const PNuoDevice& device,
 					   const PNuoWindow& parent)
 	: NuoDirectView(device, parent)
 {
-	/*_refreshTimer = std::make_shared<NuoTimer>(1000 / 60, [this](NuoTimer*)
-		{
-			this->Update();
-		});*/
-    Init();
+	Init();
 }
 
 
-void DirectView::OnSize(unsigned int x, unsigned int y)
+void ModelView::OnSize(unsigned int x, unsigned int y)
 {
 	NuoDirectView::OnSize(x, y);
-
-    //Init();
 }
 
 
-void DirectView::Init()
+void ModelView::Init()
 {
     PNuoDevice device = CommandQueue()->Device();
 
@@ -66,7 +60,7 @@ struct Light
 };
 
 
-void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
+void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 {
 	PNuoRenderTarget target = CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
@@ -103,14 +97,14 @@ void DirectView::Render(const PNuoCommandBuffer& commandBuffer)
 }
 
 
-void DirectView::OnMouseDown(short x, short y)
+void ModelView::OnMouseDown(short x, short y)
 {
     EnableMouseDrag();
     NuoDirectView::OnMouseDown(x, y);
 }
 
 
-void DirectView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
+void ModelView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
 {
     float dx = deltaY * 0.002f * 3.14f;
     float dy = deltaX * 0.002f * 3.14f;

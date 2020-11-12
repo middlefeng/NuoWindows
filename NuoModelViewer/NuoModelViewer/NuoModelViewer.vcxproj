@@ -189,7 +189,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp" />
     <ClCompile Include="ModelView.cpp" />
     <ClCompile Include="ModelViewerWindow.cpp" />
-    <ClCompile Include="NuoDirect.cpp" />
+    <ClCompile Include="ModelViewerMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h" />
@@ -237,7 +237,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp" />
     <ClInclude Include="ModelView.h" />
     <ClInclude Include="ModelViewerWindow.h" />
-    <ClInclude Include="NuoDirect.h" />
+    <ClInclude Include="ModelViewerMain.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>

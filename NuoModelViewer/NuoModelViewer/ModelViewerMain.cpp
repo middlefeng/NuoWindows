@@ -2,7 +2,7 @@
 //
 
 #include "framework.h"
-#include "NuoDirect.h"
+#include "ModelViewerMain.h"
 
 #include "NuoAppInstance.h"
 
@@ -20,7 +20,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     NuoAppInstance::Init(hInstance, nCmdShow);
     NuoWindow::RegisterClass();
 
-    PNuoDirectWindow window = std::make_shared<NuoDirectWindow>("  Nuo Direct");
+    PNuoDirectWindow window = std::make_shared<ModelViewerWindow>("  Nuo Direct");
     window->Init();
 
     auto exitFunc = []()
