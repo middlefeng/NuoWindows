@@ -2,7 +2,7 @@
 //
 
 #include "framework.h"
-#include "NuoDirectWindow.h"
+#include "ModelViewerWindow.h"
 
 #include "NuoAppInstance.h"
 

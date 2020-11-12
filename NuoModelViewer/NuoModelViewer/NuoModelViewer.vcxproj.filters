@@ -156,6 +156,15 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp">
       <Filter>NuoWindowsFoundation\NuoUtilites\Win</Filter>
     </ClCompile>
+    <ClCompile Include="ModelView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelViewerWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NuoDirect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -287,6 +296,18 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp">
       <Filter>NuoWindowsFoundation\NuoUtilites\Win</Filter>
     </ClInclude>
+    <ClInclude Include="NuoDirect.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelView.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelViewerWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_P.hlsl">
@@ -300,5 +321,13 @@
     <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ResourceCompile>
+    <ResourceCompile Include="NuoDirect.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="NuoDirect.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

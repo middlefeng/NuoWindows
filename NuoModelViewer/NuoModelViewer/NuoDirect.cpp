@@ -6,8 +6,7 @@
 
 #include "NuoAppInstance.h"
 
-#include "NuoDirectWindow.h"
-#include "DirectView.h"
+#include "ModelViewerWindow.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,

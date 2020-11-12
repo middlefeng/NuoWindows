@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NuoWindow.h"
-#include "DirectView.h"
+#include "ModelView.h"
 #include <functional>
 
 class NuoDirectWindow : public NuoWindow
