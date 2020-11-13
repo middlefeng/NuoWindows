@@ -25,7 +25,7 @@ void NuoFile::Write(void* buffer, size_t size)
 
 void NuoFile::Seek(size_t pos)
 {
-	fseek(_file, pos, SEEK_SET);
+	fseek(_file, (LONG)pos, SEEK_SET);
 }
 
 

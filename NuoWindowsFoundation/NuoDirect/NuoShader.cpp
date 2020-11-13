@@ -4,6 +4,71 @@
 #include "NuoStrings.h"
 
 #include <cassert>
+#include "NuoFile.h"
+#include "NuoAppInstance.h"
+
+
+class NuoShaderIncludeHandler : public IDxcIncludeHandler
+{
+
+	ULONG _ref;
+
+public:
+
+	NuoShaderIncludeHandler();
+
+	virtual HRESULT QueryInterface(REFIID riid, void** ppvObject);
+	virtual ULONG AddRef(void);
+	virtual ULONG Release(void);
+
+	virtual HRESULT LoadSource(LPCWSTR pFilename, IDxcBlob** ppIncludeSource);
+};
+
+
+NuoShaderIncludeHandler::NuoShaderIncludeHandler()
+	: _ref(1)
+{
+}
+
+
+HRESULT NuoShaderIncludeHandler::QueryInterface(REFIID riid, void** ppvObject)
+{
+	*ppvObject = this;
+	
+	return S_OK;
+}
+
+ULONG NuoShaderIncludeHandler::AddRef(void)
+{
+	return ++_ref;
+}
+
+ULONG NuoShaderIncludeHandler::Release(void)
+{
+	auto ref = --_ref;
+
+	if (_ref == 0)
+		delete this;
+
+	return ref;
+}
+
+HRESULT NuoShaderIncludeHandler::LoadSource(LPCWSTR pFilename, IDxcBlob** ppIncludeSource)
+{
+	Microsoft::WRL::ComPtr<IDxcLibrary> library;
+	HRESULT hr = DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&library));
+	assert(hr == S_OK);
+
+	Microsoft::WRL::ComPtr<IDxcIncludeHandler> defaultHandler;
+	library->CreateIncludeHandler(&defaultHandler);
+
+	std::string path = NuoAppInstance::GetInstance()->ModulePath();
+	path = RemoveLastPathComponent(path) + StringToUTF8(pFilename);
+
+	return defaultHandler->LoadSource(StringToUTF16(path).c_str(), ppIncludeSource);
+}
+
+
 
 NuoShader::NuoShader(const std::string& source,
 					 const std::string& name,
@@ -31,14 +96,19 @@ NuoShader::NuoShader(const std::string& source,
 	else if (type == NuoShader::kNuoShader_Lib)
 		targetProfile = L"lib_6_3";
 
+	
+	Microsoft::WRL::ComPtr<NuoShaderIncludeHandler> includeHandler;
+	includeHandler.Attach(new NuoShaderIncludeHandler());
+
 	Microsoft::WRL::ComPtr<IDxcOperationResult> result;
+	
 	hr = compiler->Compile(sourceBlob.Get(), wName.c_str(),
-						   wEntry.c_str(), // pEntryPoint
-						   targetProfile.c_str(), // pTargetProfile
-						   NULL, 0, // pArguments, argCount
-						   NULL, 0, // pDefines, defineCount
-						   NULL, // pIncludeHandler
-						   &result); // ppResult
+						   wEntry.c_str(),			// pEntryPoint
+						   targetProfile.c_str(),	// pTargetProfile
+						   NULL, 0,					// pArguments, argCount
+						   NULL, 0,					// pDefines, defineCount
+						   includeHandler.Get(),	// pIncludeHandler
+						   &result);				// ppResult
 
 #if defined(_DEBUG)
 	HRESULT status;
@@ -48,11 +118,11 @@ NuoShader::NuoShader(const std::string& source,
 	{
 		Microsoft::WRL::ComPtr<IDxcBlobEncoding> errorsBlob;
 		hr = result->GetErrorBuffer(&errorsBlob);
-		char message[1024];
+		char message[2048];
 
 		if (SUCCEEDED(hr) && errorsBlob)
 		{
-			sprintf_s(message, "%s", (const char*)errorsBlob->GetBufferPointer());
+			snprintf(message, 2048, "%s", (const char*)errorsBlob->GetBufferPointer());
 		}
 
 		std::wstring wstr = StringToUTF16(message);

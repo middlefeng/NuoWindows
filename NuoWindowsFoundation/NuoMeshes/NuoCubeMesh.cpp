@@ -26,6 +26,39 @@ struct Light
 };
 
 
+std::vector<D3D12_INPUT_ELEMENT_DESC> NuoCubeMesh::InputDesc()
+{
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		//{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
+	return inputElementDescs;
+}
+
+
+PNuoRootSignature NuoCubeMesh::RootSignature(const PNuoCommandBuffer& commandBuffer)
+{
+	PNuoDevice device = commandBuffer->CommandQueue()->Device();
+
+	PNuoRootSignature rootSignature = std::make_shared<NuoRootSignature>(device,
+									  D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+	rootSignature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+	rootSignature->AddConstant(sizeof(InputParamType), 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+	rootSignature->AddRootConstantBuffer(2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+
+	return rootSignature;
+}
+
+DXGI_FORMAT NuoCubeMesh::PipelineFormat()
+{
+	return DXGI_FORMAT_R8G8B8A8_UNORM;
+}
+
+
 void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 					   std::vector<PNuoResource>& intermediate,
 					   float width, float height, float depth)
@@ -49,7 +82,7 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 									 (NuoItemSimple*)model[0]->Ptr(), model[0]->GetVerticesNumber(),
 									 model[0]->IndicesPtr(), model[0]->IndicesCount());
 
-	std::string modulePath = RemoveLastPathComponent(NuoAppInstance::GetInstance()->ModulePath());
+	/*std::string modulePath = RemoveLastPathComponent(NuoAppInstance::GetInstance()->ModulePath());
 	std::string vertexPath = modulePath + "\\" + "NuoCubeMesh_V.hlsl";
 	std::string pixelPath = modulePath + "\\" + "NuoCubeMesh_P.hlsl";
 
@@ -61,24 +94,16 @@ void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
 	std::vector<char> pixelContent;
 	NuoFile pixelSource(pixelPath);
 	pixelSource.ReadTo(pixelContent);
-	PNuoShader pixelShader = std::make_shared<NuoShader>(pixelContent.data(), "NuoCubeMesh_P.hlsl", NuoShader::kNuoShader_Pixel, "main");
+	PNuoShader pixelShader = std::make_shared<NuoShader>(pixelContent.data(), "NuoCubeMesh_P.hlsl", NuoShader::kNuoShader_Pixel, "main");*/
 
 	PNuoDevice device = commandBuffer->CommandQueue()->Device();
-	PNuoRootSignature rootSignature = std::make_shared<NuoRootSignature>(device,
-																		 D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-	rootSignature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	rootSignature->AddConstant(sizeof(InputParamType), 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	rootSignature->AddRootConstantBuffer(2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+	PNuoRootSignature rootSignature = RootSignature(commandBuffer);
 
-	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		//{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
+	//std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs = InputDesc();
 
-	_pipelineState = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM,
-														inputElementDescs, vertexShader, pixelShader, rootSignature);
+	//_pipelineState = std::make_shared<NuoPipelineState>(device, DXGI_FORMAT_R8G8B8A8_UNORM,
+	//													inputElementDescs, vertexShader, pixelShader, rootSignature);
+	_pipelineState = MakePipelineState(commandBuffer, "NuoCubeMesh_V", "NuoCubeMesh_P");
 
 	_light = std::make_shared<NuoResourceSwapChain>(device, 3, sizeof(Light));
 }

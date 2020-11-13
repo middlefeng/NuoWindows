@@ -24,6 +24,12 @@ class NuoCubeMesh : public NuoMeshBase<NuoItemSimple>
 	PNuoPipelineState _pipelineState;
 	PNuoResourceSwapChain _light;
 
+protected:
+
+	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
+	PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
+	DXGI_FORMAT PipelineFormat() override;
+
 public:
 
 	NuoCubeMesh() = default;

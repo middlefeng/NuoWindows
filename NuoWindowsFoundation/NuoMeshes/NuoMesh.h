@@ -15,20 +15,30 @@
 
 #include <DirectXMath.h>
 
+#include "NuoMeshes/NuoShaders/NuoMeshShaderType.h"
+#include "NuoMeshes/NuoShaders/NuoUniforms.h"
+#include "NuoMeshes/NuoShaders/NuoMeshSimpile.h"
+
+#include "NuoMeshes/NuoCubeMesh_V.h"
+
 
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
 
-struct NuoModelViewProjection
-{
-	DirectX::XMMATRIX _mvpMatrix;
-	DirectX::XMMATRIX _normalMatrix;
-};
-
 
 class NuoMesh
 {
+
+protected:
+
+	PNuoPipelineState MakePipelineState(const PNuoCommandBuffer& commandBuffer,
+										const std::string& vertex, const std::string& pixel);
+
+	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() = 0;
+	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) = 0;
+	virtual DXGI_FORMAT PipelineFormat() = 0;
+
 public:
 
 	typedef std::function<void(NuoCommandEncoder* encoder)> CommonFunc;
@@ -70,3 +80,20 @@ void NuoMeshBase<MeshVertex>::Init(const PNuoCommandBuffer& commandBuffer,
 													  buffer, number * sizeof(MeshVertex), sizeof(MeshVertex),
 													  indiciesBuffer, indiciesCount);
 }
+
+
+class NuoModelSimple;
+typedef std::shared_ptr<NuoModelSimple> PNuoModelSimple;
+
+
+class NuoMeshSimple : public NuoMeshBase<NuoMeshSimpleItem>
+{
+
+public:
+
+	void Init(const PNuoCommandBuffer& commandBuffer, 
+			  std::vector<PNuoResource>& intermediate,
+			  const PNuoModelSimple& model);
+
+};
+

@@ -34,6 +34,9 @@
     <Filter Include="NuoWindowsFoundation\NuoUtilites\Win">
       <UniqueIdentifier>{221f5567-02bc-4b6e-a72c-31fea8f8ecbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoMeshes\NuoShaders">
+      <UniqueIdentifier>{35d96b29-9259-4b7c-a648-15dca21f33c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
@@ -308,14 +311,15 @@
     <ClInclude Include="ModelViewerMain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_P.hlsl">
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.h">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.hlsl">
-      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
-    </FxCompile>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoUniforms.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimpile.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">
@@ -329,5 +333,16 @@
     <Image Include="NuoDirect.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_P.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
