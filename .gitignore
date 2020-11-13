@@ -1,10 +1,15 @@
 NuoWindow/.vs/
+NuoModelViewer/.vs/
+NuoModelViewer/NuoModelViewer/.vs/
+NuoModelViewer/NuoModelViewer/x64/
+NuoModelViewer/Debug/
 NuoWindow/NuoWindow/Debug/
 NuoWindow/NuoWindow/x64/Debug/
 NuoWindow/NuoWindow/x64/Release/
 NuoWindow/x64/
 NuoWindow/NuoWindow/NuoWindow.aps
 NuoDirect/.vs/
+NuoModelViewer/x64/
 NuoDirect/Debug/
 NuoDirect/NuoDirect/Debug/
 NuoDirect/NuoDirect/Release/

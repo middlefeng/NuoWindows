@@ -23,7 +23,7 @@ typedef std::shared_ptr<NuoResource> PNuoResource;
 class NuoDevice : public std::enable_shared_from_this<NuoDevice>
 {
 
-	Microsoft::WRL::ComPtr<ID3D12Device> _dxDevice;
+	Microsoft::WRL::ComPtr<ID3D12Device8> _dxDevice;
 	Microsoft::WRL::ComPtr<IDXGIFactory6> _dxFactor;
 	DXGI_ADAPTER_DESC1 _dxDesc;
 

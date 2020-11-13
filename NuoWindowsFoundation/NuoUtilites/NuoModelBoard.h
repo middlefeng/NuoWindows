@@ -83,20 +83,20 @@ void NuoModelBoardBase<ItemBase>::CreateBuffer()
 {
     NuoVectorFloat2 corners[4];
     
-    corners[kCorner_BL].x(-_width / 2.0);
-    corners[kCorner_BL].y(-_height / 2.0);
+    corners[kCorner_BL].x(-_width / 2.0f);
+    corners[kCorner_BL].y(-_height / 2.0f);
     
-    corners[kCorner_BR].x(_width / 2.0);
-    corners[kCorner_BR].y(-_height / 2.0);
+    corners[kCorner_BR].x(_width / 2.0f);
+    corners[kCorner_BR].y(-_height / 2.0f);
     
-    corners[kCorner_TL].x(-_width / 2.0);
-    corners[kCorner_TL].y(_height / 2.0);
+    corners[kCorner_TL].x(-_width / 2.0f);
+    corners[kCorner_TL].y(_height / 2.0f);
     
-    corners[kCorner_TR].x(_width / 2.0);
-    corners[kCorner_TR].y(_height / 2.0);
+    corners[kCorner_TR].x(_width / 2.0f);
+    corners[kCorner_TR].y(_height / 2.0f);
     
     std::vector<float> bufferPosition(9), bufferNormal(3), bufferTexCoord(6);
-    float halfHeight = _thickness / 2.0;
+    float halfHeight = _thickness / 2.0f;
     
     // top-half
     bufferPosition[0] = corners[kCorner_TL].x();

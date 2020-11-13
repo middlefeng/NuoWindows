@@ -52,24 +52,24 @@ std::set<PNuoDevice> NuoDevice::Devices()
         if (requestHighPerformanceAdapter)
         for (UINT adapterIndex = 0; ; ++adapterIndex)
         {
-             HRESULT found = factory6->EnumAdapterByGpuPreference(adapterIndex, preference, IID_PPV_ARGS(&adapter));
+            HRESULT found = factory6->EnumAdapterByGpuPreference(adapterIndex, preference, IID_PPV_ARGS(&adapter));
 
-             if (found == DXGI_ERROR_NOT_FOUND)
-                 break;
+            if (found == DXGI_ERROR_NOT_FOUND)
+                break;
 
-             DXGI_ADAPTER_DESC1 desc1;
-             adapter->GetDesc1(&desc1);
+            DXGI_ADAPTER_DESC1 desc1;
+            adapter->GetDesc1(&desc1);
 
-             Microsoft::WRL::ComPtr<ID3D12Device> dxDevice;
-             if (SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), &dxDevice)))
-             {
-                 PNuoDevice device = std::make_shared<NuoDevice>();
-                 device->_dxDevice = dxDevice;
-                 device->_dxDesc = desc1;
-                 device->_dxFactor = factory6;
+            Microsoft::WRL::ComPtr<ID3D12Device8> dxDevice;
+            if (SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_12_1, _uuidof(ID3D12Device8), &dxDevice)))
+            {
+                PNuoDevice device = std::make_shared<NuoDevice>();
+                dxDevice.As<ID3D12Device8>(&device->_dxDevice);
+                device->_dxDesc = desc1;
+                device->_dxFactor = factory6;
 
-                 _devices.insert(device);
-             }
+                _devices.insert(device);
+            }
         }
     }
     while (false);

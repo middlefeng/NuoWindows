@@ -1,8 +1,11 @@
-struct ModelViewProjection
+
+#include "NuoCubeMesh_V.h"
+
+/*struct ModelViewProjection
 {
     matrix MVP;
     matrix NormalMatrix;
-};
+};*/
 
 struct InputParamType
 {
@@ -16,7 +19,7 @@ struct InputParamType
 
 //ConstantBuffer<InputParamType> aLight : register(b1);
 
-ConstantBuffer<ModelViewProjection> ModelViewProjectionCB : register(b0);
+ConstantBuffer<NuoModelViewProjection> ModelViewProjectionCB : register(b0);
 ConstantBuffer<InputParamType> InputParam : register(b1);
 
 

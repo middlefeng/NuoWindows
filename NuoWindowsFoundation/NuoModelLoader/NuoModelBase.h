@@ -16,6 +16,8 @@
 
 
 #include "NuoMeshes/NuoMeshOptions.h"
+#include "NuoMeshes/NuoShaders/NuoMeshSimpile.h"
+
 #include "NuoUtilites/NuoMathVector.h"
 
 
@@ -106,11 +108,8 @@ protected:
 
 
 
-struct NuoItemSimple
+struct NuoItemSimple : public NuoMeshSimpleItem
 {
-    NuoVectorFloat4::_typeTrait::_vectorType _position;
-    NuoVectorFloat4::_typeTrait::_vectorType _normal;
-
     NuoItemSimple();
 
     bool operator == (const NuoItemSimple& other);

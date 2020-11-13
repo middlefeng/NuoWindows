@@ -56,7 +56,8 @@ public:
 };
 
 
-class NuoCommandBuffer : public NuoRenderInFlight
+class NuoCommandBuffer : public NuoRenderInFlight,
+						 public std::enable_shared_from_this<NuoCommandBuffer>
 {
 	PNuoCommandQueue _commandQueue;
 	std::vector<PNuoCommandEncoder> _encoders;
