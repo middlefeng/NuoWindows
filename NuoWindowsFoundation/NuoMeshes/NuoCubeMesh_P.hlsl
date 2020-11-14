@@ -1,14 +1,16 @@
 
+#include "NuoUniforms.h"
 
-struct Light
+
+/*struct Light
 {
     float4 direction;
     float4 ambientColor;
     float4 diffuseColor;
     float4 specularColor;
-};
+};*/
 
-ConstantBuffer<Light> light : register(b2);
+ConstantBuffer<NuoLightParameterUniformField> light : register(b1);
 
 struct PixelShaderInput
 {
@@ -20,9 +22,8 @@ struct PixelShaderInput
 float4 main(PixelShaderInput IN) : SV_Target
 {
     float3 normal = normalize(IN.Normal.xyz);
-    float diffuseIntensity = saturate(dot(normal, light.direction));
-    float3 diffuseTerm = light.diffuseColor * IN.Color * diffuseIntensity;
+    float diffuseIntensity = saturate(dot(normal, light.direction.xyz));
+    float3 diffuseTerm = light.irradiance * IN.Color * diffuseIntensity;
 
     return float4(diffuseTerm, 1.0);
-    //return float4(1.0, 0.0, 0.0, 1.0);
 }

@@ -311,9 +311,6 @@
     <ClInclude Include="ModelViewerMain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.h">
-      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoUniforms.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </ClInclude>
@@ -343,6 +340,9 @@
     </CustomBuild>
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

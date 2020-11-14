@@ -25,6 +25,8 @@
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
+class NuoMesh;
+typedef std::shared_ptr<NuoMesh> PNuoMesh;
 
 
 class NuoMesh
@@ -36,7 +38,7 @@ protected:
 										const std::string& vertex, const std::string& pixel);
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() = 0;
-	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) = 0;
+	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer);
 	virtual DXGI_FORMAT PipelineFormat() = 0;
 
 public:
@@ -89,11 +91,20 @@ typedef std::shared_ptr<NuoModelSimple> PNuoModelSimple;
 class NuoMeshSimple : public NuoMeshBase<NuoMeshSimpleItem>
 {
 
+private:
+
+	DXGI_FORMAT _format;
+
 public:
 
 	void Init(const PNuoCommandBuffer& commandBuffer, 
 			  std::vector<PNuoResource>& intermediate,
-			  const PNuoModelSimple& model);
+			  const PNuoModelSimple& model,
+		      DXGI_FORMAT format);
+
+	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
+	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
+	virtual DXGI_FORMAT PipelineFormat() override;
 
 };
 

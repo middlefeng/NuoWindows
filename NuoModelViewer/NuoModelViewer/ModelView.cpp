@@ -8,6 +8,8 @@
 #include "NuoFile.h"
 #include "NuoStrings.h"
 
+#include "NuoModelLoader/NuoModelLoader.h"
+
 #include <dxcapi.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -40,6 +42,17 @@ void ModelView::Init()
 
     std::vector<PNuoResource> intermediate;
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
+
+    std::string path = NuoAppInstance::GetInstance()->ModulePath();
+    path = RemoveLastPathComponent(path);
+    path = path + "/uh60.obj";
+
+    NuoModelLoader loader;
+    loader.LoadModel(path);
+    std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
+
+    //auto mesh =(std::make_shared<NuoMeshSimple>());
+    //mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]));
 
     _mesh = std::make_shared<NuoCubeMesh>();
     _mesh->Init(commandBuffer, intermediate, 2.0, 2.0, 2.0);

@@ -20,7 +20,7 @@ struct InputParamType
 //ConstantBuffer<InputParamType> aLight : register(b1);
 
 ConstantBuffer<NuoModelViewProjection> ModelViewProjectionCB : register(b0);
-ConstantBuffer<InputParamType> InputParam : register(b1);
+//ConstantBuffer<InputParamType> InputParam : register(b1);
 
 
 struct VertexPosColor

@@ -4,6 +4,7 @@
 #include "NuoTimer.h"
 
 #include "NuoDirect/NuoDirectView.h"
+#include "NuoMeshes/NuoMesh.h"
 #include "NuoMeshes/NuoCubeMesh.h"
 
 #include <functional>
