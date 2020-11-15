@@ -345,4 +345,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimpleVertex.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>
