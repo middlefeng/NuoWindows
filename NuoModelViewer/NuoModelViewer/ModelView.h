@@ -5,7 +5,6 @@
 
 #include "NuoDirect/NuoDirectView.h"
 #include "NuoMeshes/NuoMesh.h"
-#include "NuoMeshes/NuoCubeMesh.h"
 
 #include <functional>
 #include <DirectXMath.h>
@@ -28,7 +27,8 @@ class ModelView : public NuoDirectView
 	PNuoPipelineState _pipeline;
 	PNuoVertexBuffer _vertexBuffer;
 
-	PNuoCubeMesh _mesh;
+	PNuoMesh _mesh;
+	PNuoResourceSwapChain _light;
 
 	PNuoTimer _refreshTimer;
 

@@ -62,8 +62,12 @@ HRESULT NuoShaderIncludeHandler::LoadSource(LPCWSTR pFilename, IDxcBlob** ppIncl
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> defaultHandler;
 	library->CreateIncludeHandler(&defaultHandler);
 
+	std::wstring filename = pFilename;
+	if (filename.find_first_of(L"./") == 0)
+		filename = L"\\NuoShaders\\" + filename.substr(2);
+
 	std::string path = NuoAppInstance::GetInstance()->ModulePath();
-	path = RemoveLastPathComponent(path) + StringToUTF8(pFilename);
+	path = RemoveLastPathComponent(path) + StringToUTF8(filename);
 
 	return defaultHandler->LoadSource(StringToUTF16(path).c_str(), ppIncludeSource);
 }

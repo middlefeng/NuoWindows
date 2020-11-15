@@ -16,7 +16,7 @@
 
 
 #include "NuoMeshes/NuoMeshOptions.h"
-#include "NuoMeshes/NuoShaders/NuoMeshSimpile.h"
+#include "NuoMeshes/NuoShaders/NuoMeshSimple.h"
 
 #include "NuoUtilites/NuoMathVector.h"
 

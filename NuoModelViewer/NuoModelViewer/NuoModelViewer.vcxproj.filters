@@ -342,11 +342,14 @@
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.h">
-      <Filter>Header Files</Filter>
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimpleVertex.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimplePixel.hlsl">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </FxCompile>
   </ItemGroup>

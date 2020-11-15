@@ -1,18 +1,21 @@
 
+#include "NuoUniforms.h"
 #include "NuoMeshSimple.h"
 
 
 
-ConstantBuffer<NuoModelViewProjection> viewProjection : register(b0);
+ConstantBuffer<NuoUniforms> viewProjection : register(b0);
 
 
-NuoMeshSimpleVertexShaderOutput main(VertexPosColor v)
+NuoMeshSimpleVertexShaderOutput main(NuoMeshSimpleItem v)
 {
-    NuoMeshSimpleVertexShaderOutput out;
+    NuoMeshSimpleVertexShaderOutput outVertex;
 
-    out._position = mul(viewProjection.viewProjectionMatrix, v._position);
-    OUT.Normal = mul(viewProjection.NormalMatrix, IN.Normal);
-    OUT.Color = float4(1.0, 1.0, 1.0, 1.0);//IN.Color;
+    outVertex._position = mul(viewProjection.viewProjectionMatrix, v._position);
 
-    return OUT;
+    matrix normalMatrix = viewProjection.viewMatrix;
+    normalMatrix[3] = float4(0, 0, 0, 1);
+    outVertex._normal = mul(normalMatrix, v._normal);
+
+    return outVertex;
 }

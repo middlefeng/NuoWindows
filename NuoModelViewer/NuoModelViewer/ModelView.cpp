@@ -8,6 +8,7 @@
 #include "NuoFile.h"
 #include "NuoStrings.h"
 
+#include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoModelLoader/NuoModelLoader.h"
 
 #include <dxcapi.h>
@@ -51,11 +52,12 @@ void ModelView::Init()
     loader.LoadModel(path);
     std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
 
-    //auto mesh =(std::make_shared<NuoMeshSimple>());
-    //mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]));
+    auto format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    auto mesh =(std::make_shared<NuoMeshSimple>());
+    mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format);
+    _mesh = std::dynamic_pointer_cast<NuoMesh>(mesh);
 
-    _mesh = std::make_shared<NuoCubeMesh>();
-    _mesh->Init(commandBuffer, intermediate, 2.0, 2.0, 2.0);
+    _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightParameterUniformField));
 
     commandBuffer->Commit();
 
@@ -96,11 +98,22 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(mvpMatrix);
     mvpMatrix = projectionMatrix * mvpMatrix;
 
-    NuoModelViewProjection mvp = { mvpMatrix._m, normalMatrix._m };
+    NuoUniforms mvp;
+    mvp.viewProjectionMatrix = mvpMatrix._m;
+    mvp.viewMatrix = (viewMatrix * _modelTransfer)._m;
 
-    NuoMesh::CommonFunc commFunc = [&mvp](NuoCommandEncoder* encoder)
+    const PNuoResourceSwapChain& lightBuffer = _light;
+
+    NuoMesh::CommonFunc commFunc = [&mvp, &lightBuffer](NuoCommandEncoder* encoder)
     {
+        NuoLightParameterUniformField light;
+        light.direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
+        light.irradiance = 1.0;
+
+        lightBuffer->UpdateResource(&light, sizeof(NuoLightParameterUniformField), encoder->InFlight());
+
         encoder->SetRootConstant(0, sizeof(NuoModelViewProjection), &mvp);
+        encoder->SetRootConstantBuffer(1, lightBuffer);
     };
     
     _mesh->DrawBegin(encoder, commFunc);

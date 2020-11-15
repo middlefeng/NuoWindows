@@ -42,9 +42,16 @@ PNuoRootSignature NuoMesh::RootSignature(const PNuoCommandBuffer& commandBuffer)
 																		 D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	rootSignature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	rootSignature->AddRootConstantBuffer(2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+	rootSignature->AddRootConstantBuffer(1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
 
 	return rootSignature;
+}
+
+
+void NuoMesh::Draw(const PNuoCommandEncoder& encoder)
+{
+	encoder->SetVertexBuffer(_vertexBuffer);
+	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 }
 
 
@@ -67,6 +74,7 @@ void NuoMeshSimple::Init(const PNuoCommandBuffer& commandBuffer,
 										 model->IndicesCount());
 
 	_format = format;
+	_pipelineState = MakePipelineState(commandBuffer, "NuoMeshSimpleVertex", "NuoMeshSimplePixel");
 }
 
 
@@ -84,20 +92,17 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> NuoMeshSimple::InputDesc()
 
 PNuoRootSignature NuoMeshSimple::RootSignature(const PNuoCommandBuffer& commandBuffer)
 {
-	PNuoDevice device = commandBuffer->CommandQueue()->Device();
-
-	PNuoRootSignature rootSignature = std::make_shared<NuoRootSignature>(device,
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-	rootSignature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	//rootSignature->AddConstant(sizeof(InputParamType), 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	rootSignature->AddRootConstantBuffer(2, 0, D3D12_SHADER_VISIBILITY_PIXEL);
-
-	return rootSignature;
+	return NuoMesh::RootSignature(commandBuffer);
 }
 
 
 DXGI_FORMAT NuoMeshSimple::PipelineFormat()
 {
 	return _format;
+}
+
+
+PNuoPipelineState NuoMeshSimple::PipelineState()
+{
+	return _pipelineState;
 }
