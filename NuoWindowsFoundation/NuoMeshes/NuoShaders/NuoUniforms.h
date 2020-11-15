@@ -68,4 +68,16 @@ struct NuoLightParameterUniformField
 };
 
 
+/**
+ *  fragement shader uniform to calulate lighted color
+ */
+struct NuoLightUniforms
+{
+    NuoLightParameterUniformField lightParams[4];
+    // NuoShadowParameterUniformField shadowParams[2];
+
+    float3 ambient;
+};
+
+
 #endif

@@ -57,7 +57,7 @@ void ModelView::Init()
     mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format);
     _mesh = std::dynamic_pointer_cast<NuoMesh>(mesh);
 
-    _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightParameterUniformField));
+    _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
 
     commandBuffer->Commit();
 
@@ -80,7 +80,7 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 	PNuoRenderTarget target = CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
-    encoder->SetClearColor(NuoVectorFloat4(0.8f, 0.8f, 0.8f, 1.0f));
+    encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
     encoder->SetViewport(NuoViewport());
 
 	const NuoVectorFloat3 eyePosition(0, 0, 30);
@@ -106,11 +106,11 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 
     NuoMesh::CommonFunc commFunc = [&mvp, &lightBuffer](NuoCommandEncoder* encoder)
     {
-        NuoLightParameterUniformField light;
-        light.direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
-        light.irradiance = 1.0;
+        NuoLightUniforms light;
+        light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
+        light.lightParams[0].irradiance = 1.0;
 
-        lightBuffer->UpdateResource(&light, sizeof(NuoLightParameterUniformField), encoder->InFlight());
+        lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
 
         encoder->SetRootConstant(0, sizeof(NuoModelViewProjection), &mvp);
         encoder->SetRootConstantBuffer(1, lightBuffer);
