@@ -8,6 +8,10 @@
 #include "NuoFile.h"
 #include "NuoStrings.h"
 
+#include "NuoDirect/NuoResourceSwapChain.h"
+#include "NuoModelLoader/NuoModelLoader.h"
+//#include "NuoMeshes/NuoCubeMesh.h"
+
 #include <dxcapi.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -41,8 +45,25 @@ void ModelView::Init()
     std::vector<PNuoResource> intermediate;
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
-    _mesh = std::make_shared<NuoCubeMesh>();
-    _mesh->Init(commandBuffer, intermediate, 2.0, 2.0, 2.0);
+    std::string path = NuoAppInstance::GetInstance()->ModulePath();
+    path = RemoveLastPathComponent(path);
+    path = path + "/uh60.obj";
+
+    NuoModelLoader loader;
+    loader.LoadModel(path);
+    std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
+
+    auto format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+    auto mesh =(std::make_shared<NuoMeshSimple>());
+    mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format);
+
+    //auto mesh = std::make_shared<NuoCubeMesh>();
+    //mesh->Init(commandBuffer, intermediate, 2.0f, 2.0f, 2.0f, format);
+
+    _mesh = std::dynamic_pointer_cast<NuoMesh>(mesh);
+
+    _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
 
     commandBuffer->Commit();
 
@@ -65,7 +86,7 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 	PNuoRenderTarget target = CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
-    encoder->SetClearColor(NuoVectorFloat4(0.8f, 0.8f, 0.8f, 1.0f));
+    encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
     encoder->SetViewport(NuoViewport());
 
 	const NuoVectorFloat3 eyePosition(0, 0, 30);
@@ -83,11 +104,22 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(mvpMatrix);
     mvpMatrix = projectionMatrix * mvpMatrix;
 
-    NuoModelViewProjection mvp = { mvpMatrix._m, normalMatrix._m };
+    NuoUniforms mvp;
+    mvp.viewProjectionMatrix = mvpMatrix._m;
+    mvp.viewMatrix = (viewMatrix * _modelTransfer)._m;
 
-    NuoMesh::CommonFunc commFunc = [&mvp](NuoCommandEncoder* encoder)
+    const PNuoResourceSwapChain& lightBuffer = _light;
+
+    NuoMesh::CommonFunc commFunc = [&mvp, &lightBuffer](NuoCommandEncoder* encoder)
     {
-        encoder->SetRootConstant(0, sizeof(NuoModelViewProjection), &mvp);
+        NuoLightUniforms light;
+        light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
+        light.lightParams[0].irradiance = 1.0;
+
+        lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
+
+        encoder->SetRootConstant(0, sizeof(NuoUniforms), &mvp);
+        encoder->SetRootConstantBuffer(1, lightBuffer);
     };
     
     _mesh->DrawBegin(encoder, commFunc);

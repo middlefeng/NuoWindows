@@ -311,9 +311,6 @@
     <ClInclude Include="ModelViewerMain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.h">
-      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoUniforms.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </ClInclude>
@@ -335,14 +332,16 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_P.hlsl">
-      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh_V.hlsl">
-      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimpleVertex.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimplePixel.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

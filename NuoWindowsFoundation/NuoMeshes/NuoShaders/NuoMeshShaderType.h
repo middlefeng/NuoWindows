@@ -13,6 +13,12 @@ typedef DirectX::XMFLOAT2 float2;
 
 typedef DirectX::XMMATRIX matrix;
 
+#define SHADER_SEMATIC(name)
+
+#else
+
+#define SHADER_SEMATIC(name)  : name
+
 #endif
 
 #endif

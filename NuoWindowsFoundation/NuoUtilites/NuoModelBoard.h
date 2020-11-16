@@ -42,6 +42,7 @@ private:
 
 
 
+
 class NuoModelBoard : virtual public NuoModelBoardBase<NuoItemSimple>,
                       virtual public NuoModelSimple
 {
@@ -60,6 +61,23 @@ class NuoModelBoard : virtual public NuoModelBoardBase<NuoItemSimple>,
 public:
     
     NuoModelBoard(float width, float height, float thickness);
+
+    virtual void AddTexCoord(size_t sourceIndex, const std::vector<float>& texCoordBuffer) override;
+    virtual void AddMaterial(const NuoMaterial& material) override;
+
+    virtual void GenerateTangents() override;
+
+    virtual void SetTexturePathDiffuse(const std::string texPath) override;
+    virtual std::string GetTexturePathDiffuse() override;
+    virtual void SetTexturePathOpacity(const std::string texPath) override;
+    virtual std::string GetTexturePathOpacity() override;
+    virtual void SetTexturePathBump(const std::string texPath) override;
+    virtual std::string GetTexturePathBump() override;
+
+    virtual NuoMaterial GetMaterial(size_t primtiveIndex) const override;
+    virtual bool HasTransparent() override;
+    virtual std::shared_ptr<NuoMaterial> GetUnifiedMaterial() override;
+    virtual void UpdateBufferWithUnifiedMaterial() override;
     
 };
 

@@ -50,9 +50,13 @@ class NuoRenderInFlight
 {
 protected:
 	unsigned int _inFlight;
+	unsigned int _frameCount;
 
 public:
 	virtual unsigned int InFlight();
+	virtual unsigned int FrameCount();
+
+	void SetInFlight(unsigned int inFlight, unsigned int frameCount);
 };
 
 

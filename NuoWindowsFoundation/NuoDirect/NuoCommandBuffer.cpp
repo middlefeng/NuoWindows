@@ -51,6 +51,19 @@ unsigned int NuoRenderInFlight::InFlight()
 }
 
 
+unsigned int NuoRenderInFlight::FrameCount()
+{
+	return _frameCount;
+}
+
+
+void NuoRenderInFlight::SetInFlight(unsigned int inFlight, unsigned int frameCount)
+{
+	_inFlight = inFlight;
+	_frameCount = frameCount;
+}
+
+
 PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight, bool resetAllocator)
 {
 	_inFlightBuffers[inFlight].clear();
@@ -58,7 +71,7 @@ PNuoCommandBuffer NuoCommandSwapChain::CreateCommandBuffer(unsigned int inFlight
 	PNuoCommandBuffer buffer = std::make_shared<NuoCommandBuffer>();
 	buffer->_commandQueue = _commandQueue;
 	buffer->_commandAllocator = _commandAllocators[inFlight];
-	buffer->_inFlight = inFlight;
+	buffer->SetInFlight(inFlight, (unsigned int)_inFlightBuffers.size());
 
 	_inFlightBuffers[inFlight].push_back(buffer);
 
@@ -79,7 +92,7 @@ PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 
 	PNuoCommandEncoder result = std::make_shared<NuoCommandEncoder>();
 	result->_commandList = commandList;
-	result->_inFlight = _inFlight;
+	result->SetInFlight(_inFlight, _frameCount);
 
 	_encoders.push_back(result);
 
@@ -136,8 +149,8 @@ void NuoCommandEncoder::SetClearColor(const NuoVectorFloat4& color)
 void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
 {
 	PNuoResource renderBuffer = _renderTarget->RenderBuffer();
-	FLOAT w = renderBuffer->Width();
-	FLOAT h = renderBuffer->Height();
+	FLOAT w = (FLOAT)renderBuffer->Width();
+	FLOAT h = (FLOAT)renderBuffer->Height();
 
 	D3D12_VIEWPORT viewport_ = viewport._viewport;
 	if (viewport_.Width == 0)

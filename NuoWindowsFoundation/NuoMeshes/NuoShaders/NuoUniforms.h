@@ -42,4 +42,42 @@ struct NuoMeshUniforms
 };
 
 
+/**
+ *  vertex shader uniform to calculate interpolatable per-vertex *shadow* data.
+ *  it is separated from ModelUniforms because the dependencies to the shadow map
+ *  render-pass
+ */
+struct NuoLightVertexUniforms
+{
+    // enabling shadow casting for two light sources
+    matrix lightCastMatrix[2];
+};
+
+
+struct NuoLightParameterUniformField
+{
+    float4 direction;
+    float specular;
+
+    /**
+     *  for directional light source in real time rendering, the radiance to a point
+     *  on a lit surface is of delta distribution and the rendering equation integral
+     *  results in multiplied by an irradiance on a single direction
+     */
+    float irradiance;
+};
+
+
+/**
+ *  fragement shader uniform to calulate lighted color
+ */
+struct NuoLightUniforms
+{
+    NuoLightParameterUniformField lightParams[4];
+    // NuoShadowParameterUniformField shadowParams[2];
+
+    float3 ambient;
+};
+
+
 #endif
