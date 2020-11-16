@@ -34,6 +34,9 @@ class NuoMesh
 
 protected:
 
+	DXGI_FORMAT _format;
+	PNuoPipelineState _pipelineState;
+
 	PNuoVertexBuffer _vertexBuffer;
 	PNuoResourceSwapChain _transform;
 
@@ -42,7 +45,8 @@ protected:
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() = 0;
 	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer);
-	virtual DXGI_FORMAT PipelineFormat() = 0;
+	virtual DXGI_FORMAT PipelineFormat();
+	virtual PNuoPipelineState PipelineState();
 
 public:
 
@@ -53,7 +57,6 @@ public:
 	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc& func);
 	virtual void Draw(const PNuoCommandEncoder& encoder);
 
-	virtual PNuoPipelineState PipelineState() = 0;
 };
 
 
@@ -95,11 +98,6 @@ typedef std::shared_ptr<NuoModelSimple> PNuoModelSimple;
 class NuoMeshSimple : public NuoMeshBase<NuoMeshSimpleItem>
 {
 
-private:
-
-	DXGI_FORMAT _format;
-	PNuoPipelineState _pipelineState;
-
 public:
 
 	void Init(const PNuoCommandBuffer& commandBuffer, 
@@ -109,9 +107,6 @@ public:
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
 	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
-	virtual DXGI_FORMAT PipelineFormat() override;
-
-	virtual PNuoPipelineState PipelineState();
 
 };
 

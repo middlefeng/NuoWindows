@@ -50,6 +50,18 @@ PNuoRootSignature NuoMesh::RootSignature(const PNuoCommandBuffer& commandBuffer)
 }
 
 
+DXGI_FORMAT NuoMesh::PipelineFormat()
+{
+	return _format;
+}
+
+
+PNuoPipelineState NuoMesh::PipelineState()
+{
+	return _pipelineState;
+}
+
+
 void NuoMesh::Draw(const PNuoCommandEncoder& encoder)
 {
 	encoder->SetVertexBuffer(_vertexBuffer);
@@ -98,13 +110,3 @@ PNuoRootSignature NuoMeshSimple::RootSignature(const PNuoCommandBuffer& commandB
 }
 
 
-DXGI_FORMAT NuoMeshSimple::PipelineFormat()
-{
-	return _format;
-}
-
-
-PNuoPipelineState NuoMeshSimple::PipelineState()
-{
-	return _pipelineState;
-}
