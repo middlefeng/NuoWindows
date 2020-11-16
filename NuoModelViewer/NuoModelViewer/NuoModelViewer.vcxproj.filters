@@ -37,6 +37,9 @@
     <Filter Include="NuoWindowsFoundation\NuoMeshes\NuoShaders">
       <UniqueIdentifier>{35d96b29-9259-4b7c-a648-15dca21f33c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes">
+      <UniqueIdentifier>{cbaafef5-91a9-4f64-9f16-0c98e0b087b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
@@ -311,12 +314,6 @@
     <ClInclude Include="ModelViewerMain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoUniforms.h">
-      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimpile.h">
-      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">
@@ -335,13 +332,17 @@
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimpleVertex.hlsl">
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoUniforms.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimplePixel.hlsl">
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimplePixel.hlsl">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
-    </FxCompile>
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimpleVertex.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshSimple.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

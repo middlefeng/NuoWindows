@@ -39,7 +39,7 @@ void NuoVertexBuffer::UpdateView(size_t stride)
 {
 	_vertexBufferView.BufferLocation = _buffer->DxResource()->GetGPUVirtualAddress();
 	_vertexBufferView.SizeInBytes = _buffer->Size();
-	_vertexBufferView.StrideInBytes = stride;
+	_vertexBufferView.StrideInBytes = (UINT)stride;
 
 	_indiciesBufferView.BufferLocation = _indicies->DxResource()->GetGPUVirtualAddress();
 	_indiciesBufferView.Format = DXGI_FORMAT_R32_UINT;
