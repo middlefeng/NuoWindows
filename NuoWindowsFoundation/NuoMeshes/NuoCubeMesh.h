@@ -18,28 +18,16 @@ class NuoCubeMesh;
 typedef std::shared_ptr<NuoCubeMesh> PNuoCubeMesh;
 
 
-class NuoCubeMesh : public NuoMeshBase<NuoItemSimple>
+class NuoCubeMesh : public NuoMeshSimple
 {
-
-	PNuoPipelineState _pipelineState;
-	PNuoResourceSwapChain _light;
-
-protected:
-
-	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
-	PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
-	DXGI_FORMAT PipelineFormat() override;
 
 public:
 
 	NuoCubeMesh() = default;
 
 	void Init(const PNuoCommandBuffer& commandBuffer,
-			  std::vector<PNuoResource>& intermediate,
-			  float width, float height, float depth);
-
-	virtual void Draw(const PNuoCommandEncoder& encoder) override;
-	virtual PNuoPipelineState PipelineState() override;
+		  	  std::vector<PNuoResource>& intermediate,
+			  float width, float height, float depth, DXGI_FORMAT format);
 
 };
 

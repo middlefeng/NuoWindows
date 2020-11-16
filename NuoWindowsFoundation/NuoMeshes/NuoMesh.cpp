@@ -5,6 +5,8 @@
 #include "NuoFile.h"
 #include "NuoStrings.h"
 #include "NuoAppInstance.h"
+
+#include "NuoMeshes/NuoShaders/NuoUniforms.h"
 #include "NuoModelLoader/NuoModelBase.h"
 
 
@@ -41,7 +43,7 @@ PNuoRootSignature NuoMesh::RootSignature(const PNuoCommandBuffer& commandBuffer)
 	PNuoRootSignature rootSignature = std::make_shared<NuoRootSignature>(device,
 																		 D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-	rootSignature->AddConstant(sizeof(NuoModelViewProjection), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+	rootSignature->AddConstant(sizeof(NuoUniforms), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 	rootSignature->AddRootConstantBuffer(1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
 
 	return rootSignature;

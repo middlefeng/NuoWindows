@@ -10,6 +10,7 @@
 
 #include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoModelLoader/NuoModelLoader.h"
+//#include "NuoMeshes/NuoCubeMesh.h"
 
 #include <dxcapi.h>
 #include <d3dcompiler.h>
@@ -53,8 +54,13 @@ void ModelView::Init()
     std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
 
     auto format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
     auto mesh =(std::make_shared<NuoMeshSimple>());
     mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format);
+
+    //auto mesh = std::make_shared<NuoCubeMesh>();
+    //mesh->Init(commandBuffer, intermediate, 2.0f, 2.0f, 2.0f, format);
+
     _mesh = std::dynamic_pointer_cast<NuoMesh>(mesh);
 
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
@@ -112,7 +118,7 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 
         lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
 
-        encoder->SetRootConstant(0, sizeof(NuoModelViewProjection), &mvp);
+        encoder->SetRootConstant(0, sizeof(NuoUniforms), &mvp);
         encoder->SetRootConstantBuffer(1, lightBuffer);
     };
     

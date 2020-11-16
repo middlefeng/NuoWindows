@@ -20,7 +20,6 @@
 #include "NuoMeshes/NuoShaders/NuoUniforms.h"
 #include "NuoMeshes/NuoShaders/NuoMeshSimple.h"
 
-#include "NuoMeshes/NuoCubeMesh_V.h"
 
 
 class NuoCommandBuffer;
