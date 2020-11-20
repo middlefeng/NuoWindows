@@ -31,7 +31,7 @@ PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuf
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs = InputDesc();
 
 	const PNuoDevice& device = commandBuffer->CommandQueue()->Device();
-	return std::make_shared<NuoPipelineState>(device, PipelineFormat(),
+	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), true /* depth */,
 											  inputElementDescs, vertexShader, pixelShader, rootSignature);
 }
 

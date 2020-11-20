@@ -29,7 +29,7 @@ class NuoPipelineState
 public:
 
 	NuoPipelineState(const PNuoDevice& device,
-					 DXGI_FORMAT format,
+					 DXGI_FORMAT format, bool depthEnabled,
 					 const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 				  	 const PNuoShader& vertex,
 					 const PNuoShader& pixel,
