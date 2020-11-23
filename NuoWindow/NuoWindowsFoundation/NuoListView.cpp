@@ -7,6 +7,8 @@
 #include "NuoAppInstance.h"
 #include "NuoDialog.h"
 
+#include <vector>
+
 
 NuoListView::NuoListView(const PNuoWindow& parent)
 	: NuoControl("", parent)
@@ -24,8 +26,9 @@ void NuoListView::Init(int controlID)
     InitCommonControlsEx(&icex);
 
     int flag = WS_CHILD | WS_BORDER | LVS_REPORT | 
-		       LVS_NOSORTHEADER |
-		LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | LVS_AUTOARRANGE | LVS_SINGLESEL;
+		       LVS_NOSORTHEADER  |
+			   LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
+			   LVS_AUTOARRANGE | LVS_SINGLESEL;
 
     _hWnd = CreateWindow(WC_LISTVIEW,     // Predefined class; Unicode assumed 
                          L"",
@@ -40,14 +43,24 @@ void NuoListView::Init(int controlID)
     parent->Add(shared_from_this());
 
 	DWORD exStyle = ListView_GetExtendedListViewStyle(_hWnd);
-	exStyle |= LVS_EX_FULLROWSELECT | LVS_EX_BORDERSELECT | LVS_EX_CHECKBOXES;
+	exStyle |= LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES;
 	ListView_SetExtendedListViewStyle(_hWnd, exStyle);
 
-	WCHAR szText[256];     // Temporary buffer.
-	LVCOLUMN lvc;
-	int iCol;
+    Update();
+    Show();
+}
 
-	wsprintf(szText, L"Test Col");
+
+void NuoListView::AddColumn(unsigned int index, const std::string& title,
+							unsigned int width, NuoAlign align)
+{
+	LVCOLUMN lvc;
+
+	std::wstring wtitle = StringToUTF16(title);
+	std::vector<wchar_t> wstrtitle(wtitle.length() + 1, '\0');
+	lstrcpyn(wstrtitle.data(), wtitle.c_str(), wtitle.length() + 1);
+
+	width = width * DPI();
 
 	// Initialize the LVCOLUMN structure.
 	// The mask specifies that the format, width, text,
@@ -55,38 +68,38 @@ void NuoListView::Init(int controlID)
 	lvc.mask = LVCF_WIDTH | LVCF_TEXT; //  LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 
 	// Add the columns.
-	for (iCol = 0; iCol < 3; iCol++)
-	{
-		lvc.iSubItem = iCol;
-		lvc.pszText = szText;
-		lvc.cx = 100;               // Width of column in pixels.
+	lvc.iSubItem = index;
+	lvc.pszText = wstrtitle.data();
+	lvc.cx = width;               // Width of column in pixels.
 
-		if (iCol < 2)
-			lvc.fmt = LVCFMT_LEFT;  // Left-aligned column.
-		else
-			lvc.fmt = LVCFMT_RIGHT; // Right-aligned column.
+	if (align == kNuoAlign_Left)
+		lvc.fmt = LVCFMT_LEFT;  // Left-aligned column.
+	else
+		lvc.fmt = LVCFMT_RIGHT; // Right-aligned column.
 
-		// Load the names of the column headings from the string resources.
+	// Insert the columns into the list view.
+	ListView_InsertColumn(_hWnd, index, &lvc);
+}
 
 
-		// Insert the columns into the list view.
-		if (ListView_InsertColumn(_hWnd, iCol, &lvc) == -1)
-			return;
-	}
-
+void NuoListView::AddItem(unsigned int index, unsigned int col, const std::string& str)
+{
 	LVITEM item;
-	item.mask = LVIF_TEXT | LVIF_PARAM;
+	item.mask = LVIF_TEXT;
 
-	wchar_t* temp = new wchar_t[20];
-	wsprintf(temp, L"%s", L"test line");
-	item.pszText = temp;
-	item.iItem = 0;
-	item.iSubItem = 0;
+	std::wstring wstring = StringToUTF16(str);
+	std::vector<wchar_t> wstr(wstring.length() + 1, '\0');
+	lstrcpyn(wstr.data(), wstring.c_str(), str.length() + 1);
+
+	item.pszText = wstr.data();
+	item.iItem = index;
+	item.iSubItem = col;
 	item.lParam = 0;
-	ListView_InsertItem(_hWnd, &item);
 
-    Update();
-    Show();
+	if (item.iSubItem)
+		ListView_SetItem(_hWnd, &item);
+	else
+		ListView_InsertItem(_hWnd, &item);
 }
 
 

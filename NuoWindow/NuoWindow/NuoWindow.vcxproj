@@ -160,6 +160,7 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoRect.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h" />
     <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h" />
+    <ClInclude Include="..\NuoWindowsFoundation\NuoWindowTypes.h" />
     <ClInclude Include="AppAboutDialog.h" />
     <ClInclude Include="FoundationResource.h" />
     <ClInclude Include="framework.h" />

@@ -27,7 +27,7 @@ void ListViewWindow::Init()
 	auto font = std::make_shared<NuoFont>(16, "MS Shell Dlg");
 	font->SetItalic(false);
 	font->SetLight(true);
-	font->CreateFont(DPI());
+	
 	_loadButton->SetFont(font);
 
 	_loadButton->SetOnCommand([this]()
@@ -35,11 +35,19 @@ void ListViewWindow::Init()
 			
 		});
 
+	font = std::make_shared<NuoFont>(14, "MS Shell Dlg");
+
 	NuoInset<float> listInset(30, 20, 35, 165);
 	_listView = std::make_shared<NuoListView>(shared_from_this());
 	_listView->Init(IDM_LISTVIEW);
 	_listView->SetAutoPosition(kNuoControl_Stretch_ALL);
 	_listView->SetMargin(listInset);
+
+	_listView->AddColumn(0, "Name", 150, kNuoAlign_Left);
+	_listView->AddColumn(1, "Description", 350, kNuoAlign_Left);
+	_listView->SetFont(font);
+
+	_listView->AddItem(0, 0, "Windows"); _listView->AddItem(0, 1, "Microsoft desktop operating system.");
 }
 
 

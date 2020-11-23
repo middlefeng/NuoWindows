@@ -84,6 +84,9 @@
     <ClInclude Include="..\NuoWindowsFoundation\NuoListView.h">
       <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
+    <ClInclude Include="..\NuoWindowsFoundation\NuoWindowTypes.h">
+      <Filter>NuoWindowsFoundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
