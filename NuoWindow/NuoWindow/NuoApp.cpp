@@ -12,6 +12,7 @@
 #include "NuoStrings.h"
 
 #include "IconWindow.h"
+#include "ListViewWindow.h"
 #include "AppAboutDialog.h"
 
 
@@ -44,7 +45,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     PNuoMenu fileMenu = std::make_shared<NuoMenu>("  &File ");
     PNuoMenuItem exitItem = std::make_shared<NuoMenuItem>(IDM_EXIT, "E&xit");
     PNuoMenuItem iconTools = std::make_shared<NuoMenuItem>(IDM_ICONTOOLS, "Icon Tools ...");
+    PNuoMenuItem listView = std::make_shared<NuoMenuItem>(IDM_LISTVIEW, "List View ...");
     fileMenu->AppenMenuItem(iconTools);
+    fileMenu->AppenMenuItem(listView);
     fileMenu->AppenMenuItem(exitItem);
     fileMenu->Update();
 
@@ -59,6 +62,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     window->SetMenu(menu);
 
     PIconWindow iconWindow;
+    PListViewWindow listViewWindow;
 
     auto exitFunc = [&iconWindow]()
     {
@@ -85,6 +89,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 {
                     iconWindow->Detach();
                     iconWindow.reset();
+                });
+        });
+
+    listView->SetAction([&listViewWindow, weakWindow](PNuoMenuItem)
+        {
+            if (!listViewWindow)
+            {
+                listViewWindow = std::make_shared<ListViewWindow>(weakWindow.lock());
+                listViewWindow->SetPositionDevice(listViewWindow->PreferredRect(), true);
+                listViewWindow->Init();
+            }
+
+            listViewWindow->Show();
+            listViewWindow->Update();
+            listViewWindow->SetOnDestroy([&listViewWindow]()
+                {
+                    listViewWindow->Detach();
+                    listViewWindow.reset();
                 });
         });
 

@@ -102,6 +102,15 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.h">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
+    <ClInclude Include="ListViewWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoListView.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindowTypes.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
@@ -178,6 +187,12 @@
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ListViewWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoListView.cpp">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClCompile>
   </ItemGroup>
