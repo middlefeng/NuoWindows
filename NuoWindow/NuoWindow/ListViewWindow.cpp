@@ -39,7 +39,7 @@ void ListViewWindow::Init()
 
 	NuoInset<float> listInset(30, 20, 35, 165);
 	_listView = std::make_shared<NuoListView>(shared_from_this());
-	_listView->Init(IDM_LISTVIEW);
+	_listView->Init(IDM_LISTVIEW, kNuoList_Checkbox);
 	_listView->SetAutoPosition(kNuoControl_Stretch_ALL);
 	_listView->SetMargin(listInset);
 

@@ -16,6 +16,15 @@
     <Filter Include="NuoWindowsFoundation">
       <UniqueIdentifier>{981d0a0c-7414-42a4-b5c2-0b583192ac8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoUtilities">
+      <UniqueIdentifier>{fbd2b8e8-4773-41d9-9a12-52d7295eee59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoUtilities\Win">
+      <UniqueIdentifier>{b582a0c5-9236-46e0-a6ae-b235468b15b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoUI">
+      <UniqueIdentifier>{77bb7239-a75c-4d83-9b1b-641b886e4a0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -30,69 +39,84 @@
     <ClInclude Include="NuoApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoAppInstance.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoStrings.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoWindow.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoMenu.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoDialog.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
     <ClInclude Include="FoundationResource.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoRect.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoMonitorScale.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoControl.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoButton.h">
-      <Filter>NuoWindowsFoundation</Filter>
     </ClInclude>
     <ClInclude Include="AppAboutDialog.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoLabel.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoImage.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoFile.h">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClInclude>
     <ClInclude Include="IconWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoOpenFileDialog.h">
-      <Filter>NuoWindowsFoundation</Filter>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.h">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoOpenFileDialog.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoRect.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoStrings.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoTimer.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoView.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoDialog.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoFile.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoImage.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoLabel.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMenu.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
     <ClInclude Include="ListViewWindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoListView.h">
-      <Filter>NuoWindowsFoundation</Filter>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoListView.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\NuoWindowsFoundation\NuoWindowTypes.h">
-      <Filter>NuoWindowsFoundation</Filter>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindowTypes.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NuoWindow.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="FoundationResource.rc">
+    <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -108,56 +132,68 @@
     <ClCompile Include="NuoApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoAppInstance.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoStrings.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoMenu.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoWindow.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoDialog.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoRect.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoMonitorScale.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoControl.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoButton.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
     <ClCompile Include="AppAboutDialog.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoLabel.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoImage.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoFile.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
     </ClCompile>
     <ClCompile Include="IconWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoOpenFileDialog.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilities\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoOpenFileDialog.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoRect.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoStrings.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoTimer.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoView.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoDialog.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoFile.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoImage.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoLabel.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMenu.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClCompile>
     <ClCompile Include="ListViewWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\NuoWindowsFoundation\NuoListView.cpp">
-      <Filter>NuoWindowsFoundation</Filter>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoListView.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
