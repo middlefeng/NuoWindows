@@ -39,6 +39,7 @@ class NuoFont : public std::enable_shared_from_this<NuoFont>
 
 public:
 	NuoFont(HFONT _hFont);
+	NuoFont(const NuoFont& font);
 	NuoFont(double weight, const std::string& name);
 	~NuoFont();
 

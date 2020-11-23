@@ -203,9 +203,10 @@ std::shared_ptr<NuoFont> NuoWindow::Font()
 
 void NuoWindow::SetFont(const std::shared_ptr<NuoFont>& font)
 {
-    _font = font;
+    _font = std::make_shared<NuoFont>(*font);
+    _font->CreateFont(DPI());
 
-    SendMessage(_hWnd, WM_SETFONT, (LPARAM)font->Handle(), TRUE);
+    SendMessage(_hWnd, WM_SETFONT, (LPARAM)_font->Handle(), TRUE);
 }
 
 
@@ -260,6 +261,7 @@ void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float ol
 {
     if (_font)
     {
+        _font = std::make_shared<NuoFont>(*_font);
         _font->CreateFont(newDPI);
         SendMessage(_hWnd, WM_SETFONT, (LPARAM)_font->Handle(), TRUE);
     }
@@ -330,6 +332,17 @@ NuoFont::NuoFont(HFONT font)
       _weight(0.0),
       _isItalic(false),
       _isLight(false)
+{
+}
+
+
+NuoFont::NuoFont(const NuoFont& font)
+    : _hFont(0),
+      _weight(font._weight),
+      _name(font._name),
+      _isItalic(font._isItalic),
+      _isLight(font._isLight),
+      _fontOwner(true)
 {
 }
 
