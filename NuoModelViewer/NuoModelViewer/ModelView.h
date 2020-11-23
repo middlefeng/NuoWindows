@@ -34,6 +34,8 @@ class ModelView : public NuoDirectView
 
 	NuoMatrixFloat44 _modelTransfer;
 
+	bool _init;
+
 public:
 
 	void Init();

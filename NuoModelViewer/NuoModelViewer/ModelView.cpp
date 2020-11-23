@@ -26,15 +26,21 @@ struct InputParamType
 
 ModelView::ModelView(const PNuoDevice& device,
 					   const PNuoWindow& parent)
-	: NuoDirectView(device, parent)
+	: NuoDirectView(device, parent),
+      _init(false)
 {
-	Init();
 }
 
 
 void ModelView::OnSize(unsigned int x, unsigned int y)
 {
 	NuoDirectView::OnSize(x, y);
+
+    if (!_init)
+    {
+        Init();
+        _init = true;
+    }
 }
 
 
