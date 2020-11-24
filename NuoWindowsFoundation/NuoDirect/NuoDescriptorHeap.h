@@ -36,6 +36,7 @@ public:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DxConstantBufferHandle(unsigned int inFlight);
 	D3D12_CPU_DESCRIPTOR_HANDLE DxHeapCPUHandle();
+	D3D12_GPU_DESCRIPTOR_HANDLE DxHeapGPUHandle();
 
 	friend class NuoDevice;
 

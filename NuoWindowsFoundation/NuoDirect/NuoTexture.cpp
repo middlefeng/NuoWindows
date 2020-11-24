@@ -14,7 +14,7 @@ NuoTexture::~NuoTexture()
 }
 
 
-D3D12_CPU_DESCRIPTOR_HANDLE NuoTexture::ShaderResourceView()
+D3D12_GPU_DESCRIPTOR_HANDLE NuoTexture::ShaderResourceView()
 {
-	return _srvHeap->DxHeapCPUHandle();
+	return _srvHeap->DxHeapGPUHandle();
 }

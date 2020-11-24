@@ -25,7 +25,7 @@ public:
 	NuoTexture();
 	virtual ~NuoTexture();
 
-	D3D12_CPU_DESCRIPTOR_HANDLE ShaderResourceView();
+	D3D12_GPU_DESCRIPTOR_HANDLE ShaderResourceView();
 
 	friend class NuoSwapChain;
 	friend class NuoDevice;

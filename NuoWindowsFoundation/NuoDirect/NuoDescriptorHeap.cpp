@@ -36,3 +36,9 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxHeapCPUHandle()
 }
 
 
+D3D12_GPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxHeapGPUHandle()
+{
+    return _heap->GetGPUDescriptorHandleForHeapStart();
+}
+
+

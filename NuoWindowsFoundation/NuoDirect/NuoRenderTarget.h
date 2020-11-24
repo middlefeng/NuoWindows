@@ -47,7 +47,7 @@ public:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE View();
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthView();
-	D3D12_CPU_DESCRIPTOR_HANDLE ShaderResource();
+	D3D12_GPU_DESCRIPTOR_HANDLE ShaderResource();
 	PNuoResource RenderBuffer() const;
 
 	void SetBackBuffer(const PNuoResource& backBuffer,

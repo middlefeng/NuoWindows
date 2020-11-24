@@ -61,7 +61,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::DepthView()
 }
 
 
-D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::ShaderResource()
+D3D12_GPU_DESCRIPTOR_HANDLE NuoRenderTarget::ShaderResource()
 {
 	// back buffer must not be used as shader resource
 	//
