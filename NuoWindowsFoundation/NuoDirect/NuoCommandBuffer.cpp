@@ -104,7 +104,7 @@ void NuoCommandEncoder::CopyResource(const PNuoResource& src, const PNuoResource
 {
 	_commandList->CopyResource(dst->DxResource(), src->DxResource());
 
-	ResourceBarrier(dst, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
+	ResourceBarrier(dst, D3D12_RESOURCE_STATE_GENERIC_READ);
 }
 
 
@@ -224,16 +224,17 @@ ID3D12GraphicsCommandList* NuoCommandEncoder::DxEncoder()
 
 
 void NuoCommandEncoder::ResourceBarrier(const PNuoResource& resource,
-									    D3D12_RESOURCE_STATES before,
-										D3D12_RESOURCE_STATES after)
+									    D3D12_RESOURCE_STATES state)
 {
 	D3D12_RESOURCE_BARRIER barrier;
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = resource->DxResource();
-	barrier.Transition.StateBefore = before;
-	barrier.Transition.StateAfter = after;
+	barrier.Transition.StateBefore = resource->State();
+	barrier.Transition.StateAfter = state;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	resource->SetState(state);
 
 	_commandList->ResourceBarrier(1, &barrier);
 }

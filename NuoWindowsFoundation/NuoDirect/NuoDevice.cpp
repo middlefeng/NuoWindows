@@ -238,7 +238,7 @@ PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format,
     assert(hr == S_OK);
 
     PNuoTexture texture = std::make_shared<NuoTexture>();
-    texture->SetResource(result);
+    texture->SetResource(result, state);
     texture->_srvHeap = CreateConstantBufferHeap(1);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -322,7 +322,7 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data,
     }
 
     PNuoResource resource = std::make_shared<NuoResource>();
-    resource->SetResource(intermediate);
+    resource->SetResource(intermediate, state);
 
     return resource;
 }

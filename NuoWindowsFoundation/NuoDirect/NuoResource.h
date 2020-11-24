@@ -20,9 +20,10 @@ protected:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> _dxResources;
 	D3D12_RESOURCE_DESC _desc;
+	D3D12_RESOURCE_STATES _state;
 	void* _mapped;
 
-	virtual void SetResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource);
+	virtual void SetResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES state);
 
 public:
 
@@ -39,6 +40,9 @@ public:
 
 	void* Map();
 	void Unmap();
+
+	D3D12_RESOURCE_STATES State() const;
+	void SetState(D3D12_RESOURCE_STATES state);
 
 	friend class NuoSwapChain;
 	friend class NuoDevice;

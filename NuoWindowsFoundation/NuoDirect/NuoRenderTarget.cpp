@@ -94,18 +94,8 @@ PNuoCommandEncoder NuoRenderTarget::RetainRenderPassEncoder(const PNuoCommandBuf
 	PNuoCommandEncoder encoder = commandBuffer->CreateRenderPassEncoder();
 	encoder->SetRenderTarget(shared_from_this());
 
-	if (_sampleResource)
-	{
-		encoder->ResourceBarrier(RenderBuffer(),
-								 D3D12_RESOURCE_STATE_RESOLVE_SOURCE,
-								 D3D12_RESOURCE_STATE_RENDER_TARGET);
-	}
-	else
-	{
-		encoder->ResourceBarrier(RenderBuffer(),
-								 D3D12_RESOURCE_STATE_PRESENT,
-								 D3D12_RESOURCE_STATE_RENDER_TARGET);
-	}
+	encoder->ResourceBarrier(RenderBuffer(),
+							 D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	_encoderCount += 1;
 	_renderPassEncoder = encoder;
@@ -122,29 +112,21 @@ void NuoRenderTarget::ReleaseRenderPassEncoder()
 	{
 		if (_sampleResource)
 		{
-			_renderPassEncoder->ResourceBarrier(RenderBuffer(),
-												D3D12_RESOURCE_STATE_RENDER_TARGET,
-												D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
+			_renderPassEncoder->ResourceBarrier(RenderBuffer(), D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
 
 			PNuoResource presentResource = _resource ? _resource : _backBuffer;
 
-			_renderPassEncoder->ResourceBarrier(presentResource,
-												D3D12_RESOURCE_STATE_PRESENT,
-												D3D12_RESOURCE_STATE_RESOLVE_DEST);
+			_renderPassEncoder->ResourceBarrier(presentResource, D3D12_RESOURCE_STATE_RESOLVE_DEST);
 
 			_renderPassEncoder->DxEncoder()->ResolveSubresource(presentResource->DxResource(), 0,
 																_sampleResource->DxResource(), 0,
 																presentResource->Format());
 
-			_renderPassEncoder->ResourceBarrier(presentResource,
-												D3D12_RESOURCE_STATE_RESOLVE_DEST,
-												D3D12_RESOURCE_STATE_PRESENT);
+			_renderPassEncoder->ResourceBarrier(presentResource, D3D12_RESOURCE_STATE_PRESENT);
 		}
 		else
 		{
-			_renderPassEncoder->ResourceBarrier(RenderBuffer(),
-												D3D12_RESOURCE_STATE_RENDER_TARGET,
-												D3D12_RESOURCE_STATE_PRESENT);
+			_renderPassEncoder->ResourceBarrier(RenderBuffer(), D3D12_RESOURCE_STATE_PRESENT);
 		}
 
 		_renderPassEncoder->EndEncoding();

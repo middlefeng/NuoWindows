@@ -130,8 +130,7 @@ public:
 private:
 
 	void ResourceBarrier(const PNuoResource& resource,
-						 D3D12_RESOURCE_STATES before,
-						 D3D12_RESOURCE_STATES after);
+						 D3D12_RESOURCE_STATES state);
 
 	ID3D12GraphicsCommandList* DxEncoder();
 
