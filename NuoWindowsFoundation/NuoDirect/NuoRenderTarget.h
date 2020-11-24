@@ -47,13 +47,16 @@ public:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE View();
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthView();
-	PNuoResource RenderBuffer();
+	PNuoResource RenderBuffer() const;
 
 	void SetBackBuffer(const PNuoResource& backBuffer,
 					   const D3D12_CPU_DESCRIPTOR_HANDLE& view);
 
 	PNuoCommandEncoder RetainRenderPassEncoder(const PNuoCommandBuffer& commandBuffer);
 	void ReleaseRenderPassEncoder();
+
+	DXGI_FORMAT Format() const;
+	unsigned int SampleCount() const;
 
 };
 

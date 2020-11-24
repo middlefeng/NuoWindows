@@ -45,6 +45,12 @@ DXGI_FORMAT NuoResource::Format() const
 }
 
 
+unsigned int NuoResource::SampleCount() const
+{
+	return _desc.SampleDesc.Count;
+}
+
+
 void* NuoResource::Map()
 {
 	if (!_mapped)

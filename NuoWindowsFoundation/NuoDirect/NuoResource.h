@@ -33,6 +33,7 @@ public:
 	unsigned long Size() const;
 
 	DXGI_FORMAT Format() const;
+	unsigned int SampleCount() const;
 
 	void* Map();
 	void Unmap();

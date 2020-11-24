@@ -9,6 +9,7 @@
 
 NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
                                    DXGI_FORMAT format, bool depthEnabled,
+                                   unsigned int sampleCount,
                                    const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 								   const PNuoShader& vertex,
 								   const PNuoShader& pixel,
@@ -75,7 +76,7 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
     psoDesc.NumRenderTargets = 1;
     psoDesc.RTVFormats[0] = format;
     psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-    psoDesc.SampleDesc.Count = 8;
+    psoDesc.SampleDesc.Count = sampleCount;
 
     HRESULT hr = device->DxDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&_dxPipelineState));
     assert(hr == S_OK);

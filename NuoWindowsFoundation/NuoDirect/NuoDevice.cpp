@@ -228,9 +228,6 @@ PNuoResource NuoDevice::CreateTexture(DXGI_FORMAT format,
     resourceDesc.Width = (UINT)width;
     resourceDesc.Height = (UINT)height;
 
-    //D3D12_CLEAR_VALUE clearValue = {};
-    //clearValue.Format = format;
-
     Microsoft::WRL::ComPtr<ID3D12Resource> result;
     D3D12_RESOURCE_STATES state = sampleCount == 1 ? D3D12_RESOURCE_STATE_RENDER_TARGET : D3D12_RESOURCE_STATE_RESOLVE_SOURCE;
     Microsoft::WRL::ComPtr<ID3D12Resource> intermediate;

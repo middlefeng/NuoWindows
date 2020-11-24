@@ -35,6 +35,7 @@ class NuoMesh
 protected:
 
 	DXGI_FORMAT _format;
+	unsigned int _sampleCount;
 	PNuoPipelineState _pipelineState;
 
 	PNuoVertexBuffer _vertexBuffer;
@@ -47,6 +48,7 @@ protected:
 	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer);
 	virtual DXGI_FORMAT PipelineFormat();
 	virtual PNuoPipelineState PipelineState();
+	virtual unsigned int SampleCount();
 
 public:
 
@@ -103,7 +105,7 @@ public:
 	void Init(const PNuoCommandBuffer& commandBuffer, 
 			  std::vector<PNuoResource>& intermediate,
 			  const PNuoModelSimple& model,
-		      DXGI_FORMAT format);
+		      DXGI_FORMAT format, unsigned int sampleCount);
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
 	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;

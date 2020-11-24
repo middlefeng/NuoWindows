@@ -31,7 +31,7 @@ PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuf
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs = InputDesc();
 
 	const PNuoDevice& device = commandBuffer->CommandQueue()->Device();
-	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), true /* depth */,
+	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), true /* depth */, SampleCount(),
 											  inputElementDescs, vertexShader, pixelShader, rootSignature);
 }
 
@@ -62,6 +62,12 @@ PNuoPipelineState NuoMesh::PipelineState()
 }
 
 
+unsigned int NuoMesh::SampleCount()
+{
+	return _sampleCount;
+}
+
+
 void NuoMesh::Draw(const PNuoCommandEncoder& encoder)
 {
 	encoder->SetVertexBuffer(_vertexBuffer);
@@ -79,7 +85,7 @@ void NuoMesh::DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc& func)
 void NuoMeshSimple::Init(const PNuoCommandBuffer& commandBuffer,
 						 std::vector<PNuoResource>& intermediate,
 						 const PNuoModelSimple& model,
-						 DXGI_FORMAT format)
+						 DXGI_FORMAT format, unsigned int sampleCount)
 {
 	NuoMeshBase<NuoMeshSimpleItem>::Init(commandBuffer, intermediate,
 										 (NuoMeshSimpleItem*)model->Ptr(),
@@ -88,6 +94,7 @@ void NuoMeshSimple::Init(const PNuoCommandBuffer& commandBuffer,
 										 model->IndicesCount());
 
 	_format = format;
+	_sampleCount = sampleCount;
 	_pipelineState = MakePipelineState(commandBuffer, "NuoMeshSimpleVertex", "NuoMeshSimplePixel");
 }
 

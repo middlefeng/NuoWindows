@@ -30,6 +30,7 @@ public:
 
 	NuoPipelineState(const PNuoDevice& device,
 					 DXGI_FORMAT format, bool depthEnabled,
+					 unsigned int sampleCount,
 					 const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 				  	 const PNuoShader& vertex,
 					 const PNuoShader& pixel,

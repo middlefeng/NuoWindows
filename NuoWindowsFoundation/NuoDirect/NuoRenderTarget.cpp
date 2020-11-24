@@ -60,7 +60,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::DepthView()
 }
 
 
-PNuoResource NuoRenderTarget::RenderBuffer()
+PNuoResource NuoRenderTarget::RenderBuffer() const
 {
 	if (_sampleResource)
 		return _sampleResource;
@@ -152,6 +152,15 @@ void NuoRenderTarget::ReleaseRenderPassEncoder()
 }
 
 
+DXGI_FORMAT NuoRenderTarget::Format() const
+{
+	return RenderBuffer()->Format();
+}
 
+
+unsigned int NuoRenderTarget::SampleCount() const
+{
+	return RenderBuffer()->SampleCount();
+}
 
 

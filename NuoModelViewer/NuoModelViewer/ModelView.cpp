@@ -59,10 +59,11 @@ void ModelView::Init()
     loader.LoadModel(path);
     std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
 
-    auto format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    auto format = RenderTarget(0)->Format();// DXGI_FORMAT_R8G8B8A8_UNORM;
+    auto sampleCount = RenderTarget(0)->SampleCount();
 
     auto mesh =(std::make_shared<NuoMeshSimple>());
-    mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format);
+    mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format, sampleCount);
 
     //auto mesh = std::make_shared<NuoCubeMesh>();
     //mesh->Init(commandBuffer, intermediate, 2.0f, 2.0f, 2.0f, format);

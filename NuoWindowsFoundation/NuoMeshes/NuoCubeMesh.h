@@ -27,7 +27,8 @@ public:
 
 	void Init(const PNuoCommandBuffer& commandBuffer,
 		  	  std::vector<PNuoResource>& intermediate,
-			  float width, float height, float depth, DXGI_FORMAT format);
+			  float width, float height, float depth, DXGI_FORMAT format,
+			  unsigned int sampleCount);
 
 };
 
