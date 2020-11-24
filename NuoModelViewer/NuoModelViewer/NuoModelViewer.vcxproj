@@ -161,6 +161,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoTexture.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoTexture.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h" />

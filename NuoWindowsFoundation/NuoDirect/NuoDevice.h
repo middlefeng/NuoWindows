@@ -19,6 +19,9 @@ typedef std::weak_ptr<NuoDevice> WPNuoDevice;
 class NuoResource;
 typedef std::shared_ptr<NuoResource> PNuoResource;
 
+class NuoTexture;
+typedef std::shared_ptr<NuoTexture> PNuoTexture;
+
 
 class NuoDevice : public std::enable_shared_from_this<NuoDevice>
 {
@@ -49,8 +52,9 @@ public:
 	PNuoResource CreatePrivateBuffer(size_t size);
 	PNuoResource CreateUploadBuffer(size_t size);
 	PNuoResource CreateDepthStencil(size_t width, size_t height, unsigned int sampleCount);
-	PNuoResource CreateTexture(DXGI_FORMAT format,
-							   unsigned int width, unsigned int height, unsigned int sampleCount);
+
+	PNuoTexture CreateTexture(DXGI_FORMAT format,
+							  unsigned int width, unsigned int height, unsigned int sampleCount);
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;

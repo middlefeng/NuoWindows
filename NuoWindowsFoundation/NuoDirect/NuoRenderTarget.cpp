@@ -2,6 +2,7 @@
 
 #include "NuoRenderTarget.h"
 #include "NuoDirect/NuoDevice.h"
+#include "NuoDirect/NuoTexture.h"
 
 
 #include <cassert>

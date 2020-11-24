@@ -3,6 +3,7 @@
 #include "NuoDevice.h"
 #include "NuoStrings.h"
 #include "NuoResource.h"
+#include "NuoTexture.h"
 #include "NuoCommandBuffer.h"
 
 #include <cassert>
@@ -205,8 +206,8 @@ PNuoResource NuoDevice::CreateDepthStencil(size_t width, size_t height, unsigned
                                 D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 }
 
-PNuoResource NuoDevice::CreateTexture(DXGI_FORMAT format,
-                                      unsigned int width, unsigned int height, unsigned int sampleCount)
+PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format,
+                                     unsigned int width, unsigned int height, unsigned int sampleCount)
 {
     D3D12_HEAP_PROPERTIES heapProps;
     heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
@@ -236,10 +237,19 @@ PNuoResource NuoDevice::CreateTexture(DXGI_FORMAT format,
                                                     nullptr, IID_PPV_ARGS(&result));
     assert(hr == S_OK);
 
-    PNuoResource resource = std::make_shared<NuoResource>();
-    resource->SetResource(result);
+    PNuoTexture texture = std::make_shared<NuoTexture>();
+    texture->SetResource(result);
+    texture->_srvHeap = CreateConstantBufferHeap(1);
 
-    return resource;
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = texture->Format();
+    srvDesc.ViewDimension = texture->SampleCount() > 1 ? D3D12_SRV_DIMENSION_TEXTURE2DMS :
+                                                         D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = 1;
+    _dxDevice->CreateShaderResourceView(texture->DxResource(), &srvDesc, texture->_srvHeap->DxHeapCPUHandle());
+
+    return texture;
 }
 
 
