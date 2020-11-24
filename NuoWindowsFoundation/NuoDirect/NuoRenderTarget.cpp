@@ -61,6 +61,16 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::DepthView()
 }
 
 
+D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::ShaderResource()
+{
+	// back buffer must not be used as shader resource
+	//
+	assert(_backBuffer == nullptr);
+
+	return _resource->ShaderResourceView();
+}
+
+
 PNuoResource NuoRenderTarget::RenderBuffer() const
 {
 	if (_sampleResource)
