@@ -40,6 +40,12 @@ void NuoScreenSpaceMesh::Init(const PNuoCommandBuffer& commandBuffer,
 }
 
 
+bool NuoScreenSpaceMesh::EnableDepth()
+{
+    return false;
+}
+
+
 
 std::vector<D3D12_INPUT_ELEMENT_DESC> NuoScreenSpaceMesh::InputDesc()
 {

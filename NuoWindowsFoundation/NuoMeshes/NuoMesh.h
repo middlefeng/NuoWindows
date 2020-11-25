@@ -49,6 +49,7 @@ protected:
 	virtual DXGI_FORMAT PipelineFormat();
 	virtual PNuoPipelineState PipelineState();
 	virtual unsigned int SampleCount();
+	virtual bool EnableDepth();
 
 public:
 

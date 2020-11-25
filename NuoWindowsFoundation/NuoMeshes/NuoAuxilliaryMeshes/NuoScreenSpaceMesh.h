@@ -22,6 +22,10 @@ ScreenSpaceBlendMode;
 class NuoScreenSpaceMesh : public NuoMeshBase<NuoMeshScreenSpaceItem>
 {
 
+protected:
+
+    virtual bool EnableDepth() override;
+
 public:
 
     void Init(const PNuoCommandBuffer& commandBuffer,
