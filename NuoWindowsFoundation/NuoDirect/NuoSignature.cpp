@@ -44,8 +44,6 @@ ID3D12RootSignature* NuoRootSignature::DxSignature()
 void NuoRootSignature::AddConstant(size_t size, unsigned int shaderRegister, unsigned int space, 
 								   D3D12_SHADER_VISIBILITY visibility)
 {
-	_signature.Reset();
-
 	D3D12_ROOT_PARAMETER1 param;
 	param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	param.ShaderVisibility = visibility;
@@ -55,16 +53,13 @@ void NuoRootSignature::AddConstant(size_t size, unsigned int shaderRegister, uns
 
 	_parameters.push_back(param);
 
-	_desc.Desc_1_1.NumParameters = _parameters.size();
-	_desc.Desc_1_1.pParameters = _parameters.data();
+	UpdateDesc();
 }
 
 
 void NuoRootSignature::AddRootConstantBuffer(unsigned int shaderRegister, unsigned int space,
 											 D3D12_SHADER_VISIBILITY visibility)
 {
-	_signature.Reset();
-
 	D3D12_ROOT_PARAMETER1 param;
 
 	param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
@@ -75,9 +70,42 @@ void NuoRootSignature::AddRootConstantBuffer(unsigned int shaderRegister, unsign
 
 	_parameters.push_back(param);
 
-	_desc.Desc_1_1.NumParameters = _parameters.size();
-	_desc.Desc_1_1.pParameters = _parameters.data();
+	UpdateDesc();
 }
 
 
+
+void NuoRootSignature::AddSampler(unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility)
+{
+	D3D12_STATIC_SAMPLER_DESC desc = {};
+
+	desc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	desc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	desc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	desc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	desc.MipLODBias = 0;
+	desc.MaxAnisotropy = 0;
+	desc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	desc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	desc.MinLOD = 0.0f;
+	desc.MaxLOD = D3D12_FLOAT32_MAX;
+	desc.ShaderRegister = shaderRegister;
+	desc.RegisterSpace = space;
+	desc.ShaderVisibility = visibility;
+
+	_samplers.push_back(desc);
+
+	UpdateDesc();
+}
+
+
+void NuoRootSignature::UpdateDesc()
+{
+	_signature.Reset();
+
+	_desc.Desc_1_1.NumParameters = _parameters.size();
+	_desc.Desc_1_1.pParameters = _parameters.data();
+	_desc.Desc_1_1.NumStaticSamplers = _samplers.size();
+	_desc.Desc_1_1.pStaticSamplers = _samplers.data();
+}
 

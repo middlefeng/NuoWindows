@@ -61,13 +61,13 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::DepthView()
 }
 
 
-D3D12_GPU_DESCRIPTOR_HANDLE NuoRenderTarget::ShaderResource()
+D3D12_GPU_VIRTUAL_ADDRESS NuoRenderTarget::TargetGPUAddress()
 {
 	// back buffer must not be used as shader resource
 	//
 	assert(_backBuffer == nullptr);
 
-	return _resource->ShaderResourceView();
+	return _resource->DxResource()->GetGPUVirtualAddress();
 }
 
 

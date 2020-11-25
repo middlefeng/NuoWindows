@@ -178,6 +178,12 @@ void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoReso
 }
 
 
+void NuoCommandEncoder::SetTexture(unsigned int index, const PNuoRenderTarget& texture)
+{
+	_commandList->SetGraphicsRootShaderResourceView(index, texture->TargetGPUAddress());
+}
+
+
 void NuoCommandEncoder::SetRenderTarget(const PNuoRenderTarget& renderTarget)
 {
 	_renderTarget = renderTarget;
