@@ -9,6 +9,7 @@
 #include <wrl.h>
 
 class NuoDevice;
+typedef std::shared_ptr<NuoDevice> PNuoDevice;
 
 
 class NuoDescriptorHeap;
@@ -16,25 +17,33 @@ typedef std::shared_ptr<NuoDescriptorHeap> PNuoDescriptorHeap;
 typedef std::weak_ptr<NuoDescriptorHeap> WPNuoDescriptorHeap;
 
 
+enum NuoDescriptorType
+{
+	kNuoDescriptor_RenderTarget,
+	kNuoDescriptor_DepthStencil,
+	kNuoDescriptor_ShaderResource
+};
+
+
 class NuoDescriptorHeap
 {	
 
-	std::weak_ptr<NuoDevice> _device;
+	PNuoDevice _device;
 	
+	NuoDescriptorType _type;
 	unsigned int _size;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _heap;
 
 private:
 
-	NuoDescriptorHeap() : _size(0) {};
+	NuoDescriptorHeap(NuoDescriptorType type);
 
 public:
 
-	// CPU descriptor is used for both handle and view for render targets
-	//
-	D3D12_CPU_DESCRIPTOR_HANDLE DxRenderTargetView(unsigned int inFlight);
+	unsigned int Incremental();
 
-	D3D12_CPU_DESCRIPTOR_HANDLE DxConstantBufferHandle(unsigned int inFlight);
+	D3D12_CPU_DESCRIPTOR_HANDLE DxCPUHandle(unsigned int inFlight);
+	D3D12_GPU_DESCRIPTOR_HANDLE DxGPUHandle(unsigned int inFlight);
 	D3D12_CPU_DESCRIPTOR_HANDLE DxHeapCPUHandle();
 	D3D12_GPU_DESCRIPTOR_HANDLE DxHeapGPUHandle();
 

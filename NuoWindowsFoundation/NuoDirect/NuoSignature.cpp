@@ -103,9 +103,9 @@ void NuoRootSignature::UpdateDesc()
 {
 	_signature.Reset();
 
-	_desc.Desc_1_1.NumParameters = _parameters.size();
+	_desc.Desc_1_1.NumParameters = (UINT)_parameters.size();
 	_desc.Desc_1_1.pParameters = _parameters.data();
-	_desc.Desc_1_1.NumStaticSamplers = _samplers.size();
+	_desc.Desc_1_1.NumStaticSamplers = (UINT)_samplers.size();
 	_desc.Desc_1_1.pStaticSamplers = _samplers.data();
 }
 

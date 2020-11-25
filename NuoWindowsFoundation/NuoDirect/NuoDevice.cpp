@@ -108,7 +108,7 @@ unsigned int NuoDevice::RenderTargetDescriptorHandleIncrementSize() const
 
 PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 {
-    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap(kNuoDescriptor_RenderTarget));
 
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
     rtvHeapDesc.NumDescriptors = frameCount;
@@ -123,22 +123,22 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 }
 
 
-unsigned int NuoDevice::ConstantBufferDescriptorHandleIncrementSize() const
+unsigned int NuoDevice::ShaderResourceDescriptorHandleIncrementSize() const
 {
     return _dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
 
-PNuoDescriptorHeap NuoDevice::CreateConstantBufferHeap(unsigned int frameCount)
+PNuoDescriptorHeap NuoDevice::CreateShaderDescriptorHeap(unsigned int size)
 {
-    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap(kNuoDescriptor_ShaderResource));
 
     D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
-    cbvHeapDesc.NumDescriptors = frameCount;
+    cbvHeapDesc.NumDescriptors = size;
     cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;;
 
-    heap->_size = frameCount;
+    heap->_size = size;
     heap->_device = shared_from_this();
     _dxDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&heap->_heap));
 
@@ -148,7 +148,7 @@ PNuoDescriptorHeap NuoDevice::CreateConstantBufferHeap(unsigned int frameCount)
 
 PNuoDescriptorHeap NuoDevice::CreateDepthStencilHeap()
 {
-    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap(kNuoDescriptor_DepthStencil));
 
     D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
     dsvHeapDesc.NumDescriptors = 1;
@@ -239,7 +239,7 @@ PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format,
 
     PNuoTexture texture = std::make_shared<NuoTexture>();
     texture->SetResource(result, state);
-    texture->_srvHeap = CreateConstantBufferHeap(1);
+    texture->_srvHeap = CreateShaderDescriptorHeap(1);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;

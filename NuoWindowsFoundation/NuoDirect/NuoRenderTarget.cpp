@@ -44,7 +44,7 @@ NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _rtvHeap->DxHeapCPUHandle();
 		device->DxDevice()->CreateRenderTargetView(resource->DxResource(), nullptr, rtvHandle);
 
-		_view = _rtvHeap->DxRenderTargetView(0);
+		_view = _rtvHeap->DxHeapCPUHandle();
 	}
 }
 

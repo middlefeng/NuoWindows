@@ -42,8 +42,8 @@ public:
 	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
 	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);
 
-	unsigned int ConstantBufferDescriptorHandleIncrementSize() const;
-	PNuoDescriptorHeap CreateConstantBufferHeap(unsigned int frameCount);
+	unsigned int ShaderResourceDescriptorHandleIncrementSize() const;
+	PNuoDescriptorHeap CreateShaderDescriptorHeap(unsigned int frameCount);
 
 	PNuoDescriptorHeap CreateDepthStencilHeap();
 

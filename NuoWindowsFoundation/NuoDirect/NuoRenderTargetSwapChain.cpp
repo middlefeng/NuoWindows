@@ -52,7 +52,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTargetSwapChain::DxRenderTargetView(unsigne
 {
     assert(_sampleCount == 1);
 
-    return _rtvHeap->DxRenderTargetView(inFlight);
+    return _rtvHeap->DxCPUHandle(inFlight);
 }
 
 

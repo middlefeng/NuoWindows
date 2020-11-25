@@ -18,10 +18,10 @@ NuoConstantBufferSwapChain::NuoConstantBufferSwapChain(const PNuoDevice& device,
 
 	_resources = std::make_shared<NuoResourceSwapChain>(resources);
 
-	_cbvHeap = device->CreateConstantBufferHeap(frameCount);
+	_cbvHeap = device->CreateShaderDescriptorHeap(frameCount);
 	for (UINT n = 0; n < frameCount; ++n)
 	{
-		D3D12_CPU_DESCRIPTOR_HANDLE cbvHandle = _cbvHeap->DxConstantBufferHandle(n);
+		D3D12_CPU_DESCRIPTOR_HANDLE cbvHandle = _cbvHeap->DxCPUHandle(n);
 
 		D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
 		PNuoResource resource = resources[n];
