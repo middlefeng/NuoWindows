@@ -118,7 +118,7 @@ public:
 
 	void SetRootConstant(unsigned int index, size_t size, void* constant);
 	void SetRootConstantBuffer(unsigned int index, const PNuoResourceSwapChain& cb);
-	void SetTexture(unsigned int index, const PNuoRenderTarget& texture);
+	void SetDescriptorTable(unsigned int index, const PNuoDescriptorHeap& table);
 	
 	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
 

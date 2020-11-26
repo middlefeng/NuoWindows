@@ -178,9 +178,9 @@ void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoReso
 }
 
 
-void NuoCommandEncoder::SetTexture(unsigned int index, const PNuoRenderTarget& texture)
+void NuoCommandEncoder::SetDescriptorTable(unsigned int index, const PNuoDescriptorHeap& table)
 {
-	_commandList->SetGraphicsRootShaderResourceView(index, texture->TargetGPUAddress());
+	_commandList->SetGraphicsRootDescriptorTable(index, table->DxHeapGPUHandle());
 }
 
 
