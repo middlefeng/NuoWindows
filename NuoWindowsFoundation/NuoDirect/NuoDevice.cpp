@@ -239,15 +239,6 @@ PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format,
 
     PNuoTexture texture = std::make_shared<NuoTexture>();
     texture->SetResource(result, state);
-    texture->_srvHeap = CreateShaderDescriptorHeap(1);
-
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = texture->Format();
-    srvDesc.ViewDimension = texture->SampleCount() > 1 ? D3D12_SRV_DIMENSION_TEXTURE2DMS :
-                                                         D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = 1;
-    _dxDevice->CreateShaderResourceView(texture->DxResource(), &srvDesc, texture->_srvHeap->DxHeapCPUHandle());
 
     return texture;
 }

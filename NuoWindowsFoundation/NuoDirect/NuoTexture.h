@@ -18,14 +18,10 @@ typedef std::shared_ptr<NuoDescriptorHeap> PNuoDescriptorHeap;
 class NuoTexture : public NuoResource
 {
 
-	PNuoDescriptorHeap _srvHeap;
-
 public:
 
 	NuoTexture();
 	virtual ~NuoTexture();
-
-	D3D12_GPU_DESCRIPTOR_HANDLE ShaderResourceView();
 
 	friend class NuoSwapChain;
 	friend class NuoDevice;
