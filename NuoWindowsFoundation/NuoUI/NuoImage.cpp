@@ -10,7 +10,6 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <cassert>
-#include <vector>
 #include <wrl.h>
 
 
@@ -172,7 +171,8 @@ static HBITMAP CreateHBITMAP(const Microsoft::WRL::ComPtr<IWICBitmapSource>& ipB
 
 NuoImage::NuoImage()
     : _hBitmap(0),
-      _iStream(0)
+      _iStream(0),
+      _backgroundGrid(false)
 {
 }
 
@@ -186,6 +186,32 @@ NuoImage::~NuoImage()
 
 void NuoImage::Load(const std::string& path, int backgroundGrid)
 {
+    do
+    {
+        Microsoft::WRL::ComPtr<IWICImagingFactory> imagingFactory;
+        if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER,
+                                    IID_PPV_ARGS(&imagingFactory))))
+            break;
+
+        NuoFile imageFile(path);
+        PNuoReadStream stream = imageFile.ReadStream();
+
+        Microsoft::WRL::ComPtr<IWICBitmapDecoder> decoder;
+        if (FAILED(imagingFactory->CreateDecoderFromStream(stream->Stream().Get(), nullptr, WICDecodeMetadataCacheOnLoad, &decoder)))
+            break;
+
+        _bitmap = LoadBitmapFromDecoder(decoder);
+        _iStream = stream;
+        _backgroundGrid = backgroundGrid;
+    }
+    while (0);
+
+    UpdateImageInfo();
+}
+
+
+void NuoImage::LoadPNG(const std::string& path, int backgroundGrid)
+{
     NuoFile imageFile(path);
     PNuoReadStream stream = imageFile.ReadStream();
 
@@ -194,15 +220,14 @@ void NuoImage::Load(const std::string& path, int backgroundGrid)
         if (!stream)
             break;
 
-        auto source = LoadBitmapFromStream(stream->Stream());
-        if (!source)
-            break;
-
-        _hBitmap = CreateHBITMAP(source, backgroundGrid);
+        _bitmap = LoadBitmapFromStream(stream->Stream());
+        _backgroundGrid = backgroundGrid;
     }
     while (0);
 
     _iStream = stream;
+
+    UpdateImageInfo();
 }
 
 
@@ -220,10 +245,45 @@ PNuoIcon NuoImage::Icon()
 }
 
 
-NuoImage::operator HBITMAP () const
+NuoImage::operator HBITMAP ()
 {
+    if (!_hBitmap)
+        _hBitmap = CreateHBITMAP(_bitmap, _backgroundGrid);
+
     return _hBitmap;
 }
+
+
+
+void NuoImage::CopyPixel(std::vector<UINT8>& data)
+{
+    const UINT cbStride = Width() * 4;
+    const UINT cbImage = cbStride * Height();
+
+    data.resize(cbImage);
+
+    _bitmap->CopyPixels(NULL, cbStride, cbImage, static_cast<BYTE*>(&data[0]));
+}
+
+
+double NuoImage:: Width() const
+{
+    return _width;
+}
+
+
+double NuoImage::Height() const
+{
+    return _height;
+}
+
+
+void NuoImage::UpdateImageInfo()
+{
+    _bitmap->GetResolution(&_width, &_height);
+}
+
+
 
 
 // code of saving ico file
