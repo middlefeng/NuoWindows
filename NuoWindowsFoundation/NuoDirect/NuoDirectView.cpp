@@ -122,7 +122,7 @@ void NuoSwapChain::UpdateBuffer()
         _swapChain->GetBuffer(i, IID_PPV_ARGS(&dxResource));
 
         PNuoResource buffer = std::make_shared<NuoResource>();
-        buffer->SetResource(dxResource);
+        buffer->SetResource(dxResource, D3D12_RESOURCE_STATE_PRESENT);
 
         buffers.push_back(buffer);
     }

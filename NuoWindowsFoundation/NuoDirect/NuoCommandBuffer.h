@@ -53,8 +53,8 @@ protected:
 	unsigned int _frameCount;
 
 public:
-	virtual unsigned int InFlight();
-	virtual unsigned int FrameCount();
+	virtual unsigned int InFlight() const;
+	virtual unsigned int FrameCount() const;
 
 	void SetInFlight(unsigned int inFlight, unsigned int frameCount);
 };
@@ -118,6 +118,7 @@ public:
 
 	void SetRootConstant(unsigned int index, size_t size, void* constant);
 	void SetRootConstantBuffer(unsigned int index, const PNuoResourceSwapChain& cb);
+	void SetDescriptorTable(unsigned int index, const PNuoDescriptorHeap& table);
 	
 	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
 
@@ -130,8 +131,7 @@ public:
 private:
 
 	void ResourceBarrier(const PNuoResource& resource,
-						 D3D12_RESOURCE_STATES before,
-						 D3D12_RESOURCE_STATES after);
+						 D3D12_RESOURCE_STATES state);
 
 	ID3D12GraphicsCommandList* DxEncoder();
 

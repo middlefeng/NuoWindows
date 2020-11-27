@@ -25,8 +25,8 @@ typedef std::shared_ptr<NuoDevice> PNuoDevice;
 class NuoRenderTarget : public std::enable_shared_from_this<NuoRenderTarget>
 {
 
-	PNuoResource _resource;
-	PNuoResource _sampleResource;
+	PNuoTexture _resource;
+	PNuoTexture _sampleResource;
 	PNuoResource _backBuffer;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE _view;
@@ -47,7 +47,9 @@ public:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE View();
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthView();
+	D3D12_GPU_VIRTUAL_ADDRESS TargetGPUAddress();
 	PNuoResource RenderBuffer() const;
+	PNuoTexture ResultTexture() const;
 
 	void SetBackBuffer(const PNuoResource& backBuffer,
 					   const D3D12_CPU_DESCRIPTOR_HANDLE& view);

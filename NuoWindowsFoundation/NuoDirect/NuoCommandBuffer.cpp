@@ -45,13 +45,13 @@ PNuoCommandQueue NuoCommandSwapChain::CommandQueue() const
 }
 
 
-unsigned int NuoRenderInFlight::InFlight()
+unsigned int NuoRenderInFlight::InFlight() const
 {
 	return _inFlight;
 }
 
 
-unsigned int NuoRenderInFlight::FrameCount()
+unsigned int NuoRenderInFlight::FrameCount() const
 {
 	return _frameCount;
 }
@@ -104,7 +104,7 @@ void NuoCommandEncoder::CopyResource(const PNuoResource& src, const PNuoResource
 {
 	_commandList->CopyResource(dst->DxResource(), src->DxResource());
 
-	ResourceBarrier(dst, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
+	ResourceBarrier(dst, D3D12_RESOURCE_STATE_GENERIC_READ);
 }
 
 
@@ -178,6 +178,15 @@ void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoReso
 }
 
 
+void NuoCommandEncoder::SetDescriptorTable(unsigned int index, const PNuoDescriptorHeap& table)
+{
+	ID3D12DescriptorHeap* pHeaps[] = { table->DxHeap() };
+
+	_commandList->SetDescriptorHeaps(_countof(pHeaps), pHeaps);
+	_commandList->SetGraphicsRootDescriptorTable(index, table->DxHeapGPUHandle());
+}
+
+
 void NuoCommandEncoder::SetRenderTarget(const PNuoRenderTarget& renderTarget)
 {
 	_renderTarget = renderTarget;
@@ -193,7 +202,7 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 	
 	_commandList->SetPipelineState(dxPipeline);
 	if (pipeline->DxRootSignature())
-	_commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
+		_commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
 }
 
 
@@ -224,16 +233,17 @@ ID3D12GraphicsCommandList* NuoCommandEncoder::DxEncoder()
 
 
 void NuoCommandEncoder::ResourceBarrier(const PNuoResource& resource,
-									    D3D12_RESOURCE_STATES before,
-										D3D12_RESOURCE_STATES after)
+									    D3D12_RESOURCE_STATES state)
 {
 	D3D12_RESOURCE_BARRIER barrier;
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = resource->DxResource();
-	barrier.Transition.StateBefore = before;
-	barrier.Transition.StateAfter = after;
+	barrier.Transition.StateBefore = resource->State();
+	barrier.Transition.StateAfter = state;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	resource->SetState(state);
 
 	_commandList->ResourceBarrier(1, &barrier);
 }

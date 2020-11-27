@@ -49,6 +49,7 @@ protected:
 	virtual DXGI_FORMAT PipelineFormat();
 	virtual PNuoPipelineState PipelineState();
 	virtual unsigned int SampleCount();
+	virtual bool EnableDepth();
 
 public:
 
@@ -56,7 +57,7 @@ public:
 
 	typedef std::function<void(NuoCommandEncoder* encoder)> CommonFunc;
 
-	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc& func);
+	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func);
 	virtual void Draw(const PNuoCommandEncoder& encoder);
 
 };

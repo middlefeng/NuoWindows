@@ -10,7 +10,7 @@
 
 #include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoModelLoader/NuoModelLoader.h"
-//#include "NuoMeshes/NuoCubeMesh.h"
+#include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
 
 #include <dxcapi.h>
 #include <d3dcompiler.h>
@@ -36,6 +36,15 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
 {
 	NuoDirectView::OnSize(x, y);
 
+    const PNuoRenderTarget& renderTarget = RenderTarget(0);
+    const PNuoDevice& device = CommandQueue()->Device();
+    auto format = renderTarget->Format();
+    auto sampleCount = renderTarget->SampleCount();
+    auto w = renderTarget->RenderBuffer()->Width();
+    auto h = renderTarget->RenderBuffer()->Height();
+
+    _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, sampleCount, true, true);
+
     if (!_init)
     {
         Init();
@@ -59,16 +68,16 @@ void ModelView::Init()
     loader.LoadModel(path);
     std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
 
-    auto format = RenderTarget(0)->Format();// DXGI_FORMAT_R8G8B8A8_UNORM;
+    auto format = RenderTarget(0)->Format();
     auto sampleCount = RenderTarget(0)->SampleCount();
 
     auto mesh =(std::make_shared<NuoMeshSimple>());
     mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format, sampleCount);
 
-    //auto mesh = std::make_shared<NuoCubeMesh>();
-    //mesh->Init(commandBuffer, intermediate, 2.0f, 2.0f, 2.0f, format);
-
     _mesh = std::dynamic_pointer_cast<NuoMesh>(mesh);
+    
+    _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
+    _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
 
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
 
@@ -90,7 +99,10 @@ struct Light
 
 void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 {
-	PNuoRenderTarget target = CurrentRenderTarget();
+    if (!_init)
+        return;
+
+    PNuoRenderTarget target = _intermediateTarget; // CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -133,6 +145,17 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     _mesh->Draw(encoder);
 
 	target->ReleaseRenderPassEncoder();
+    encoder.reset();
+
+    target = CurrentRenderTarget();
+    encoder = target->RetainRenderPassEncoder(commandBuffer);
+
+    encoder->SetViewport(NuoViewport());
+    _textureMesh->SetTexture(encoder.get(), _intermediateTarget->ResultTexture());
+    _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
+    _textureMesh->Draw(encoder);
+
+    target->ReleaseRenderPassEncoder();
 }
 
 

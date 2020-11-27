@@ -31,7 +31,7 @@ PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuf
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs = InputDesc();
 
 	const PNuoDevice& device = commandBuffer->CommandQueue()->Device();
-	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), true /* depth */, SampleCount(),
+	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), EnableDepth(), SampleCount(),
 											  inputElementDescs, vertexShader, pixelShader, rootSignature);
 }
 
@@ -68,6 +68,12 @@ unsigned int NuoMesh::SampleCount()
 }
 
 
+bool NuoMesh::EnableDepth()
+{
+	return true;
+}
+
+
 void NuoMesh::Draw(const PNuoCommandEncoder& encoder)
 {
 	encoder->SetVertexBuffer(_vertexBuffer);
@@ -75,7 +81,7 @@ void NuoMesh::Draw(const PNuoCommandEncoder& encoder)
 }
 
 
-void NuoMesh::DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc& func)
+void NuoMesh::DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func)
 {
 	encoder->SetPipeline(PipelineState());
 	func(encoder.get());

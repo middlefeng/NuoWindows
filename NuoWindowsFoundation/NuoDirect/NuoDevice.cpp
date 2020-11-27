@@ -3,6 +3,7 @@
 #include "NuoDevice.h"
 #include "NuoStrings.h"
 #include "NuoResource.h"
+#include "NuoTexture.h"
 #include "NuoCommandBuffer.h"
 
 #include <cassert>
@@ -107,7 +108,7 @@ unsigned int NuoDevice::RenderTargetDescriptorHandleIncrementSize() const
 
 PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 {
-    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap(kNuoDescriptor_RenderTarget));
 
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
     rtvHeapDesc.NumDescriptors = frameCount;
@@ -122,22 +123,22 @@ PNuoDescriptorHeap NuoDevice::CreateRenderTargetHeap(unsigned int frameCount)
 }
 
 
-unsigned int NuoDevice::ConstantBufferDescriptorHandleIncrementSize() const
+unsigned int NuoDevice::ShaderResourceDescriptorHandleIncrementSize() const
 {
     return _dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
 
-PNuoDescriptorHeap NuoDevice::CreateConstantBufferHeap(unsigned int frameCount)
+PNuoDescriptorHeap NuoDevice::CreateShaderDescriptorHeap(unsigned int size)
 {
-    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap(kNuoDescriptor_ShaderResource));
 
     D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
-    cbvHeapDesc.NumDescriptors = frameCount;
+    cbvHeapDesc.NumDescriptors = size;
     cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;;
 
-    heap->_size = frameCount;
+    heap->_size = size;
     heap->_device = shared_from_this();
     _dxDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&heap->_heap));
 
@@ -147,7 +148,7 @@ PNuoDescriptorHeap NuoDevice::CreateConstantBufferHeap(unsigned int frameCount)
 
 PNuoDescriptorHeap NuoDevice::CreateDepthStencilHeap()
 {
-    PNuoDescriptorHeap heap(new NuoDescriptorHeap());
+    PNuoDescriptorHeap heap(new NuoDescriptorHeap(kNuoDescriptor_DepthStencil));
 
     D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
     dsvHeapDesc.NumDescriptors = 1;
@@ -205,8 +206,8 @@ PNuoResource NuoDevice::CreateDepthStencil(size_t width, size_t height, unsigned
                                 D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 }
 
-PNuoResource NuoDevice::CreateTexture(DXGI_FORMAT format,
-                                      unsigned int width, unsigned int height, unsigned int sampleCount)
+PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format,
+                                     unsigned int width, unsigned int height, unsigned int sampleCount)
 {
     D3D12_HEAP_PROPERTIES heapProps;
     heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
@@ -236,10 +237,10 @@ PNuoResource NuoDevice::CreateTexture(DXGI_FORMAT format,
                                                     nullptr, IID_PPV_ARGS(&result));
     assert(hr == S_OK);
 
-    PNuoResource resource = std::make_shared<NuoResource>();
-    resource->SetResource(result);
+    PNuoTexture texture = std::make_shared<NuoTexture>();
+    texture->SetResource(result, state);
 
-    return resource;
+    return texture;
 }
 
 
@@ -312,7 +313,7 @@ PNuoResource NuoDevice::CreateBufferInternal(void* data,
     }
 
     PNuoResource resource = std::make_shared<NuoResource>();
-    resource->SetResource(intermediate);
+    resource->SetResource(intermediate, state);
 
     return resource;
 }

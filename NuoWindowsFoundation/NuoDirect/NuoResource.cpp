@@ -15,10 +15,13 @@ NuoResource::~NuoResource()
 }
 
 
-void NuoResource::SetResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource)
+void NuoResource::SetResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource,
+							  D3D12_RESOURCE_STATES state)
 {
 	_dxResources = resource;
 	_desc = _dxResources->GetDesc();
+
+	_state = state;
 }
 
 
@@ -77,3 +80,16 @@ ID3D12Resource* NuoResource::DxResource() const
 {
 	return _dxResources.Get();
 }
+
+
+D3D12_RESOURCE_STATES NuoResource::State() const
+{
+	return _state;
+}
+
+
+void NuoResource::SetState(D3D12_RESOURCE_STATES state)
+{
+	_state = state;
+}
+
