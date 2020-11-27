@@ -11,8 +11,9 @@
 #include "NuoResource.h"
 
 
-class NuoDescriptorHeap;
-typedef std::shared_ptr<NuoDescriptorHeap> PNuoDescriptorHeap;
+class NuoCommandBuffer;
+typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
+
 
 
 class NuoTexture : public NuoResource
@@ -22,6 +23,8 @@ public:
 
 	NuoTexture();
 	virtual ~NuoTexture();
+
+	void Upload(const PNuoCommandBuffer& commandBuffe, const std::vector<UINT8>& data, std::vector<PNuoResource> intermediate);
 
 	friend class NuoSwapChain;
 	friend class NuoDevice;

@@ -231,7 +231,7 @@ PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format,
 
     Microsoft::WRL::ComPtr<ID3D12Resource> result;
     D3D12_RESOURCE_STATES state = sampleCount == 1 ? D3D12_RESOURCE_STATE_RENDER_TARGET : D3D12_RESOURCE_STATE_RESOLVE_SOURCE;
-    Microsoft::WRL::ComPtr<ID3D12Resource> intermediate;
+
     HRESULT hr = _dxDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE,
                                                     &resourceDesc, state,
                                                     nullptr, IID_PPV_ARGS(&result));
