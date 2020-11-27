@@ -86,3 +86,9 @@ void NuoDescriptorHeap::SetConstantBuffer(unsigned int index,
     _device->DxDevice()->CreateConstantBufferView(&desc, DxCPUHandle(index));
 }
 
+
+ID3D12DescriptorHeap* NuoDescriptorHeap::DxHeap() const
+{
+    return _heap.Get();
+}
+

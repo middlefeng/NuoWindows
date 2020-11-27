@@ -83,6 +83,12 @@ PNuoResource NuoRenderTarget::RenderBuffer() const
 }
 
 
+PNuoTexture NuoRenderTarget::ResultTexture() const
+{
+	return _resource;
+}
+
+
 void NuoRenderTarget::SetBackBuffer(const PNuoResource& backBuffer,
 									const D3D12_CPU_DESCRIPTOR_HANDLE& view)
 {

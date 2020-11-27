@@ -57,7 +57,7 @@ public:
 
 	typedef std::function<void(NuoCommandEncoder* encoder)> CommonFunc;
 
-	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc& func);
+	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func);
 	virtual void Draw(const PNuoCommandEncoder& encoder);
 
 };

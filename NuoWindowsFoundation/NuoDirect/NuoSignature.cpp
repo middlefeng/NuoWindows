@@ -60,19 +60,14 @@ void NuoRootSignature::AddConstant(size_t size, unsigned int shaderRegister, uns
 void NuoRootSignature::AddRootConstantBuffer(unsigned int shaderRegister, unsigned int space,
 											 D3D12_SHADER_VISIBILITY visibility)
 {
-	D3D12_ROOT_PARAMETER1 param;
-
-	param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	param.ShaderVisibility = visibility;
-	param.Descriptor.ShaderRegister = shaderRegister;
-	param.Descriptor.RegisterSpace = space;
-	param.Descriptor.Flags = D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC_WHILE_SET_AT_EXECUTE;
-
-	_parameters.push_back(param);
-
-	UpdateDesc();
+	AddConstantView(shaderRegister, space, visibility, D3D12_ROOT_PARAMETER_TYPE_CBV);
 }
 
+
+void NuoRootSignature::AddRootResource(unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility)
+{
+	AddConstantView(shaderRegister, space, visibility, D3D12_ROOT_PARAMETER_TYPE_SRV);
+}
 
 
 void NuoRootSignature::AddSampler(unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility)
@@ -107,7 +102,7 @@ void NuoRootSignature::AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VI
 	param.ShaderVisibility = visibility;
 	param.DescriptorTable.NumDescriptorRanges = rangeNum;
 
-	size_t index = _parameters.size() - 1;
+	size_t index = _parameters.size();
 	_descriptorTableRanges.insert(std::make_pair(index, std::vector<D3D12_DESCRIPTOR_RANGE1>(rangeNum)));
 	param.DescriptorTable.pDescriptorRanges = _descriptorTableRanges[index].data();
 	
@@ -120,7 +115,8 @@ void NuoRootSignature::AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VI
 void NuoRootSignature::AddTextures(unsigned int index, unsigned int rangeIndex, unsigned int num,
 								   unsigned int shaderRegister, unsigned int space)
 {
-	D3D12_DESCRIPTOR_RANGE1* range = &_descriptorTableRanges[(size_t)index][rangeIndex];
+	auto ranges = &_descriptorTableRanges.find(index)->second;
+	auto range = (ranges->begin() + rangeIndex);
 
 	range->BaseShaderRegister = shaderRegister;
 	range->RegisterSpace = space;
@@ -139,5 +135,23 @@ void NuoRootSignature::UpdateDesc()
 	_desc.Desc_1_1.pParameters = _parameters.data();
 	_desc.Desc_1_1.NumStaticSamplers = (UINT)_samplers.size();
 	_desc.Desc_1_1.pStaticSamplers = _samplers.data();
+}
+
+
+
+void NuoRootSignature::AddConstantView(unsigned int shaderRegister, unsigned int space,
+									   D3D12_SHADER_VISIBILITY visibility, D3D12_ROOT_PARAMETER_TYPE type)
+{
+	D3D12_ROOT_PARAMETER1 param;
+
+	param.ParameterType = type;
+	param.ShaderVisibility = visibility;
+	param.Descriptor.ShaderRegister = shaderRegister;
+	param.Descriptor.RegisterSpace = space;
+	param.Descriptor.Flags = D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC_WHILE_SET_AT_EXECUTE;
+
+	_parameters.push_back(param);
+
+	UpdateDesc();
 }
 

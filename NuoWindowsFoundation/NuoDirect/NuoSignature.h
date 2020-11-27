@@ -36,6 +36,7 @@ public:
 
 	void AddConstant(size_t size, unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility);
 	void AddRootConstantBuffer(unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility);
+	void AddRootResource(unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility);
 	void AddSampler(unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility);
 
 	void AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VISIBILITY visibility);
@@ -47,6 +48,8 @@ public:
 private:
 
 	void UpdateDesc();
+	void AddConstantView(unsigned int shaderRegister, unsigned int space,
+						 D3D12_SHADER_VISIBILITY visibility, D3D12_ROOT_PARAMETER_TYPE type);
 
 };
 

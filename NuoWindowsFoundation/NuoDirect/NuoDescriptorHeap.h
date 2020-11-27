@@ -57,6 +57,8 @@ public:
 	void SetTexture(unsigned int index, const PNuoTexture& texture);
 	void SetConstantBuffer(unsigned int index, const PNuoResource& buffer);
 
+	ID3D12DescriptorHeap* DxHeap() const;
+
 	friend class NuoDevice;
 
 };

@@ -45,13 +45,13 @@ PNuoCommandQueue NuoCommandSwapChain::CommandQueue() const
 }
 
 
-unsigned int NuoRenderInFlight::InFlight()
+unsigned int NuoRenderInFlight::InFlight() const
 {
 	return _inFlight;
 }
 
 
-unsigned int NuoRenderInFlight::FrameCount()
+unsigned int NuoRenderInFlight::FrameCount() const
 {
 	return _frameCount;
 }
@@ -180,6 +180,9 @@ void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoReso
 
 void NuoCommandEncoder::SetDescriptorTable(unsigned int index, const PNuoDescriptorHeap& table)
 {
+	ID3D12DescriptorHeap* pHeaps[] = { table->DxHeap() };
+
+	_commandList->SetDescriptorHeaps(_countof(pHeaps), pHeaps);
 	_commandList->SetGraphicsRootDescriptorTable(index, table->DxHeapGPUHandle());
 }
 
@@ -199,7 +202,7 @@ void NuoCommandEncoder::SetPipeline(const PNuoPipelineState& pipeline)
 	
 	_commandList->SetPipelineState(dxPipeline);
 	if (pipeline->DxRootSignature())
-	_commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
+		_commandList->SetGraphicsRootSignature(pipeline->DxRootSignature());
 }
 
 

@@ -13,6 +13,9 @@
 class ModelView;
 typedef std::shared_ptr<ModelView> PDirectView;
 
+class NuoTextureMesh;
+typedef std::shared_ptr<NuoTextureMesh> PNuoTextureMesh;
+
 
 class ModelView : public NuoDirectView
 {
@@ -28,7 +31,10 @@ class ModelView : public NuoDirectView
 	PNuoVertexBuffer _vertexBuffer;
 
 	PNuoMesh _mesh;
+	PNuoTextureMesh _textureMesh;
 	PNuoResourceSwapChain _light;
+
+	PNuoRenderTarget _intermediateTarget;
 
 	PNuoTimer _refreshTimer;
 

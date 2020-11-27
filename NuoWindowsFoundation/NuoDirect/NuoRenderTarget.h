@@ -49,6 +49,7 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthView();
 	D3D12_GPU_VIRTUAL_ADDRESS TargetGPUAddress();
 	PNuoResource RenderBuffer() const;
+	PNuoTexture ResultTexture() const;
 
 	void SetBackBuffer(const PNuoResource& backBuffer,
 					   const D3D12_CPU_DESCRIPTOR_HANDLE& view);

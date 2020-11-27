@@ -43,12 +43,14 @@ class NuoTextureMesh : public NuoScreenSpaceMesh
 
 private:
 
-    PNuoResource _texture;
-    PNuoRenderTarget _source;
+    PNuoTexture _texture;
+    std::vector<PNuoDescriptorHeap> _paramHeap;
 
 public:
 
-    void SetSource(const PNuoRenderTarget& source);
+    NuoTextureMesh(const PNuoCommandBuffer& buffer, unsigned int frameCount);
+
+    void SetTexture(const NuoRenderInFlight* inFlight, const PNuoTexture& texture);
 
     virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
     virtual void Draw(const PNuoCommandEncoder& encoder) override;

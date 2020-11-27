@@ -53,8 +53,8 @@ protected:
 	unsigned int _frameCount;
 
 public:
-	virtual unsigned int InFlight();
-	virtual unsigned int FrameCount();
+	virtual unsigned int InFlight() const;
+	virtual unsigned int FrameCount() const;
 
 	void SetInFlight(unsigned int inFlight, unsigned int frameCount);
 };
