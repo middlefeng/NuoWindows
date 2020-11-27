@@ -18,7 +18,7 @@
 
 
 
-static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(IStream* ipImageStream)
+static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(const Microsoft::WRL::ComPtr<IStream>& ipImageStream)
 {
     Microsoft::WRL::ComPtr<IWICBitmapSource> ipBitmap;
 
@@ -33,7 +33,7 @@ static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(IStream* ip
         {
             // load the PNG
 
-            if (FAILED(ipDecoder->Initialize(ipImageStream, WICDecodeMetadataCacheOnLoad)))
+            if (FAILED(ipDecoder->Initialize(ipImageStream.Get(), WICDecodeMetadataCacheOnLoad)))
                 break;
 
             // check for the presence of the first frame in the bitmap
@@ -62,6 +62,9 @@ static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(IStream* ip
 
     return ipBitmap;
 }
+
+
+
 
 
 static void BlendCheckerboard(void* buffer, size_t width, size_t height, size_t grid)
@@ -181,7 +184,7 @@ void NuoImage::Load(const std::string& path, int backgroundGrid)
         if (!stream)
             break;
 
-        auto source = LoadBitmapFromStream(*stream);
+        auto source = LoadBitmapFromStream(stream->Stream());
         if (!source)
             break;
 
@@ -198,7 +201,7 @@ PNuoIcon NuoImage::Icon()
     if (!_iStream)
         return nullptr;
 
-    Gdiplus::Bitmap gdiBitmap(*_iStream);
+    Gdiplus::Bitmap gdiBitmap(_iStream->Stream().Get());
     HICON icon = 0;
     HRESULT hr = gdiBitmap.GetHICON(&icon);
 
@@ -420,7 +423,7 @@ void NuoIcon::Save16(const std::string& path)
     PNuoWriteStream wStream = std::make_shared<NuoWriteStream>();
 
     LONG cbSize = 0;
-    pPicture->SaveAsFile(*wStream, true, &cbSize);
+    pPicture->SaveAsFile(wStream->Stream().Get(), true, &cbSize);
 
     file.SaveStream(wStream, cbSize);
 }

@@ -104,7 +104,7 @@ void NuoFile::SaveStream(const PNuoWriteStream& stream, long size)
 	if (!size)
 	{
 		STATSTG state;
-		stream->operator IStream* ()->Stat(&state, 0);
+		stream->Stream()->Stat(&state, 0);
 		size = (long)(state.cbSize.QuadPart);
 	}
 
@@ -146,13 +146,13 @@ NuoFile::~NuoFile()
 }
 
 
-NuoReadStream::NuoReadStream(IStream* iStream)
+NuoReadStream::NuoReadStream(const Microsoft::WRL::ComPtr<IStream>& iStream)
 	: _iStream(iStream)
 {
 }
 
 
-NuoReadStream::operator IStream* ()
+Microsoft::WRL::ComPtr<IStream>& NuoReadStream::Stream()
 {
 	return _iStream;
 }
@@ -160,8 +160,6 @@ NuoReadStream::operator IStream* ()
 
 NuoReadStream::~NuoReadStream()
 {
-	if (_iStream)
-		_iStream->Release();
 }
 
 
@@ -171,7 +169,7 @@ NuoWriteStream::NuoWriteStream()
 }
 
 
-NuoWriteStream::operator IStream* ()
+Microsoft::WRL::ComPtr<IStream>&  NuoWriteStream::Stream()
 {
 	if (!_iStream)
 		CreateStreamOnHGlobal(0, TRUE, &_iStream);
@@ -184,7 +182,7 @@ NuoWriteStream::operator IStream* ()
 HGLOBAL NuoWriteStream::GlobalBuffer()
 {
 	if (!_hGlobal)
-		GetHGlobalFromStream(_iStream, &_hGlobal);
+		GetHGlobalFromStream(_iStream.Get(), &_hGlobal);
 
 	return _hGlobal;
 }

@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <wrl.h>
 
 
 class NuoReadStream;
@@ -36,13 +37,13 @@ public:
 
 class NuoReadStream : public std::enable_shared_from_this<NuoReadStream>
 {
-	IStream* _iStream;
-	NuoReadStream(IStream* iStream);
+	Microsoft::WRL::ComPtr<IStream> _iStream;
+	NuoReadStream(const Microsoft::WRL::ComPtr<IStream>& iStream);
 
 public:
 
 	~NuoReadStream();
-	operator IStream* ();
+	Microsoft::WRL::ComPtr<IStream>& Stream();
 
 	friend NuoFile;
 };
@@ -50,14 +51,14 @@ public:
 
 class NuoWriteStream : public std::enable_shared_from_this<NuoWriteStream>
 {
-	IStream* _iStream;
+	Microsoft::WRL::ComPtr<IStream> _iStream;
 	HGLOBAL _hGlobal;
 	HGLOBAL GlobalBuffer();
 	
 public:
 
 	NuoWriteStream();
-	operator IStream* ();
+	Microsoft::WRL::ComPtr<IStream>& Stream();
 
 	friend NuoFile;
 };
