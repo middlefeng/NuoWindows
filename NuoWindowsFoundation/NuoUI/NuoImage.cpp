@@ -11,21 +11,22 @@
 #include <stdio.h>
 #include <cassert>
 #include <vector>
+#include <wrl.h>
 
 
 // code on https://faithlife.codes/blog/2008/09/displaying_a_splash_screen_with_c_part_i/
 
 
 
-static IWICBitmapSource* LoadBitmapFromStream(IStream* ipImageStream)
+static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(IStream* ipImageStream)
 {
-    IWICBitmapSource* ipBitmap = NULL;
+    Microsoft::WRL::ComPtr<IWICBitmapSource> ipBitmap;
 
     do
     {
-        IWICBitmapDecoder* ipDecoder = NULL;
+        Microsoft::WRL::ComPtr<IWICBitmapDecoder> ipDecoder;
         if (FAILED(CoCreateInstance(CLSID_WICPngDecoder, NULL, CLSCTX_INPROC_SERVER,
-                                    __uuidof(ipDecoder), reinterpret_cast<void**>(&ipDecoder))))
+                   IID_PPV_ARGS(&ipDecoder))))
             break;
 
         do
@@ -43,7 +44,7 @@ static IWICBitmapSource* LoadBitmapFromStream(IStream* ipImageStream)
 
             // load the first frame (i.e., the image)
 
-            IWICBitmapFrameDecode* ipFrame = NULL;
+            Microsoft::WRL::ComPtr<IWICBitmapFrameDecode> ipFrame;
             if (FAILED(ipDecoder->GetFrame(0, &ipFrame)))
                 break;
 
@@ -53,12 +54,9 @@ static IWICBitmapSource* LoadBitmapFromStream(IStream* ipImageStream)
 
             //   but we need this format to create the DIB to use on-screen)
 
-            WICConvertBitmapSource(GUID_WICPixelFormat32bppPBGRA, ipFrame, &ipBitmap);
-            ipFrame->Release();
+            WICConvertBitmapSource(GUID_WICPixelFormat32bppPBGRA, ipFrame.Get(), &ipBitmap);
         } 
         while (0);
-
-        ipDecoder->Release();
     } 
     while (0);
 
@@ -96,7 +94,7 @@ static void BlendCheckerboard(void* buffer, size_t width, size_t height, size_t 
 }
 
 
-static HBITMAP CreateHBITMAP(IWICBitmapSource* ipBitmap, int backgroundGrid)
+static HBITMAP CreateHBITMAP(const Microsoft::WRL::ComPtr<IWICBitmapSource>& ipBitmap, int backgroundGrid)
 {
     // initialize return value
 
