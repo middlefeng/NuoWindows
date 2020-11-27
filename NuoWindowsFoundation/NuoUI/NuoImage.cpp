@@ -17,6 +17,9 @@
 // code on https://faithlife.codes/blog/2008/09/displaying_a_splash_screen_with_c_part_i/
 
 
+static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromDecoder(const Microsoft::WRL::ComPtr<IWICBitmapDecoder>& decoder);
+
+
 
 static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(const Microsoft::WRL::ComPtr<IStream>& ipImageStream)
 {
@@ -29,34 +32,12 @@ static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(const Micro
                    IID_PPV_ARGS(&ipDecoder))))
             break;
 
-        do
-        {
-            // load the PNG
+        // load the PNG
 
-            if (FAILED(ipDecoder->Initialize(ipImageStream.Get(), WICDecodeMetadataCacheOnLoad)))
-                break;
+        if (FAILED(ipDecoder->Initialize(ipImageStream.Get(), WICDecodeMetadataCacheOnLoad)))
+            break;
 
-            // check for the presence of the first frame in the bitmap
-
-            UINT nFrameCount = 0;
-            if (FAILED(ipDecoder->GetFrameCount(&nFrameCount)) || nFrameCount != 1)
-                break;
-
-            // load the first frame (i.e., the image)
-
-            Microsoft::WRL::ComPtr<IWICBitmapFrameDecode> ipFrame;
-            if (FAILED(ipDecoder->GetFrame(0, &ipFrame)))
-                break;
-
-            // convert the image to 32bpp BGRA format with pre-multiplied alpha
-
-            //   (it may not be stored in that format natively in the PNG resource,
-
-            //   but we need this format to create the DIB to use on-screen)
-
-            WICConvertBitmapSource(GUID_WICPixelFormat32bppPBGRA, ipFrame.Get(), &ipBitmap);
-        } 
-        while (0);
+        ipBitmap = LoadBitmapFromDecoder(ipDecoder);
     } 
     while (0);
 
@@ -64,7 +45,36 @@ static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(const Micro
 }
 
 
+static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromDecoder(const Microsoft::WRL::ComPtr<IWICBitmapDecoder>& decoder)
+{
+    Microsoft::WRL::ComPtr<IWICBitmapSource> ipBitmap;
 
+    do
+    {
+        // check for the presence of the first frame in the bitmap
+
+        UINT nFrameCount = 0;
+        if (FAILED(decoder->GetFrameCount(&nFrameCount)) || nFrameCount != 1)
+            break;
+
+        // load the first frame (i.e., the image)
+
+        Microsoft::WRL::ComPtr<IWICBitmapFrameDecode> ipFrame;
+        if (FAILED(decoder->GetFrame(0, &ipFrame)))
+            break;
+
+        // convert the image to 32bpp BGRA format with pre-multiplied alpha
+
+        //   (it may not be stored in that format natively in the PNG resource,
+
+        //   but we need this format to create the DIB to use on-screen)
+
+        WICConvertBitmapSource(GUID_WICPixelFormat32bppPBGRA, ipFrame.Get(), &ipBitmap);
+    }
+    while (0);
+
+    return ipBitmap;
+}
 
 
 static void BlendCheckerboard(void* buffer, size_t width, size_t height, size_t grid)
