@@ -194,6 +194,7 @@
     <ClCompile Include="ModelViewerMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\d3dx12.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandQueue.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoConstantBufferSwapChain.h" />
