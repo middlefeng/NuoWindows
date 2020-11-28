@@ -93,6 +93,7 @@ PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 	PNuoCommandEncoder result = std::make_shared<NuoCommandEncoder>();
 	result->_commandList = commandList;
 	result->SetInFlight(_inFlight, _frameCount);
+	result->_commandQueue = _commandQueue;
 
 	_encoders.push_back(result);
 

@@ -110,6 +110,7 @@ class NuoCommandEncoder : public NuoRenderInFlight
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> _commandList;
 
 	PNuoRenderTarget _renderTarget;
+	PNuoCommandQueue _commandQueue;
 
 public:
 
