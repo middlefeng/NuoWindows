@@ -266,13 +266,13 @@ void NuoImage::CopyPixel(std::vector<UINT8>& data)
 }
 
 
-double NuoImage:: Width() const
+UINT NuoImage:: Width() const
 {
     return _width;
 }
 
 
-double NuoImage::Height() const
+UINT NuoImage::Height() const
 {
     return _height;
 }
@@ -280,7 +280,7 @@ double NuoImage::Height() const
 
 void NuoImage::UpdateImageInfo()
 {
-    _bitmap->GetResolution(&_width, &_height);
+    _bitmap->GetSize(&_width, &_height);
 }
 
 

@@ -127,6 +127,7 @@ public:
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
 	void DrawIndexed(unsigned int indiciesCount);
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
+	void CopyTexture(const std::vector<UINT8>& src, std::vector<PNuoResource>& intermediate, const PNuoTexture& texture);
 	void EndEncoding();
 
 private:

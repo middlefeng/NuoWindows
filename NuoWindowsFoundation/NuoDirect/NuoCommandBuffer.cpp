@@ -2,11 +2,13 @@
 
 #include "NuoCommandBuffer.h"
 
+#include "NuoTexture.h"
 #include "NuoRenderTarget.h"
 #include "NuoResourceSwapChain.h"
 
 #include <windows.h>
 #include <cassert>
+#include "d3dx12.h"
 
 
 
@@ -106,6 +108,30 @@ void NuoCommandEncoder::CopyResource(const PNuoResource& src, const PNuoResource
 	_commandList->CopyResource(dst->DxResource(), src->DxResource());
 
 	ResourceBarrier(dst, D3D12_RESOURCE_STATE_GENERIC_READ);
+}
+
+
+void NuoCommandEncoder::CopyTexture(const std::vector<UINT8>& src, std::vector<PNuoResource>& intermediate, const PNuoTexture& texture)
+{
+	PNuoDevice device = _commandQueue->Device();
+	UINT64 rowSizesInBytes;
+	UINT numRows;
+	D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint;
+	UINT64 requiredSize;
+	device->DxDevice()->GetCopyableFootprints(&texture->DxResource()->GetDesc(), 0, 1, 0,
+											  &footprint, &numRows, &rowSizesInBytes, &requiredSize);
+
+	PNuoResource intermediateResource = device->CreateUploadBuffer(requiredSize);
+	intermediate.push_back(intermediateResource);
+	
+	D3D12_SUBRESOURCE_DATA textureData = {};
+	textureData.pData = src.data();
+	textureData.RowPitch = texture->Width() * 4;
+	textureData.SlicePitch = textureData.RowPitch * texture->Height();
+
+	ResourceBarrier(texture, D3D12_RESOURCE_STATE_COPY_DEST);
+	UpdateSubresources(_commandList.Get(), texture->DxResource(), intermediateResource->DxResource(), 0, 0, 1, &textureData);
+	ResourceBarrier(texture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 

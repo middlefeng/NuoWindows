@@ -23,8 +23,8 @@ class NuoImage : public std::enable_shared_from_this<NuoImage>
 	HBITMAP _hBitmap;
 	bool _backgroundGrid;
 
-	double _width;
-	double _height;
+	UINT _width;
+	UINT _height;
 
 public:
 
@@ -38,8 +38,8 @@ public:
 
 	void CopyPixel(std::vector<UINT8>& data);
 
-	double Width() const;
-	double Height() const;
+	UINT Width() const;
+	UINT Height() const;
 
 private:
 

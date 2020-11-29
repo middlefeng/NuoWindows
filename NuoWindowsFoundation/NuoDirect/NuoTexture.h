@@ -24,7 +24,7 @@ public:
 	NuoTexture();
 	virtual ~NuoTexture();
 
-	void Upload(const PNuoCommandBuffer& commandBuffe, const std::vector<UINT8>& data, std::vector<PNuoResource> intermediate);
+	void Upload(const PNuoCommandBuffer& commandBuffe, const std::vector<UINT8>& data, std::vector<PNuoResource>& intermediate);
 
 	friend class NuoSwapChain;
 	friend class NuoDevice;
