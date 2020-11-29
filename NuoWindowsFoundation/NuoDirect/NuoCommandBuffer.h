@@ -110,6 +110,7 @@ class NuoCommandEncoder : public NuoRenderInFlight
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> _commandList;
 
 	PNuoRenderTarget _renderTarget;
+	PNuoCommandQueue _commandQueue;
 
 public:
 
@@ -126,6 +127,7 @@ public:
 	void SetVertexBuffer(const PNuoVertexBuffer& vertexBuffer);
 	void DrawIndexed(unsigned int indiciesCount);
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
+	void CopyTexture(const std::vector<UINT8>& src, std::vector<PNuoResource>& intermediate, const PNuoTexture& texture);
 	void EndEncoding();
 
 private:

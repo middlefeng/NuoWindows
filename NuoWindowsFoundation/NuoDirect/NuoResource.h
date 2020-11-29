@@ -13,7 +13,7 @@ typedef std::shared_ptr<NuoResource> PNuoResource;
 typedef std::weak_ptr<NuoResource> WPNuoResource;
 
 
-class NuoResource
+class NuoResource : public std::enable_shared_from_this<NuoResource>
 {
 
 protected:

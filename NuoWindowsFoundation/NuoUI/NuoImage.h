@@ -3,7 +3,9 @@
 #include <windows.h>
 
 #include <string>
+#include <vector>
 #include <memory>
+#include <wrl.h>
 
 class NuoIcon;
 typedef std::shared_ptr<NuoIcon> PNuoIcon;
@@ -11,10 +13,18 @@ typedef std::shared_ptr<NuoIcon> PNuoIcon;
 class NuoReadStream;
 typedef std::shared_ptr<NuoReadStream> PNuoReadStream;
 
+struct IWICBitmapSource;
+
+
 class NuoImage : public std::enable_shared_from_this<NuoImage>
 {
-	HBITMAP _hBitmap;
 	PNuoReadStream _iStream;
+	Microsoft::WRL::ComPtr<IWICBitmapSource> _bitmap;
+	HBITMAP _hBitmap;
+	bool _backgroundGrid;
+
+	UINT _width;
+	UINT _height;
 
 public:
 
@@ -22,8 +32,18 @@ public:
 	~NuoImage();
 
 	void Load(const std::string& path, int backgroundGrid);
+	void LoadPNG(const std::string& path, int backgroundGrid);
 	PNuoIcon Icon();
-	operator HBITMAP () const;
+	operator HBITMAP ();
+
+	void CopyPixel(std::vector<UINT8>& data);
+
+	UINT Width() const;
+	UINT Height() const;
+
+private:
+
+	void UpdateImageInfo();
 
 };
 

@@ -10,56 +10,66 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <cassert>
-#include <vector>
+#include <wrl.h>
 
 
 // code on https://faithlife.codes/blog/2008/09/displaying_a_splash_screen_with_c_part_i/
 
 
+static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromDecoder(const Microsoft::WRL::ComPtr<IWICBitmapDecoder>& decoder);
 
-static IWICBitmapSource* LoadBitmapFromStream(IStream* ipImageStream)
+
+
+static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromStream(const Microsoft::WRL::ComPtr<IStream>& ipImageStream)
 {
-    IWICBitmapSource* ipBitmap = NULL;
+    Microsoft::WRL::ComPtr<IWICBitmapSource> ipBitmap;
 
     do
     {
-        IWICBitmapDecoder* ipDecoder = NULL;
+        Microsoft::WRL::ComPtr<IWICBitmapDecoder> ipDecoder;
         if (FAILED(CoCreateInstance(CLSID_WICPngDecoder, NULL, CLSCTX_INPROC_SERVER,
-                                    __uuidof(ipDecoder), reinterpret_cast<void**>(&ipDecoder))))
+                   IID_PPV_ARGS(&ipDecoder))))
             break;
 
-        do
-        {
-            // load the PNG
+        // load the PNG
 
-            if (FAILED(ipDecoder->Initialize(ipImageStream, WICDecodeMetadataCacheOnLoad)))
-                break;
+        if (FAILED(ipDecoder->Initialize(ipImageStream.Get(), WICDecodeMetadataCacheOnLoad)))
+            break;
 
-            // check for the presence of the first frame in the bitmap
-
-            UINT nFrameCount = 0;
-            if (FAILED(ipDecoder->GetFrameCount(&nFrameCount)) || nFrameCount != 1)
-                break;
-
-            // load the first frame (i.e., the image)
-
-            IWICBitmapFrameDecode* ipFrame = NULL;
-            if (FAILED(ipDecoder->GetFrame(0, &ipFrame)))
-                break;
-
-            // convert the image to 32bpp BGRA format with pre-multiplied alpha
-
-            //   (it may not be stored in that format natively in the PNG resource,
-
-            //   but we need this format to create the DIB to use on-screen)
-
-            WICConvertBitmapSource(GUID_WICPixelFormat32bppPBGRA, ipFrame, &ipBitmap);
-            ipFrame->Release();
-        } 
-        while (0);
-
-        ipDecoder->Release();
+        ipBitmap = LoadBitmapFromDecoder(ipDecoder);
     } 
+    while (0);
+
+    return ipBitmap;
+}
+
+
+static Microsoft::WRL::ComPtr<IWICBitmapSource> LoadBitmapFromDecoder(const Microsoft::WRL::ComPtr<IWICBitmapDecoder>& decoder)
+{
+    Microsoft::WRL::ComPtr<IWICBitmapSource> ipBitmap;
+
+    do
+    {
+        // check for the presence of the first frame in the bitmap
+
+        UINT nFrameCount = 0;
+        if (FAILED(decoder->GetFrameCount(&nFrameCount)) || nFrameCount != 1)
+            break;
+
+        // load the first frame (i.e., the image)
+
+        Microsoft::WRL::ComPtr<IWICBitmapFrameDecode> ipFrame;
+        if (FAILED(decoder->GetFrame(0, &ipFrame)))
+            break;
+
+        // convert the image to 32bpp BGRA format with pre-multiplied alpha
+
+        //   (it may not be stored in that format natively in the PNG resource,
+
+        //   but we need this format to create the DIB to use on-screen)
+
+        WICConvertBitmapSource(GUID_WICPixelFormat32bppPBGRA, ipFrame.Get(), &ipBitmap);
+    }
     while (0);
 
     return ipBitmap;
@@ -96,7 +106,7 @@ static void BlendCheckerboard(void* buffer, size_t width, size_t height, size_t 
 }
 
 
-static HBITMAP CreateHBITMAP(IWICBitmapSource* ipBitmap, int backgroundGrid)
+static HBITMAP CreateHBITMAP(const Microsoft::WRL::ComPtr<IWICBitmapSource>& ipBitmap, int backgroundGrid)
 {
     // initialize return value
 
@@ -161,7 +171,8 @@ static HBITMAP CreateHBITMAP(IWICBitmapSource* ipBitmap, int backgroundGrid)
 
 NuoImage::NuoImage()
     : _hBitmap(0),
-      _iStream(0)
+      _iStream(0),
+      _backgroundGrid(false)
 {
 }
 
@@ -175,6 +186,32 @@ NuoImage::~NuoImage()
 
 void NuoImage::Load(const std::string& path, int backgroundGrid)
 {
+    do
+    {
+        Microsoft::WRL::ComPtr<IWICImagingFactory> imagingFactory;
+        if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER,
+                                    IID_PPV_ARGS(&imagingFactory))))
+            break;
+
+        NuoFile imageFile(path);
+        PNuoReadStream stream = imageFile.ReadStream();
+
+        Microsoft::WRL::ComPtr<IWICBitmapDecoder> decoder;
+        if (FAILED(imagingFactory->CreateDecoderFromStream(stream->Stream().Get(), nullptr, WICDecodeMetadataCacheOnLoad, &decoder)))
+            break;
+
+        _bitmap = LoadBitmapFromDecoder(decoder);
+        _iStream = stream;
+        _backgroundGrid = backgroundGrid;
+
+        UpdateImageInfo();
+    }
+    while (0);
+}
+
+
+void NuoImage::LoadPNG(const std::string& path, int backgroundGrid)
+{
     NuoFile imageFile(path);
     PNuoReadStream stream = imageFile.ReadStream();
 
@@ -183,15 +220,13 @@ void NuoImage::Load(const std::string& path, int backgroundGrid)
         if (!stream)
             break;
 
-        auto source = LoadBitmapFromStream(*stream);
-        if (!source)
-            break;
+        _bitmap = LoadBitmapFromStream(stream->Stream());
+        _backgroundGrid = backgroundGrid;
+        _iStream = stream;
 
-        _hBitmap = CreateHBITMAP(source, backgroundGrid);
+        UpdateImageInfo();
     }
     while (0);
-
-    _iStream = stream;
 }
 
 
@@ -200,7 +235,7 @@ PNuoIcon NuoImage::Icon()
     if (!_iStream)
         return nullptr;
 
-    Gdiplus::Bitmap gdiBitmap(*_iStream);
+    Gdiplus::Bitmap gdiBitmap(_iStream->Stream().Get());
     HICON icon = 0;
     HRESULT hr = gdiBitmap.GetHICON(&icon);
 
@@ -209,10 +244,45 @@ PNuoIcon NuoImage::Icon()
 }
 
 
-NuoImage::operator HBITMAP () const
+NuoImage::operator HBITMAP ()
 {
+    if (!_hBitmap)
+        _hBitmap = CreateHBITMAP(_bitmap, _backgroundGrid);
+
     return _hBitmap;
 }
+
+
+
+void NuoImage::CopyPixel(std::vector<UINT8>& data)
+{
+    const UINT cbStride = Width() * 4;
+    const UINT cbImage = cbStride * Height();
+
+    data.resize(cbImage);
+
+    _bitmap->CopyPixels(NULL, cbStride, cbImage, static_cast<BYTE*>(&data[0]));
+}
+
+
+UINT NuoImage:: Width() const
+{
+    return _width;
+}
+
+
+UINT NuoImage::Height() const
+{
+    return _height;
+}
+
+
+void NuoImage::UpdateImageInfo()
+{
+    _bitmap->GetSize(&_width, &_height);
+}
+
+
 
 
 // code of saving ico file
@@ -422,7 +492,7 @@ void NuoIcon::Save16(const std::string& path)
     PNuoWriteStream wStream = std::make_shared<NuoWriteStream>();
 
     LONG cbSize = 0;
-    pPicture->SaveAsFile(*wStream, true, &cbSize);
+    pPicture->SaveAsFile(wStream->Stream().Get(), true, &cbSize);
 
     file.SaveStream(wStream, cbSize);
 }

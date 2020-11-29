@@ -26,6 +26,7 @@ unsigned int NuoDescriptorHeap::Incremental()
     case kNuoDescriptor_ShaderResource:
         return _device->ShaderResourceDescriptorHandleIncrementSize();
     }
+    return 0;
 }
 
 
@@ -33,7 +34,7 @@ unsigned int NuoDescriptorHeap::Incremental()
 D3D12_CPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxCPUHandle(unsigned int index)
 {
     D3D12_CPU_DESCRIPTOR_HANDLE cbvHandle(DxHeapCPUHandle());
-    SIZE_T offset = index * Incremental();
+    SIZE_T offset = (UINT32)index * Incremental();
     cbvHandle.ptr = (SIZE_T)((char*)cbvHandle.ptr + offset);
 
     return cbvHandle;
@@ -43,7 +44,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxCPUHandle(unsigned int index)
 D3D12_GPU_DESCRIPTOR_HANDLE NuoDescriptorHeap::DxGPUHandle(unsigned int index)
 {
     D3D12_GPU_DESCRIPTOR_HANDLE cbvHandle(DxHeapGPUHandle());
-    SIZE_T offset = index * Incremental();
+    SIZE_T offset = (UINT32)index * Incremental();
     cbvHandle.ptr = (SIZE_T)((char*)cbvHandle.ptr + offset);
 
     return cbvHandle;
