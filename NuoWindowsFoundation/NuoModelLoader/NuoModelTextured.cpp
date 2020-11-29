@@ -12,9 +12,11 @@
 
 
 
-NuoItemTextured::NuoItemTextured() :
-    _position(0), _normal(0), _texCoord(0)
+NuoItemTextured::NuoItemTextured()
 {
+    _position = {};
+    _normal = {};
+    _texCoord = {};
 }
 
 

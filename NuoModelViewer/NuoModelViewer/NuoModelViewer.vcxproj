@@ -328,6 +328,8 @@
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialed.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshTextured.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.h" />

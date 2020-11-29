@@ -11,14 +11,11 @@
 
 
 #include "NuoModelBase.h"
+#include "NuoMeshes/NuoShaders/NuoMeshTextured.h"
 
 
-struct NuoItemTextured
+struct NuoItemTextured : public NuoMeshTexturedItem
 {
-    NuoVectorFloat4::_typeTrait::_vectorType _position;
-    NuoVectorFloat4::_typeTrait::_vectorType _normal;
-    NuoVectorFloat2::_typeTrait::_vectorType _texCoord;
-    
     NuoItemTextured();
     
     bool operator == (const NuoItemTextured& other);

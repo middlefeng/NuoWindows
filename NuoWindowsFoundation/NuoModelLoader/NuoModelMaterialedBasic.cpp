@@ -18,10 +18,14 @@ bool ItemTexCoordEequal<NuoItemMaterialedBasic>(const NuoItemMaterialedBasic& i1
 
 
 
-NuoItemMaterialedTexturedBasic::NuoItemMaterialedTexturedBasic() :
-    _position(0), _normal(0), _texCoord(0),
-    _ambient(0), _diffuse(0), _specular(0)
+NuoItemMaterialedTexturedBasic::NuoItemMaterialedTexturedBasic()
 {
+    _position = {};
+    _normal = {};
+    _texCoord = {};
+    _ambient = {};
+    _diffuse = {};
+    _specular = {};
 }
 
 
@@ -39,35 +43,14 @@ bool NuoItemMaterialedTexturedBasic::operator == (const NuoItemMaterialedTexture
 }
 
 
-NuoItermMaterialedBumpedTextured::NuoItermMaterialedBumpedTextured() :
-    _position(0), _normal(0), _tangent(0), _texCoord(0),
-    _ambient(0), _diffuse(0), _specular(0)
+
+NuoItemMaterialedBasic::NuoItemMaterialedBasic()
 {
-}
-
-
-bool NuoItermMaterialedBumpedTextured::operator == (const NuoItermMaterialedBumpedTextured& i2)
-{
-    return
-        (_position == i2._position) &&
-        (_normal == i2._normal) &&
-        (_tangent == i2._tangent) &&
-    
-        (_ambient == i2._ambient) &&
-        (_diffuse == i2._diffuse) &&
-        (_specular.x == i2._specular.x) &&
-        (_specular.y == i2._specular.y) &&
-        (_specular.z == i2._specular.z) &&
-        
-        (_texCoord.x == i2._texCoord.x) &&
-        (_texCoord.y == i2._texCoord.y);
-}
-
-
-NuoItemMaterialedBasic::NuoItemMaterialedBasic() :
-    _position(0), _normal(0),
-    _ambient(0), _diffuse(0), _specular(0)
-{
+    _position = {};
+    _normal = {};
+    _ambient = {};
+    _diffuse = {};
+    _specular = {};
 }
 
 

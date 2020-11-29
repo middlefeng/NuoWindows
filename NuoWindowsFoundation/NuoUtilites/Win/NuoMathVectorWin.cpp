@@ -23,6 +23,13 @@ bool operator == (const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
 }
 
 
+bool operator == (const DirectX::XMFLOAT2& v1, const DirectX::XMFLOAT2& v2)
+{
+    return v1.x == v2.x &&
+           v1.y == v2.y;
+}
+
+
 DirectX::XMFLOAT3 operator + (const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
 {
     DirectX::XMFLOAT3 result;

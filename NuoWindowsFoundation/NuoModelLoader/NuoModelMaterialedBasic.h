@@ -15,6 +15,8 @@
 #include "NuoModelTextured.h"
 #include "NuoMaterial.h"
 
+#include "NuoMeshes/NuoShaders/NuoMeshMaterialed.h"
+
 #include <memory>
 
 
@@ -47,17 +49,8 @@ public:
 
 
 
-struct NuoItemMaterialedTexturedBasic
+struct NuoItemMaterialedTexturedBasic : public NuoMaterialedTexturedBasicItem
 {
-    NuoVectorFloat4::_typeTrait::_vectorType _position;
-    NuoVectorFloat4::_typeTrait::_vectorType _normal;
-    NuoVectorFloat2::_typeTrait::_vectorType _texCoord;
-    
-    NuoVectorFloat3::_typeTrait::_vectorType _diffuse;
-    NuoVectorFloat3::_typeTrait::_vectorType _ambient;
-    NuoVectorFloat3::_typeTrait::_vectorType _specular;
-    NuoVectorFloat3::_typeTrait::_vectorType _shinessDisolveIllum;
-    
     NuoItemMaterialedTexturedBasic();
     
     bool operator == (const NuoItemMaterialedTexturedBasic& other);
@@ -81,47 +74,8 @@ public:
 
 
 
-struct NuoItermMaterialedBumpedTextured
+struct NuoItemMaterialedBasic : public NuoMaterialedBasicItem
 {
-    NuoVectorFloat4::_typeTrait::_vectorType _position;
-    NuoVectorFloat4::_typeTrait::_vectorType _normal;
-    NuoVectorFloat4::_typeTrait::_vectorType _tangent;
-    NuoVectorFloat4::_typeTrait::_vectorType _bitangent;
-    NuoVectorFloat2::_typeTrait::_vectorType _texCoord;
-    
-    NuoVectorFloat3::_typeTrait::_vectorType _diffuse;
-    NuoVectorFloat3::_typeTrait::_vectorType _ambient;
-    NuoVectorFloat3::_typeTrait::_vectorType _specular;
-    NuoVectorFloat3::_typeTrait::_vectorType _shinessDisolveIllum;
-    
-    NuoItermMaterialedBumpedTextured();
-    
-    bool operator == (const NuoItermMaterialedBumpedTextured& other);
-};
-
-
-
-
-class NuoModelMaterialedBumpedTextured : virtual public NuoModelTexturedWithTangentBase<NuoItermMaterialedBumpedTextured>,
-                                         virtual public NuoModelMaterialedBasicBase<NuoItermMaterialedBumpedTextured>
-{
-public:
-    IMPL_CLONE(NuoModelMaterialedBumpedTextured);
-};
-
-
-
-
-struct NuoItemMaterialedBasic
-{
-    NuoVectorFloat4::_typeTrait::_vectorType _position;
-    NuoVectorFloat4::_typeTrait::_vectorType _normal;
-    
-    NuoVectorFloat3::_typeTrait::_vectorType _diffuse;
-    NuoVectorFloat3::_typeTrait::_vectorType _ambient;
-    NuoVectorFloat3::_typeTrait::_vectorType _specular;
-    NuoVectorFloat3::_typeTrait::_vectorType _shinessDisolveIllum;
-    
     NuoItemMaterialedBasic();
     
     bool operator == (const NuoItemMaterialedBasic& other);

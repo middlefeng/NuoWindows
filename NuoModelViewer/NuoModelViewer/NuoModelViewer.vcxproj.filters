@@ -341,6 +341,12 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelTextured.h">
       <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshTextured.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialed.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">
