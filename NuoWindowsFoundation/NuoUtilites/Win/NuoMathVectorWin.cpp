@@ -8,6 +8,21 @@
 
 #include "NuoMathVector.h"
 
+
+bool operator == (const DirectX::XMVECTOR& v1, const DirectX::XMVECTOR& v2)
+{
+    return DirectX::XMVector4Equal(v1, v2);
+}
+
+
+bool operator == (const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
+{
+    return v1.x == v2.x &&
+           v1.y == v2.y &&
+           v1.z == v2.z;
+}
+
+
 DirectX::XMFLOAT3 operator + (const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
 {
     DirectX::XMFLOAT3 result;

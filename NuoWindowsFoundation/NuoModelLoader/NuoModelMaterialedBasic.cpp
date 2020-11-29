@@ -28,25 +28,14 @@ NuoItemMaterialedTexturedBasic::NuoItemMaterialedTexturedBasic() :
 bool NuoItemMaterialedTexturedBasic::operator == (const NuoItemMaterialedTexturedBasic& i2)
 {
     return
-        (_position.x == i2._position.x) &&
-        (_position.y == i2._position.y) &&
-        (_position.z == i2._position.z) &&
-        (_normal.x == i2._normal.x) &&
-        (_normal.y == i2._normal.y) &&
-        (_normal.z == i2._normal.z) &&
+        (_position == i2._position) &&
+        (_normal == i2._normal) &&
     
-        (_ambient.x == i2._ambient.x) &&
-        (_ambient.y == i2._ambient.y) &&
-        (_ambient.z == i2._ambient.z) &&
-        (_diffuse.x == i2._diffuse.x) &&
-        (_diffuse.y == i2._diffuse.y) &&
-        (_diffuse.z == i2._diffuse.z) &&
-        (_specular.x == i2._specular.x) &&
-        (_specular.y == i2._specular.y) &&
-        (_specular.z == i2._specular.z) &&
+        (_ambient == i2._ambient) &&
+        (_diffuse == i2._diffuse) &&
+        (_specular == i2._specular) &&
     
-        (_texCoord.x == i2._texCoord.x) &&
-        (_texCoord.y == i2._texCoord.y);
+        (_texCoord == i2._texCoord);
 }
 
 
@@ -60,23 +49,12 @@ NuoItermMaterialedBumpedTextured::NuoItermMaterialedBumpedTextured() :
 bool NuoItermMaterialedBumpedTextured::operator == (const NuoItermMaterialedBumpedTextured& i2)
 {
     return
-        (_position.x == i2._position.x) &&
-        (_position.y == i2._position.y) &&
-        (_position.z == i2._position.z) &&
-        (_normal.x == i2._normal.x) &&
-        (_normal.y == i2._normal.y) &&
-        (_normal.z == i2._normal.z) &&
-        (_tangent.x == i2._tangent.x) &&
-        (_tangent.y == i2._tangent.y) &&
-        (_tangent.z == i2._tangent.z) &&
-        (_tangent.w == i2._tangent.w) &&
+        (_position == i2._position) &&
+        (_normal == i2._normal) &&
+        (_tangent == i2._tangent) &&
     
-        (_ambient.x == i2._ambient.x) &&
-        (_ambient.y == i2._ambient.y) &&
-        (_ambient.z == i2._ambient.z) &&
-        (_diffuse.x == i2._diffuse.x) &&
-        (_diffuse.y == i2._diffuse.y) &&
-        (_diffuse.z == i2._diffuse.z) &&
+        (_ambient == i2._ambient) &&
+        (_diffuse == i2._diffuse) &&
         (_specular.x == i2._specular.x) &&
         (_specular.y == i2._specular.y) &&
         (_specular.z == i2._specular.z) &&
@@ -96,22 +74,12 @@ NuoItemMaterialedBasic::NuoItemMaterialedBasic() :
 bool NuoItemMaterialedBasic::operator == (const NuoItemMaterialedBasic& i2)
 {
     return
-        (_position.x == i2._position.x) &&
-        (_position.y == i2._position.y) &&
-        (_position.z == i2._position.z) &&
-        (_normal.x == i2._normal.x) &&
-        (_normal.y == i2._normal.y) &&
-        (_normal.z == i2._normal.z) &&
+        (_position == i2._position) &&
+        (_normal == i2._normal) &&
         
-        (_ambient.x == i2._ambient.x) &&
-        (_ambient.y == i2._ambient.y) &&
-        (_ambient.z == i2._ambient.z) &&
-        (_diffuse.x == i2._diffuse.x) &&
-        (_diffuse.y == i2._diffuse.y) &&
-        (_diffuse.z == i2._diffuse.z) &&
-        (_specular.x == i2._specular.x) &&
-        (_specular.y == i2._specular.y) &&
-        (_specular.z == i2._specular.z);
+        (_ambient == i2._ambient) &&
+        (_diffuse == i2._diffuse) &&
+        (_specular == i2._specular);
 }
 
 

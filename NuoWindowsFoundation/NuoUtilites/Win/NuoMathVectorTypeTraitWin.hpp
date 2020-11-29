@@ -37,6 +37,9 @@ public:
 };
 
 
+bool operator == (const DirectX::XMVECTOR& v1, const DirectX::XMVECTOR& v2);
+bool operator == (const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2);
+
 
 DirectX::XMVECTOR NuoXMLoad(const DirectX::XMFLOAT3& vector);
 DirectX::XMVECTOR NuoXMLoad(const DirectX::XMFLOAT4& vector);
