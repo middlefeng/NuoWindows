@@ -59,6 +59,8 @@ class NuoModelBoard : virtual public NuoModelBoardBase<NuoItemSimple>,
     float _specularPower;
     
 public:
+
+    IMPL_CLONE(NuoModelBoard);
     
     NuoModelBoard(float width, float height, float thickness);
 

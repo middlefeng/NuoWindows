@@ -177,6 +177,12 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes\NuoScreenSpaceMesh.cpp">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelMaterialedBasic.cpp">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelTextured.cpp">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -328,6 +334,12 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\d3dx12.h">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelMaterialedBasic.h">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelTextured.h">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

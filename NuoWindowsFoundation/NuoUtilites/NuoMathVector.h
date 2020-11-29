@@ -63,6 +63,12 @@ public:
     {
         return (_vector = v);
     }
+
+    inline bool operator == (const NuoVector& o) const
+    {
+        return x() == o.x() && y() == o.y() &&
+               z() == o.z() && w() == o.w();
+    }
     
     inline NuoVector operator - () const;
     
