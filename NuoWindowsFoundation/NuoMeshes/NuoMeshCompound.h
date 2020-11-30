@@ -23,10 +23,17 @@ class NuoMeshCompound : public NuoMesh
 protected:
 
 	std::vector<PNuoMesh> _meshes;
+
+	CommonFunc _commonFunc;
 	
 public:
 
 	NuoMeshCompound(const std::vector<PNuoMesh>& meshes);
+
+	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
+
+	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func) override;
+	virtual void Draw(const PNuoCommandEncoder& encoder) override;
 
 };
 

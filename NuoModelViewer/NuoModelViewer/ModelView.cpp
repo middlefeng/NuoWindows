@@ -9,6 +9,7 @@
 #include "NuoStrings.h"
 
 #include "NuoDirect/NuoResourceSwapChain.h"
+#include "NuoMeshes/NuoMeshCompound.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
 
 #include "NuoModelLoader/NuoModelLoader.h"
@@ -28,7 +29,7 @@ struct InputParamType
 
 
 ModelView::ModelView(const PNuoDevice& device,
-					   const PNuoWindow& parent)
+					 const PNuoWindow& parent)
 	: NuoDirectView(device, parent),
       _init(false)
 {
@@ -60,7 +61,6 @@ void ModelView::Init()
 {
     PNuoDevice device = CommandQueue()->Device();
 
-    std::vector<PNuoResource> intermediate;
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     std::string path = NuoAppInstance::GetInstance()->ModulePath();
@@ -78,8 +78,9 @@ void ModelView::Init()
     options._basicMaterialized = false;
 
     NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
-    _meshes = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
+    _mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
 
+    std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
 
@@ -143,11 +144,8 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
         encoder->SetRootConstantBuffer(1, lightBuffer);
     };
     
-    for (PNuoMesh mesh : _meshes)
-    {
-        mesh->DrawBegin(encoder, commFunc);
-        mesh->Draw(encoder);
-    }
+    _mesh->DrawBegin(encoder, commFunc);
+    _mesh->Draw(encoder);
 
 	target->ReleaseRenderPassEncoder();
     encoder.reset();

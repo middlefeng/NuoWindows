@@ -4,7 +4,6 @@
 #include "NuoTimer.h"
 
 #include "NuoDirect/NuoDirectView.h"
-#include "NuoMeshes/NuoMesh.h"
 
 #include <functional>
 #include <DirectXMath.h>
@@ -15,6 +14,10 @@ typedef std::shared_ptr<ModelView> PDirectView;
 
 class NuoTextureMesh;
 typedef std::shared_ptr<NuoTextureMesh> PNuoTextureMesh;
+
+class NuoMeshCompound;
+typedef std::shared_ptr<NuoMeshCompound> PNuoMeshCompound;
+
 
 
 class ModelView : public NuoDirectView
@@ -30,7 +33,7 @@ class ModelView : public NuoDirectView
 	PNuoPipelineState _pipeline;
 	PNuoVertexBuffer _vertexBuffer;
 
-	std::vector<PNuoMesh> _meshes;
+	PNuoMeshCompound _mesh;
 	PNuoTextureMesh _textureMesh;
 	PNuoResourceSwapChain _light;
 

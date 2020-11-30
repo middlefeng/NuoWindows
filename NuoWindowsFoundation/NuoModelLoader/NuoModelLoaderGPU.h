@@ -25,8 +25,8 @@ typedef std::function<void(float)> NuoModelLoaderProgress;
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
-class NuoMesh;
-typedef std::shared_ptr<NuoMesh> PNuoMesh;
+class NuoMeshCompound;
+typedef std::shared_ptr<NuoMeshCompound> PNuoMeshCompound;
 
 class NuoResource;
 typedef std::shared_ptr<NuoResource> PNuoResource;
@@ -51,9 +51,9 @@ public:
      *  Create a renderable GPU mesh. A GPU mesh consists of the continuous buffer where the vertex data
      *  is stored, the associated textures, and the associated pipeline state used for rendering.
      */
-    std::vector<PNuoMesh> CreateMesh(const NuoMeshOptions& loadOption,
-                                     const PNuoCommandBuffer& commandBuffer,
-                                     NuoModelLoaderProgress progress);
+    PNuoMeshCompound CreateMesh(const NuoMeshOptions& loadOption,
+                                const PNuoCommandBuffer& commandBuffer,
+                                NuoModelLoaderProgress progress);
 
     void ClearIntermediates();
     

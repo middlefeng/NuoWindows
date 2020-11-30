@@ -9,7 +9,7 @@
 #include "NuoModelLoaderGPU.h"
 
 
-#include "NuoMeshes/NuoMesh.h"
+#include "NuoMeshes/NuoMeshCompound.h"
 #include "NuoMeshes/NuoMeshBounds.h"
 
 
@@ -28,9 +28,9 @@ NuoModelLoaderGPU::~NuoModelLoaderGPU()
 
 
 
-std::vector<PNuoMesh> NuoModelLoaderGPU::CreateMesh(const NuoMeshOptions& loadOption,
-                                                    const PNuoCommandBuffer& commandBuffer,
-                                                    NuoModelLoaderProgress progress)
+PNuoMeshCompound NuoModelLoaderGPU::CreateMesh(const NuoMeshOptions& loadOption,
+                                               const PNuoCommandBuffer& commandBuffer,
+                                               NuoModelLoaderProgress progress)
 {
     const float loadingPortionModelBuffer = loadOption._textured ? 0.70 : 0.85;
     const float loadingPortionModelGPU = (1 - loadingPortionModelBuffer);
@@ -60,7 +60,9 @@ std::vector<PNuoMesh> NuoModelLoaderGPU::CreateMesh(const NuoMeshOptions& loadOp
             progress(++index / (float)models.size() * loadingPortionModelGPU + loadingPortionModelBuffer);
     }
 
-    return result;
+    PNuoMeshCompound resultObj = std::make_shared<NuoMeshCompound>(result);
+
+    return resultObj;
 }
 
 
