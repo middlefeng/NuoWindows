@@ -48,4 +48,7 @@ private:
 };
 
 
+typedef std::shared_ptr<NuoModelLoader> PNuoModelLoader;
+
+
 #endif

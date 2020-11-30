@@ -9,8 +9,12 @@
 #include "NuoStrings.h"
 
 #include "NuoDirect/NuoResourceSwapChain.h"
-#include "NuoModelLoader/NuoModelLoader.h"
+#include "NuoMeshes/NuoMeshCompound.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
+
+#include "NuoModelLoader/NuoModelLoader.h"
+#include "NuoModelLoader/NuoModelLoaderGPU.h"
+
 
 #include <dxcapi.h>
 #include <d3dcompiler.h>
@@ -25,7 +29,7 @@ struct InputParamType
 
 
 ModelView::ModelView(const PNuoDevice& device,
-					   const PNuoWindow& parent)
+					 const PNuoWindow& parent)
 	: NuoDirectView(device, parent),
       _init(false)
 {
@@ -57,30 +61,27 @@ void ModelView::Init()
 {
     PNuoDevice device = CommandQueue()->Device();
 
-    std::vector<PNuoResource> intermediate;
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     std::string path = NuoAppInstance::GetInstance()->ModulePath();
     path = RemoveLastPathComponent(path);
     path = path + "/uh60.obj";
 
+    PNuoModelLoader loader = std::make_shared<NuoModelLoader>();
+    loader->LoadModel(path);
+
+    auto format = RenderTarget(0)->Format();
+    auto sampleCount = RenderTarget(0)->SampleCount();
+
     NuoMeshOptions options = {};
     options._combineByMaterials = false;
     options._textured = true;
     options._basicMaterialized = true;
 
-    NuoModelLoader loader;
-    loader.LoadModel(path);
-    std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(options, [](float) {});
+    NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
+    _mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
 
-    auto format = RenderTarget(0)->Format();
-    auto sampleCount = RenderTarget(0)->SampleCount();
-
-    auto mesh =(std::make_shared<NuoMeshSimple>());
-    mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format, sampleCount);
-
-    _mesh = std::dynamic_pointer_cast<NuoMesh>(mesh);
-    
+    std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
 
@@ -133,15 +134,13 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     mvp.viewMatrix = (viewMatrix * _modelTransfer)._m;
 
     const PNuoResourceSwapChain& lightBuffer = _light;
+    NuoLightUniforms light;
+    light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
+    light.lightParams[0].irradiance = 1.0;
+    lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
 
     NuoMesh::CommonFunc commFunc = [&mvp, &lightBuffer](NuoCommandEncoder* encoder)
     {
-        NuoLightUniforms light;
-        light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
-        light.lightParams[0].irradiance = 1.0;
-
-        lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
-
         encoder->SetRootConstant(0, sizeof(NuoUniforms), &mvp);
         encoder->SetRootConstantBuffer(1, lightBuffer);
     };

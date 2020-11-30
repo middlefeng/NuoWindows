@@ -183,6 +183,15 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelTextured.cpp">
       <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshBounds.cpp">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoaderGPU.cpp">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshCompound.cpp">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -346,6 +355,15 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialed.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshBounds.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoaderGPU.h">
+      <Filter>NuoWindowsFoundation\NuoModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshCompound.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

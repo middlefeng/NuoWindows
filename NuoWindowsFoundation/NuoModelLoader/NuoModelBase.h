@@ -15,6 +15,7 @@
 #include <string>
 
 
+#include "NuoBounds.h"
 #include "NuoMeshes/NuoMeshOptions.h"
 #include "NuoMeshes/NuoShaders/NuoMeshSimple.h"
 
@@ -72,6 +73,7 @@ public:
     virtual size_t GetIndicesNumber() const = 0;
     virtual NuoVectorFloat4 GetPosition(size_t index) = 0;
     virtual NuoMaterial GetMaterial(size_t primtiveIndex) const = 0;
+    virtual NuoBounds GetBoundingBox();
 
     virtual void* Ptr() = 0;
     virtual size_t Length() = 0;

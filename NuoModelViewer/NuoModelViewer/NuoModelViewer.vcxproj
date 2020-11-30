@@ -166,12 +166,15 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes\NuoScreenSpaceMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshBounds.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshCompound.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoader.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelMaterialedBasic.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelTextured.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoaderGPU.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.cc" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.cpp" />
@@ -216,6 +219,8 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes\NuoScreenSpaceMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshBounds.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshCompound.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshOptions.h" />
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DeploymentContent>
@@ -357,6 +362,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoader.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelMaterialedBasic.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelTextured.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoaderGPU.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.h" />
