@@ -70,8 +70,6 @@ void ModelView::Init()
     PNuoModelLoader loader = std::make_shared<NuoModelLoader>();
     loader->LoadModel(path);
 
-    //std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
-
     auto format = RenderTarget(0)->Format();
     auto sampleCount = RenderTarget(0)->SampleCount();
 
