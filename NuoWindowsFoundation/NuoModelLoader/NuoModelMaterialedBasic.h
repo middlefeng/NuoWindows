@@ -69,6 +69,20 @@ public:
     virtual void GenerateTangents() override;
     virtual void SetTexturePathBump(const std::string texPath) override;
     virtual std::string GetTexturePathBump() override;
+
+    virtual void AddTexCoord(size_t sourceIndex, const std::vector<float>& texCoordBuffer) override;
+    virtual void AddMaterial(const NuoMaterial& material) override;
+    virtual NuoMaterial GetMaterial(size_t primtiveIndex) const override;
+
+    virtual bool HasTransparent() override;
+    virtual std::shared_ptr<NuoMaterial> GetUnifiedMaterial() override;
+    virtual void UpdateBufferWithUnifiedMaterial() override;
+
+    virtual void SetTexturePathDiffuse(const std::string texPath) override;
+    virtual std::string GetTexturePathDiffuse() override;
+
+    virtual void SetTexturePathOpacity(const std::string texPath) override;
+    virtual std::string GetTexturePathOpacity() override;
 };
 
 
@@ -127,7 +141,7 @@ void NuoModelMaterialedBasicBase<ItemBase>::AddMaterial(const NuoMaterial& mater
     
     NuoModelCommon<ItemBase>::_buffer[targetOffset]._shinessDisolveIllum.x = material.shininess;
     NuoModelCommon<ItemBase>::_buffer[targetOffset]._shinessDisolveIllum.y = material.dissolve;
-    NuoModelCommon<ItemBase>::_buffer[targetOffset]._shinessDisolveIllum.z = material.illum;
+    NuoModelCommon<ItemBase>::_buffer[targetOffset]._shinessDisolveIllum.z = (float)material.illum;
     
     if (!_material)
         _material.reset(new NuoMaterial(material));
@@ -175,7 +189,7 @@ void NuoModelMaterialedBasicBase<ItemBase>::UpdateBufferWithUnifiedMaterial()
         
         NuoModelCommon<ItemBase>::_buffer[targetOffset]._shinessDisolveIllum.x = material.shininess;
         NuoModelCommon<ItemBase>::_buffer[targetOffset]._shinessDisolveIllum.y = material.dissolve;
-        NuoModelCommon<ItemBase>::_buffer[targetOffset]._shinessDisolveIllum.z = material.illum;
+        NuoModelCommon<ItemBase>::_buffer[targetOffset]._shinessDisolveIllum.z = (float)material.illum;
     }
 }
 

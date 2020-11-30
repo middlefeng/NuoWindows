@@ -89,6 +89,66 @@ std::string NuoModelMaterialedTextured::GetTexturePathBump()
 }
 
 
+void NuoModelMaterialedTextured::AddTexCoord(size_t sourceIndex, const std::vector<float>& texCoordBuffer)
+{
+    NuoModelTextureBase<NuoItemMaterialedTexturedBasic>::AddTexCoord(sourceIndex, texCoordBuffer);
+}
+
+
+void NuoModelMaterialedTextured::AddMaterial(const NuoMaterial& material)
+{
+    NuoModelMaterialedBasicBase<NuoItemMaterialedTexturedBasic>::AddMaterial(material);
+}
+
+
+NuoMaterial NuoModelMaterialedTextured::GetMaterial(size_t primtiveIndex) const
+{
+    return NuoModelMaterialedBasicBase<NuoItemMaterialedTexturedBasic>::GetMaterial(primtiveIndex);
+}
+
+
+bool NuoModelMaterialedTextured::HasTransparent()
+{
+    return NuoModelMaterialedBasicBase<NuoItemMaterialedTexturedBasic>::HasTransparent();
+}
+
+
+std::shared_ptr<NuoMaterial> NuoModelMaterialedTextured::GetUnifiedMaterial()
+{
+    return NuoModelMaterialedBasicBase<NuoItemMaterialedTexturedBasic>::GetUnifiedMaterial();
+}
+
+
+void NuoModelMaterialedTextured::UpdateBufferWithUnifiedMaterial()
+{
+    return NuoModelMaterialedBasicBase<NuoItemMaterialedTexturedBasic>::UpdateBufferWithUnifiedMaterial();
+}
+
+
+void NuoModelMaterialedTextured::SetTexturePathDiffuse(const std::string texPath)
+{
+    NuoModelTextureBase<NuoItemMaterialedTexturedBasic>::SetTexturePathDiffuse(texPath);
+}
+
+
+std::string NuoModelMaterialedTextured::GetTexturePathDiffuse()
+{
+    return NuoModelTextureBase<NuoItemMaterialedTexturedBasic>::GetTexturePathDiffuse();
+}
+
+
+void NuoModelMaterialedTextured::SetTexturePathOpacity(const std::string texPath)
+{
+    NuoModelTextureBase<NuoItemMaterialedTexturedBasic>::SetTexturePathOpacity(texPath);
+}
+
+
+std::string NuoModelMaterialedTextured::GetTexturePathOpacity()
+{
+    return NuoModelTextureBase<NuoItemMaterialedTexturedBasic>::GetTexturePathOpacity();
+}
+
+
 
 void NuoModelMaterialed::SetTexturePathDiffuse(const std::string texPath)
 {
