@@ -64,9 +64,14 @@ void ModelView::Init()
     path = RemoveLastPathComponent(path);
     path = path + "/uh60.obj";
 
+    NuoMeshOptions options = {};
+    options._combineByMaterials = false;
+    options._textured = true;
+    options._basicMaterialized = true;
+
     NuoModelLoader loader;
     loader.LoadModel(path);
-    std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
+    std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(options, [](float) {});
 
     auto format = RenderTarget(0)->Format();
     auto sampleCount = RenderTarget(0)->SampleCount();
