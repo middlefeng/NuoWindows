@@ -79,6 +79,35 @@ size_t NuoModelBase::IndicesCount()
 }
 
 
+NuoBounds NuoModelBase::GetBoundingBox()
+{
+    float xMin = 1e9f, xMax = -1e9f;
+    float yMin = 1e9f, yMax = -1e9f;
+    float zMin = 1e9f, zMax = -1e9f;
+
+    for (size_t i = 0; i < GetVerticesNumber(); ++i)
+    {
+        NuoVectorFloat4 position = GetPosition(i);
+
+        xMin = std::min(xMin, position.x());
+        xMax = std::max(xMax, position.x());
+        yMin = std::min(yMin, position.y());
+        yMax = std::max(yMax, position.y());
+        zMin = std::min(zMin, position.z());
+        zMax = std::max(zMax, position.z());
+    }
+
+    NuoVectorFloat3 center((xMax + xMin) / 2.0f, (yMax + yMin) / 2.0f, (zMax + zMin) / 2.0f);
+    NuoVectorFloat3 span(xMax - xMin, yMax - yMin, zMax - zMin);
+
+    NuoBounds result;
+    result._center = center;
+    result._span = span;
+
+    return result;
+}
+
+
 NuoItemSimple::NuoItemSimple()
 {
     memset(&_position, sizeof(_position), 0);

@@ -166,6 +166,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes\NuoScreenSpaceMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshBounds.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes\NuoScreenSpaceMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoCubeMesh.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMesh.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshBounds.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshOptions.h" />
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DeploymentContent>
