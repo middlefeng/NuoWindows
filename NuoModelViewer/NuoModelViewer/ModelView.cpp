@@ -9,8 +9,11 @@
 #include "NuoStrings.h"
 
 #include "NuoDirect/NuoResourceSwapChain.h"
-#include "NuoModelLoader/NuoModelLoader.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
+
+#include "NuoModelLoader/NuoModelLoader.h"
+#include "NuoModelLoader/NuoModelLoaderGPU.h"
+
 
 #include <dxcapi.h>
 #include <d3dcompiler.h>
@@ -64,18 +67,21 @@ void ModelView::Init()
     path = RemoveLastPathComponent(path);
     path = path + "/uh60.obj";
 
-    NuoModelLoader loader;
-    loader.LoadModel(path);
-    std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
+    PNuoModelLoader loader = std::make_shared<NuoModelLoader>();
+    loader->LoadModel(path);
+
+    //std::vector<PNuoModelBase> model = loader.CreateMeshWithOptions(NuoMeshOptions(), [](float) {});
 
     auto format = RenderTarget(0)->Format();
     auto sampleCount = RenderTarget(0)->SampleCount();
 
-    auto mesh =(std::make_shared<NuoMeshSimple>());
-    mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model[0]), format, sampleCount);
+    NuoMeshOptions options;
+    options._combineByMaterials = true;
+    options._basicMaterialized = false;
 
-    _mesh = std::dynamic_pointer_cast<NuoMesh>(mesh);
-    
+    NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
+    _meshes = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
+
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
 
@@ -128,21 +134,22 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     mvp.viewMatrix = (viewMatrix * _modelTransfer)._m;
 
     const PNuoResourceSwapChain& lightBuffer = _light;
+    NuoLightUniforms light;
+    light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
+    light.lightParams[0].irradiance = 1.0;
+    lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
 
     NuoMesh::CommonFunc commFunc = [&mvp, &lightBuffer](NuoCommandEncoder* encoder)
     {
-        NuoLightUniforms light;
-        light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
-        light.lightParams[0].irradiance = 1.0;
-
-        lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
-
         encoder->SetRootConstant(0, sizeof(NuoUniforms), &mvp);
         encoder->SetRootConstantBuffer(1, lightBuffer);
     };
     
-    _mesh->DrawBegin(encoder, commFunc);
-    _mesh->Draw(encoder);
+    for (PNuoMesh mesh : _meshes)
+    {
+        mesh->DrawBegin(encoder, commFunc);
+        mesh->Draw(encoder);
+    }
 
 	target->ReleaseRenderPassEncoder();
     encoder.reset();

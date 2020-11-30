@@ -74,6 +74,26 @@ bool NuoMesh::EnableDepth()
 }
 
 
+NuoMeshBounds NuoMesh::BoundsLocal() const
+{
+	return _boundsLocal;
+}
+
+
+void NuoMesh::SetBoundsLocal(const NuoMeshBounds& bounds)
+{
+	_boundsLocal = bounds;
+
+	// calculate the sphere from box if the former is not calculated.
+	// some subclass might do this by itself (such as compound mesh)
+	//
+	if (_boundsLocal.boundingSphere._radius == 0.)
+	{
+		_boundsLocal.boundingSphere = _boundsLocal.boundingBox.Sphere();
+	}
+}
+
+
 void NuoMesh::Draw(const PNuoCommandEncoder& encoder)
 {
 	encoder->SetVertexBuffer(_vertexBuffer);
@@ -123,3 +143,24 @@ PNuoRootSignature NuoMeshSimple::RootSignature(const PNuoCommandBuffer& commandB
 }
 
 
+
+
+PNuoMesh CreateMesh(const NuoMeshOptions& options,
+					const PNuoCommandBuffer& commandBuffer,
+					const PNuoModelBase& model,
+					DXGI_FORMAT format, unsigned int sampleCount,
+					std::vector<PNuoResource>& intermediate)
+{
+	PNuoMesh resultMesh;
+	bool textured = options._textured && !model->GetTexturePathDiffuse().empty();
+
+	if (!textured && !options._basicMaterialized)
+	{
+		PNuoMeshSimple mesh = std::make_shared<NuoMeshSimple>();
+		mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model), format, sampleCount);
+
+		resultMesh = mesh;
+	}
+
+	return resultMesh;
+}

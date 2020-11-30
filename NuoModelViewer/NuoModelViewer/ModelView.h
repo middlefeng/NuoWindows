@@ -30,7 +30,7 @@ class ModelView : public NuoDirectView
 	PNuoPipelineState _pipeline;
 	PNuoVertexBuffer _vertexBuffer;
 
-	PNuoMesh _mesh;
+	std::vector<PNuoMesh> _meshes;
 	PNuoTextureMesh _textureMesh;
 	PNuoResourceSwapChain _light;
 

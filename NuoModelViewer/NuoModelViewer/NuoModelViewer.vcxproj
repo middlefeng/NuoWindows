@@ -171,6 +171,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoader.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoaderGPU.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.cc" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.cpp" />
@@ -332,6 +333,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoader.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoaderGPU.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.h" />

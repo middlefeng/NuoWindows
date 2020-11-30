@@ -16,6 +16,7 @@
 
 #include <DirectXMath.h>
 
+#include "NuoMeshes/NuoMeshBounds.h"
 #include "NuoMeshes/NuoShaders/NuoMeshShaderType.h"
 #include "NuoMeshes/NuoShaders/NuoUniforms.h"
 #include "NuoMeshes/NuoShaders/NuoMeshSimple.h"
@@ -40,6 +41,7 @@ protected:
 
 	PNuoVertexBuffer _vertexBuffer;
 	PNuoResourceSwapChain _transform;
+	NuoMeshBounds _boundsLocal;
 
 	PNuoPipelineState MakePipelineState(const PNuoCommandBuffer& commandBuffer,
 										const std::string& vertex, const std::string& pixel);
@@ -52,6 +54,9 @@ protected:
 	virtual bool EnableDepth();
 
 public:
+
+	NuoMeshBounds BoundsLocal() const;
+	void SetBoundsLocal(const NuoMeshBounds& bounds);
 
 	//virtual void UpdateUniforms(const NuoMatrixFloat44& world);
 
@@ -113,3 +118,17 @@ public:
 
 };
 
+
+typedef std::shared_ptr<NuoMeshSimple> PNuoMeshSimple;
+
+
+class NuoMeshOptions;
+class NuoModelBase;
+typedef std::shared_ptr<NuoModelBase> PNuoModelBase;
+
+
+PNuoMesh CreateMesh(const NuoMeshOptions& options,
+					const PNuoCommandBuffer& commandBuffer,
+					const PNuoModelBase& model,
+					DXGI_FORMAT format, unsigned int sampleCount,
+					std::vector<PNuoResource>& intermediate);
