@@ -32,6 +32,9 @@ public:
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
 
+	virtual bool HasTransparency() const override;
+	virtual void SetTransparency(bool transparency) override;
+
 	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func) override;
 	virtual void Draw(const PNuoCommandEncoder& encoder) override;
 

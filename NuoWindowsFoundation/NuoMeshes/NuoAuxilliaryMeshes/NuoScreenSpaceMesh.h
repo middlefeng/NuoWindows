@@ -52,6 +52,9 @@ public:
 
     void SetTexture(const NuoRenderInFlight* inFlight, const PNuoTexture& texture);
 
+    virtual bool HasTransparency() const override;
+    virtual void SetTransparency(bool transparency) override;
+
     virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
     virtual void Draw(const PNuoCommandEncoder& encoder) override;
 

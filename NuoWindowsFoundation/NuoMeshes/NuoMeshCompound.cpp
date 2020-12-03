@@ -15,6 +15,23 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> NuoMeshCompound::InputDesc()
 }
 
 
+bool NuoMeshCompound::HasTransparency() const
+{
+	for (const PNuoMesh& mesh : _meshes)
+	{
+		if (mesh->HasTransparency())
+			return true;
+	}
+	
+	return false;
+}
+
+
+void NuoMeshCompound:: SetTransparency(bool transparency)
+{
+}
+
+
 void NuoMeshCompound::Draw(const PNuoCommandEncoder& encoder)
 {
 	for (PNuoMesh& mesh : _meshes)

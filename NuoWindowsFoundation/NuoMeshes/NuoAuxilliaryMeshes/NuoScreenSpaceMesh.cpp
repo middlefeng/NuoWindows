@@ -86,6 +86,17 @@ void NuoTextureMesh::SetTexture(const NuoRenderInFlight* inFlight, const PNuoTex
 }
 
 
+bool NuoTextureMesh::HasTransparency() const
+{
+    return false;
+}
+
+
+void NuoTextureMesh::SetTransparency(bool transparency)
+{
+}
+
+
 PNuoRootSignature NuoTextureMesh::RootSignature(const PNuoCommandBuffer& commandBuffer)
 {
     PNuoRootSignature rootSignature = NuoScreenSpaceMesh::RootSignature(commandBuffer);
