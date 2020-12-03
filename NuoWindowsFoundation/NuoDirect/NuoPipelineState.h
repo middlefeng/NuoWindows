@@ -19,6 +19,15 @@ typedef std::weak_ptr<NuoPipelineState> WPNuoPipelineState;
 
 
 
+enum NuoBlendingMode
+{
+	kNuoBlending_None,
+	kNuoBlending_Alpha,
+	kNuoBlending_Accumulate,
+};
+
+
+
 class NuoPipelineState
 {
 
@@ -31,6 +40,7 @@ public:
 	NuoPipelineState(const PNuoDevice& device,
 					 DXGI_FORMAT format, bool depthEnabled,
 					 unsigned int sampleCount,
+					 NuoBlendingMode blendingMode,
 					 const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 				  	 const PNuoShader& vertex,
 					 const PNuoShader& pixel,

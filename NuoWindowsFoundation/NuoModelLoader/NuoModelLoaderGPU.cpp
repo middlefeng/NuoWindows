@@ -32,7 +32,7 @@ PNuoMeshCompound NuoModelLoaderGPU::CreateMesh(const NuoMeshOptions& loadOption,
                                                const PNuoCommandBuffer& commandBuffer,
                                                NuoModelLoaderProgress progress)
 {
-    const float loadingPortionModelBuffer = loadOption._textured ? 0.70 : 0.85;
+    const float loadingPortionModelBuffer = loadOption._textured ? 0.70f : 0.85f;
     const float loadingPortionModelGPU = (1 - loadingPortionModelBuffer);
 
     auto progressFunc = [loadingPortionModelBuffer, progress](float progressValue)

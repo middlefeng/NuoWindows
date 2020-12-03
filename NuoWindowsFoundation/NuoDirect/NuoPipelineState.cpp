@@ -10,6 +10,7 @@
 NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
                                    DXGI_FORMAT format, bool depthEnabled,
                                    unsigned int sampleCount,
+                                   NuoBlendingMode blendingMode,
                                    const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 								   const PNuoShader& vertex,
 								   const PNuoShader& pixel,
@@ -52,17 +53,37 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
     rasterizerDesc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
     psoDesc.RasterizerState = rasterizerDesc;
 
-    D3D12_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc;
+    D3D12_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc = {};
     renderTargetBlendDesc.BlendEnable = false;
     renderTargetBlendDesc.LogicOpEnable = false;
-    renderTargetBlendDesc.SrcBlend = D3D12_BLEND_ONE;
-    renderTargetBlendDesc.DestBlend = D3D12_BLEND_ZERO;
-    renderTargetBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-    renderTargetBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-    renderTargetBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-    renderTargetBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
     renderTargetBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
     renderTargetBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+    if (blendingMode != kNuoBlending_None)
+    {
+        renderTargetBlendDesc.BlendEnable = true;
+
+        if (blendingMode == kNuoBlending_Accumulate)
+        {
+            renderTargetBlendDesc.SrcBlend = D3D12_BLEND_ONE;
+        }
+        else if (blendingMode == kNuoBlending_Alpha)
+        {
+            renderTargetBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+        }
+        else
+        {
+            renderTargetBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+            assert(false);
+        }
+        
+        renderTargetBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+        renderTargetBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+        renderTargetBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+        renderTargetBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+        renderTargetBlendDesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+    }
 
     D3D12_BLEND_DESC blendDesc;
     blendDesc.AlphaToCoverageEnable = false;
