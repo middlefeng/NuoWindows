@@ -75,7 +75,7 @@ void ModelView::Init()
 
     NuoMeshOptions options = {};
     options._combineByMaterials = false;
-    options._textured = true;
+    options._textured = false;
     options._basicMaterialized = true;
 
     NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);

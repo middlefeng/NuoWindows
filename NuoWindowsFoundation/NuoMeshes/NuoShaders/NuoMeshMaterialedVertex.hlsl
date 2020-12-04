@@ -1,17 +1,19 @@
 
 #include "NuoUniforms.h"
-#include "NuoMeshSimple.h"
+#include "NuoMeshMaterialed.h"
 
 
 
 ConstantBuffer<NuoUniforms> viewProjection : register(b0);
 
 
-NuoMeshSimpleVertexShaderOutput main(NuoMeshSimpleItem v)
+NuoMaterialedBasicVertexOutput main(NuoMaterialedBasicItem v)
 {
-    NuoMeshSimpleVertexShaderOutput outVertex;
+    NuoMaterialedBasicVertexOutput outVertex;
 
     outVertex._position = mul(viewProjection.viewProjectionMatrix, v._position);
+    outVertex._diffuse = v._diffuse;
+    outVertex._shinessDisolveIllum = v._shinessDisolveIllum;
 
     matrix normalMatrix = viewProjection.viewMatrix;
     normalMatrix[3] = float4(0, 0, 0, 1);
