@@ -31,8 +31,10 @@ PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuf
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs = InputDesc();
 
+	NuoBlendingMode blendingMode = HasTransparency() ? kNuoBlending_Alpha : kNuoBlending_None;
+
 	const PNuoDevice& device = commandBuffer->CommandQueue()->Device();
-	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), EnableDepth(), SampleCount(), kNuoBlending_None,
+	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), EnableDepth(), SampleCount(), blendingMode,
 											  inputElementDescs, vertexShader, pixelShader, rootSignature);
 }
 
@@ -211,12 +213,12 @@ PNuoMesh CreateMesh(const NuoMeshOptions& options,
 	else if (!textured && options._basicMaterialized)
 	{
 		PNuoMeshMaterialed mesh = std::make_shared<NuoMeshMaterialed>();
+		mesh->SetTransparency(model->HasTransparent());
+		mesh->SetPhysicallyReflection(options._physicallyReflection);
+
 		mesh->Init(commandBuffer, intermediate,
 				   std::dynamic_pointer_cast<NuoModelMaterialed>(model),
 				   format, sampleCount);
-
-		mesh->SetTransparency(model->HasTransparent());
-		mesh->SetPhysicallyReflection(options._physicallyReflection);
 
 		resultMesh = mesh;
 	}
