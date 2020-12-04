@@ -52,7 +52,7 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> NuoScreenSpaceMesh::InputDesc()
     std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
     {
         { "POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "TEX_COORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "TEX_COORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
     return inputElementDescs;
@@ -83,6 +83,17 @@ void NuoTextureMesh::SetTexture(const NuoRenderInFlight* inFlight, const PNuoTex
 {
     _texture = texture;
     _paramHeap[inFlight->InFlight()]->SetTexture(0, texture);
+}
+
+
+bool NuoTextureMesh::HasTransparency() const
+{
+    return false;
+}
+
+
+void NuoTextureMesh::SetTransparency(bool transparency)
+{
 }
 
 

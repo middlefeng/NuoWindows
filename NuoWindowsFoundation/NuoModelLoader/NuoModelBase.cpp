@@ -9,6 +9,9 @@
 #include "NuoModelBase.h"
 #include "NuoMaterial.h"
 
+#include "NuoModelLoader/NuoModelTextured.h"
+#include "NuoModelLoader/NuoModelMaterialedBasic.h"
+
 #include <DirectXMath.h>
 
 
@@ -17,13 +20,13 @@ std::shared_ptr<NuoModelBase> CreateModel(const NuoMeshOptions& options, const N
 {
     bool textured = options._textured && material.HasTextureDiffuse();
 
-    //if (!textured && !options._basicMaterialized)
+    if (!textured && !options._basicMaterialized)
     {
         auto model = std::make_shared<NuoModelSimple>();
         model->SetName(modelItemName);
         return model;
     }
-    /*else if (textured && !options._basicMaterialized)
+    else if (textured && !options._basicMaterialized)
     {
         auto model = std::make_shared<NuoModelTextured>();
         model->SetName(modelItemName);
@@ -32,14 +35,14 @@ std::shared_ptr<NuoModelBase> CreateModel(const NuoMeshOptions& options, const N
     }
     else if (textured && options._basicMaterialized)
     {
-        if (material.HasTextureBump() && options._texturedBump)
+        /*if (material.HasTextureBump() && options._texturedBump)
         {
             auto model = std::make_shared<NuoModelMaterialedBumpedTextured>();
             model->SetName(modelItemName);
             model->SetCheckTransparency(true);
             return model;
         }
-        else
+        else*/
         {
             auto model = std::make_shared<NuoModelMaterialedTextured>();
             model->SetName(modelItemName);
@@ -53,6 +56,7 @@ std::shared_ptr<NuoModelBase> CreateModel(const NuoMeshOptions& options, const N
         model->SetName(modelItemName);
         return model;
     }
+    /*
     else
     {
         auto model = std::shared_ptr<NuoModelBase>();

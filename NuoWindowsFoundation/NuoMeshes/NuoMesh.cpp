@@ -7,8 +7,9 @@
 #include "NuoAppInstance.h"
 
 #include "NuoMeshes/NuoShaders/NuoUniforms.h"
-#include "NuoModelLoader/NuoModelBase.h"
 
+#include "NuoModelLoader/NuoModelBase.h"
+#include "NuoMeshMaterialed.h"
 
 PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuffer,
 											 const std::string& vertex, const std::string& pixel)
@@ -30,8 +31,10 @@ PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuf
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs = InputDesc();
 
+	NuoBlendingMode blendingMode = HasTransparency() ? kNuoBlending_Alpha : kNuoBlending_None;
+
 	const PNuoDevice& device = commandBuffer->CommandQueue()->Device();
-	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), EnableDepth(), SampleCount(), kNuoBlending_None,
+	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), EnableDepth(), SampleCount(), blendingMode,
 											  inputElementDescs, vertexShader, pixelShader, rootSignature);
 }
 
@@ -125,6 +128,17 @@ void NuoMeshSimple::Init(const PNuoCommandBuffer& commandBuffer,
 }
 
 
+bool NuoMeshSimple::HasTransparency() const
+{
+	return false;
+}
+
+
+void NuoMeshSimple::SetTransparency(bool transparency)
+{
+}
+
+
 std::vector<D3D12_INPUT_ELEMENT_DESC> NuoMeshSimple::InputDesc()
 {
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs =
@@ -161,6 +175,54 @@ PNuoMesh CreateMesh(const NuoMeshOptions& options,
 
 		resultMesh = mesh;
 	}
+	/*else if (textured && options._basicMaterialized)
+	{
+		NSString* modelTexturePath = [NSString stringWithUTF8String : model->GetTexturePathDiffuse().c_str()];
+		BOOL embeddedAlpha = options._textureEmbedMaterialTransparency;
+
+		NuoMeshTexMatieraled* mesh = [[NuoMeshTexMatieraled alloc]initWithCommandQueue:commandQueue
+			withVerticesBuffer : model->Ptr()
+			withLength : model->Length()
+			withIndices : model->IndicesPtr()
+			withLength : model->IndicesLength()];
+
+		[mesh makeTexture : modelTexturePath checkTransparency : embeddedAlpha] ;
+
+		NSString* modelTexturePathOpacity = [NSString stringWithUTF8String : model->GetTexturePathOpacity().c_str()];
+		if ([modelTexturePathOpacity isEqualToString : @""])
+			modelTexturePathOpacity = nil;
+		if (modelTexturePathOpacity)
+			[mesh makeTextureOpacity : modelTexturePathOpacity withCommandQueue : commandQueue];
+
+		NSString* modelTexturePathBump = [NSString stringWithUTF8String : model->GetTexturePathBump().c_str()];
+		if ([modelTexturePathBump isEqualToString : @""])
+			modelTexturePathBump = nil;
+		if (modelTexturePathBump)
+			[mesh makeTextureBump : modelTexturePathBump withCommandQueue : commandQueue];
+
+		if (model->HasTransparent() || modelTexturePathOpacity)
+			[mesh setTransparency : YES];
+		else if (!embeddedAlpha)
+			[mesh setTransparency : NO];
+
+		[mesh setIgnoreTexutreAlpha : !embeddedAlpha] ;
+		[mesh setPhysicallyReflection : options._physicallyReflection] ;
+
+		resultMesh = mesh;
+	}*/
+	else if (!textured && options._basicMaterialized)
+	{
+		PNuoMeshMaterialed mesh = std::make_shared<NuoMeshMaterialed>();
+		mesh->SetTransparency(model->HasTransparent());
+		mesh->SetPhysicallyReflection(options._physicallyReflection);
+
+		mesh->Init(commandBuffer, intermediate,
+				   std::dynamic_pointer_cast<NuoModelMaterialed>(model),
+				   format, sampleCount);
+
+		resultMesh = mesh;
+	}
 
 	return resultMesh;
 }
+

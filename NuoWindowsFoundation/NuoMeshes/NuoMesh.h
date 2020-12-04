@@ -58,7 +58,8 @@ public:
 	NuoMeshBounds BoundsLocal() const;
 	void SetBoundsLocal(const NuoMeshBounds& bounds);
 
-	//virtual void UpdateUniforms(const NuoMatrixFloat44& world);
+	virtual bool HasTransparency() const = 0;
+	virtual void SetTransparency(bool transparency) = 0;
 
 	typedef std::function<void(NuoCommandEncoder* encoder)> CommonFunc;
 
@@ -75,6 +76,7 @@ class NuoMeshBase : public NuoMesh
 public:
 
 	NuoMeshBase() = default;
+	virtual ~NuoMeshBase();
 	
 	void Init(const PNuoCommandBuffer& commandBuffer,
 			  std::vector<PNuoResource>& intermediate,
@@ -82,6 +84,12 @@ public:
 			  UINT32* indiciesBuffer, size_t indiciesCount);
 
 };
+
+
+template <class MeshVertex>
+NuoMeshBase<MeshVertex>::~NuoMeshBase()
+{
+}
 
 
 template <class MeshVertex>
@@ -112,6 +120,9 @@ public:
 			  std::vector<PNuoResource>& intermediate,
 			  const PNuoModelSimple& model,
 		      DXGI_FORMAT format, unsigned int sampleCount);
+
+	virtual bool HasTransparency() const override;
+	virtual void SetTransparency(bool transparency) override;
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
 	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;

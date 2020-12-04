@@ -73,9 +73,10 @@ void ModelView::Init()
     auto format = RenderTarget(0)->Format();
     auto sampleCount = RenderTarget(0)->SampleCount();
 
-    NuoMeshOptions options;
-    options._combineByMaterials = true;
-    options._basicMaterialized = false;
+    NuoMeshOptions options = {};
+    options._combineByMaterials = false;
+    options._textured = false;
+    options._basicMaterialized = true;
 
     NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
     _mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});

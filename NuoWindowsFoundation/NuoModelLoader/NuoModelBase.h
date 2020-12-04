@@ -30,6 +30,14 @@ class NuoMaterial;
 typedef std::shared_ptr<NuoModelBase> PNuoModelBase;
 
 
+template <class ItemBase>
+bool ItemTexCoordEequal(const ItemBase& i1, const ItemBase& i2)
+{
+    return fabs(i1._texCoord.x - i2._texCoord.x) < 1e-3 &&
+           fabs(i1._texCoord.y - i2._texCoord.y) < 1e-3;
+}
+
+
 
 PNuoModelBase CreateModel(const NuoMeshOptions& options, const NuoMaterial& material,
                           const std::string& modelItemName);
@@ -42,6 +50,8 @@ protected:
     std::vector<uint32_t> _indices;
 
 public:
+
+    virtual std::shared_ptr<NuoModelBase> Clone() const = 0;
 
     virtual void AddPosition(size_t sourceIndex, const std::vector<float>& positionsBuffer) = 0;
     virtual void AddNormal(size_t sourceIndex, const std::vector<float>& normalBuffer) = 0;
@@ -78,6 +88,15 @@ public:
     virtual void UpdateBufferWithUnifiedMaterial() = 0;
   
 };
+
+
+
+#define IMPL_CLONE(className)                                       \
+    virtual std::shared_ptr<NuoModelBase> Clone() const override    \
+    {                                                               \
+        std::shared_ptr<NuoModelBase> result(new className(*this)); \
+        return result;                                              \
+    }
 
 
 
@@ -126,6 +145,8 @@ protected:
 
 public:
     NuoModelSimple();
+
+    IMPL_CLONE(NuoModelSimple);
 
     virtual void AddTexCoord(size_t sourceIndex, const std::vector<float>& texCoordBuffer) override;
     virtual void AddMaterial(const NuoMaterial& material) override;
