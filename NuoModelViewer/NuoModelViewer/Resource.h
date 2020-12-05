@@ -9,6 +9,7 @@
 #define IDD_ABOUTBOX			103
 #define IDM_ABOUT				104
 #define IDM_EXIT				105
+#define IDM_FILE_OPEN			501
 #define IDI_NUODIRECT			107
 #define IDI_SMALL				108
 #define IDC_NUODIRECT			109
