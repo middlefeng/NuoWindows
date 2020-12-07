@@ -198,6 +198,9 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshSceneRoot.cpp">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshRotation.cpp">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -372,6 +375,9 @@
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshSceneRoot.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshRotation.h">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClInclude>
   </ItemGroup>

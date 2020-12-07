@@ -84,6 +84,8 @@ void ModelView::Init()
     _scene->ReplaceMesh(_mainMesh, mesh);
     _mainMesh = mesh;
 
+    mesh->CenterMesh();
+
     std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
