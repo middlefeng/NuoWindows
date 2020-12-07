@@ -97,6 +97,13 @@ void NuoMesh::SetBoundsLocal(const NuoMeshBounds& bounds)
 }
 
 
+void NuoMesh::CenterMesh()
+{
+	const NuoBounds& bounds = _boundsLocal.boundingBox;
+	_transformPoise = NuoMatrixTranslation(-bounds._center);
+}
+
+
 void NuoMesh::Draw(const PNuoCommandEncoder& encoder)
 {
 	encoder->SetVertexBuffer(_vertexBuffer);

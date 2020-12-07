@@ -4,8 +4,29 @@
 
 
 NuoMeshCompound::NuoMeshCompound(const std::vector<PNuoMesh>& meshes)
-	: _meshes(meshes)
+	: _meshes()
 {
+	SetMeshes(meshes);
+}
+
+
+void NuoMeshCompound::SetMeshes(const std::vector<PNuoMesh>& meshes)
+{
+    _meshes = meshes;
+
+    if (!meshes.size())
+        return;
+
+    NuoBounds bounds = meshes[0]->BoundsLocal().boundingBox;
+    NuoSphere sphere = meshes[0]->BoundsLocal().boundingSphere;
+    for (size_t i = 1; i < meshes.size(); ++i)
+    {
+        bounds = bounds.Union(meshes[i]->BoundsLocal().boundingBox);
+        sphere = sphere.Union(meshes[i]->BoundsLocal().boundingSphere);
+    }
+
+    NuoMeshBounds meshBounds = { bounds, sphere };
+    _boundsLocal = meshBounds;
 }
 
 

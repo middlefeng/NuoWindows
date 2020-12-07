@@ -30,6 +30,8 @@ public:
 
 	NuoMeshCompound(const std::vector<PNuoMesh>& meshes);
 
+	void SetMeshes(const std::vector<PNuoMesh>& meshes);
+
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
 
 	virtual bool HasTransparency() const override;

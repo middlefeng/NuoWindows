@@ -35,13 +35,24 @@ class NuoMesh
 
 protected:
 
+	// mesh transform about the poise (rotation around model center).
+	// note this transform may include a slight translation before rotation
+	// because the model need to be centered (usually around its bounding box)
+	//
+	NuoMatrixFloat44 _transformPoise;
+
+	NuoMeshBounds _boundsLocal;
+
+
+	// GPU related data structures
+	//
+
 	DXGI_FORMAT _format;
 	unsigned int _sampleCount;
 	PNuoPipelineState _pipelineState;
 
 	PNuoVertexBuffer _vertexBuffer;
 	PNuoResourceSwapChain _transform;
-	NuoMeshBounds _boundsLocal;
 
 	PNuoPipelineState MakePipelineState(const PNuoCommandBuffer& commandBuffer,
 										const std::string& vertex, const std::string& pixel);
@@ -65,6 +76,8 @@ public:
 
 	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func);
 	virtual void Draw(const PNuoCommandEncoder& encoder);
+
+	void CenterMesh();
 
 };
 
