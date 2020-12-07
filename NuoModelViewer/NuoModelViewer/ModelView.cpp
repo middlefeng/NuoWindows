@@ -9,7 +9,7 @@
 #include "NuoStrings.h"
 
 #include "NuoDirect/NuoResourceSwapChain.h"
-#include "NuoMeshes/NuoMeshCompound.h"
+#include "NuoMeshes/NuoMeshSceneRoot.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
 
 #include "NuoModelLoader/NuoModelLoader.h"
@@ -33,6 +33,7 @@ ModelView::ModelView(const PNuoDevice& device,
 	: NuoDirectView(device, parent),
       _init(false)
 {
+    _scene = std::make_shared<NuoMeshSceneRoot>();
 }
 
 
@@ -79,7 +80,9 @@ void ModelView::Init()
     options._basicMaterialized = true;
 
     NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
-    _mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
+    auto mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
+    _scene->ReplaceMesh(_mainMesh, mesh);
+    _mainMesh = mesh;
 
     std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
@@ -145,8 +148,8 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
         encoder->SetRootConstantBuffer(1, lightBuffer);
     };
     
-    _mesh->DrawBegin(encoder, commFunc);
-    _mesh->Draw(encoder);
+    _scene->DrawBegin(encoder, commFunc);
+    _scene->Draw(encoder);
 
 	target->ReleaseRenderPassEncoder();
     encoder.reset();

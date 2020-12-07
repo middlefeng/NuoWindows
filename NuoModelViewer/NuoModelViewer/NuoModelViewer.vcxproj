@@ -169,6 +169,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshBounds.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshCompound.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshMaterialed.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshSceneRoot.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelBase.cpp" />
@@ -357,6 +358,7 @@
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshSceneRoot.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshTextured.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoBounds.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoMaterial.h" />

@@ -195,6 +195,9 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshMaterialed.cpp">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshSceneRoot.cpp">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -368,6 +371,9 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshMaterialed.h">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshSceneRoot.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">
@@ -410,13 +416,7 @@
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialed.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialedPixel.hlsl">
-      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialedVertex.hlsl">
-      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
-    </FxCompile>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialedPixel.hlsl" />
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialedVertex.hlsl" />
   </ItemGroup>
 </Project>
