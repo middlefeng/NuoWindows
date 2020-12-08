@@ -37,6 +37,7 @@ public:
 	virtual bool HasTransparency() const override;
 	virtual void SetTransparency(bool transparency) override;
 
+	virtual void UpdateUniform(unsigned int inFlight, const NuoMatrixFloat44& transform) override;
 	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func) override;
 	virtual void Draw(const PNuoCommandEncoder& encoder) override;
 

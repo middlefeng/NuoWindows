@@ -32,7 +32,7 @@ public:
     
     void SetRadius(float radius);
     float Radius() const { return _radius; }
-    const NuoMatrixFloat44& RotationMatrix();
+    const NuoMatrixFloat44& RotationMatrix() const;
 
 };
 

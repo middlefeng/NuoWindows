@@ -4,14 +4,17 @@
 
 
 
-ConstantBuffer<NuoUniforms> viewProjection : register(b0);
+ConstantBuffer<NuoUniforms> viewProjection   : register(b0);
+ConstantBuffer<NuoMeshUniforms> meshUniforms : register(b2);
 
 
 NuoMaterialedBasicVertexOutput main(NuoMaterialedBasicItem v)
 {
     NuoMaterialedBasicVertexOutput outVertex;
 
-    outVertex._position = mul(viewProjection.viewProjectionMatrix, v._position);
+    float4 meshPosition = mul(meshUniforms.transform, v._position);
+
+    outVertex._position = mul(viewProjection.viewProjectionMatrix, meshPosition);
     outVertex._diffuse = v._diffuse;
     outVertex._shinessDisolveIllum = v._shinessDisolveIllum;
 

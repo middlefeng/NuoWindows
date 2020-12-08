@@ -4,14 +4,17 @@
 
 
 
-ConstantBuffer<NuoUniforms> viewProjection : register(b0);
+ConstantBuffer<NuoUniforms> viewProjection   : register(b0);
+ConstantBuffer<NuoMeshUniforms> meshUniforms : register(b2);
 
 
 NuoMeshSimpleVertexShaderOutput main(NuoMeshSimpleItem v)
 {
     NuoMeshSimpleVertexShaderOutput outVertex;
 
-    outVertex._position = mul(viewProjection.viewProjectionMatrix, v._position);
+    float4 meshPosition = meshUniforms.transform * v._position;
+
+    outVertex._position = mul(viewProjection.viewProjectionMatrix, meshPosition);
 
     matrix normalMatrix = viewProjection.viewMatrix;
     normalMatrix[3] = float4(0, 0, 0, 1);

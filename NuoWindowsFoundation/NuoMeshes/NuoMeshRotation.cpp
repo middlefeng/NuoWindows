@@ -49,7 +49,7 @@ void NuoMeshRotation::SetRadius(float radius)
 
 
 
-const NuoMatrixFloat44& NuoMeshRotation::RotationMatrix()
+const NuoMatrixFloat44& NuoMeshRotation::RotationMatrix() const
 {
     return _cachedResult;
 }

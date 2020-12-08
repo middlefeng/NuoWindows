@@ -6,10 +6,21 @@
 #include "NuoStrings.h"
 #include "NuoAppInstance.h"
 
+#include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoMeshes/NuoShaders/NuoUniforms.h"
 
 #include "NuoModelLoader/NuoModelBase.h"
 #include "NuoMeshMaterialed.h"
+
+
+
+
+void NuoMesh::Init(const PNuoCommandBuffer& commandBuffer)
+{
+	_transformBuffers = std::make_shared<NuoResourceSwapChain>(commandBuffer->CommandQueue()->Device(),
+															   SampleCount(), (unsigned long)sizeof(NuoMeshUniforms));
+}
+
 
 PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuffer,
 											 const std::string& vertex, const std::string& pixel)
@@ -47,7 +58,8 @@ PNuoRootSignature NuoMesh::RootSignature(const PNuoCommandBuffer& commandBuffer)
 																		 D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	rootSignature->AddConstant(sizeof(NuoUniforms), 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	rootSignature->AddRootConstantBuffer(1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+	rootSignature->AddRootConstantBuffer(1, 0, D3D12_SHADER_VISIBILITY_PIXEL);	// light
+	rootSignature->AddRootConstantBuffer(2, 0, D3D12_SHADER_VISIBILITY_VERTEX);	// mesh transform
 
 	return rootSignature;
 }
@@ -104,8 +116,44 @@ void NuoMesh::CenterMesh()
 }
 
 
+NuoMatrixFloat44 NuoMesh::MeshTransform() const
+{
+	return _rotation.RotationMatrix() * _transformTranslate * _transformPoise;
+}
+
+
+NuoMeshBounds NuoMesh::WorldBounds(const NuoMatrixFloat44& transform)
+{
+	const NuoBounds& boundsLocal = _boundsLocal.boundingBox;
+	const NuoSphere& sphereLocal = _boundsLocal.boundingSphere;
+
+	const NuoMatrixFloat44 transformWorld = transform * MeshTransform();
+
+	NuoMeshBounds worldMeshBounds =
+	{
+		boundsLocal.Transform(transformWorld),
+		sphereLocal.Transform(transformWorld)
+	};
+
+	return worldMeshBounds;
+}
+
+
+void NuoMesh::UpdateUniform(unsigned int inFlight, const NuoMatrixFloat44& transform)
+{
+	NuoMatrixFloat44 transformWorld = transform * MeshTransform();
+
+	NuoMeshUniforms uniforms;
+	uniforms.transform = transformWorld._m;
+	uniforms.normalTransform = NuoMatrixExtractLinear4(transformWorld)._m;
+
+	_transformBuffers->UpdateResource(&uniforms, sizeof(uniforms), inFlight);
+}
+
+
 void NuoMesh::Draw(const PNuoCommandEncoder& encoder)
 {
+	encoder->SetRootConstantBuffer(2, _transformBuffers);
 	encoder->SetVertexBuffer(_vertexBuffer);
 	encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 }
@@ -123,14 +171,15 @@ void NuoMeshSimple::Init(const PNuoCommandBuffer& commandBuffer,
 						 const PNuoModelSimple& model,
 						 DXGI_FORMAT format, unsigned int sampleCount)
 {
+	_format = format;
+	_sampleCount = sampleCount;
+
 	NuoMeshBase<NuoMeshSimpleItem>::Init(commandBuffer, intermediate,
 										 (NuoMeshSimpleItem*)model->Ptr(),
 										 model->GetVerticesNumber(),
 										 model->IndicesPtr(),
 										 model->IndicesCount());
 
-	_format = format;
-	_sampleCount = sampleCount;
 	_pipelineState = MakePipelineState(commandBuffer, "NuoMeshSimpleVertex", "NuoMeshSimplePixel");
 }
 

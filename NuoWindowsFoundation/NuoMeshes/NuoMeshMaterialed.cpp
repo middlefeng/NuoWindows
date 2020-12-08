@@ -20,14 +20,15 @@ void NuoMeshMaterialed::Init(const PNuoCommandBuffer& commandBuffer,
 							 const PNuoModelMaterialed& model,
 							 DXGI_FORMAT format, unsigned int sampleCount)
 {
+	_format = format;
+	_sampleCount = sampleCount;
+
 	NuoMeshBase<NuoMaterialedBasicItem>::Init(commandBuffer, intermediate,
 											  (NuoMaterialedBasicItem*)model->Ptr(),
 											  model->GetVerticesNumber(),
 											  model->IndicesPtr(),
 											  model->IndicesCount());
 
-	_format = format;
-	_sampleCount = sampleCount;
 	_pipelineState = MakePipelineState(commandBuffer, "NuoMeshMaterialedVertex", "NuoMeshMaterialedPixel");
 }
 

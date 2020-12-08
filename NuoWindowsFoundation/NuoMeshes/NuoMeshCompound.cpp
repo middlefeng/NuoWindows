@@ -72,6 +72,16 @@ void NuoMeshCompound::Draw(const PNuoCommandEncoder& encoder)
 }
 
 
+void NuoMeshCompound::UpdateUniform(unsigned int inFlight, const NuoMatrixFloat44& transform)
+{
+	const NuoMatrixFloat44 transformLocal = _transformTranslate * _transformPoise;
+	const NuoMatrixFloat44 transformWorld = transform * transformLocal;
+
+	for (PNuoMesh& mesh : _meshes)
+		mesh->UpdateUniform(inFlight, transformWorld);
+}
+
+
 void NuoMeshCompound::DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func)
 {
 	_commonFunc = func;

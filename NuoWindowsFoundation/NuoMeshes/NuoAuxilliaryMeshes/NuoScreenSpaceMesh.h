@@ -35,6 +35,11 @@ public:
     virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
     virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
 
+    // screen-space meshes do not have a transform uniform. that requires an overriding
+    // to the default mesh's Draw()
+    //
+    virtual void Draw(const PNuoCommandEncoder& encoder) override;
+
 };
 
 

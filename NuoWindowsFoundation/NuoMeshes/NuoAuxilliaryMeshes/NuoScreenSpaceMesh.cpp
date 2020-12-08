@@ -29,12 +29,12 @@ void NuoScreenSpaceMesh::Init(const PNuoCommandBuffer& commandBuffer,
         2, 3, 0
     };
 
+    _format = format;
+    _sampleCount = sampleCount;
+
     NuoMeshBase<NuoMeshScreenSpaceItem>::Init(commandBuffer, intermediate,
                                               vertices, sizeof(vertices) / sizeof(vertices[0]),
                                               indices, sizeof(indices) / sizeof(indices[0]));
-
-    _format = format;
-    _sampleCount = sampleCount;
 
     _pipelineState = MakePipelineState(commandBuffer, "NuoTextureVertex", "NuoTexturePixel");
 }
@@ -67,6 +67,13 @@ PNuoRootSignature NuoScreenSpaceMesh::RootSignature(const PNuoCommandBuffer& com
                                                                          D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     return rootSignature;
+}
+
+
+void NuoScreenSpaceMesh::Draw(const PNuoCommandEncoder& encoder)
+{
+    encoder->SetVertexBuffer(_vertexBuffer);
+    encoder->DrawIndexed(_vertexBuffer->IndiciesCount());
 }
 
 
