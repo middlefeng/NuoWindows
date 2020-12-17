@@ -1,18 +1,16 @@
 
+
+#define __SHADER_REGISTERS__ 1
+
 #include "NuoUniforms.h"
 #include "NuoMeshSimple.h"
-
-
-
-ConstantBuffer<NuoUniforms> viewProjection   : register(b0);
-ConstantBuffer<NuoMeshUniforms> meshUniforms : register(b2);
 
 
 NuoMeshSimpleVertexShaderOutput main(NuoMeshSimpleItem v)
 {
     NuoMeshSimpleVertexShaderOutput outVertex;
 
-    float4 meshPosition = meshUniforms.transform * v._position;
+    float4 meshPosition = mul(meshUniforms.transform, v._position);
 
     outVertex._position = mul(viewProjection.viewProjectionMatrix, meshPosition);
 

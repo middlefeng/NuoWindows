@@ -80,4 +80,19 @@ struct NuoLightUniforms
 };
 
 
+#if __SHADER_REGISTERS__
+
+// constant shared by most of scene meshes
+//
+ConstantBuffer<NuoUniforms> viewProjection   : register(b0);
+ConstantBuffer<NuoLightUniforms> light       : register(b1);
+
+// constant commonly used by scene meshes, but each has its respective value
+//
+ConstantBuffer<NuoMeshUniforms> meshUniforms : register(b2);
+
+#endif
+
+
+
 #endif

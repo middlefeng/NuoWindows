@@ -1,11 +1,10 @@
 
+
+#define __SHADER_REGISTERS__ 1
+
 #include "NuoUniforms.h"
 #include "NuoMeshMaterialed.h"
 
-
-
-ConstantBuffer<NuoUniforms> viewProjection   : register(b0);
-ConstantBuffer<NuoMeshUniforms> meshUniforms : register(b2);
 
 
 NuoMaterialedBasicVertexOutput main(NuoMaterialedBasicItem v)
