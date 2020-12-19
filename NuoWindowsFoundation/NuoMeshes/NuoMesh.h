@@ -17,6 +17,7 @@
 #include <DirectXMath.h>
 
 #include "NuoMeshes/NuoMeshBounds.h"
+#include "NuoMeshes/NuoMeshRotation.h"
 #include "NuoMeshes/NuoShaders/NuoMeshShaderType.h"
 #include "NuoMeshes/NuoShaders/NuoUniforms.h"
 #include "NuoMeshes/NuoShaders/NuoMeshSimple.h"
@@ -35,13 +36,30 @@ class NuoMesh
 
 protected:
 
+	NuoMeshRotation _rotation;
+
+	// mesh transform about the poise (rotation around model center).
+	// note this transform may include a slight translation before rotation
+	// because the model need to be centered (usually around its bounding box)
+	//
+	NuoMatrixFloat44 _transformPoise;
+
+	// mesh transform about the translate in the world coordinate
+	//
+	NuoMatrixFloat44 _transformTranslate;
+
+	NuoMeshBounds _boundsLocal;
+
+
+	// GPU related data structures
+	//
+
 	DXGI_FORMAT _format;
 	unsigned int _sampleCount;
 	PNuoPipelineState _pipelineState;
 
 	PNuoVertexBuffer _vertexBuffer;
-	PNuoResourceSwapChain _transform;
-	NuoMeshBounds _boundsLocal;
+	PNuoResourceSwapChain _transformBuffers;
 
 	PNuoPipelineState MakePipelineState(const PNuoCommandBuffer& commandBuffer,
 										const std::string& vertex, const std::string& pixel);
@@ -55,16 +73,28 @@ protected:
 
 public:
 
+	void Init(const PNuoCommandBuffer& commandBuffer);
+
 	NuoMeshBounds BoundsLocal() const;
 	void SetBoundsLocal(const NuoMeshBounds& bounds);
+	
+	NuoMeshBounds WorldBounds(const NuoMatrixFloat44& transform);
 
 	virtual bool HasTransparency() const = 0;
 	virtual void SetTransparency(bool transparency) = 0;
+
+	virtual void UpdateUniform(unsigned int inFlight, const NuoMatrixFloat44& transform);
 
 	typedef std::function<void(NuoCommandEncoder* encoder)> CommonFunc;
 
 	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func);
 	virtual void Draw(const PNuoCommandEncoder& encoder);
+
+	void CenterMesh();
+
+protected:
+
+	NuoMatrixFloat44 MeshTransform() const;
 
 };
 
@@ -102,8 +132,7 @@ void NuoMeshBase<MeshVertex>::Init(const PNuoCommandBuffer& commandBuffer,
 													  buffer, number * sizeof(MeshVertex), sizeof(MeshVertex),
 													  indiciesBuffer, indiciesCount);
 
-	//_transform = std::make_shared<NuoResourceSwapChain>(commandBuffer->CommandQueue()->Device(),
-	//													commandBuffer->FrameCount(), sizeof(NuoLightVertexUniforms));
+	NuoMesh::Init(commandBuffer);
 }
 
 

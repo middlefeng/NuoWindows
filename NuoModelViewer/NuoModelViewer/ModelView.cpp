@@ -84,6 +84,8 @@ void ModelView::Init()
     _scene->ReplaceMesh(_mainMesh, mesh);
     _mainMesh = mesh;
 
+    mesh->CenterMesh();
+
     std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
@@ -141,6 +143,8 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
     light.lightParams[0].irradiance = 1.0;
     lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
+
+    _scene->UpdateUniform(encoder->InFlight(), NuoMatrixFloat44Identity);
 
     NuoMesh::CommonFunc commFunc = [&mvp, &lightBuffer](NuoCommandEncoder* encoder)
     {

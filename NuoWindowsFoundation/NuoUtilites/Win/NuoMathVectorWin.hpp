@@ -212,6 +212,19 @@ inline NuoMatrix<float, 3> NuoMatrixExtractLinear(const NuoMatrix<float, 4>& m)
 }
 
 
+inline NuoMatrix<float, 4> NuoMatrixExtractLinear4(const NuoMatrix<float, 4>& m)
+{
+    DirectX::XMVECTORF32 X; X.v = m._m.r[0];
+    DirectX::XMVECTORF32 Y; Y.v = m._m.r[1];
+    DirectX::XMVECTORF32 Z; Z.v = m._m.r[2];
+
+    return DirectX::XMMATRIX(X.f[0], X.f[1], X.f[2], 0,
+                             Y.f[0], Y.f[1], Y.f[2], 0,
+                             Z.f[0], Z.f[1], Z.f[2], 0,
+                                  0,      0,      0, 1);
+}
+
+
 template <>
 inline typename NuoMatrix<float, 4>::_typeTrait::_vectorType& NuoMatrix<float, 4>::operator[] (size_t i)
 {

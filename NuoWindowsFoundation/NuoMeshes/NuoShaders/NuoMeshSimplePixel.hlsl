@@ -1,9 +1,9 @@
 
+
+#define __SHADER_REGISTERS__ 1
+
 #include "NuoUniforms.h"
 #include "NuoMeshSimple.h"
-
-
-ConstantBuffer<NuoLightUniforms> light : register(b1);
 
 
 
