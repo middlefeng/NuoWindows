@@ -12,6 +12,11 @@ NuoControl::NuoControl(const std::string& title, const PNuoWindow& parent)
 
 NuoControl::~NuoControl()
 {
+	if (!_hWnd)
+	{
+		::DestroyWindow(_hWnd);
+		_hWnd = 0;
+	}
 }
 
 
@@ -124,7 +129,7 @@ NuoRect<float> NuoControl::AutoPosition()
 	case kNuoControl_RB:
 	{
 		result.SetX(parentBound.W() - result.W() - margin);
-		result.SetY(parentBound.Y() - result.H() - margin);
+		result.SetY(parentBound.H() - result.H() - margin);
 		break;
 	}
 	case kNuoControl_R:
