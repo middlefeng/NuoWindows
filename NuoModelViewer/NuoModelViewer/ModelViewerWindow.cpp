@@ -7,7 +7,11 @@
 #include "ModelViewerWindow.h"
 
 #include "NuoMenu.h"
+#include "NuoDropdownList.h"
 #include "NuoAppInstance.h"
+#include "NuoStrings.h"
+
+#include "ModelState/ModelViewConfiguration.h"
 
 
 ModelViewerWindow::ModelViewerWindow(const std::string& title)
@@ -32,6 +36,10 @@ ModelViewerWindow::ModelViewerWindow(const std::string& title)
 		});
 
 	SetMenu(menu);
+
+	NuoAppInstance* app = NuoAppInstance::GetInstance();
+	std::string path = RemoveLastPathComponent(app->ModulePath());
+	_configuration = std::make_shared<ModelViewConfiguration>(path + "/configuration.lua");
 }
 
 
@@ -54,6 +62,16 @@ void ModelViewerWindow::Init()
 	NuoInset<float> margin(0, 0, 0, 200);
 	_dxView->SetAutoPosition(kNuoControl_Stretch_ALL);
 	_dxView->SetMargin(margin);
+
+	NuoInset<float> deivceListMargin(0, 0, 20, 20);
+	NuoRect<float> deviceListPos(0, 0, 200, 20);
+	_deviceList = std::make_shared<NuoDropdownList>(shared_from_this(), std::vector<std::string>());
+	Add(_deviceList);
+
+	_deviceList->Init(0);
+	_deviceList->SetAutoPosition(kNuoControl_RB);
+	_deviceList->SetMargin(deivceListMargin);
+	_deviceList->SetPosition(deviceListPos, false);
 }
 
 

@@ -39,6 +39,8 @@ public:
 	void EnableDebugInfoQueue();
 
 	std::string Name() const;
+	bool SupportRayTracing();
+
 	unsigned int RenderTargetDescriptorHandleIncrementSize() const;
 	PNuoDescriptorHeap CreateRenderTargetHeap(unsigned int frameCount);
 

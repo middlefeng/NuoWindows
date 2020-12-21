@@ -99,6 +99,25 @@ std::string NuoDevice::Name() const
 }
 
 
+bool NuoDevice::SupportRayTracing()
+{
+    if (_dxDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
+    {
+        return false;
+    }
+
+    // Check if the device supports ray tracing.
+    D3D12_FEATURE_DATA_D3D12_OPTIONS5 features = {};
+    HRESULT hr = _dxDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &features, sizeof(features));
+    if (FAILED(hr) || features.RaytracingTier < D3D12_RAYTRACING_TIER_1_0)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+
 unsigned int NuoDevice::RenderTargetDescriptorHandleIncrementSize() const
 {
     return _dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
