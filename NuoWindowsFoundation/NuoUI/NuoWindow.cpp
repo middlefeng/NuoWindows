@@ -522,6 +522,18 @@ void NuoFont::CreateFont(float scale)
 }
 
 
+PNuoFont NuoFont::MenuFont(unsigned int size)
+{
+    NONCLIENTMETRICS metric;
+    metric.cbSize = sizeof(NONCLIENTMETRICS);
+
+    SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, (void*)&metric, 0);
+
+    std::string face = StringToUTF8(metric.lfMenuFont.lfFaceName);
+    return std::make_shared<NuoFont>(size, face);
+}
+
+
 void NuoWindow::RegisterClass()
 {
     wsprintf(kClassName, L"%s", L"NuoWindowClass");

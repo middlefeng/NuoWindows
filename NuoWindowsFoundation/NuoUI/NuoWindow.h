@@ -51,7 +51,11 @@ public:
 	void SetItalic(bool b);
 
 	HFONT Handle() const;
+
+	static PNuoFont MenuFont(unsigned int size);
 };
+
+typedef std::shared_ptr<NuoFont> PNuoFont;
 
 
 class NuoWindow : public std::enable_shared_from_this<NuoWindow>
@@ -71,7 +75,7 @@ protected:
 	std::set<PNuoWindow> _children;
 	PNuoIcon _icon;
 
-	std::shared_ptr<NuoFont> _font;
+	PNuoFont _font;
 
 	short _mouseX;
 	short _mouseY;
