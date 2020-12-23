@@ -64,14 +64,16 @@ void ModelViewerWindow::Init()
 	_dxView->SetMargin(margin);
 
 	NuoInset<float> deivceListMargin(0, 0, 20, 20);
-	NuoRect<float> deviceListPos(0, 0, 200, 20);
-	_deviceList = std::make_shared<NuoDropdownList>(shared_from_this(), std::vector<std::string>());
+	NuoRect<float> deviceListPos(0, 0, 150, 100);
+	_deviceList = std::make_shared<NuoDropdownList>(shared_from_this(),
+													_configuration->DeviceNames());
 	Add(_deviceList);
 
 	_deviceList->Init(0);
 	_deviceList->SetAutoPosition(kNuoControl_RB);
 	_deviceList->SetMargin(deivceListMargin);
 	_deviceList->SetPosition(deviceListPos, false);
+	_deviceList->SetFont(NuoFont::MenuFont(16.5));
 }
 
 

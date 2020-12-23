@@ -29,6 +29,8 @@ typedef std::shared_ptr<NuoDialog> PNuoDialog;
 class NuoDropdownList : public NuoControl
 {
 
+	std::vector<std::string> _itemList;
+
 public:
 
 	NuoDropdownList(const PNuoWindow& parent, const std::vector<std::string>& list);
@@ -36,8 +38,18 @@ public:
 
 	void Init(int controlID);
 
+	// a dropdown's position does not behave like a normal window/view's. its height
+	// affect the dropped's height instead of the control its own.
+	//
+	virtual void SetPosition(const NuoRect<float>& pos, bool activate) override;
+
+	virtual void OnCommand() override;
 
 	friend NuoDialog;
+
+private:
+
+	void UpdateDroppedWidth();
 
 };
 

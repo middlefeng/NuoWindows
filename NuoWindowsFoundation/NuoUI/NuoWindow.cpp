@@ -226,6 +226,34 @@ float NuoWindow::DPI() const
 }
 
 
+long NuoWindow::TextWidth(const std::string& text, const PNuoFont& font)
+{
+    return TextSize(text, font).cx;
+}
+
+
+long NuoWindow::TextHeight(const std::string& text, const PNuoFont& font)
+{
+    return TextSize(text, font).cy;
+}
+
+
+SIZE NuoWindow::TextSize(const std::string& text, const PNuoFont& font)
+{
+    HDC hDC = GetDC(_hWnd);
+
+    std::wstring wtext = StringToUTF16(text);
+
+    SIZE size;
+    SelectFont(hDC, font->Handle());
+    GetTextExtentPoint32(hDC, wtext.c_str(), wtext.length(), &size);
+
+    ReleaseDC(_hWnd, hDC);
+
+    return size;
+}
+
+
 float NuoWindow::SavedDPI() const
 {
     return _savedDPI;
@@ -522,7 +550,7 @@ void NuoFont::CreateFont(float scale)
 }
 
 
-PNuoFont NuoFont::MenuFont(unsigned int size)
+PNuoFont NuoFont::MenuFont(double size)
 {
     NONCLIENTMETRICS metric;
     metric.cbSize = sizeof(NONCLIENTMETRICS);
