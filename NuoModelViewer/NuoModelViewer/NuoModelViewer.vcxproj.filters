@@ -216,6 +216,9 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoDropdownList.cpp">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -403,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoDropdownList.h">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.h">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
