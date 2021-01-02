@@ -57,6 +57,25 @@ void NuoDropdownList::Init(int controlID)
 }
 
 
+void NuoDropdownList::SelectItem(const std::string& item)
+{
+    auto pos = std::find(_itemList.begin(), _itemList.end(), item);
+    if (pos != _itemList.end())
+    {
+        unsigned int i = pos - _itemList.begin();
+        SendMessage(_hWnd, CB_SETCURSEL, i, 0);
+
+        _selectedItem = item;
+    }
+}
+
+
+const std::string& NuoDropdownList::SelectedItem()
+{
+    return _selectedItem;
+}
+
+
 void NuoDropdownList::SetPosition(const NuoRect<float>& pos, bool activate)
 {
     NuoRect<float> aPos = pos;
@@ -67,8 +86,24 @@ void NuoDropdownList::SetPosition(const NuoRect<float>& pos, bool activate)
 }
 
 
-void NuoDropdownList::OnCommand()
+void NuoDropdownList::OnCommand(int notification)
 {
+    if (notification == CBN_SELENDOK)
+    {
+        LRESULT index = SendMessage(_hWnd, CB_GETCURSEL, 0, 0);
+        LRESULT length = SendMessage(_hWnd, CB_GETLBTEXTLEN, index, 0);
+
+        std::vector<wchar_t> buf(length + 1);
+
+        SendMessage(_hWnd, CB_GETLBTEXT, index, (LPARAM)buf.data());
+        
+        std::string value = StringToUTF8(buf.data());
+        if (_selectedItem != value)
+        {
+            _selectedItem = value;
+            NuoControl::OnCommand(notification);
+        }
+    }
 }
 
 

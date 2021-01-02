@@ -29,11 +29,12 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
+        int notification = HIWORD(wParam);
 
         bool processed = false;
 
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
-        processed = window->OnCommand(wmId);
+        processed = window->OnCommand(wmId, notification);
 
         if (!processed)
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -306,7 +307,7 @@ void NuoWindow::OnPaint()
 }
 
 
-bool NuoWindow::OnCommand(int id)
+bool NuoWindow::OnCommand(int id, int notification)
 {
     bool processed = false;
 
@@ -317,7 +318,7 @@ bool NuoWindow::OnCommand(int id)
     {
         NuoControl* control = dynamic_cast<NuoControl*>(child.get());
         if (control && control->ID() == id)
-            control->OnCommand();
+            control->OnCommand(notification);
     }
 
     return processed;

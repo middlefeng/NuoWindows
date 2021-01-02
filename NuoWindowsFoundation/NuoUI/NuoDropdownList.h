@@ -30,6 +30,7 @@ class NuoDropdownList : public NuoControl
 {
 
 	std::vector<std::string> _itemList;
+	std::string _selectedItem;
 
 public:
 
@@ -37,13 +38,15 @@ public:
 	virtual ~NuoDropdownList();
 
 	void Init(int controlID);
+	void SelectItem(const std::string& item);
+	const std::string& SelectedItem();
 
 	// a dropdown's position does not behave like a normal window/view's. its height
 	// affect the dropped's height instead of the control its own.
 	//
 	virtual void SetPosition(const NuoRect<float>& pos, bool activate) override;
 
-	virtual void OnCommand() override;
+	virtual void OnCommand(int notification) override;
 
 	friend NuoDialog;
 

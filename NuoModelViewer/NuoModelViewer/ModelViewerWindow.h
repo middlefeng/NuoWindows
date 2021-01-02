@@ -24,6 +24,7 @@ class ModelViewerWindow : public NuoWindow
 public:
 
 	void Init();
+	void UpdateControls();
 
 	ModelViewerWindow(const std::string& title);
 	virtual void OnPaint();

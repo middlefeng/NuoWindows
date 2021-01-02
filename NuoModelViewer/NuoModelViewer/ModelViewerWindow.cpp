@@ -45,14 +45,7 @@ ModelViewerWindow::ModelViewerWindow(const std::string& title)
 
 void ModelViewerWindow::Init()
 {
-	PNuoDevice currentDevice;
-	std::set<PNuoDevice> devices = NuoDevice::Devices();
-	for (auto device : devices)
-	{
-		std::string name = device->Name();
-		if (name.find("NVIDIA") != std::string::npos)
-			currentDevice = device;
-	}
+	PNuoDevice currentDevice = _configuration->Device();
 
 	currentDevice->EnableDebugInfoQueue();
 
@@ -69,11 +62,28 @@ void ModelViewerWindow::Init()
 													_configuration->DeviceNames());
 	Add(_deviceList);
 
-	_deviceList->Init(0);
+	std::weak_ptr<ModelViewConfiguration> configuration = _configuration;
+	std::weak_ptr<NuoDropdownList> list = _deviceList;
+
+	_deviceList->Init(IDC_DEVICE_LIST);
 	_deviceList->SetAutoPosition(kNuoControl_RB);
 	_deviceList->SetMargin(deivceListMargin);
 	_deviceList->SetPosition(deviceListPos, false);
 	_deviceList->SetFont(NuoFont::MenuFont(16.5));
+	_deviceList->SetOnCommand([configuration, list](int notification)
+		{
+			PNuoDropdownList pList = list.lock();
+			PModelViewConfiguration pConfiguration = configuration.lock();
+			pConfiguration->SelectDevice(pList->SelectedItem());
+		});
+
+	UpdateControls();
+}
+
+
+void ModelViewerWindow::UpdateControls()
+{
+	_deviceList->SelectItem(_configuration->Device()->Name());
 }
 
 

@@ -28,7 +28,7 @@ enum NuoControlAutoPosition
 };
 
 
-typedef std::function<void()> CommandFunc;
+typedef std::function<void(int)> CommandFunc;
 
 
 class NuoControl : public NuoWindow
@@ -64,7 +64,7 @@ public:
 
 	virtual NuoRect<float> AutoPosition();
 
-	virtual void OnCommand();
+	virtual void OnCommand(int notification);
 	virtual void SetOnCommand(const CommandFunc& func);
 };
 

@@ -90,7 +90,7 @@ public:
 	static void RegisterClass();
 
 	virtual void OnDestroy();
-	virtual bool OnCommand(int id);
+	virtual bool OnCommand(int id, int notification);
 	virtual void OnPaint();
 	virtual void OnSize(unsigned int x, unsigned int y);
 	virtual void OnMouseMove(short x, short y);

@@ -167,9 +167,9 @@ void NuoControl::SetPosition(const NuoRect<float>& pos, bool activate)
 }
 
 
-void NuoControl::OnCommand()
+void NuoControl::OnCommand(int notification)
 {
-	_commandFunc();
+	_commandFunc(notification);
 }
 
 

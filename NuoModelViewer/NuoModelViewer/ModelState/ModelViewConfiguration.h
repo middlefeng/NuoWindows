@@ -31,11 +31,13 @@ class ModelViewConfiguration
 public:
 
 	ModelViewConfiguration(const std::string& path);
+	~ModelViewConfiguration();
 
 	void Save();
 
 	PNuoDevice Device();
 	std::vector<std::string> DeviceNames() const;
+	void SelectDevice(const std::string& device);
 
 private:
 
