@@ -12,7 +12,7 @@ NuoControl::NuoControl(const std::string& title, const PNuoWindow& parent)
 
 NuoControl::~NuoControl()
 {
-	if (!_hWnd)
+	if (_hWnd)
 	{
 		::DestroyWindow(_hWnd);
 		_hWnd = 0;
@@ -167,9 +167,9 @@ void NuoControl::SetPosition(const NuoRect<float>& pos, bool activate)
 }
 
 
-void NuoControl::OnCommand()
+void NuoControl::OnCommand(int notification)
 {
-	_commandFunc();
+	_commandFunc(notification);
 }
 
 

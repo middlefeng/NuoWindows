@@ -93,6 +93,18 @@ void NuoFile::ReadTo(std::vector<char>& content)
 	fread(content.data(), 1, fileSize, file);
 }
 
+
+bool NuoFile::Exists()
+{
+	std::wstring wpath = StringToUTF16(_path);
+
+	DWORD dwAttrib = GetFileAttributes(wpath.c_str());
+
+	return (dwAttrib != INVALID_FILE_ATTRIBUTES &&
+			!(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+
 void NuoFile::SaveStream(const PNuoWriteStream& stream, long size)
 {
 	HGLOBAL hGlobal = stream->GlobalBuffer();

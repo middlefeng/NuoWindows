@@ -28,6 +28,9 @@ class NuoIcon;
 typedef std::shared_ptr<NuoIcon> PNuoIcon;
 
 
+class NuoFont;
+typedef std::shared_ptr<NuoFont> PNuoFont;
+
 class NuoFont : public std::enable_shared_from_this<NuoFont>
 {
 	HFONT _hFont;
@@ -51,6 +54,8 @@ public:
 	void SetItalic(bool b);
 
 	HFONT Handle() const;
+
+	static PNuoFont MenuFont(double size);
 };
 
 
@@ -71,7 +76,7 @@ protected:
 	std::set<PNuoWindow> _children;
 	PNuoIcon _icon;
 
-	std::shared_ptr<NuoFont> _font;
+	PNuoFont _font;
 
 	short _mouseX;
 	short _mouseY;
@@ -85,7 +90,7 @@ public:
 	static void RegisterClass();
 
 	virtual void OnDestroy();
-	virtual bool OnCommand(int id);
+	virtual bool OnCommand(int id, int notification);
 	virtual void OnPaint();
 	virtual void OnSize(unsigned int x, unsigned int y);
 	virtual void OnMouseMove(short x, short y);
@@ -110,6 +115,8 @@ public:
 	NuoRect<float> ClientRect();
 
 	float DPI() const;
+	long TextWidth(const std::string& text, const PNuoFont& font);
+	long TextHeight(const std::string& text, const PNuoFont& font);
 
 	std::shared_ptr<NuoFont> Font();
 	void SetFont(const std::shared_ptr<NuoFont>& font);
@@ -123,6 +130,7 @@ public:
 private:
 
 	float SavedDPI() const;
+	SIZE TextSize(const std::string& text, const PNuoFont& font);
 
 	static LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 

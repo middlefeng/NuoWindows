@@ -29,11 +29,12 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
+        int notification = HIWORD(wParam);
 
         bool processed = false;
 
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
-        processed = window->OnCommand(wmId);
+        processed = window->OnCommand(wmId, notification);
 
         if (!processed)
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -226,6 +227,34 @@ float NuoWindow::DPI() const
 }
 
 
+long NuoWindow::TextWidth(const std::string& text, const PNuoFont& font)
+{
+    return TextSize(text, font).cx;
+}
+
+
+long NuoWindow::TextHeight(const std::string& text, const PNuoFont& font)
+{
+    return TextSize(text, font).cy;
+}
+
+
+SIZE NuoWindow::TextSize(const std::string& text, const PNuoFont& font)
+{
+    HDC hDC = GetDC(_hWnd);
+
+    std::wstring wtext = StringToUTF16(text);
+
+    SIZE size;
+    SelectFont(hDC, font->Handle());
+    GetTextExtentPoint32(hDC, wtext.c_str(), wtext.length(), &size);
+
+    ReleaseDC(_hWnd, hDC);
+
+    return size;
+}
+
+
 float NuoWindow::SavedDPI() const
 {
     return _savedDPI;
@@ -278,7 +307,7 @@ void NuoWindow::OnPaint()
 }
 
 
-bool NuoWindow::OnCommand(int id)
+bool NuoWindow::OnCommand(int id, int notification)
 {
     bool processed = false;
 
@@ -289,7 +318,7 @@ bool NuoWindow::OnCommand(int id)
     {
         NuoControl* control = dynamic_cast<NuoControl*>(child.get());
         if (control && control->ID() == id)
-            control->OnCommand();
+            control->OnCommand(notification);
     }
 
     return processed;
@@ -519,6 +548,18 @@ void NuoFont::CreateFont(float scale)
                           _isItalic /* non-italic */, 0, 0, 0, 0, 0, 0, 0, wname.c_str());
 
     _fontOwner = true;
+}
+
+
+PNuoFont NuoFont::MenuFont(double size)
+{
+    NONCLIENTMETRICS metric;
+    metric.cbSize = sizeof(NONCLIENTMETRICS);
+
+    SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, (void*)&metric, 0);
+
+    std::string face = StringToUTF8(metric.lfMenuFont.lfFaceName);
+    return std::make_shared<NuoFont>(size, face);
 }
 
 

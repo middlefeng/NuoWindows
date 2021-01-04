@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../NuoWindowsFoundation/NuoUtilites;../../NuoWindowsFoundation/NuoUI;../../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../NuoWindowsFoundation/NuoUtilites;../../NuoWindowsFoundation/NuoUI;../../lua/src;../../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../NuoWindowsFoundation/NuoUtilites;../../NuoWindowsFoundation/NuoUI;../../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../NuoWindowsFoundation/NuoUtilites;../../NuoWindowsFoundation/NuoUI;../../lua/src;../../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../NuoWindowsFoundation/NuoUtilites;../../NuoWindowsFoundation/NuoUI;../../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../NuoWindowsFoundation/NuoUtilites;../../NuoWindowsFoundation/NuoUI;../../lua/src;../../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../NuoWindowsFoundation/NuoUtilites;../../NuoWindowsFoundation/NuoUI;../../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../NuoWindowsFoundation/NuoUtilites;../../NuoWindowsFoundation/NuoUI;../../lua/src;../../NuoWindowsFoundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -179,10 +179,12 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelTextured.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoaderGPU.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.cc" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoScripting\NuoLua.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoDialog.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoDropdownList.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoFile.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoImage.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoLabel.cpp" />
@@ -196,7 +198,9 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelBoard.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp" />
+    <ClCompile Include="ModelState\ModelViewConfiguration.cpp" />
     <ClCompile Include="ModelView.cpp" />
     <ClCompile Include="ModelViewerWindow.cpp" />
     <ClCompile Include="ModelViewerMain.cpp" />
@@ -370,11 +374,13 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelTextured.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\NuoModelLoaderGPU.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoModelLoader\tiny_obj_loader.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoScripting\NuoLua.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoDialog.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoDropdownList.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoFile.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoImage.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoLabel.h" />
@@ -388,8 +394,10 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelBoard.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp" />
+    <ClInclude Include="ModelState\ModelViewConfiguration.h" />
     <ClInclude Include="ModelView.h" />
     <ClInclude Include="ModelViewerWindow.h" />
     <ClInclude Include="ModelViewerMain.h" />
@@ -528,6 +536,11 @@
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\lua\Lua\LuaLib\LuaLib.vcxproj">
+      <Project>{5bcc2242-37c1-4693-bb93-6137e698966d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

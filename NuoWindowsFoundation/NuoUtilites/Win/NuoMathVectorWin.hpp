@@ -88,6 +88,14 @@ inline NuoVector<float, 4>::NuoVector(float x, float y, float z, float w)
     r->f[3] = w;
 }
 
+template <>
+inline float NuoVector<float, 4>::operator[] (size_t i) const
+{
+    DirectX::XMVECTORF32* r = (DirectX::XMVECTORF32*) & _vector;
+
+    return r->f[i];
+}
+
 
 template <class itemType, int itemCount>
 inline NuoVector<itemType, itemCount> NuoVector<itemType, itemCount>::operator - () const

@@ -40,6 +40,12 @@
     <Filter Include="NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes">
       <UniqueIdentifier>{cbaafef5-91a9-4f64-9f16-0c98e0b087b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoScripting">
+      <UniqueIdentifier>{a6e373ff-1ecc-424f-bfff-c09b004a0470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ModelState">
+      <UniqueIdentifier>{f2c7ea3d-c63d-4f62-b33f-5c748bae5a70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
@@ -200,6 +206,18 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshRotation.cpp">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoScripting\NuoLua.cpp">
+      <Filter>NuoWindowsFoundation\NuoScripting</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelState\ModelViewConfiguration.cpp">
+      <Filter>Source Files\ModelState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoDropdownList.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +397,18 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshRotation.h">
       <Filter>NuoWindowsFoundation\NuoMeshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoScripting\NuoLua.h">
+      <Filter>NuoWindowsFoundation\NuoScripting</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelState\ModelViewConfiguration.h">
+      <Filter>Source Files\ModelState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoDropdownList.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.h">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

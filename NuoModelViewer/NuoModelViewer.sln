@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NuoModelViewer", "NuoModelViewer\NuoModelViewer.vcxproj", "{039D35D1-3468-4AAD-8CCB-85DFAA53AA8F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LuaLib", "..\lua\Lua\LuaLib\LuaLib.vcxproj", "{5BCC2242-37C1-4693-BB93-6137E698966D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{039D35D1-3468-4AAD-8CCB-85DFAA53AA8F}.Release|x64.Build.0 = Release|x64
 		{039D35D1-3468-4AAD-8CCB-85DFAA53AA8F}.Release|x86.ActiveCfg = Release|Win32
 		{039D35D1-3468-4AAD-8CCB-85DFAA53AA8F}.Release|x86.Build.0 = Release|Win32
+		{5BCC2242-37C1-4693-BB93-6137E698966D}.Debug|x64.ActiveCfg = Debug|x64
+		{5BCC2242-37C1-4693-BB93-6137E698966D}.Debug|x64.Build.0 = Debug|x64
+		{5BCC2242-37C1-4693-BB93-6137E698966D}.Debug|x86.ActiveCfg = Debug|Win32
+		{5BCC2242-37C1-4693-BB93-6137E698966D}.Debug|x86.Build.0 = Debug|Win32
+		{5BCC2242-37C1-4693-BB93-6137E698966D}.Release|x64.ActiveCfg = Release|x64
+		{5BCC2242-37C1-4693-BB93-6137E698966D}.Release|x64.Build.0 = Release|x64
+		{5BCC2242-37C1-4693-BB93-6137E698966D}.Release|x86.ActiveCfg = Release|Win32
+		{5BCC2242-37C1-4693-BB93-6137E698966D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

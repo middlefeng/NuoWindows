@@ -29,6 +29,8 @@ public:
 	size_t Position();
 	void ReadTo(std::vector<char>& content);
 
+	bool Exists();
+
 	PNuoReadStream ReadStream();
 	void SaveStream(const PNuoWriteStream& stream, long size);
 	FILE* FileHandle(bool read);
