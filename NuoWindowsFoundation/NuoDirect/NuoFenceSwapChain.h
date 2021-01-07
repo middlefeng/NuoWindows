@@ -40,5 +40,10 @@ public:
 	void MoveToNextFrame(const PNuoDirectView& view);
 
 	friend class NuoDevice;
+
+private:
+
+	void WaitForGPU(const PNuoCommandQueue& commandQueue, unsigned int inFlight);
+
 };
 

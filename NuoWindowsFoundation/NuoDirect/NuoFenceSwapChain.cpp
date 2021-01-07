@@ -26,17 +26,7 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoDirectView& view)
     PNuoCommandQueue queue = view->CommandQueue();
     unsigned int currentBufferIndex = view->CurrentBackBufferIndex();
 
-    // Schedule a Signal command in the queue.
-    queue->DxQueue()->Signal(_fence.Get(), _fenceValues[currentBufferIndex]);
-
-    // Wait until the fence has been processed.
-    _fence->SetEventOnCompletion(_fenceValues[currentBufferIndex], _fenceEvent);
-    WaitForSingleObjectEx(_fenceEvent, INFINITE, FALSE);
-
-    queue->ReleasePendingCommandBuffers();
-
-    // Increment the fence value for the current frame.
-    _fenceValues[currentBufferIndex]++;
+    WaitForGPU(queue, currentBufferIndex);
 }
 
 
@@ -44,17 +34,23 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue)
 {
     assert(_fenceValues.size() == 1);
 
+    WaitForGPU(commandQueue, 0);
+}
+
+
+void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue, unsigned int inFlight)
+{
     // Schedule a Signal command in the queue.
-    commandQueue->DxQueue()->Signal(_fence.Get(), _fenceValues[0]);
+    commandQueue->DxQueue()->Signal(_fence.Get(), _fenceValues[inFlight]);
 
     // Wait until the fence has been processed.
-    _fence->SetEventOnCompletion(_fenceValues[0], _fenceEvent);
+    _fence->SetEventOnCompletion(_fenceValues[inFlight], _fenceEvent);
     WaitForSingleObjectEx(_fenceEvent, INFINITE, FALSE);
 
     commandQueue->ReleasePendingCommandBuffers();
 
     // Increment the fence value for the current frame.
-    _fenceValues[0] += 1;
+    _fenceValues[inFlight] += 1;
 }
 
 
