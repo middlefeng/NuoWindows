@@ -12,6 +12,9 @@
 class ModelView;
 typedef std::shared_ptr<ModelView> PDirectView;
 
+class ModelState;
+typedef std::shared_ptr<ModelState> PModelState;
+
 class NuoTextureMesh;
 typedef std::shared_ptr<NuoTextureMesh> PNuoTextureMesh;
 
@@ -24,13 +27,8 @@ typedef std::shared_ptr<NuoMeshSceneRoot> PNuoMeshSceneRoot;
 
 class ModelView : public NuoDirectView
 {
-
-	PNuoPipelineState _pipeline;
-	PNuoVertexBuffer _vertexBuffer;
-
-	PNuoMeshSceneRoot _scene;
-	PNuoMesh _mainMesh;
-
+	PModelState _modelState;
+	
 	PNuoTextureMesh _textureMesh;
 	PNuoResourceSwapChain _light;
 

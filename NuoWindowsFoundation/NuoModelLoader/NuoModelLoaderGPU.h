@@ -59,5 +59,7 @@ public:
     
 };
 
+typedef std::shared_ptr<NuoModelLoaderGPU> PNuoModelLoaderGPU;
+
 
 #endif

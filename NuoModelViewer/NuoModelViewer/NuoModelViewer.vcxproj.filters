@@ -44,7 +44,7 @@
       <UniqueIdentifier>{a6e373ff-1ecc-424f-bfff-c09b004a0470}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\ModelState">
-      <UniqueIdentifier>{f2c7ea3d-c63d-4f62-b33f-5c748bae5a70}</UniqueIdentifier>
+      <UniqueIdentifier>{4ff698d3-d570-4ec0-8753-7dacda8328ae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.cpp">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelState\ModelState.cpp">
+      <Filter>Source Files\ModelState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.h">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelState\ModelState.h">
+      <Filter>Source Files\ModelState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

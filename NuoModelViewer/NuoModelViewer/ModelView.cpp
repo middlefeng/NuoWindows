@@ -2,7 +2,9 @@
 //
 
 #include "framework.h"
+
 #include "ModelView.h"
+#include "ModelState/ModelState.h"
 
 #include "NuoAppInstance.h"
 #include "NuoFile.h"
@@ -33,7 +35,7 @@ ModelView::ModelView(const PNuoDevice& device,
 	: NuoDirectView(device, parent),
       _init(false)
 {
-    _scene = std::make_shared<NuoMeshSceneRoot>();
+    //_scene = std::make_shared<NuoMeshSceneRoot>();
 }
 
 
@@ -62,8 +64,6 @@ void ModelView::Init()
 {
     PNuoDevice device = CommandQueue()->Device();
 
-    PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
-
     std::string path = NuoAppInstance::GetInstance()->ModulePath();
     path = RemoveLastPathComponent(path);
     path = path + "/uh60.obj";
@@ -74,17 +74,24 @@ void ModelView::Init()
     auto format = RenderTarget(0)->Format();
     auto sampleCount = RenderTarget(0)->SampleCount();
 
+    _modelState = std::make_shared<ModelState>(CommandQueue(), format, sampleCount);
+
     NuoMeshOptions options = {};
     options._combineByMaterials = false;
     options._textured = false;
     options._basicMaterialized = true;
 
-    NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
-    auto mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
-    _scene->ReplaceMesh(_mainMesh, mesh);
-    _mainMesh = mesh;
+    _modelState->SetOptions(options);
+    _modelState->LoadMesh(path, [](float) {});
 
-    mesh->CenterMesh();
+    //NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
+    //auto mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
+    //_scene->ReplaceMesh(_mainMesh, mesh);
+    //_mainMesh = mesh;
+
+    //mesh->CenterMesh();
+
+    PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
@@ -144,7 +151,7 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     light.lightParams[0].irradiance = 1.0;
     lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
 
-    _scene->UpdateUniform(encoder->InFlight(), NuoMatrixFloat44Identity);
+    _modelState->SceneRoot()->UpdateUniform(encoder->InFlight(), NuoMatrixFloat44Identity);
 
     NuoMesh::CommonFunc commFunc = [&mvp, &lightBuffer](NuoCommandEncoder* encoder)
     {
@@ -152,8 +159,8 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
         encoder->SetRootConstantBuffer(1, lightBuffer);
     };
     
-    _scene->DrawBegin(encoder, commFunc);
-    _scene->Draw(encoder);
+    _modelState->SceneRoot()->DrawBegin(encoder, commFunc);
+    _modelState->SceneRoot()->Draw(encoder);
 
 	target->ReleaseRenderPassEncoder();
     encoder.reset();

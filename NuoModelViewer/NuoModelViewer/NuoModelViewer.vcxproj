@@ -201,6 +201,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.cpp" />
     <ClCompile Include="ModelState\ModelViewConfiguration.cpp" />
+    <ClCompile Include="ModelState\ModelState.cpp" />
     <ClCompile Include="ModelView.cpp" />
     <ClCompile Include="ModelViewerWindow.cpp" />
     <ClCompile Include="ModelViewerMain.cpp" />
@@ -398,6 +399,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorTypeTraitWin.hpp" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\Win\NuoMathVectorWin.hpp" />
     <ClInclude Include="ModelState\ModelViewConfiguration.h" />
+    <ClInclude Include="ModelState\ModelState.h" />
     <ClInclude Include="ModelView.h" />
     <ClInclude Include="ModelViewerWindow.h" />
     <ClInclude Include="ModelViewerMain.h" />
