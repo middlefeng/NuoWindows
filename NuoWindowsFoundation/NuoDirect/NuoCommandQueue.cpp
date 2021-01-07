@@ -26,6 +26,12 @@ PNuoDevice NuoCommandQueue::Device() const
 }
 
 
+void NuoCommandQueue::ReleasePendingCommandBuffers()
+{
+    _pendingCommandBuffers.clear();
+}
+
+
 PNuoCommandBuffer NuoCommandQueue::CreateCommandBuffer()
 {
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
@@ -38,6 +44,8 @@ PNuoCommandBuffer NuoCommandQueue::CreateCommandBuffer()
     commandBuffer->_inFlight = 0;
     commandBuffer->_commandAllocator = allocator;
     commandBuffer->_commandQueue = shared_from_this();
+
+    _pendingCommandBuffers.push_back(commandBuffer);
 
     return commandBuffer;
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <set>
+#include <vector>
 #include <string>
 
 #include <d3d12.h>
@@ -23,6 +23,7 @@ class NuoCommandQueue : public std::enable_shared_from_this<NuoCommandQueue>
 	PNuoDevice _device;
 
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> _dxQueue;
+	std::vector<PNuoCommandBuffer> _pendingCommandBuffers;
 
 public:
 
@@ -30,6 +31,7 @@ public:
 	PNuoCommandBuffer CreateCommandBuffer();
 
 	PNuoDevice Device() const;
+	void ReleasePendingCommandBuffers();
 
 	ID3D12CommandQueue* DxQueue() const;
 

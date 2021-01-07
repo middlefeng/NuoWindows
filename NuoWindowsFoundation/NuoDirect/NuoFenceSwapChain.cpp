@@ -33,6 +33,8 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoDirectView& view)
     _fence->SetEventOnCompletion(_fenceValues[currentBufferIndex], _fenceEvent);
     WaitForSingleObjectEx(_fenceEvent, INFINITE, FALSE);
 
+    queue->ReleasePendingCommandBuffers();
+
     // Increment the fence value for the current frame.
     _fenceValues[currentBufferIndex]++;
 }
@@ -48,6 +50,8 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue)
     // Wait until the fence has been processed.
     _fence->SetEventOnCompletion(_fenceValues[0], _fenceEvent);
     WaitForSingleObjectEx(_fenceEvent, INFINITE, FALSE);
+
+    commandQueue->ReleasePendingCommandBuffers();
 
     // Increment the fence value for the current frame.
     _fenceValues[0] += 1;
