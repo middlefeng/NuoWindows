@@ -7,6 +7,7 @@
 #include "ModelViewerWindow.h"
 
 #include "NuoMenu.h"
+#include "NuoOpenFileDialog.h"
 #include "NuoDropdownList.h"
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
@@ -33,6 +34,12 @@ ModelViewerWindow::ModelViewerWindow(const std::string& title)
 		{
 			Destroy();
 			NuoAppInstance::Exit();
+		});
+
+	fileOpenItem->SetAction([this](const PNuoMenuItem&)
+		{
+			NuoFileDialog dlg;
+			dlg.Open(this->shared_from_this());
 		});
 
 	SetMenu(menu);

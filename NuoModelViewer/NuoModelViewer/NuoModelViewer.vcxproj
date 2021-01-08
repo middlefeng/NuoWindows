@@ -95,6 +95,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>comdlg32.lib;oleaut32.lib;ole32.lib;gdi32.lib;user32.lib;gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;dxguid.lib;dxcompiler.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <AdditionalManifestFiles>../../NuoWindowsFoundation/NuoUI/DPIAware.manifest</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -113,6 +116,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>comdlg32.lib;oleaut32.lib;ole32.lib;gdi32.lib;user32.lib;gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;dxguid.lib;dxcompiler.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <AdditionalManifestFiles>../../NuoWindowsFoundation/NuoUI/DPIAware.manifest</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -127,6 +133,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>comdlg32.lib;oleaut32.lib;ole32.lib;gdi32.lib;user32.lib;gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;dxguid.lib;dxcompiler.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <AdditionalManifestFiles>../../NuoWindowsFoundation/NuoUI/DPIAware.manifest</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -145,6 +154,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>comdlg32.lib;oleaut32.lib;ole32.lib;gdi32.lib;user32.lib;gdiplus.lib;Windowscodecs.lib;d3d12.lib;dxgi.lib;dxguid.lib;dxcompiler.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <AdditionalManifestFiles>../../NuoWindowsFoundation/NuoUI/DPIAware.manifest</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp" />

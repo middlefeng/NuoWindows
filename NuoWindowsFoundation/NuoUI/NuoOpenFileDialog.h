@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include <commdlg.h>
 #include <windows.h>
 
 #include "NuoWindow.h"

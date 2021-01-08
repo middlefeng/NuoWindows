@@ -35,7 +35,6 @@ ModelView::ModelView(const PNuoDevice& device,
 	: NuoDirectView(device, parent),
       _init(false)
 {
-    //_scene = std::make_shared<NuoMeshSceneRoot>();
 }
 
 
@@ -83,13 +82,6 @@ void ModelView::Init()
 
     _modelState->SetOptions(options);
     _modelState->LoadMesh(path, [](float) {});
-
-    //NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
-    //auto mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
-    //_scene->ReplaceMesh(_mainMesh, mesh);
-    //_mainMesh = mesh;
-
-    //mesh->CenterMesh();
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 

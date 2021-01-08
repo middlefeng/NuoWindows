@@ -30,7 +30,7 @@ void ListViewWindow::Init()
 	
 	_loadButton->SetFont(font);
 
-	_loadButton->SetOnCommand([this]()
+	_loadButton->SetOnCommand([this](int)
 		{
 			
 		});
