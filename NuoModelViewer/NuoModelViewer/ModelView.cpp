@@ -75,14 +75,6 @@ void ModelView::Init()
 
     _modelState = std::make_shared<ModelState>(CommandQueue(), format, sampleCount);
 
-    NuoMeshOptions options = {};
-    options._combineByMaterials = false;
-    options._textured = false;
-    options._basicMaterialized = true;
-
-    _modelState->SetOptions(options);
-    _modelState->LoadMesh(path, [](float) {});
-
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     std::vector<PNuoResource> intermediate;
@@ -98,18 +90,22 @@ void ModelView::Init()
     fence->WaitForGPU(CommandQueue());
 }
 
-struct Light
+
+
+void ModelView::OpenFile(const std::string& path)
 {
-    DirectX::XMFLOAT4 direction;
-    DirectX::XMFLOAT4 ambientColor;
-    DirectX::XMFLOAT4 diffuseColor;
-    DirectX::XMFLOAT4 specularColor;
-};
+    LoadMesh(path);
+    Update();
+}
+
 
 
 void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 {
     if (!_init)
+        return;
+
+    if (!_modelState->SceneRoot())
         return;
 
     PNuoRenderTarget target = _intermediateTarget; // CurrentRenderTarget();
@@ -166,6 +162,27 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     _textureMesh->Draw(encoder);
 
     target->ReleaseRenderPassEncoder();
+}
+
+
+void ModelView::LoadMesh(const std::string& path)
+{
+    NuoMeshOptions options = {};
+    options._combineByMaterials = false;
+    options._textured = false;
+    options._basicMaterialized = true;
+
+    _modelState->SetOptions(options);
+    _modelState->LoadMesh(path, [](float) {// TODO
+        });
+
+    std::string documentName = LastPathComponent(path);
+    std::string title = "ModelView - " + documentName;
+
+    // Create synchronization objects and wait until assets have been uploaded to the GPU.
+    PNuoDevice device = CommandQueue()->Device();
+    PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
+    fence->WaitForGPU(CommandQueue());
 }
 
 

@@ -34,6 +34,14 @@ std::string StringToUTF8(const std::wstring& s)
 	return resultStr;
 }
 
+
+std::string LastPathComponent(const std::string& s)
+{
+	size_t delimitor = s.find_last_of("\\");
+	return s.substr(delimitor + 1);
+}
+
+
 std::string RemoveLastPathComponent(const std::string& s)
 {
 	size_t delimitor = s.find_last_of("\\");

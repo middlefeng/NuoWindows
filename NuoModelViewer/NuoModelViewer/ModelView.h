@@ -42,9 +42,11 @@ class ModelView : public NuoDirectView
 
 public:
 
-	void Init();
-
 	ModelView(const PNuoDevice& device, const PNuoWindow& parent);
+
+	void Init();
+	void OpenFile(const std::string& path);
+	void LoadMesh(const std::string& path);
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void OnSize(unsigned int x, unsigned int y) override;

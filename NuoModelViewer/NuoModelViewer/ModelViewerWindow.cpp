@@ -40,6 +40,8 @@ ModelViewerWindow::ModelViewerWindow(const std::string& title)
 		{
 			NuoFileDialog dlg;
 			dlg.Open(this->shared_from_this());
+
+			_dxView->OpenFile(dlg.FilePath());
 		});
 
 	SetMenu(menu);
