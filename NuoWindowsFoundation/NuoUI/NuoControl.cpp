@@ -94,8 +94,6 @@ NuoRect<float> NuoControl::Position()
 
 NuoRect<float> NuoControl::AutoPosition()
 {
-	static const long margin = 20;
-
 	NuoRect<float> originalRect = Position();
 	NuoRect<float> result(0, 0, originalRect.W(), originalRect.H());
 
@@ -125,23 +123,25 @@ NuoRect<float> NuoControl::AutoPosition()
 	switch (_autoPosition)
 	{
 	case kNuoControl_NoneAuto:
+	{
 		break;
+	}
 	case kNuoControl_RB:
 	{
-		result.SetX(parentBound.W() - result.W() - margin);
-		result.SetY(parentBound.H() - result.H() - margin);
+		result.SetX(parentBound.W() - result.W() - _parentMargin._right);
+		result.SetY(parentBound.H() - result.H() - _parentMargin._bottom);
 		break;
 	}
 	case kNuoControl_R:
 	{
-		result.SetX(parentBound.W() - result.W() - margin);
+		result.SetX(parentBound.W() - result.W() - _parentMargin._right);
 		result.SetY(originalRect.Y());
 		break;
 	}
 	case kNuoControl_RT:
 	{
-		result.SetX(parentBound.W() - result.W() - margin);
-		result.SetY(margin);
+		result.SetX(parentBound.W() - result.W() - _parentMargin._right);
+		result.SetY(_parentMargin._top);
 		break;
 	}
 	default:
