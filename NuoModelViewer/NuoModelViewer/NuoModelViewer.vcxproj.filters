@@ -222,6 +222,9 @@
     <ClCompile Include="ModelState\ModelState.cpp">
       <Filter>Source Files\ModelState</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -415,6 +418,9 @@
     </ClInclude>
     <ClInclude Include="ModelState\ModelState.h">
       <Filter>Source Files\ModelState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

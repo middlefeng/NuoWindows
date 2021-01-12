@@ -203,6 +203,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMenu.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoOpenFileDialog.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoRect.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoStrings.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoTimer.cpp" />
@@ -400,6 +401,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMenu.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoOpenFileDialog.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoRect.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoStrings.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoTimer.h" />

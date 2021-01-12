@@ -23,6 +23,9 @@ class NuoMeshSceneRoot;
 typedef std::shared_ptr<NuoMesh> PNuoMesh;
 typedef std::shared_ptr<NuoMeshSceneRoot> PNuoMeshSceneRoot;
 
+class NuoProgressBar;
+typedef std::shared_ptr<NuoProgressBar> PNuoProgressBar;
+
 
 
 class ModelView : public NuoDirectView
@@ -39,6 +42,8 @@ class ModelView : public NuoDirectView
 	NuoMatrixFloat44 _modelTransfer;
 
 	bool _init;
+
+	PNuoProgressBar _loadingProgress;
 
 public:
 

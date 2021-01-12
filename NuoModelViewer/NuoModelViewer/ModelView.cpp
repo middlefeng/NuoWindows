@@ -61,15 +61,6 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
 
 void ModelView::Init()
 {
-    PNuoDevice device = CommandQueue()->Device();
-
-    std::string path = NuoAppInstance::GetInstance()->ModulePath();
-    path = RemoveLastPathComponent(path);
-    path = path + "/uh60.obj";
-
-    PNuoModelLoader loader = std::make_shared<NuoModelLoader>();
-    loader->LoadModel(path);
-
     auto format = RenderTarget(0)->Format();
     auto sampleCount = RenderTarget(0)->SampleCount();
 
@@ -81,6 +72,7 @@ void ModelView::Init()
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
 
+    PNuoDevice device = CommandQueue()->Device();
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
 
     commandBuffer->Commit();
