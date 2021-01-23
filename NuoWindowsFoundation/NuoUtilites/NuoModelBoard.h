@@ -1,5 +1,5 @@
 //
-//  NuoModelCube.hpp
+//  NuoModelCube.h
 //  ModelViewer
 //
 //  Created by middleware on 5/22/17.

@@ -21,20 +21,22 @@ class NuoTimer : std::enable_shared_from_this<NuoTimer>
 {
 public:
 
-	typedef std::function<void(NuoTimer* timer)> Func;
+	typedef std::function<bool (NuoTimer* timer)> Func;
 
 	UINT_PTR _id;
 
 	unsigned int _interval;
 	Func _function;
 
+	NuoTimer(unsigned int _interval, Func timerFunc);
+
 public:
 
 	friend class NuoWindow;
 
-	virtual void OnTimer();
+	static PNuoTimer MakeTimer(unsigned int interval, Func timeFunc);
+	virtual bool OnTimer();
 
-	NuoTimer(unsigned int _interval, Func timerFunc);
 	virtual ~NuoTimer();
 };
 
