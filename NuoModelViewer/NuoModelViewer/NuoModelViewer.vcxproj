@@ -209,6 +209,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoTimer.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoView.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoDispatch.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelBoard.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.cpp" />
@@ -407,6 +408,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoTimer.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoView.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoWindow.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoDispatch.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoMathVector.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelBoard.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoTableExporter.h" />

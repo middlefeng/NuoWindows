@@ -4,7 +4,7 @@
 
 
 
-static std::map<UINT_PTR, NuoTimer*> _sTimers;
+static std::map<UINT_PTR, PNuoTimer> _sTimers;
 
 
 
@@ -15,10 +15,20 @@ static void Timerproc(HWND hWnd, UINT msg, UINT_PTR id, DWORD Arg4)
 		auto pos = _sTimers.find(id);
 		if (pos != _sTimers.end())
 		{
-			NuoTimer* timer = pos->second;
-			timer->OnTimer();
+			PNuoTimer timer = pos->second;
+			if (!timer->OnTimer())
+			{
+				_sTimers.erase(pos);
+			}
 		}
 	}
+}
+
+
+
+PNuoTimer NuoTimer::MakeTimer(unsigned int interval, Func timeFunc)
+{
+	return std::make_shared<NuoTimer>(interval, timeFunc);
 }
 
 
@@ -29,18 +39,18 @@ NuoTimer::NuoTimer(unsigned int interval, Func timerFunc)
 {
 	_id = SetTimer(0, 0, _interval, Timerproc);
 
-	_sTimers.insert(std::make_pair(_id, this));
+	_sTimers.insert(std::make_pair(_id, shared_from_this()));
 }
 
 
 NuoTimer::~NuoTimer()
 {
-	_sTimers.erase(_id);
+	KillTimer(0, _id);
 }
 
 
-void NuoTimer::OnTimer()
+bool NuoTimer::OnTimer()
 {
-	_function(this);
+	return _function(this);
 }
 

@@ -225,6 +225,9 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.cpp">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoDispatch.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -421,6 +424,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.h">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoDispatch.h">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
