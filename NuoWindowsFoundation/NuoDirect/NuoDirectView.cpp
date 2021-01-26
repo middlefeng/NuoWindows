@@ -298,6 +298,8 @@ void NuoDirectView::OnSize(unsigned int x, unsigned int y)
     {
         CreateSwapChain(3, rect.W(), rect.H());
     }
+
+    NuoView::OnSize(x, y);
 }
 
 

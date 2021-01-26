@@ -34,9 +34,9 @@ void NuoProgressBar::Init(int controlID)
     std::wstring wtitle = StringToUTF16(_title);
     PNuoWindow parent = _parent.lock();
 
-    _hWnd = CreateWindow(PROGRESS_CLASS,     // Predefined class; Unicode assumed 
+    _hWnd = CreateWindow(PROGRESS_CLASS,
                          wtitle.c_str(),        // Button text 
-                         WS_TABSTOP | WS_VISIBLE | WS_CHILD,  // Styles 
+                         WS_TABSTOP | WS_VISIBLE | WS_CHILD | PBS_SMOOTH,  // Styles 
                          10, 10, 300, 40,       // Button height
                          parent->Handle(),      // Parent window
                          (HMENU)controlID,             
