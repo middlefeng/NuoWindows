@@ -9,10 +9,12 @@
 #include "NuoAppInstance.h"
 #include "NuoFile.h"
 #include "NuoStrings.h"
+#include "NuoTimer.h"
 
 #include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoMeshes/NuoMeshSceneRoot.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
+#include "NuoUtilites/NuoDispatch.h"
 
 #include "NuoModelLoader/NuoModelLoader.h"
 #include "NuoModelLoader/NuoModelLoaderGPU.h"
@@ -165,16 +167,43 @@ void ModelView::LoadMesh(const std::string& path)
     options._basicMaterialized = true;
 
     _modelState->SetOptions(options);
-    _modelState->LoadMesh(path, [](float) {// TODO
+
+    NuoDispatch* dispatch = NuoDispatch::GetInstance();
+
+    ModelState* modelState = _modelState.get();
+    PNuoCommandQueue commandQueue = CommandQueue();
+
+    ModelView* view = this;
+
+    std::shared_ptr<std::atomic<bool>> running = std::make_shared<std::atomic<bool>>();
+    *running = true;
+
+    PNuoTimer timer = NuoTimer::MakeTimer(1, [view, running](NuoTimer* timer)
+        {
+            if (*running)
+                return true;
+
+            view->Update();
+            return false;
+        });
+
+    dispatch->DispatchAsync([modelState, path, commandQueue, view, running]()
+        {
+            modelState->LoadMesh(path, [](float b)
+                {
+                    float a = b;
+                });
+
+            // Create synchronization objects and wait until assets have been uploaded to the GPU.
+            PNuoDevice device = commandQueue->Device();
+            PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
+            fence->WaitForGPU(commandQueue);
+
+            *running = false;
         });
 
     std::string documentName = LastPathComponent(path);
     std::string title = "ModelView - " + documentName;
-
-    // Create synchronization objects and wait until assets have been uploaded to the GPU.
-    PNuoDevice device = CommandQueue()->Device();
-    PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
-    fence->WaitForGPU(CommandQueue());
 }
 
 
