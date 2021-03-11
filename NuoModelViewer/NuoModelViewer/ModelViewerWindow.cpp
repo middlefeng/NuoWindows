@@ -7,6 +7,7 @@
 #include "ModelViewerWindow.h"
 
 #include "NuoMenu.h"
+#include "NuoProgressBar.h"
 #include "NuoOpenFileDialog.h"
 #include "NuoDropdownList.h"
 #include "NuoAppInstance.h"
@@ -41,7 +42,7 @@ ModelViewerWindow::ModelViewerWindow(const std::string& title)
 			NuoFileDialog dlg;
 			dlg.Open(this->shared_from_this());
 
-			_dxView->OpenFile(dlg.FilePath());
+			_dxView->OpenFile(dlg.FilePath(), [](float) {});
 		});
 
 	SetMenu(menu);
@@ -87,6 +88,20 @@ void ModelViewerWindow::Init()
 		});
 
 	UpdateControls();
+
+	NuoInset<float> loadingProgressMaring(20, 0, 20, 0);
+	NuoRect<float> loadingProgressPos(0, 0, 150, 30);
+	_loadingProgress = std::make_shared<NuoProgressBar>(shared_from_this(), "");
+	Add(_loadingProgress);
+
+	_loadingProgress->Init(0);
+	_loadingProgress->SetAutoPosition(kNuoControl_LB);
+	_loadingProgress->SetMargin(loadingProgressMaring);
+	_loadingProgress->SetPosition(loadingProgressPos, true);
+	_loadingProgress->SetFont(NuoFont::MenuFont(16.5));
+
+	_loadingProgress->SetRange(0.0, 1.0);
+	_loadingProgress->SetBarPosition(0.7);
 }
 
 

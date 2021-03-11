@@ -118,7 +118,8 @@ void NuoCommandEncoder::CopyTexture(const std::vector<UINT8>& src, std::vector<P
 	UINT64 requiredSize;
 	UINT numRows;
 	D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint;
-	device->DxDevice()->GetCopyableFootprints(&texture->DxResource()->GetDesc(), 0, 1, 0,
+	auto textureDesc = texture->DxResource()->GetDesc();
+	device->DxDevice()->GetCopyableFootprints(&textureDesc, 0, 1, 0,
 											  &footprint, &numRows, &rowSizesInBytes, &requiredSize);
 
 	PNuoResource intermediateResource = device->CreateUploadBuffer(requiredSize);
@@ -218,7 +219,10 @@ void NuoCommandEncoder::SetRenderTarget(const PNuoRenderTarget& renderTarget)
 {
 	_renderTarget = renderTarget;
 
-	_commandList->OMSetRenderTargets(1, &_renderTarget->View(), false, &_renderTarget->DepthView());
+	auto renderTargetHandle = _renderTarget->View();
+	auto depthView = _renderTarget->DepthView();
+
+	_commandList->OMSetRenderTargets(1, &renderTargetHandle, false, &depthView);
 	_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

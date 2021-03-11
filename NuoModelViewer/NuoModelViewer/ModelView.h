@@ -4,6 +4,7 @@
 #include "NuoTimer.h"
 
 #include "NuoDirect/NuoDirectView.h"
+#include "NuoModelLoader/NuoModelLoader.h"
 
 #include <functional>
 #include <DirectXMath.h>
@@ -45,8 +46,8 @@ public:
 	ModelView(const PNuoDevice& device, const PNuoWindow& parent);
 
 	void Init();
-	void OpenFile(const std::string& path);
-	void LoadMesh(const std::string& path);
+	void OpenFile(const std::string& path, NuoTaskProgress progress);
+	void LoadMesh(const std::string& path, NuoTaskProgress progress);
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void OnSize(unsigned int x, unsigned int y) override;
