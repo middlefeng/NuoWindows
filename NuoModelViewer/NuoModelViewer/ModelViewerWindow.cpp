@@ -96,9 +96,7 @@ void ModelViewerWindow::Init()
 	_loadingProgress->SetMargin(loadingProgressMaring);
 	_loadingProgress->SetPosition(loadingProgressPos, true);
 	_loadingProgress->SetFont(NuoFont::MenuFont(16.5));
-
 	_loadingProgress->SetRange(0.0, 1.0);
-	_loadingProgress->SetBarPosition(0.7);
 }
 
 
