@@ -9,7 +9,6 @@
 #include "NuoAppInstance.h"
 #include "NuoFile.h"
 #include "NuoStrings.h"
-#include "NuoTimer.h"
 
 #include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoMeshes/NuoMeshSceneRoot.h"
@@ -84,9 +83,9 @@ void ModelView::Init()
 
 
 
-void ModelView::OpenFile(const std::string& path, NuoTaskProgress progress)
+void ModelView::OpenFile(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion)
 {
-    LoadMesh(path, progress);
+    LoadMesh(path, progress, completion);
     Update();
 }
 
@@ -157,7 +156,7 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 }
 
 
-void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
+void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion)
 {
     NuoMeshOptions options = {};
     options._combineByMaterials = false;
@@ -181,7 +180,11 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
         fence->WaitForGPU(commandQueue);
     };
 
-    NuoBackgroundTask::BackgroundTask(task, progress, [view]() { view->Update(); });
+    NuoBackgroundTask::BackgroundTask(task, progress, [view, completion]()
+        {
+            view->Update();
+            completion();
+        });
 
     std::string documentName = LastPathComponent(path);
     std::string title = "ModelView - " + documentName;

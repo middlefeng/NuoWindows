@@ -33,6 +33,10 @@ public:
 	ModelViewerWindow(const std::string& title);
 	virtual void OnPaint();
 
+private:
+
+	void OpenFile();
+
 };
 
 

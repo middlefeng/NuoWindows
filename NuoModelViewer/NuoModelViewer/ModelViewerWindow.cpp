@@ -39,10 +39,7 @@ ModelViewerWindow::ModelViewerWindow(const std::string& title)
 
 	fileOpenItem->SetAction([this](const PNuoMenuItem&)
 		{
-			NuoFileDialog dlg;
-			dlg.Open(this->shared_from_this());
-
-			_dxView->OpenFile(dlg.FilePath(), [](float) {});
+			this->OpenFile();
 		});
 
 	SetMenu(menu);
@@ -113,5 +110,30 @@ void ModelViewerWindow::UpdateControls()
 
 void ModelViewerWindow::OnPaint()
 {
+}
+
+
+void ModelViewerWindow::OpenFile()
+{
+	NuoFileDialog dlg;
+	dlg.Open(shared_from_this());
+
+	std::weak_ptr<ModelView> dxView = _dxView;
+	PNuoProgressBar progressBar = _loadingProgress;
+
+	_dxView->Hide();
+	_loadingProgress->Show();
+
+	_dxView->OpenFile(dlg.FilePath(),
+		[progressBar](float p)
+		{
+			progressBar->SetBarPosition(p);
+		},
+		[dxView, progressBar]()
+		{
+			auto aDxView = dxView.lock();
+			progressBar->Hide();
+			aDxView->Show();
+		});
 }
 
