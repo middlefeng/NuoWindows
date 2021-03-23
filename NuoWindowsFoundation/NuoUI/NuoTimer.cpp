@@ -28,7 +28,10 @@ static void Timerproc(HWND hWnd, UINT msg, UINT_PTR id, DWORD Arg4)
 
 PNuoTimer NuoTimer::MakeTimer(unsigned int interval, Func timeFunc)
 {
-	return std::make_shared<NuoTimer>(interval, timeFunc);
+	PNuoTimer timer = std::make_shared<NuoTimer>(interval, timeFunc);
+
+	_sTimers.insert(std::make_pair(timer->_id, timer));
+	return timer;
 }
 
 
@@ -38,8 +41,6 @@ NuoTimer::NuoTimer(unsigned int interval, Func timerFunc)
 	  _function(timerFunc)
 {
 	_id = SetTimer(0, 0, _interval, Timerproc);
-
-	_sTimers.insert(std::make_pair(_id, shared_from_this()));
 }
 
 

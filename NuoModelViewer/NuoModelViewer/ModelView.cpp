@@ -14,7 +14,6 @@
 #include "NuoMeshes/NuoMeshSceneRoot.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
 
-#include "NuoModelLoader/NuoModelLoader.h"
 #include "NuoModelLoader/NuoModelLoaderGPU.h"
 
 
@@ -35,7 +34,6 @@ ModelView::ModelView(const PNuoDevice& device,
 	: NuoDirectView(device, parent),
       _init(false)
 {
-    //_scene = std::make_shared<NuoMeshSceneRoot>();
 }
 
 
@@ -62,34 +60,10 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
 
 void ModelView::Init()
 {
-    PNuoDevice device = CommandQueue()->Device();
-
-    std::string path = NuoAppInstance::GetInstance()->ModulePath();
-    path = RemoveLastPathComponent(path);
-    path = path + "/uh60.obj";
-
-    PNuoModelLoader loader = std::make_shared<NuoModelLoader>();
-    loader->LoadModel(path);
-
     auto format = RenderTarget(0)->Format();
     auto sampleCount = RenderTarget(0)->SampleCount();
 
     _modelState = std::make_shared<ModelState>(CommandQueue(), format, sampleCount);
-
-    NuoMeshOptions options = {};
-    options._combineByMaterials = false;
-    options._textured = false;
-    options._basicMaterialized = true;
-
-    _modelState->SetOptions(options);
-    _modelState->LoadMesh(path, [](float) {});
-
-    //NuoModelLoaderGPU loaderGPU(loader, format, sampleCount);
-    //auto mesh = loaderGPU.CreateMesh(options, commandBuffer, [](float) {});
-    //_scene->ReplaceMesh(_mainMesh, mesh);
-    //_mainMesh = mesh;
-
-    //mesh->CenterMesh();
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
@@ -97,6 +71,7 @@ void ModelView::Init()
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
 
+    PNuoDevice device = CommandQueue()->Device();
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
 
     commandBuffer->Commit();
@@ -106,18 +81,22 @@ void ModelView::Init()
     fence->WaitForGPU(CommandQueue());
 }
 
-struct Light
+
+
+void ModelView::OpenFile(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion)
 {
-    DirectX::XMFLOAT4 direction;
-    DirectX::XMFLOAT4 ambientColor;
-    DirectX::XMFLOAT4 diffuseColor;
-    DirectX::XMFLOAT4 specularColor;
-};
+    LoadMesh(path, progress, completion);
+    Update();
+}
+
 
 
 void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 {
     if (!_init)
+        return;
+
+    if (!_modelState->SceneRoot())
         return;
 
     PNuoRenderTarget target = _intermediateTarget; // CurrentRenderTarget();
@@ -174,6 +153,41 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     _textureMesh->Draw(encoder);
 
     target->ReleaseRenderPassEncoder();
+}
+
+
+void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion)
+{
+    NuoMeshOptions options = {};
+    options._combineByMaterials = false;
+    options._textured = false;
+    options._basicMaterialized = true;
+
+    _modelState->SetOptions(options);
+
+    ModelState* modelState = _modelState.get();
+    PNuoCommandQueue commandQueue = CommandQueue();
+
+    ModelView* view = this;
+
+    NuoTask task = [modelState, path, commandQueue, view](NuoTaskProgress progress)
+    {
+        modelState->LoadMesh(path, progress);
+
+        // Create synchronization objects and wait until assets have been uploaded to the GPU.
+        PNuoDevice device = commandQueue->Device();
+        PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
+        fence->WaitForGPU(commandQueue);
+    };
+
+    NuoBackgroundTask::BackgroundTask(task, progress, [view, completion]()
+        {
+            view->Update();
+            completion();
+        });
+
+    std::string documentName = LastPathComponent(path);
+    std::string title = "ModelView - " + documentName;
 }
 
 

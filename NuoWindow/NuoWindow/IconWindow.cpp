@@ -24,7 +24,7 @@ void IconWindow::Init()
 	_loadButton->SetAutoPosition(kNuoControl_RT);
 	_loadButton->SetPosition(rect, false);
 
-	_loadButton->SetOnCommand([this]()
+	_loadButton->SetOnCommand([this](int)
 		{
 			NuoFileDialog dlg;
 			dlg.Open(this->shared_from_this());
@@ -43,7 +43,7 @@ void IconWindow::Init()
 	_saveButton->SetAutoPosition(kNuoControl_R);
 	_saveButton->SetPosition(rect, false);
 
-	_saveButton->SetOnCommand([this]()
+	_saveButton->SetOnCommand([this](int)
 		{
 			NuoFileDialog dlg;
 			dlg.Save(this->shared_from_this());

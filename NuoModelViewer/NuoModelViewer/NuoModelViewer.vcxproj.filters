@@ -222,7 +222,13 @@
     <ClCompile Include="ModelState\ModelState.cpp">
       <Filter>Source Files\ModelState</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoDispatch.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoBackgroundTask.cpp">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClCompile>
   </ItemGroup>
@@ -419,7 +425,13 @@
     <ClInclude Include="ModelState\ModelState.h">
       <Filter>Source Files\ModelState</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoDispatch.h">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoBackgroundTask.h">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClInclude>
   </ItemGroup>

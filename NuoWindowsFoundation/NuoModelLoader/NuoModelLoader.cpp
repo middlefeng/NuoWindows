@@ -219,7 +219,7 @@ void NuoModelLoader::LoadModel(const std::string& path)
 
 
 std::vector<PNuoModelBase> NuoModelLoader::CreateMeshWithOptions(const NuoMeshOptions& options,
-                                                                 NuoModelLoaderProgress progressFunc)
+                                                                 NuoTaskProgress progressFunc)
 {
     typedef std::shared_ptr<NuoModelBase> PNuoModelBase;
     

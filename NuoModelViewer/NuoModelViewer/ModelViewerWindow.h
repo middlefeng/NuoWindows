@@ -11,6 +11,9 @@ typedef std::shared_ptr<ModelViewConfiguration> PModelViewConfiguration;
 class NuoDropdownList;
 typedef std::shared_ptr<NuoDropdownList> PNuoDropdownList;
 
+class NuoProgressBar;
+typedef std::shared_ptr<NuoProgressBar> PNuoProgressBar;
+
 
 class ModelViewerWindow : public NuoWindow
 {
@@ -20,6 +23,7 @@ class ModelViewerWindow : public NuoWindow
 
 	PModelViewConfiguration _configuration;
 	PNuoDropdownList _deviceList;
+	PNuoProgressBar _loadingProgress;
 
 public:
 
@@ -28,6 +32,10 @@ public:
 
 	ModelViewerWindow(const std::string& title);
 	virtual void OnPaint();
+
+private:
+
+	void OpenFile();
 
 };
 

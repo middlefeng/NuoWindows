@@ -1,9 +1,7 @@
 #pragma once
 
-#include "NuoWindow.h"
-#include "NuoTimer.h"
-
 #include "NuoDirect/NuoDirectView.h"
+#include "NuoModelLoader/NuoModelLoader.h"
 
 #include <functional>
 #include <DirectXMath.h>
@@ -42,9 +40,11 @@ class ModelView : public NuoDirectView
 
 public:
 
-	void Init();
-
 	ModelView(const PNuoDevice& device, const PNuoWindow& parent);
+
+	void Init();
+	void OpenFile(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion);
+	void LoadMesh(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion);
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void OnSize(unsigned int x, unsigned int y) override;

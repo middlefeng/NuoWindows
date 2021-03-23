@@ -7,6 +7,8 @@
 #include "ModelViewerWindow.h"
 
 #include "NuoMenu.h"
+#include "NuoProgressBar.h"
+#include "NuoOpenFileDialog.h"
 #include "NuoDropdownList.h"
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
@@ -33,6 +35,11 @@ ModelViewerWindow::ModelViewerWindow(const std::string& title)
 		{
 			Destroy();
 			NuoAppInstance::Exit();
+		});
+
+	fileOpenItem->SetAction([this](const PNuoMenuItem&)
+		{
+			this->OpenFile();
 		});
 
 	SetMenu(menu);
@@ -78,6 +85,18 @@ void ModelViewerWindow::Init()
 		});
 
 	UpdateControls();
+
+	NuoInset<float> loadingProgressMaring(20, 0, 20, 0);
+	NuoRect<float> loadingProgressPos(0, 0, 150, 30);
+	_loadingProgress = std::make_shared<NuoProgressBar>(shared_from_this(), "");
+	Add(_loadingProgress);
+
+	_loadingProgress->Init(0);
+	_loadingProgress->SetAutoPosition(kNuoControl_LB);
+	_loadingProgress->SetMargin(loadingProgressMaring);
+	_loadingProgress->SetPosition(loadingProgressPos, true);
+	_loadingProgress->SetFont(NuoFont::MenuFont(16.5));
+	_loadingProgress->SetRange(0.0, 1.0);
 }
 
 
@@ -89,5 +108,30 @@ void ModelViewerWindow::UpdateControls()
 
 void ModelViewerWindow::OnPaint()
 {
+}
+
+
+void ModelViewerWindow::OpenFile()
+{
+	NuoFileDialog dlg;
+	dlg.Open(shared_from_this());
+
+	std::weak_ptr<ModelView> dxView = _dxView;
+	PNuoProgressBar progressBar = _loadingProgress;
+
+	_dxView->Hide();
+	_loadingProgress->Show();
+
+	_dxView->OpenFile(dlg.FilePath(),
+		[progressBar](float p)
+		{
+			progressBar->SetBarPosition(p);
+		},
+		[dxView, progressBar]()
+		{
+			auto aDxView = dxView.lock();
+			progressBar->Hide();
+			aDxView->Show();
+		});
 }
 
