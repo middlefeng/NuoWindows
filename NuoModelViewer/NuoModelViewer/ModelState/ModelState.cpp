@@ -54,6 +54,18 @@ PNuoMeshSceneRoot ModelState::SceneRoot() const
 }
 
 
+void ModelState::SetDocumentName(const std::string& name)
+{
+    _documentName = name;
+}
+
+
+std::string ModelState::DocumentName() const
+{
+    return _documentName;
+}
+
+
 void ModelState::CreateMeshes(NuoModelLoaderProgress progress)
 {
     PNuoCommandBuffer commandBuffer = _commandQueue->CreateCommandBuffer();

@@ -8,7 +8,7 @@
 
 
 class ModelView;
-typedef std::shared_ptr<ModelView> PDirectView;
+typedef std::shared_ptr<ModelView> PModelView;
 
 class ModelState;
 typedef std::shared_ptr<ModelState> PModelState;
@@ -41,6 +41,8 @@ class ModelView : public NuoDirectView
 public:
 
 	ModelView(const PNuoDevice& device, const PNuoWindow& parent);
+
+	PModelState State();
 
 	void Init();
 	void OpenFile(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion);

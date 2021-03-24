@@ -37,6 +37,13 @@ ModelView::ModelView(const PNuoDevice& device,
 }
 
 
+
+PModelState ModelView::State()
+{
+    return _modelState;
+}
+
+
 void ModelView::OnSize(unsigned int x, unsigned int y)
 {
 	NuoDirectView::OnSize(x, y);
@@ -187,7 +194,7 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress, NuoT
         });
 
     std::string documentName = LastPathComponent(path);
-    std::string title = "ModelView - " + documentName;
+    _modelState->SetDocumentName(documentName);
 }
 
 

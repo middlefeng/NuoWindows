@@ -34,6 +34,7 @@ typedef std::shared_ptr<NuoCommandQueue> PNuoCommandQueue;
 
 class ModelState
 {
+	std::string _documentName;
 
 	PNuoMeshSceneRoot _sceneRoot;
 	PNuoMeshCompound _mainModelMesh;
@@ -55,6 +56,9 @@ public:
 	void SetOptions(const NuoMeshOptions& options);
 
 	PNuoMeshSceneRoot SceneRoot() const;
+
+	void SetDocumentName(const std::string& name);
+	std::string DocumentName() const;
 
 private:
 

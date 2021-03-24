@@ -19,7 +19,7 @@ class ModelViewerWindow : public NuoWindow
 {
 
 	std::function<void()> _onPaint;
-	PDirectView _dxView;
+	PModelView _dxView;
 
 	PModelViewConfiguration _configuration;
 	PNuoDropdownList _deviceList;
