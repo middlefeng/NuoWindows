@@ -13,6 +13,7 @@
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
 
+#include "ModelState/ModelState.h"
 #include "ModelState/ModelViewConfiguration.h"
 
 
@@ -133,5 +134,9 @@ void ModelViewerWindow::OpenFile()
 			progressBar->Hide();
 			aDxView->Show();
 		});
+
+	PModelState modelState = _dxView->State();
+
+	SetText("  Model Viewer - " + modelState->DocumentName());
 }
 

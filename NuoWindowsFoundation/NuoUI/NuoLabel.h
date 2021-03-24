@@ -27,9 +27,10 @@ public:
 	virtual ~NuoLabel();
 
 	void Init(bool image);
-	void SetText(const std::string& text);
 	void SetImage(const PNuoImage& image);
 	PNuoImage Image() const;
+
+	virtual void SetText(const std::string& text) override;
 
 	friend NuoDialog;
 

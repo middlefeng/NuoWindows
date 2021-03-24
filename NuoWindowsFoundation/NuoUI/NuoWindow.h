@@ -109,6 +109,7 @@ public:
 	
 	void SetMenu(const PNuoMenuBar& menu);
 	void SetIcon(const PNuoIcon& icon);
+	virtual void SetText(const std::string& text);
 	virtual NuoRect<long> PositionDevice();
 	virtual void SetPositionDevice(const NuoRect<long>& pos, bool activate);
 	NuoRect<long> ClientRectDevice();

@@ -302,6 +302,14 @@ void NuoWindow::SetIcon(const PNuoIcon& icon)
 }
 
 
+void NuoWindow::SetText(const std::string& text)
+{
+    std::wstring wtext = StringToUTF16(text);
+
+    SetWindowText(_hWnd, wtext.c_str());
+}
+
+
 void NuoWindow::OnPaint()
 {
 }
