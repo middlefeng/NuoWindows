@@ -46,6 +46,9 @@
     <Filter Include="Source Files\ModelState">
       <UniqueIdentifier>{4ff698d3-d570-4ec0-8753-7dacda8328ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoRender">
+      <UniqueIdentifier>{753a4121-4f16-4009-ba22-ae694a575ac4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
@@ -230,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoBackgroundTask.cpp">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPass.cpp">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoBackgroundTask.h">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPass.h">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
