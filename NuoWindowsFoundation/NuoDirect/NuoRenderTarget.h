@@ -8,8 +8,9 @@
 #include <dxgi1_6.h>
 #include <wrl.h>
 
-#include "NuoDirect/NuoResource.h"
-#include "NuoDirect/NuoCommandBuffer.h"
+#include "NuoResource.h"
+#include "NuoCommandBuffer.h"
+#include "NuoSize.h"
 
 
 
@@ -59,6 +60,7 @@ public:
 
 	DXGI_FORMAT Format() const;
 	unsigned int SampleCount() const;
+	NuoSize DrawableSize() const;
 
 };
 

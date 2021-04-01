@@ -239,6 +239,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResourceSwapChain.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoShader.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSignature.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSize.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoTexture.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoVertexBuffer.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoAuxilliaryMeshes\NuoScreenSpaceMesh.h" />

@@ -449,6 +449,9 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipelinePass.h">
       <Filter>NuoWindowsFoundation\NuoRender</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSize.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">

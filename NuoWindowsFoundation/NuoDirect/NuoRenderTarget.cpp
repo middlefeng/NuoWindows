@@ -163,3 +163,12 @@ unsigned int NuoRenderTarget::SampleCount() const
 }
 
 
+
+NuoSize NuoRenderTarget::DrawableSize() const
+{
+	auto renderBuffer = RenderBuffer();
+	NuoSize result(renderBuffer->Width(), renderBuffer->Height());
+
+	return result;
+}
+

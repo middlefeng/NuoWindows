@@ -25,6 +25,8 @@
 class NuoRenderPipelinePass : public NuoRenderPass
 {
 
+public:
 
+	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 
 };

@@ -9,3 +9,7 @@
 #include "NuoRenderPass.h"
 
 
+void NuoRenderPass::SetDrawableSize(const NuoSize& size)
+{
+	_drawableSize = size;
+}

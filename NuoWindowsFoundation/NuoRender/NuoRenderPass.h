@@ -7,17 +7,25 @@
 //
 
 #include <memory>
+#include "NuoDirect/NuoSize.h"
 
 
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
+class NuoRenderTarget;
+typedef std::shared_ptr<NuoRenderTarget> PNuoRenderTarget;
+
 
 class NuoRenderPass
 {
 
+	PNuoRenderTarget _renderTarget;
+	NuoSize _drawableSize;
+
 public:
 
+	virtual void SetDrawableSize(const NuoSize& size);
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) = 0;
 
 };

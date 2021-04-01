@@ -10,6 +10,14 @@
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
 
 
+
+void NuoRenderPipelinePass::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
+{
+
+}
+
+
+
 /*@interface NuoRenderPipelinePass()
 
 @property (nonatomic, strong) NuoTextureMesh* textureMesh;
