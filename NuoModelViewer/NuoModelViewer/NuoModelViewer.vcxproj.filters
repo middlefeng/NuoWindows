@@ -231,6 +231,9 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoBackgroundTask.cpp">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderPassTarget.cpp">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -433,6 +436,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoBackgroundTask.h">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderPassTarget.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

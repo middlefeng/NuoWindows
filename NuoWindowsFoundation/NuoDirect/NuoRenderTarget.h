@@ -25,6 +25,12 @@ typedef std::shared_ptr<NuoDevice> PNuoDevice;
 class NuoRenderTarget : public std::enable_shared_from_this<NuoRenderTarget>
 {
 
+protected:
+
+	unsigned int _width;
+	unsigned int _height;
+	unsigned int _sampleCount;
+
 	PNuoTexture _resource;
 	PNuoTexture _sampleResource;
 	PNuoResource _backBuffer;
@@ -38,6 +44,11 @@ class NuoRenderTarget : public std::enable_shared_from_this<NuoRenderTarget>
 
 	unsigned int _encoderCount;
 	PNuoCommandEncoder _renderPassEncoder;
+
+	
+	NuoRenderTarget(const PNuoDevice& device,
+				    unsigned int width, unsigned int height,
+		            unsigned int sampleCount, bool depthEnabled);
 
 public:
 
@@ -59,6 +70,10 @@ public:
 
 	DXGI_FORMAT Format() const;
 	unsigned int SampleCount() const;
+
+private:
+
+	void CreateDepth(const PNuoDevice& device);
 
 };
 

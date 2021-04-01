@@ -8,25 +8,30 @@
 #include <cassert>
 
 
-NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
+NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device,
 								 unsigned int width, unsigned int height,
-								 unsigned int sampleCount, bool depthEnabled, bool manageResource)
-	: _encoderCount(0)
+	                             unsigned int sampleCount, bool depthEnabled)
+	: _encoderCount(0),
+	  _width(width), _height(height),
+	  _sampleCount(sampleCount)
 {
 	if (depthEnabled)
 	{
-		_dsvHeap = device->CreateDepthStencilHeap();
-		_depthResource = device->CreateDepthStencil(width, height, sampleCount);
+		CreateDepth(device);
+	}
+}
 
-		D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
-		dsv.Format = DXGI_FORMAT_D32_FLOAT;
-		dsv.ViewDimension = sampleCount > 1 ? D3D12_DSV_DIMENSION_TEXTURE2DMS : D3D12_DSV_DIMENSION_TEXTURE2D;
-		dsv.Texture2D.MipSlice = 0;
-		dsv.Flags = D3D12_DSV_FLAG_NONE;
 
-		device->DxDevice()->CreateDepthStencilView(_depthResource->DxResource(), &dsv, _dsvHeap->DxHeapCPUHandle());
-
-		_depthView = _dsvHeap->DxHeapCPUHandle();
+NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
+								 unsigned int width, unsigned int height,
+								 unsigned int sampleCount, bool depthEnabled, bool manageResource)
+	: _encoderCount(0),
+	  _width(width), _height(height),
+	  _sampleCount(sampleCount)
+{
+	if (depthEnabled)
+	{
+		CreateDepth(device);
 	}
 
 	if (sampleCount > 1)
@@ -46,6 +51,23 @@ NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
 
 		_view = _rtvHeap->DxHeapCPUHandle();
 	}
+}
+
+
+void NuoRenderTarget::CreateDepth(const PNuoDevice& device)
+{
+	_dsvHeap = device->CreateDepthStencilHeap();
+	_depthResource = device->CreateDepthStencil(_width, _height, _sampleCount);
+
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
+	dsv.Format = DXGI_FORMAT_D32_FLOAT;
+	dsv.ViewDimension = _sampleCount > 1 ? D3D12_DSV_DIMENSION_TEXTURE2DMS : D3D12_DSV_DIMENSION_TEXTURE2D;
+	dsv.Texture2D.MipSlice = 0;
+	dsv.Flags = D3D12_DSV_FLAG_NONE;
+
+	device->DxDevice()->CreateDepthStencilView(_depthResource->DxResource(), &dsv, _dsvHeap->DxHeapCPUHandle());
+
+	_depthView = _dsvHeap->DxHeapCPUHandle();
 }
 
 
