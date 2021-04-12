@@ -1,8 +1,8 @@
 ﻿
 
 #include "NuoRenderTarget.h"
-#include "NuoDirect/NuoDevice.h"
-#include "NuoDirect/NuoTexture.h"
+#include "NuoDevice.h"
+#include "NuoTexture.h"
 
 
 #include <cassert>
@@ -77,6 +77,12 @@ D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::View()
 }
 
 
+unsigned int NuoRenderTarget::AttachmentNumber() const
+{
+	return 1;
+}
+
+
 D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::DepthView()
 {
 	return _depthView;
@@ -107,6 +113,14 @@ PNuoResource NuoRenderTarget::RenderBuffer() const
 
 PNuoTexture NuoRenderTarget::ResultTexture() const
 {
+	return _resource;
+}
+
+
+PNuoTexture NuoRenderTarget::ResultTexture(unsigned int index) const
+{
+	assert(index == 1);
+
 	return _resource;
 }
 
@@ -182,6 +196,19 @@ DXGI_FORMAT NuoRenderTarget::Format() const
 unsigned int NuoRenderTarget::SampleCount() const
 {
 	return RenderBuffer()->SampleCount();
+}
+
+
+unsigned int NuoRenderTarget::Width() const
+{
+	return _width;
+}
+
+
+
+unsigned int NuoRenderTarget::Height() const
+{
+	return _height;
 }
 
 

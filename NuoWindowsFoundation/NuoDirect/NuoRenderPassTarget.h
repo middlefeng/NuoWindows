@@ -24,10 +24,43 @@
 class NuoRenderPassTarget;
 typedef std::shared_ptr<NuoRenderPassTarget> PNuoRenderPassTarget;
 
+class NuoRenderPassAttachment;
+typedef std::shared_ptr<NuoRenderPassAttachment> PNuoRenderPassAttachment;
+
+class NuoCommandEncoder;
+typedef std::shared_ptr<NuoCommandEncoder> PNuoCommandEncoder;
+
+
+class NuoRenderPassAttachment
+{
+	PNuoDevice _device;
+	DXGI_FORMAT _format;
+	NuoRenderPassTarget* _renderTarget;
+
+	PNuoTexture _resource;
+	PNuoTexture _sampleResource;
+
+public:
+
+	NuoRenderPassAttachment(const PNuoDevice& device,
+		                    DXGI_FORMAT format, NuoRenderPassTarget* renderTarget);
+
+	void MakeTexture();
+	PNuoResource RenderBuffer();
+	PNuoTexture Texture();
+
+	void ResourceUseBegin(const PNuoCommandEncoder& encoder);
+	void ResourceUseEnd(const PNuoCommandEncoder& encoder);
+
+};
+
 
 
 class NuoRenderPassTarget : public NuoRenderTarget
 {
+
+	std::vector<PNuoRenderPassAttachment> _attachments;
+	PNuoDevice _device;
 
 public:
 
@@ -37,6 +70,11 @@ public:
 
 	void AddAttachment(DXGI_FORMAT format);
 	void Init();
+
+	virtual unsigned int AttachmentNumber() const override;
+
+	virtual PNuoCommandEncoder RetainRenderPassEncoder(const PNuoCommandBuffer& commandBuffer) override;
+	virtual void ReleaseRenderPassEncoder() override;
 
 };
 

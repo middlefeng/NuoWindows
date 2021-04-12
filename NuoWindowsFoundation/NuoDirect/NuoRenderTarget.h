@@ -60,16 +60,23 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthView();
 	D3D12_GPU_VIRTUAL_ADDRESS TargetGPUAddress();
 	PNuoResource RenderBuffer() const;
-	PNuoTexture ResultTexture() const;
+
+	virtual PNuoTexture ResultTexture() const;
+	virtual PNuoTexture ResultTexture(unsigned int index) const;
+
+	virtual unsigned int AttachmentNumber() const;
 
 	void SetBackBuffer(const PNuoResource& backBuffer,
 					   const D3D12_CPU_DESCRIPTOR_HANDLE& view);
 
-	PNuoCommandEncoder RetainRenderPassEncoder(const PNuoCommandBuffer& commandBuffer);
-	void ReleaseRenderPassEncoder();
+	virtual PNuoCommandEncoder RetainRenderPassEncoder(const PNuoCommandBuffer& commandBuffer);
+	virtual void ReleaseRenderPassEncoder();
 
 	DXGI_FORMAT Format() const;
 	unsigned int SampleCount() const;
+
+	unsigned int Width() const;
+	unsigned int Height() const;
 
 private:
 

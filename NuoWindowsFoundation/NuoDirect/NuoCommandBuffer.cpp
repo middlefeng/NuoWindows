@@ -222,7 +222,7 @@ void NuoCommandEncoder::SetRenderTarget(const PNuoRenderTarget& renderTarget)
 	auto renderTargetHandle = _renderTarget->View();
 	auto depthView = _renderTarget->DepthView();
 
-	_commandList->OMSetRenderTargets(1, &renderTargetHandle, false, &depthView);
+	_commandList->OMSetRenderTargets(_renderTarget->AttachmentNumber(), &renderTargetHandle, false, &depthView);
 	_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
