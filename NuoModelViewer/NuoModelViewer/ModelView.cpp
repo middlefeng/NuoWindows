@@ -52,8 +52,8 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
     const PNuoDevice& device = CommandQueue()->Device();
     auto format = renderTarget->Format();
     auto sampleCount = renderTarget->SampleCount();
-    auto w = renderTarget->RenderBuffer()->Width();
-    auto h = renderTarget->RenderBuffer()->Height();
+    auto w = renderTarget->Width();
+    auto h = renderTarget->Height();
 
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, sampleCount, true, true);
 

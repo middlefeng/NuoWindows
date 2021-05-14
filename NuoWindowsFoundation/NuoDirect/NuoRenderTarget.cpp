@@ -195,7 +195,7 @@ DXGI_FORMAT NuoRenderTarget::Format() const
 
 unsigned int NuoRenderTarget::SampleCount() const
 {
-	return RenderBuffer()->SampleCount();
+	return _sampleCount;
 }
 
 

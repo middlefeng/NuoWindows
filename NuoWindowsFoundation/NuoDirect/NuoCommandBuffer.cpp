@@ -176,9 +176,8 @@ void NuoCommandEncoder::SetClearColor(const NuoVectorFloat4& color)
 
 void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
 {
-	PNuoResource renderBuffer = _renderTarget->RenderBuffer();
-	FLOAT w = (FLOAT)renderBuffer->Width();
-	FLOAT h = (FLOAT)renderBuffer->Height();
+	FLOAT w = (FLOAT)_renderTarget->Width();
+	FLOAT h = (FLOAT)_renderTarget->Height();
 
 	D3D12_VIEWPORT viewport_ = viewport._viewport;
 	if (viewport_.Width == 0)
