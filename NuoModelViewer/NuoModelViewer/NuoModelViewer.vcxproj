@@ -167,6 +167,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoFenceSwapChain.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoPipelineState.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderPassTarget.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTarget.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTargetSwapChain.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResource.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoDirectView.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoFenceSwapChain.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoPipelineState.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderPassTarget.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTarget.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderTargetSwapChain.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoResource.h" />

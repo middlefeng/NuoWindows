@@ -52,8 +52,8 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
     const PNuoDevice& device = CommandQueue()->Device();
     auto format = renderTarget->Format();
     auto sampleCount = renderTarget->SampleCount();
-    auto w = renderTarget->RenderBuffer()->Width();
-    auto h = renderTarget->RenderBuffer()->Height();
+    auto w = renderTarget->Width();
+    auto h = renderTarget->Height();
 
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, sampleCount, true, true);
 
@@ -118,8 +118,8 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 
     auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
 
-    const auto w = target->RenderBuffer()->Width();
-    const float h = (float)target->RenderBuffer()->Height();
+    const auto w = target->Width();
+    const float h = (float)target->Height();
     const float aspectRatio = w / h;
     NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(20), 0.1f, 100.f);
 

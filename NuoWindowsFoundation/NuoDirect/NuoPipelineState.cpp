@@ -94,8 +94,14 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
     psoDesc.BlendState = blendDesc;
     psoDesc.SampleMask = UINT_MAX;
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    psoDesc.NumRenderTargets = 1;
-    psoDesc.RTVFormats[0] = format;
+
+    // is this affecting performance by setting the targets number larger
+    // than actual?
+    //
+    psoDesc.NumRenderTargets = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;
+    for (UINT i = 0; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i)
+        psoDesc.RTVFormats[i] = format;
+
     psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
     psoDesc.SampleDesc.Count = sampleCount;
 
