@@ -62,6 +62,8 @@ class NuoRenderPassTarget : public NuoRenderTarget
 	std::vector<PNuoRenderPassAttachment> _attachments;
 	PNuoDevice _device;
 
+	std::vector< D3D12_CPU_DESCRIPTOR_HANDLE> _views;
+
 public:
 
 	NuoRenderPassTarget(const PNuoDevice& device,
@@ -72,9 +74,11 @@ public:
 	void Init();
 
 	virtual unsigned int AttachmentNumber() const override;
+	virtual D3D12_CPU_DESCRIPTOR_HANDLE* View() override;
 
 	virtual PNuoCommandEncoder RetainRenderPassEncoder(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void ReleaseRenderPassEncoder() override;
+	virtual PNuoTexture ResultTexture(unsigned int index) const override;
 
 };
 

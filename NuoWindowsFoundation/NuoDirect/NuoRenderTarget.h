@@ -56,8 +56,9 @@ public:
 					unsigned int width, unsigned int height,
 					unsigned int sampleCount, bool depthEnabled, bool manageResource);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE View();
+	virtual D3D12_CPU_DESCRIPTOR_HANDLE* View();
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthView();
+	
 	D3D12_GPU_VIRTUAL_ADDRESS TargetGPUAddress();
 	PNuoResource RenderBuffer() const;
 

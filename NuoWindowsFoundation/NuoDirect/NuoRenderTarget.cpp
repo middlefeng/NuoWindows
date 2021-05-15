@@ -71,9 +71,9 @@ void NuoRenderTarget::CreateDepth(const PNuoDevice& device)
 }
 
 
-D3D12_CPU_DESCRIPTOR_HANDLE NuoRenderTarget::View()
+D3D12_CPU_DESCRIPTOR_HANDLE* NuoRenderTarget::View()
 {
-	return _view;
+	return &_view;
 }
 
 
@@ -128,6 +128,9 @@ PNuoTexture NuoRenderTarget::ResultTexture(unsigned int index) const
 void NuoRenderTarget::SetBackBuffer(const PNuoResource& backBuffer,
 									const D3D12_CPU_DESCRIPTOR_HANDLE& view)
 {
+	assert(backBuffer->Width() == Width());
+	assert(backBuffer->Height() == Height());
+
 	_backBuffer = backBuffer;
 
 	if (!_sampleResource)

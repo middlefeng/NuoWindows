@@ -101,10 +101,18 @@ unsigned int NuoRenderPassTarget::AttachmentNumber() const
 }
 
 
+D3D12_CPU_DESCRIPTOR_HANDLE* NuoRenderPassTarget::View()
+{
+	return _views.data();
+}
+
+
 void NuoRenderPassTarget::Init()
 {
 	const unsigned int attachmentNum = AttachmentNumber();
+
 	_rtvHeap = _device->CreateRenderTargetHeap(attachmentNum);
+	_views.resize(attachmentNum);
 
 	for (unsigned int i = 0; i < attachmentNum; ++i)
 	{
@@ -115,6 +123,8 @@ void NuoRenderPassTarget::Init()
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _rtvHeap->DxCPUHandle(i);
 
 		_device->DxDevice()->CreateRenderTargetView(resource->DxResource(), nullptr, rtvHandle);
+
+		_views[i] = rtvHandle;
 	}
 
 	_view = _rtvHeap->DxHeapCPUHandle();
@@ -154,6 +164,13 @@ void NuoRenderPassTarget::ReleaseRenderPassEncoder()
 		_renderPassEncoder->EndEncoding();
 		_renderPassEncoder.reset();
 	}
+}
+
+
+PNuoTexture NuoRenderPassTarget::ResultTexture(unsigned int index) const
+{
+	auto texture = _attachments[index]->Texture();
+	return texture;
 }
 
 
