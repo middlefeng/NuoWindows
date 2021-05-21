@@ -139,6 +139,7 @@ private:
 
 	friend class NuoCommandBuffer;
 	friend class NuoRenderTarget;
+	friend class NuoRenderPassAttachment;
 };
 
 

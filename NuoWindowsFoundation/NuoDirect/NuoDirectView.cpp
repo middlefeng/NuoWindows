@@ -20,7 +20,7 @@ class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
 
     PNuoCommandSwapChain _commandSwapChain;
     PNuoResourceSwapChain _buffer;
-    PNuoRenderTargetSwapChain _rtvSwapChain;
+    PNuoRenderTargetSwapChain _renderTargetSwapChain;
     PNuoFenceSwapChain _fence;
     
     int _currentBackBufferIndex;
@@ -32,7 +32,7 @@ public:
                  unsigned int w, unsigned int h);
 
     PNuoResourceSwapChain Buffer();
-    PNuoRenderTargetSwapChain RenderTargetViews();
+    PNuoRenderTargetSwapChain RenderTargetSwapChain();
     PNuoCommandSwapChain CommandBuffers();
 
     void ResizeBuffer(unsigned int w, unsigned int h);
@@ -99,7 +99,7 @@ void NuoSwapChain::ResizeBuffer(unsigned int w, unsigned int h)
     // resize possible.
     //
     _buffer.reset();
-    _rtvSwapChain.reset();
+    _renderTargetSwapChain.reset();
     _fence = device->CreateFenceSwapChain(buffersCount);
     _currentBackBufferIndex = -1;
     _commandSwapChain.reset();
@@ -131,7 +131,7 @@ void NuoSwapChain::UpdateBuffer()
     PNuoCommandQueue queue = view->CommandQueue();
 
     _buffer = std::make_shared<NuoResourceSwapChain>(buffers);
-    _rtvSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), (*_buffer)[0]->Format(), _buffer, 8));
+    _renderTargetSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), (*_buffer)[0]->Format(), _buffer, 8));
     _commandSwapChain = std::make_shared<NuoCommandSwapChain>(queue, buffersCount);
 }
 
@@ -142,9 +142,9 @@ PNuoResourceSwapChain NuoSwapChain::Buffer()
 }
 
 
-PNuoRenderTargetSwapChain NuoSwapChain::RenderTargetViews()
+PNuoRenderTargetSwapChain NuoSwapChain::RenderTargetSwapChain()
 {
-    return _rtvSwapChain;
+    return _renderTargetSwapChain;
 }
 
 
@@ -219,8 +219,8 @@ void NuoDirectView::CreateSwapChain(unsigned int frameCount,
 
 PNuoRenderTarget NuoDirectView::RenderTarget(unsigned int inFlight)
 {
-    auto rtvSwapChain = _swapChain->RenderTargetViews();
-    return rtvSwapChain->RenderTarget(inFlight);
+    auto swapChain = _swapChain->RenderTargetSwapChain();
+    return swapChain->RenderTarget(inFlight);
 }
 
 

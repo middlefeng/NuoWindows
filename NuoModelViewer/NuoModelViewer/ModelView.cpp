@@ -52,8 +52,8 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
     const PNuoDevice& device = CommandQueue()->Device();
     auto format = renderTarget->Format();
     auto sampleCount = renderTarget->SampleCount();
-    auto w = renderTarget->RenderBuffer()->Width();
-    auto h = renderTarget->RenderBuffer()->Height();
+    auto w = renderTarget->Width();
+    auto h = renderTarget->Height();
 
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, sampleCount, true, true);
 
@@ -75,8 +75,9 @@ void ModelView::Init()
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     std::vector<PNuoResource> intermediate;
-    _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
+    _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
+    _textureMesh->SetTexture(nullptr, _intermediateTarget->ResultTexture());
 
     PNuoDevice device = CommandQueue()->Device();
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
@@ -118,8 +119,8 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 
     auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
 
-    const auto w = target->RenderBuffer()->Width();
-    const float h = (float)target->RenderBuffer()->Height();
+    const auto w = target->Width();
+    const float h = (float)target->Height();
     const float aspectRatio = w / h;
     NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(20), 0.1f, 100.f);
 
@@ -155,7 +156,6 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     encoder->SetViewport(NuoViewport());
-    _textureMesh->SetTexture(encoder.get(), _intermediateTarget->ResultTexture());
     _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
     _textureMesh->Draw(encoder);
 

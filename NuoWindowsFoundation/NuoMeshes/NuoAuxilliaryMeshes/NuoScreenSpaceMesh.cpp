@@ -89,7 +89,16 @@ NuoTextureMesh::NuoTextureMesh(const PNuoCommandBuffer& buffer, unsigned int fra
 void NuoTextureMesh::SetTexture(const NuoRenderInFlight* inFlight, const PNuoTexture& texture)
 {
     _texture = texture;
-    _paramHeap[inFlight->InFlight()]->SetTexture(0, texture);
+
+    unsigned int flight = 0;
+    
+    // respect the in-flight index only if the number of the param buffers is not 1.
+    // otherwise the param is a pure-GPU buffer and does not need tri-buffer rotation.
+    //
+    if (_paramHeap.size() != 1 && inFlight)
+        flight = inFlight->InFlight();
+
+    _paramHeap[flight]->SetTexture(0, texture);
 }
 
 
@@ -120,7 +129,13 @@ PNuoRootSignature NuoTextureMesh::RootSignature(const PNuoCommandBuffer& command
 void NuoTextureMesh::Draw(const PNuoCommandEncoder& encoder)
 {
     if (_texture)
-        encoder->SetDescriptorTable(0, _paramHeap[encoder->InFlight()]);
+    {
+        unsigned int flight = 0;
+        if (_paramHeap.size() != 1)
+            flight = encoder->InFlight();
+
+        encoder->SetDescriptorTable(0, _paramHeap[flight]);
+    }
     
     NuoScreenSpaceMesh::Draw(encoder);
 }

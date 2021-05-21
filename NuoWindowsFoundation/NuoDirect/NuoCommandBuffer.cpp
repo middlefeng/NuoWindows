@@ -169,16 +169,17 @@ void NuoCommandEncoder::SetClearColor(const NuoVectorFloat4& color)
 {
 	float acolor[] = { color.x(), color.y(), color.z(), color.w() };
 
-	_commandList->ClearRenderTargetView(_renderTarget->View(), acolor, 0, nullptr);
+	for (unsigned int i = 0; i < _renderTarget->AttachmentNumber(); ++i)
+		_commandList->ClearRenderTargetView(_renderTarget->View()[i], acolor, 0, nullptr);
+	
 	_commandList->ClearDepthStencilView(_renderTarget->DepthView(), D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
 }
 
 
 void NuoCommandEncoder::SetViewport(const NuoViewport& viewport)
 {
-	PNuoResource renderBuffer = _renderTarget->RenderBuffer();
-	FLOAT w = (FLOAT)renderBuffer->Width();
-	FLOAT h = (FLOAT)renderBuffer->Height();
+	FLOAT w = (FLOAT)_renderTarget->Width();
+	FLOAT h = (FLOAT)_renderTarget->Height();
 
 	D3D12_VIEWPORT viewport_ = viewport._viewport;
 	if (viewport_.Width == 0)
@@ -222,7 +223,7 @@ void NuoCommandEncoder::SetRenderTarget(const PNuoRenderTarget& renderTarget)
 	auto renderTargetHandle = _renderTarget->View();
 	auto depthView = _renderTarget->DepthView();
 
-	_commandList->OMSetRenderTargets(1, &renderTargetHandle, false, &depthView);
+	_commandList->OMSetRenderTargets(_renderTarget->AttachmentNumber(), renderTargetHandle, false, &depthView);
 	_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
