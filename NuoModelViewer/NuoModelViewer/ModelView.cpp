@@ -75,8 +75,9 @@ void ModelView::Init()
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     std::vector<PNuoResource> intermediate;
-    _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, BuffersCount());
+    _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
+    _textureMesh->SetTexture(nullptr, _intermediateTarget->ResultTexture());
 
     PNuoDevice device = CommandQueue()->Device();
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
@@ -155,7 +156,6 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     encoder->SetViewport(NuoViewport());
-    _textureMesh->SetTexture(encoder.get(), _intermediateTarget->ResultTexture());
     _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
     _textureMesh->Draw(encoder);
 
