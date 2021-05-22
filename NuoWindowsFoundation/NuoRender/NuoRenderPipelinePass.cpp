@@ -11,54 +11,31 @@
 
 
 
+NuoRenderPipelinePass::NuoRenderPipelinePass(const PNuoCommandBuffer& commandBuffer,
+                                             std::vector<PNuoResource>& intermediate,
+                                             DXGI_FORMAT format,
+                                             unsigned int sampleCount)
+{
+    _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
+    _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
+}
+
+
+void NuoRenderPipelinePass::SetSourceTextrue(const PNuoTexture& texture)
+{
+    _textureMesh->SetTexture(nullptr, texture);
+}
+
+
 void NuoRenderPipelinePass::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
 {
-
+    PNuoCommandEncoder encoder = RetainDefaultEncoder(commandBuffer);
+    _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
+    ReleaseDefaultEncoder();
 }
 
 
-
-/*@interface NuoRenderPipelinePass()
-
-@property (nonatomic, strong) NuoTextureMesh* textureMesh;
-
-@end
-
-
-@implementation NuoRenderPipelinePass
-
-
-- (instancetype)initWithCommandQueue:(id<MTLCommandQueue>)commandQueue
-                     withPixelFormat:(MTLPixelFormat)pixelFormat
-                     withSampleCount:(uint)sampleCount
+bool NuoRenderPipelinePass::IsPipelinePass() const
 {
-    self = [super init];
-    if (self)
-    {
-        self.commandQueue = commandQueue;
-        _textureMesh = [[NuoTextureMesh alloc] initWithCommandQueue:commandQueue];
-        _textureMesh.sampleCount = sampleCount;
-        [_textureMesh makePipelineAndSampler:pixelFormat withBlendMode:kBlend_None];
-    }
-    
-    return self;
+    return true;
 }
-
-
-- (void)drawWithCommandBuffer:(NuoCommandBuffer*)commandBuffer
-{
-    [_textureMesh setModelTexture:self.sourceTexture];
-    
-    NuoRenderPassEncoder* renderPass = [self retainDefaultEncoder:commandBuffer];
-    [_textureMesh drawMesh:renderPass];
-    [self releaseDefaultEncoder];
-}
-
-
-- (BOOL)isPipelinePass
-{
-    return YES;
-}
-
-
-@end*/

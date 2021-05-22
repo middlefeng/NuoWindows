@@ -8,8 +8,23 @@
 
 #include "NuoRenderPass.h"
 
+#include "NuoDirect/NuoRenderTarget.h"
 
-void NuoRenderPass::SetDrawableSize(const NuoSize& size)
+
+
+bool NuoRenderPass::IsPipelinePass() const
 {
-	_drawableSize = size;
+	return false;
+}
+
+
+PNuoCommandEncoder NuoRenderPass::RetainDefaultEncoder(const PNuoCommandBuffer& commandBuffer)
+{
+	return _renderTarget->RetainRenderPassEncoder(commandBuffer);
+}
+
+
+void NuoRenderPass::ReleaseDefaultEncoder()
+{
+	_renderTarget->ReleaseRenderPassEncoder();
 }

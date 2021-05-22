@@ -9,6 +9,20 @@
 
 #include "NuoRenderPass.h"
 
+#include <memory>
+#include <vector>
+#include <dxgi1_6.h>
+
+
+class NuoTextureMesh;
+typedef std::shared_ptr<NuoTextureMesh> PNuoTextureMesh;
+
+class NuoTexture;
+typedef std::shared_ptr<NuoTexture> PNuoTexture;
+
+class NuoResource;
+typedef std::shared_ptr<NuoResource> PNuoResource;
+
 
 /**
  *  a render pass takes the result from its immediate previous
@@ -25,8 +39,19 @@
 class NuoRenderPipelinePass : public NuoRenderPass
 {
 
+	PNuoTextureMesh _textureMesh;
+	
+
 public:
 
+	NuoRenderPipelinePass(const PNuoCommandBuffer& commandBuffer,
+						  std::vector<PNuoResource>& intermediate,
+						  DXGI_FORMAT format,
+						  unsigned int sampleCount);
+
+	void SetSourceTextrue(const PNuoTexture& texture);
+
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+	virtual bool IsPipelinePass() const override;
 
 };

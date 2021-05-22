@@ -16,17 +16,28 @@ typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 class NuoRenderTarget;
 typedef std::shared_ptr<NuoRenderTarget> PNuoRenderTarget;
 
+class NuoCommandEncoder;
+typedef std::shared_ptr<NuoCommandEncoder> PNuoCommandEncoder;
+
 
 class NuoRenderPass
 {
 
+protected:
+
 	PNuoRenderTarget _renderTarget;
-	NuoSize _drawableSize;
 
 public:
 
-	virtual void SetDrawableSize(const NuoSize& size);
+	virtual void SetDrawableSize(const NuoSize& size) = 0;
+	virtual void SetSampleCount(unsigned int sampleCount) = 0;
+
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) = 0;
+
+	virtual bool IsPipelinePass() const;
+
+	virtual PNuoCommandEncoder RetainDefaultEncoder(const PNuoCommandBuffer& commandBuffer);
+	virtual void ReleaseDefaultEncoder();
 
 };
 
