@@ -11,13 +11,21 @@
 NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device,
 								 unsigned int width, unsigned int height,
 	                             unsigned int sampleCount, bool depthEnabled)
-	: _encoderCount(0),
+	: _encoderCount(0), _device(device),
+	  _format(DXGI_FORMAT_UNKNOWN),
+	  _depthEnabled(depthEnabled),
+
+	  // except the single-buffer target which might be tied to a surface, all types of
+	  // targets manage its own resources
+	  //
+	  _manageResource(true),
+
 	  _width(width), _height(height),
 	  _sampleCount(sampleCount)
 {
 	if (depthEnabled)
 	{
-		CreateDepth(device);
+		CreateDepth();
 	}
 }
 
@@ -25,39 +33,26 @@ NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device,
 NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
 								 unsigned int width, unsigned int height,
 								 unsigned int sampleCount, bool depthEnabled, bool manageResource)
-	: _encoderCount(0),
+	: _encoderCount(0), _device(device),
+	  _format(format),
+	  _depthEnabled(depthEnabled),
+	  _manageResource(manageResource),
 	  _width(width), _height(height),
 	  _sampleCount(sampleCount)
 {
 	if (depthEnabled)
 	{
-		CreateDepth(device);
+		CreateDepth();
 	}
 
-	if (sampleCount > 1)
-		_sampleResource = device->CreateTexture(format, width, height, sampleCount);
-
-	if (manageResource)
-		_resource = device->CreateTexture(format, width, height, 1);
-
-
-	if (sampleCount > 1 || manageResource)
-	{
-		PNuoResource resource = _sampleResource ? _sampleResource : _resource;
-
-		_rtvHeap = device->CreateRenderTargetHeap(1);
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _rtvHeap->DxHeapCPUHandle();
-		device->DxDevice()->CreateRenderTargetView(resource->DxResource(), nullptr, rtvHandle);
-
-		_view = _rtvHeap->DxHeapCPUHandle();
-	}
+	CreateTextures();
 }
 
 
-void NuoRenderTarget::CreateDepth(const PNuoDevice& device)
+void NuoRenderTarget::CreateDepth()
 {
-	_dsvHeap = device->CreateDepthStencilHeap();
-	_depthResource = device->CreateDepthStencil(_width, _height, _sampleCount);
+	_dsvHeap = _device->CreateDepthStencilHeap();
+	_depthResource = _device->CreateDepthStencil(_width, _height, _sampleCount);
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
 	dsv.Format = DXGI_FORMAT_D32_FLOAT;
@@ -65,9 +60,31 @@ void NuoRenderTarget::CreateDepth(const PNuoDevice& device)
 	dsv.Texture2D.MipSlice = 0;
 	dsv.Flags = D3D12_DSV_FLAG_NONE;
 
-	device->DxDevice()->CreateDepthStencilView(_depthResource->DxResource(), &dsv, _dsvHeap->DxHeapCPUHandle());
+	_device->DxDevice()->CreateDepthStencilView(_depthResource->DxResource(), &dsv, _dsvHeap->DxHeapCPUHandle());
 
 	_depthView = _dsvHeap->DxHeapCPUHandle();
+}
+
+
+void NuoRenderTarget::CreateTextures()
+{
+	if (_sampleCount > 1)
+		_sampleResource = _device->CreateTexture(_format, _width, _height, _sampleCount);
+
+	if (_manageResource)
+		_resource = _device->CreateTexture(_format, _width, _height, 1);
+
+
+	if (_sampleCount > 1 || _manageResource)
+	{
+		PNuoResource resource = _sampleResource ? _sampleResource : _resource;
+
+		_rtvHeap = _device->CreateRenderTargetHeap(1);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _rtvHeap->DxHeapCPUHandle();
+		_device->DxDevice()->CreateRenderTargetView(resource->DxResource(), nullptr, rtvHandle);
+
+		_view = _rtvHeap->DxHeapCPUHandle();
+	}
 }
 
 
@@ -218,9 +235,22 @@ unsigned int NuoRenderTarget::Height() const
 
 NuoSize NuoRenderTarget::DrawableSize() const
 {
-	auto renderBuffer = RenderBuffer();
-	NuoSize result(renderBuffer->Width(), renderBuffer->Height());
+	NuoSize result(Width(), Height());
 
 	return result;
+}
+
+
+void NuoRenderTarget::SetDrawableSize(const NuoSize& size)
+{
+	_width = (unsigned int)size.X();
+	_height = (unsigned int)size.Y();
+
+	if (_depthEnabled)
+	{
+		CreateDepth();
+	}
+
+	CreateTextures();
 }
 

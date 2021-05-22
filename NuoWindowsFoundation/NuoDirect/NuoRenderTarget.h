@@ -28,9 +28,15 @@ class NuoRenderTarget : public std::enable_shared_from_this<NuoRenderTarget>
 
 protected:
 
+	PNuoDevice _device;
+
 	unsigned int _width;
 	unsigned int _height;
 	unsigned int _sampleCount;
+	
+	DXGI_FORMAT _format;
+	bool _manageResource;
+	bool _depthEnabled;
 
 	PNuoTexture _resource;
 	PNuoTexture _sampleResource;
@@ -77,13 +83,15 @@ public:
 	DXGI_FORMAT Format() const;
 	unsigned int SampleCount() const;
 	NuoSize DrawableSize() const;
+	virtual void SetDrawableSize(const NuoSize& size);
 
 	unsigned int Width() const;
 	unsigned int Height() const;
 
 private:
 
-	void CreateDepth(const PNuoDevice& device);
+	void CreateDepth();
+	void CreateTextures();
 
 };
 
