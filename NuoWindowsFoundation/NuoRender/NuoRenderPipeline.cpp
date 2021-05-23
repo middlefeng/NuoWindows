@@ -7,10 +7,7 @@
 //
 
 #include "NuoRenderPipeline.h"
-
-
-//#import "NuoRenderPipelinePass.h"
-//#import "NuoRenderPassAttachment.h"
+#include "NuoRenderPipelinePass.h"
 
 
 
@@ -69,19 +66,19 @@
     }
     
     return YES;
-}
+}*/
 
 
-- (void)setDrawableSize:(CGSize)size
+void NuoRenderPipeline::SetDrawableSize(const NuoSize& size)
 {
-    for (size_t i = 0; i < [_renderPasses count]; ++i)
+    for (size_t i = 0; i < _renderPasses.size(); ++i)
     {
-        NuoRenderPass* render = _renderPasses[i];
-        [render setDrawableSize:size];
+        PNuoRenderPass render = _renderPasses[i];
+        render->SetDrawableSize(size);
     }
 }
 
-
+/*
 - (void)setSampleCount:(NSUInteger)sampleCount
 {
     for (size_t i = 0; i < [_renderPasses count]; ++i)
