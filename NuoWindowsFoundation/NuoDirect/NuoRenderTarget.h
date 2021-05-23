@@ -88,7 +88,7 @@ public:
 	unsigned int Width() const;
 	unsigned int Height() const;
 
-private:
+protected:
 
 	void CreateDepth();
 	void CreateTextures();

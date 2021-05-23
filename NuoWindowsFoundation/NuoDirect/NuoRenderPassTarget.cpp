@@ -185,9 +185,13 @@ void NuoRenderPassTarget::SetDrawableSize(const NuoSize& size)
 	_height = (unsigned int)size.Y();
 
 	_views.clear();
-	_attachments.clear();
 
 	Init();
+
+	if (_depthEnabled)
+	{
+		CreateDepth();
+	}
 }
 
 
