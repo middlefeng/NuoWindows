@@ -88,8 +88,6 @@ NuoTextureMesh::NuoTextureMesh(const PNuoCommandBuffer& buffer, unsigned int fra
 
 void NuoTextureMesh::SetTexture(const NuoRenderInFlight* inFlight, const PNuoTexture& texture)
 {
-    _texture = texture;
-
     unsigned int flight = 0;
     
     // respect the in-flight index only if the number of the param buffers is not 1.
@@ -98,7 +96,12 @@ void NuoTextureMesh::SetTexture(const NuoRenderInFlight* inFlight, const PNuoTex
     if (_paramHeap.size() != 1 && inFlight)
         flight = inFlight->InFlight();
 
-    _paramHeap[flight]->SetTexture(0, texture);
+    if (_paramHeap.size() != 1 || _texture != texture)
+    {
+        _paramHeap[flight]->SetTexture(0, texture);
+    }
+
+    _texture = texture;
 }
 
 
