@@ -243,6 +243,11 @@ NuoSize NuoRenderTarget::DrawableSize() const
 
 void NuoRenderTarget::SetDrawableSize(const NuoSize& size)
 {
+	if (_width == size.X() && _height == size.Y())
+	{
+		return;
+	}
+
 	_width = (unsigned int)size.X();
 	_height = (unsigned int)size.Y();
 

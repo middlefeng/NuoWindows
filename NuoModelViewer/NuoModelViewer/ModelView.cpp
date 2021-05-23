@@ -10,6 +10,7 @@
 #include "NuoFile.h"
 #include "NuoStrings.h"
 
+#include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoMeshes/NuoMeshSceneRoot.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
@@ -48,27 +49,30 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
 {
 	NuoDirectView::OnSize(x, y);
 
+    if (!_init)
+    {
+        Init();
+        _init = true;
+    }
+    
+    const PNuoRenderTarget& renderTarget = RenderTarget(0);
+    const auto size = renderTarget->DrawableSize();
+
+    _intermediateTarget->SetDrawableSize(size);
+}
+
+
+void ModelView::Init()
+{
     const PNuoRenderTarget& renderTarget = RenderTarget(0);
     const PNuoDevice& device = CommandQueue()->Device();
+
     auto format = renderTarget->Format();
     auto sampleCount = renderTarget->SampleCount();
     auto w = renderTarget->Width();
     auto h = renderTarget->Height();
 
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, sampleCount, true, true);
-
-    if (!_init)
-    {
-        Init();
-        _init = true;
-    }
-}
-
-
-void ModelView::Init()
-{
-    auto format = RenderTarget(0)->Format();
-    auto sampleCount = RenderTarget(0)->SampleCount();
 
     _modelState = std::make_shared<ModelState>(CommandQueue(), format, sampleCount);
 
@@ -78,7 +82,6 @@ void ModelView::Init()
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
 
-    PNuoDevice device = CommandQueue()->Device();
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
 
     commandBuffer->Commit();
