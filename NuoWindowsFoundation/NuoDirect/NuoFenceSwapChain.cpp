@@ -9,6 +9,7 @@
 
 
 NuoFenceSwapChain::NuoFenceSwapChain(unsigned int frameCount)
+    : _currentFenceValue(0)
 {
 	_fenceValues.resize(frameCount, 0);
 	_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
@@ -54,17 +55,22 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue, unsigne
 }
 
 
-void NuoFenceSwapChain::MoveToNextFrame(const PNuoDirectView& view)
+void NuoFenceSwapChain::Present(const PNuoDirectView& view)
 {
     PNuoCommandQueue queue = view->CommandQueue();
     unsigned int currentFrameIndex = view->CurrentBackBufferIndex();
 
-    view->Present();
+    view->PresentWithoutFence();
 
     // Schedule a Signal command in the queue.
-    const UINT64 currentFenceValue = _fenceValues[currentFrameIndex];
-    queue->DxQueue()->Signal(_fence.Get(), currentFenceValue);
+    _currentFenceValue = _fenceValues[currentFrameIndex];
+    queue->DxQueue()->Signal(_fence.Get(), _currentFenceValue);
+}
 
+
+void NuoFenceSwapChain::PrepareFrame(const PNuoDirectView& view)
+{
+    PNuoCommandQueue queue = view->CommandQueue();
     unsigned int nextFrameIndex = view->CurrentBackBufferIndex();
 
     // If the next frame is not ready to be rendered yet, wait until it is ready.
@@ -75,5 +81,5 @@ void NuoFenceSwapChain::MoveToNextFrame(const PNuoDirectView& view)
     }
 
     // Set the fence value for the next frame.
-    _fenceValues[nextFrameIndex] = currentFenceValue + 1;
+    _fenceValues[nextFrameIndex] = _currentFenceValue + 1;
 }

@@ -47,8 +47,8 @@ public:
 	PNuoCommandBuffer CreateCommandBuffer(bool resetAllocator);
 
 	void Present();
+	void PresentWithoutFence();
 	void WaitForGPU();
-	void MoveToNextFrame();
 	unsigned int CurrentBackBufferIndex();
 	unsigned int BuffersCount();
 
