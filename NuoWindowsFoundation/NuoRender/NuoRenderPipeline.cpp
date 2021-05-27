@@ -9,64 +9,44 @@
 #include "NuoRenderPipeline.h"
 #include "NuoRenderPipelinePass.h"
 
+#include "NuoDirect/NuoRenderPassTarget.h"
 
 
-/*
-@implementation NuoRenderPipeline
 
-
-- (BOOL)renderWithCommandBuffer:(NuoCommandBuffer*)commandBuffer
+void NuoRenderPipeline::RenderWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
 {
     // rendering that do not need the drawable (which is subject to the limit of
     // the render surface frame buffers, therefore might cause wait)
     //
-    for (NuoRenderPass* pass : _renderPasses)
+    for (PNuoRenderPass pass : _renderPasses)
     {
-        [pass predrawWithCommandBuffer:commandBuffer];
+        pass->PredrawWithCommandBuffer(commandBuffer);
     }
     
     // associate the source and destine texture of each step, along the course
     // of rendering each step
     //
-    const size_t count = [_renderPasses count];
+    const size_t count = _renderPasses.size();
     for (size_t i = 0; i < count; ++i)
     {
-        const NuoRenderPass* renderStep = [_renderPasses objectAtIndex:i];
-        if (!renderStep.isPipelinePass)
+        const PNuoRenderPass renderStep = _renderPasses[i];
+        if (!renderStep->IsPipelinePass())
             continue;
         
-        NuoRenderPipelinePass* renderStepSuccessor = nil;
+        PNuoRenderPipelinePass renderStepSuccessor;
         
         if (i < count - 1)
-            renderStepSuccessor = (NuoRenderPipelinePass*)[_renderPasses objectAtIndex:i + 1];
+            renderStepSuccessor = std::dynamic_pointer_cast<NuoRenderPipelinePass>(_renderPasses[i + 1]);
         
         if (renderStepSuccessor)
         {
-            NuoRenderPassTarget* interResult = renderStep.renderTarget;
-            [renderStepSuccessor setSourceTexture:interResult.targetTexture];
-        }
-        else
-        {
-            NuoRenderPassTarget* finalResult = renderStep.renderTarget;
-            
-            if (!finalResult.manageTargetTexture)
-            {
-                // request the drawable only when it is immediately needed
-                //
-                id<MTLTexture> currentDrawable = [_renderPipelineDelegate nextFinalTexture];
-                if (!currentDrawable)
-                    return NO;
-                
-                NuoRenderPassAttachment* attachment = finalResult.colorAttachments[0];
-                [attachment setTexture:currentDrawable];
-            }
+            PNuoRenderTarget interResult = renderStep->RenderTarget();
+            renderStepSuccessor->SetSourceTextrue(interResult->ResultTexture());
         }
         
-        [renderStep drawWithCommandBuffer:commandBuffer];
+        renderStep->DrawWithCommandBuffer(commandBuffer);
     }
-    
-    return YES;
-}*/
+}
 
 
 void NuoRenderPipeline::SetDrawableSize(const NuoSize& size)

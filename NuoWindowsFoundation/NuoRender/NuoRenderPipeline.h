@@ -12,8 +12,6 @@
 #include "NuoDirect/NuoSize.h"
 
 
-class NuoTexture;
-typedef std::shared_ptr<NuoTexture> PNuoTexture;
 
 class NuoRenderPass;
 typedef std::shared_ptr<NuoRenderPass> PNuoRenderPass;
@@ -21,20 +19,6 @@ typedef std::shared_ptr<NuoRenderPass> PNuoRenderPass;
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
-
-/**
- *  use this delegate to defer the retrival of the final target texture.
- *  the retrival is time consuming in some case and should be deferred until
- *  the very last pass
- */
-class NuoRenderPipelineDelegate
-{
-
-public:
-
-	virtual PNuoTexture NextFinalTexture() = 0;
-
-};
 
 
 
@@ -50,12 +34,10 @@ class NuoRenderPipeline
 	 */
 	std::vector<PNuoRenderPass> _renderPasses;
 
-	NuoRenderPipelineDelegate* _renderPipelineDelegate;
-
 
 public:
 
-	bool RenderWithCommandBuffer(const PNuoCommandBuffer& commandBuffer);
+	void RenderWithCommandBuffer(const PNuoCommandBuffer& commandBuffer);
 
 	void SetDrawableSize(const NuoSize& size);
 	//void SetSampleCount(unsigned int sampleCount);

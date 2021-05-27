@@ -51,7 +51,13 @@ public:
 
 	void SetSourceTextrue(const PNuoTexture& texture);
 
+	/**
+	 *  draw calls that target to the *_renderTarget*
+	 */
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+
 	virtual bool IsPipelinePass() const override;
 
 };
+
+typedef std::shared_ptr<NuoRenderPipelinePass> PNuoRenderPipelinePass;

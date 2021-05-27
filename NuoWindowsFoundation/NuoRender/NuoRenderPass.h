@@ -32,12 +32,23 @@ public:
 	virtual void SetDrawableSize(const NuoSize& size) = 0;
 	virtual void SetSampleCount(unsigned int sampleCount) = 0;
 
+	/**
+	 *  draw calls that target to their own target (e.g. shadow map texture)
+	 */
+	virtual void PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) = 0;
+
+	/**
+	 *  draw calls that target to the *_renderTarget*
+	 */
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) = 0;
 
 	virtual bool IsPipelinePass() const;
 
 	virtual PNuoCommandEncoder RetainDefaultEncoder(const PNuoCommandBuffer& commandBuffer);
 	virtual void ReleaseDefaultEncoder();
+
+	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
+	PNuoRenderTarget RenderTarget();
 
 };
 

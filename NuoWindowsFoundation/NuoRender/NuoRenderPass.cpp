@@ -28,3 +28,17 @@ void NuoRenderPass::ReleaseDefaultEncoder()
 {
 	_renderTarget->ReleaseRenderPassEncoder();
 }
+
+
+void NuoRenderPass::SetRenderTarget(const PNuoRenderTarget& renderTarget)
+{
+	_renderTarget = renderTarget;
+}
+
+
+PNuoRenderTarget NuoRenderPass::RenderTarget()
+{
+	return _renderTarget;
+}
+
+

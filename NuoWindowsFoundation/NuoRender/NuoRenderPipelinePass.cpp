@@ -30,7 +30,10 @@ void NuoRenderPipelinePass::SetSourceTextrue(const PNuoTexture& texture)
 void NuoRenderPipelinePass::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
 {
     PNuoCommandEncoder encoder = RetainDefaultEncoder(commandBuffer);
+
     _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
+    _textureMesh->Draw(encoder);
+
     ReleaseDefaultEncoder();
 }
 
