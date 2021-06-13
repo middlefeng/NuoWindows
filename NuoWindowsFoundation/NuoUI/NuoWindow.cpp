@@ -494,6 +494,12 @@ NuoFont::NuoFont(HFONT font)
       _isItalic(false),
       _isLight(false)
 {
+    LOGFONT logicFont;
+
+    GetObject(_hFont, sizeof(LOGFONT), &logicFont);
+
+    wchar_t* name = logicFont.lfFaceName;
+    _name = StringToUTF8(name);
 }
 
 
@@ -503,8 +509,10 @@ NuoFont::NuoFont(const NuoFont& font)
       _name(font._name),
       _isItalic(font._isItalic),
       _isLight(font._isLight),
-      _fontOwner(true)
+      _fontOwner(font._fontOwner)
 {
+    if (!_fontOwner)
+        _hFont = font._hFont;
 }
 
 

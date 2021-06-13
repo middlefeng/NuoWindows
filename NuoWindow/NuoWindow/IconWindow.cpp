@@ -18,10 +18,12 @@ IconWindow::IconWindow(const PNuoWindow& appWindow)
 void IconWindow::Init()
 {
 	NuoRect<float> rect(0, 0, 120, 24);
+	NuoInset<float> buttonInset(20, 20, 20, 20);
 
 	_loadButton = std::make_shared<NuoButton>(shared_from_this(), "Load Image ...");
 	_loadButton->Init(IDB_LOADICON);
 	_loadButton->SetAutoPosition(kNuoControl_RT);
+	_loadButton->SetMargin(buttonInset);
 	_loadButton->SetPosition(rect, false);
 
 	_loadButton->SetOnCommand([this](int)
@@ -41,6 +43,7 @@ void IconWindow::Init()
 	_saveButton = std::make_shared<NuoButton>(shared_from_this(), "Save Icon ...");
 	_saveButton->Init(IDB_SAVEICON);
 	_saveButton->SetAutoPosition(kNuoControl_R);
+	_saveButton->SetMargin(buttonInset);
 	_saveButton->SetPosition(rect, false);
 
 	_saveButton->SetOnCommand([this](int)
