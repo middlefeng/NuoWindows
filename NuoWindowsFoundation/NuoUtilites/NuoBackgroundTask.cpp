@@ -12,6 +12,66 @@
 #include "NuoDispatch.h"
 
 
+NuoBackgroundTask::NuoBackgroundTask(NuoTask work)
+    : _work(work), _started(false), _running(false), _progress(0)
+{
+}
+
+
+
+bool NuoBackgroundTask::Resume(float* progress)
+{
+    if (!_started)
+    {
+        auto running = &_running;
+
+        _timer = NuoTimer::MakeTimer(1, [running](NuoTimer* timer)
+            {
+                if (!(*running))
+                    return false;
+            });
+
+        auto progressRate = &_progress;
+        auto work = _work;
+
+        _running = true;
+
+        NuoDispatch* dispatch = NuoDispatch::GetInstance();
+        dispatch->DispatchAsync([progressRate, running, work]()
+            {
+                work([progressRate](float progress)
+                    {
+                        *progressRate = progress;
+                    });
+
+                *running = false;
+            });
+
+        _started = true;
+    }
+
+    MSG msg;
+
+    // Main message loop:
+    if (GetMessage(&msg, nullptr, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    if (progress)
+        *progress = _progress;
+
+    return _running;
+}
+
+
+void NuoBackgroundTask::Await()
+{
+    while (Resume(nullptr));
+}
+
+
 void NuoBackgroundTask::BackgroundTask(NuoTask work, NuoTaskProgress progress, NuoTaskCompletion completion)
 {
     NuoDispatch* dispatch = NuoDispatch::GetInstance();
