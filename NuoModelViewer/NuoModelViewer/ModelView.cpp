@@ -90,9 +90,9 @@ void ModelView::Init()
 
 
 
-void ModelView::OpenFile(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion)
+void ModelView::OpenFile(const std::string& path, NuoTaskProgress progress)
 {
-    LoadMesh(path, progress, completion);
+    LoadMesh(path, progress);
     Update();
 }
 
@@ -163,7 +163,7 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 }
 
 
-void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion)
+void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
 {
     NuoMeshOptions options = {};
     options._combineByMaterials = false;
@@ -187,14 +187,18 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress, NuoT
         fence->WaitForGPU(commandQueue);
     };
 
-    NuoBackgroundTask::BackgroundTask(task, progress, [view, completion]()
-        {
-            view->Update();
-            completion();
-        });
+    NuoBackgroundTask backgroundTask(task);
 
     std::string documentName = LastPathComponent(path);
     _modelState->SetDocumentName(documentName);
+
+    float progressRate = 0;
+    while (backgroundTask.Resume(&progressRate))
+    {
+        progress(progressRate);
+    }
+
+    view->Update();
 }
 
 
