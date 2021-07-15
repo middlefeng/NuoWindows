@@ -83,6 +83,7 @@ void ModelView::Init()
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
 
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
+    _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
 
     commandBuffer->Commit();
 
@@ -140,11 +141,14 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     light.lightParams[0].irradiance = 1.0;
     lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
 
+    const PNuoResourceSwapChain& mvpBuffer = _mvp;
+    _mvp->UpdateResource(&mvp, sizeof(NuoUniforms), encoder->InFlight());
+
     _modelState->SceneRoot()->UpdateUniform(encoder->InFlight(), NuoMatrixFloat44Identity);
 
-    NuoMesh::CommonFunc commFunc = [&mvp, &lightBuffer](NuoCommandEncoder* encoder)
+    NuoMesh::CommonFunc commFunc = [&mvpBuffer, &lightBuffer](NuoCommandEncoder* encoder)
     {
-        encoder->SetRootConstant(0, sizeof(NuoUniforms), &mvp);
+        encoder->SetRootConstantBuffer(0, mvpBuffer);
         encoder->SetRootConstantBuffer(1, lightBuffer);
     };
     

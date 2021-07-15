@@ -49,6 +49,9 @@
     <Filter Include="NuoWindowsFoundation\NuoRender">
       <UniqueIdentifier>{753a4121-4f16-4009-ba22-ae694a575ac4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Renderer">
+      <UniqueIdentifier>{288810cd-3c80-4448-91bd-900b0a0049c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">

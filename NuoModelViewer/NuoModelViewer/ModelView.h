@@ -29,6 +29,7 @@ class ModelView : public NuoDirectView
 	
 	PNuoTextureMesh _textureMesh;
 	PNuoResourceSwapChain _light;
+	PNuoResourceSwapChain _mvp;
 
 	PNuoRenderTarget _intermediateTarget;
 
