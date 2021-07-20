@@ -6,6 +6,7 @@
 #include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoDirect/NuoRenderTargetSwapChain.h"
 #include "NuoDirect/NuoFenceSwapChain.h"
+#include "NuoRender/NuoRenderPipeline.h"
 
 #include <cassert>
 
@@ -287,6 +288,7 @@ unsigned int NuoDirectView::BuffersCount()
 
 void NuoDirectView::Render(const PNuoCommandBuffer& commandBuffer)
 {
+    _renderPipeline->RenderWithCommandBuffer(commandBuffer);
 }
 
 void NuoDirectView::OnPaint()

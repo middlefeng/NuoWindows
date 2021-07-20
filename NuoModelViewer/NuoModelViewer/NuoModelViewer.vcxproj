@@ -224,6 +224,7 @@
     <ClCompile Include="ModelView.cpp" />
     <ClCompile Include="ModelViewerWindow.cpp" />
     <ClCompile Include="ModelViewerMain.cpp" />
+    <ClCompile Include="Renderer\ModelViewerRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\d3dx12.h" />
@@ -430,6 +431,7 @@
     <ClInclude Include="ModelView.h" />
     <ClInclude Include="ModelViewerWindow.h" />
     <ClInclude Include="ModelViewerMain.h" />
+    <ClInclude Include="Renderer\ModelViewerRenderer.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>

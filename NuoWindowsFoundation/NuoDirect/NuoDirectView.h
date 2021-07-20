@@ -26,12 +26,17 @@ typedef std::weak_ptr<NuoDirectView> WPNuoDirectView;
 class NuoSwapChain;
 typedef std::shared_ptr<NuoSwapChain> PNuoSwapChain;
 
+class NuoRenderPipeline;
+typedef std::shared_ptr<NuoRenderPipeline> PNuoRenderPipeline;
+
 
 class NuoDirectView : public NuoView
 {
 
 	PNuoSwapChain _swapChain;
 	PNuoCommandQueue _commandQueue;
+
+	PNuoRenderPipeline _renderPipeline;
 
 public:
 

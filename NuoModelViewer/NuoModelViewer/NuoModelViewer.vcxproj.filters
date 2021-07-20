@@ -249,6 +249,9 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipeline.cpp">
       <Filter>NuoWindowsFoundation\NuoRender</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\ModelViewerRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -466,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipeline.h">
       <Filter>NuoWindowsFoundation\NuoRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\ModelViewerRenderer.h">
+      <Filter>Source Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
