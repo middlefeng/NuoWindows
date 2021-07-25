@@ -29,6 +29,9 @@ typedef std::shared_ptr<NuoSwapChain> PNuoSwapChain;
 class NuoRenderPipeline;
 typedef std::shared_ptr<NuoRenderPipeline> PNuoRenderPipeline;
 
+class NuoRenderPass;
+typedef std::shared_ptr<NuoRenderPass> PNuoRenderPass;
+
 
 class NuoDirectView : public NuoView
 {
@@ -56,6 +59,8 @@ public:
 	void WaitForGPU();
 	unsigned int CurrentBackBufferIndex();
 	unsigned int BuffersCount();
+
+	void SetRenderPasses(const std::vector<PNuoRenderPass>& passes);
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer);
 

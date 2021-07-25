@@ -286,6 +286,13 @@ unsigned int NuoDirectView::BuffersCount()
 }
 
 
+void NuoDirectView::SetRenderPasses(const std::vector<PNuoRenderPass>& passes)
+{
+    _renderPipeline = std::make_shared<NuoRenderPipeline>();
+    _renderPipeline->SetRenderPasses(passes);
+}
+
+
 void NuoDirectView::Render(const PNuoCommandBuffer& commandBuffer)
 {
     _renderPipeline->RenderWithCommandBuffer(commandBuffer);

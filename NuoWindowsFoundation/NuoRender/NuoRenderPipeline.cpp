@@ -49,6 +49,12 @@ void NuoRenderPipeline::RenderWithCommandBuffer(const PNuoCommandBuffer& command
 }
 
 
+void NuoRenderPipeline::SetRenderPasses(const std::vector<PNuoRenderPass>& passes)
+{
+    _renderPasses = passes;
+}
+
+
 void NuoRenderPipeline::SetDrawableSize(const NuoSize& size)
 {
     for (size_t i = 0; i < _renderPasses.size(); ++i)

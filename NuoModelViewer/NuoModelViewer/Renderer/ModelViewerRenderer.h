@@ -8,5 +8,14 @@
 #include "NuoRender/NuoRenderPipelinePass.h"
 
 
+class ModelRenderer : public NuoRenderPipelinePass
+{
+
+public:
+
+	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+
+};
+
 
 #endif

@@ -39,6 +39,7 @@ public:
 
 	void RenderWithCommandBuffer(const PNuoCommandBuffer& commandBuffer);
 
+	void SetRenderPasses(const std::vector<PNuoRenderPass>& passes);
 	void SetDrawableSize(const NuoSize& size);
 	//void SetSampleCount(unsigned int sampleCount);
 

@@ -5,3 +5,8 @@
 
 
 
+void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
+{
+
+}
+
