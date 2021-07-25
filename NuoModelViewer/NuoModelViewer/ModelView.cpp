@@ -51,11 +51,13 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
     const PNuoRenderTarget& renderTarget = RenderTarget(0);
     const PNuoDevice& device = CommandQueue()->Device();
     auto format = renderTarget->Format();
-    auto sampleCount = renderTarget->SampleCount();
     auto w = renderTarget->Width();
     auto h = renderTarget->Height();
 
-    _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, sampleCount, true, true);
+    // the intermediate target takes the direct render of the model so its sample count is the
+    // MSAA sample count
+    //
+    _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, 8, true, true);
 
     if (!_init)
     {
@@ -68,11 +70,15 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
 void ModelView::Init()
 {
     auto format = RenderTarget(0)->Format();
-    auto sampleCount = RenderTarget(0)->SampleCount();
-
-    _modelState = std::make_shared<ModelState>(CommandQueue(), format, sampleCount);
+    
+    // model rendering is enabling MSAA and consistent with the intermediate target
+    //
+    auto modelSampleCount = _intermediateTarget->SampleCount();
+    _modelState = std::make_shared<ModelState>(CommandQueue(), format, modelSampleCount);
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
+
+    auto sampleCount = RenderTarget(0)->SampleCount();
 
     std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
