@@ -46,8 +46,8 @@ public:
 	PModelState State();
 
 	void Init();
-	void OpenFile(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion);
-	void LoadMesh(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion);
+	void OpenFile(const std::string& path, NuoTaskProgress progress);
+	void LoadMesh(const std::string& path, NuoTaskProgress progress);
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void OnSize(unsigned int x, unsigned int y) override;

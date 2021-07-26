@@ -68,16 +68,19 @@ void ModelView::Init()
     const PNuoDevice& device = CommandQueue()->Device();
 
     auto format = renderTarget->Format();
-    auto sampleCount = renderTarget->SampleCount();
     auto w = renderTarget->Width();
     auto h = renderTarget->Height();
 
-    _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, sampleCount, true, true);
-
-    _modelState = std::make_shared<ModelState>(CommandQueue(), format, sampleCount);
+    // the intermediate target takes the direct render of the model so its sample count is the
+    // MSAA sample count
+    //
+    auto modelSampleCount = 8;
+    _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, modelSampleCount, true, true);
+    _modelState = std::make_shared<ModelState>(CommandQueue(), format, modelSampleCount);
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
+    auto sampleCount = renderTarget->SampleCount();
     std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
     _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
@@ -94,9 +97,9 @@ void ModelView::Init()
 
 
 
-void ModelView::OpenFile(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion)
+void ModelView::OpenFile(const std::string& path, NuoTaskProgress progress)
 {
-    LoadMesh(path, progress, completion);
+    LoadMesh(path, progress);
     Update();
 }
 
@@ -170,7 +173,7 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
 }
 
 
-void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress, NuoTaskCompletion completion)
+void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
 {
     NuoMeshOptions options = {};
     options._combineByMaterials = false;
@@ -194,14 +197,18 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress, NuoT
         fence->WaitForGPU(commandQueue);
     };
 
-    NuoBackgroundTask::BackgroundTask(task, progress, [view, completion]()
-        {
-            view->Update();
-            completion();
-        });
+    NuoBackgroundTask backgroundTask(task);
 
     std::string documentName = LastPathComponent(path);
     _modelState->SetDocumentName(documentName);
+
+    float progressRate = 0;
+    while (backgroundTask.Resume(&progressRate))
+    {
+        progress(progressRate);
+    }
+
+    view->Update();
 }
 
 

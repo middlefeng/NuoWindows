@@ -107,11 +107,16 @@ void NuoDialog::DoModal(const PNuoWindow& parent)
 		if (ret == -1) /* error found */
 			break;
 
-		if (IsDialogMessage(_hWnd, &msg))
-		{
-			TranslateMessage(&msg); /* translate virtual-key messages */
-			DispatchMessage(&msg);  /* send it to dialog procedure */
-		}
+		// the document of IsDialogMessage() says the function not only check if the message
+		// is targeted to a dialog, and perform the translate/dispatch if it is targeted.
+		//
+		// so the signle IsDialogMessage(_hWnd, &msg) is equal to
+		// {
+		//    TranslateMessage(&msg); /* translate virtual-key messages */
+		//    DispatchMessage(&msg);  /* send it to dialog procedure */
+	    // }
+		//
+		IsDialogMessage(_hWnd, &msg);
 	}
 
 	EndDialog(_hWnd, (INT_PTR)0);

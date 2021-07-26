@@ -123,17 +123,13 @@ void ModelViewerWindow::OpenFile()
 	_dxView->Hide();
 	_loadingProgress->Show();
 
-	_dxView->OpenFile(dlg.FilePath(),
-		[progressBar](float p)
+	_dxView->OpenFile(dlg.FilePath(), [progressBar](float p)
 		{
 			progressBar->SetBarPosition(p);
-		},
-		[dxView, progressBar]()
-		{
-			auto aDxView = dxView.lock();
-			progressBar->Hide();
-			aDxView->Show();
 		});
+
+	_loadingProgress->Hide();
+	_dxView->Show();
 
 	PModelState modelState = _dxView->State();
 

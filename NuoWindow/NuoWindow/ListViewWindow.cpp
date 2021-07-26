@@ -18,11 +18,13 @@ ListViewWindow::ListViewWindow(const PNuoWindow& appWindow)
 void ListViewWindow::Init()
 {
 	NuoRect<float> rect(0, 0, 120, 24);
+	NuoInset<float> buttonInset(20, 20, 20, 20);
 
 	_loadButton = std::make_shared<NuoButton>(shared_from_this(), "Load ...");
 	_loadButton->Init(IDB_LOADICON);
 	_loadButton->SetAutoPosition(kNuoControl_RT);
 	_loadButton->SetPosition(rect, false);
+	_loadButton->SetMargin(buttonInset);
 
 	auto font = std::make_shared<NuoFont>(16, "MS Shell Dlg");
 	font->SetItalic(false);
