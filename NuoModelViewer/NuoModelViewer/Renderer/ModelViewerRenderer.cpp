@@ -4,8 +4,11 @@
 #include "ModelViewerRenderer.h"
 
 #include "ModelState/ModelState.h"
+
 #include "NuoMeshes/NuoMeshSceneRoot.h"
 #include "NuoMeshes/NuoShaders/NuoUniforms.h"
+#include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
+
 #include "NuoDirect/NuoRenderTarget.h"
 #include "NuoDirect/NuoResourceSwapChain.h"
 
@@ -64,7 +67,7 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     target->ReleaseRenderPassEncoder();
     encoder.reset();
 
-    target = CurrentRenderTarget();
+    target = RenderTarget();
     encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     encoder->SetViewport(NuoViewport());
