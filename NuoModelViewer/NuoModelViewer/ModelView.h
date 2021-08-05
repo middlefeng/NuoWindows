@@ -21,6 +21,9 @@ class NuoMeshSceneRoot;
 typedef std::shared_ptr<NuoMesh> PNuoMesh;
 typedef std::shared_ptr<NuoMeshSceneRoot> PNuoMeshSceneRoot;
 
+class ModelRenderer;
+typedef std::shared_ptr<ModelRenderer> PModelRenderer;
+
 
 
 class ModelView : public NuoDirectView
@@ -39,6 +42,11 @@ class ModelView : public NuoDirectView
 
 	bool _init;
 
+	// renderers
+	//
+
+	PModelRenderer _modelRenderer;
+
 public:
 
 	ModelView(const PNuoDevice& device, const PNuoWindow& parent);
@@ -46,6 +54,8 @@ public:
 	PModelState State();
 
 	void Init();
+	void SetupPipelineSettings();
+
 	void OpenFile(const std::string& path, NuoTaskProgress progress);
 	void LoadMesh(const std::string& path, NuoTaskProgress progress);
 

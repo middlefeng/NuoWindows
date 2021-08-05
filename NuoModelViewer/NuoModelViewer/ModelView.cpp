@@ -96,6 +96,12 @@ void ModelView::Init()
 }
 
 
+void ModelView::SetupPipelineSettings()
+{
+    
+}
+
+
 
 void ModelView::OpenFile(const std::string& path, NuoTaskProgress progress)
 {
