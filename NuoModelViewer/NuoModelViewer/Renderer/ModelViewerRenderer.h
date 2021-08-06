@@ -9,6 +9,8 @@
 
 #include "NuoUtilites/NuoMathVector.h"
 
+#include <dxgi1_6.h>
+
 
 class ModelState;
 typedef std::shared_ptr<ModelState> PModelState;
@@ -17,6 +19,9 @@ typedef std::shared_ptr<ModelState> PModelState;
 class NuoResourceSwapChain;
 typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
 
+
+class NuoCommandBuffer;
+typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
 
 
@@ -35,6 +40,12 @@ class ModelRenderer : public NuoRenderPipelinePass
 
 public:
 
+	ModelRenderer(const PNuoCommandBuffer& commandBuffer, std::vector<PNuoResource>& intermediate, DXGI_FORMAT format,
+				  unsigned int width, unsigned int height, unsigned int sampleCount);
+
+	PModelState State() const;
+
+	virtual void SetDrawableSize(const NuoSize& size) override;
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 
 };

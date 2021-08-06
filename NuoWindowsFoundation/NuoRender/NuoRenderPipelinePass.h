@@ -7,6 +7,11 @@
 //
 
 
+#ifndef __NUO_RENDER_PIPELINE_PASS_H__
+#define __NUO_RENDER_PIPELINE_PASS_H__
+
+
+
 #include "NuoRenderPass.h"
 
 #include <memory>
@@ -61,3 +66,6 @@ public:
 };
 
 typedef std::shared_ptr<NuoRenderPipelinePass> PNuoRenderPipelinePass;
+
+
+#endif // !__NUO_RENDER_PIPELINE_PASS_H__

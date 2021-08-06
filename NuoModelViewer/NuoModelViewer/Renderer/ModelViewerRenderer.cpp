@@ -9,8 +9,49 @@
 #include "NuoMeshes/NuoShaders/NuoUniforms.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
 
+#include "NuoDirect/NuoCommandQueue.h"
+#include "NuoDirect/NuoCommandBuffer.h"
 #include "NuoDirect/NuoRenderTarget.h"
 #include "NuoDirect/NuoResourceSwapChain.h"
+
+#include <memory>
+
+
+
+ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, std::vector<PNuoResource>& intermediate, DXGI_FORMAT format,
+                             unsigned int width, unsigned int height, unsigned int sampleCount)
+    : NuoRenderPipelinePass(commandBuffer, intermediate, format, sampleCount)
+{
+    const PNuoCommandQueue& commandQueue = commandBuffer->CommandQueue();
+    const PNuoDevice& device = commandQueue->Device();
+
+    // the intermediate target takes the direct render of the model so its sample count is the
+    // MSAA sample count
+    //
+    auto modelSampleCount = 8;
+    _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, width, height, modelSampleCount, true, true);
+    _modelState = std::make_shared<ModelState>(commandQueue, format, modelSampleCount);
+
+    _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
+    _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
+
+    _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
+    _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
+}
+
+
+
+PModelState ModelRenderer::State() const
+{
+    return _modelState;
+}
+
+
+
+void ModelRenderer::SetDrawableSize(const NuoSize& size)
+{
+    _intermediateTarget->SetDrawableSize(size);
+}
 
 
 
