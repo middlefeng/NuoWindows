@@ -43,13 +43,14 @@ class ModelState
 	PNuoCommandQueue _commandQueue;
 	DXGI_FORMAT _format;
 	unsigned int _sampleCount;
+	unsigned int _frameCount;
 
 	NuoMeshOptions _meshOptions;
 	PNuoModelLoaderGPU _modelLoader;
 
 public:
 
-	ModelState(const PNuoCommandQueue& commandQueue,
+	ModelState(const PNuoCommandQueue& commandQueue, unsigned int frameCount,
 			   DXGI_FORMAT format, unsigned int sampleCount);
 
 	void LoadMesh(const std::string& path, NuoModelLoaderProgress progress);

@@ -14,14 +14,14 @@
 
 
 void NuoCubeMesh::Init(const PNuoCommandBuffer& commandBuffer,
+					   unsigned int frameCount,
 					   std::vector<PNuoResource>& intermediate,
-					   float width, float height, float depth, DXGI_FORMAT format,
-					   unsigned int sampleCount)
+					   float width, float height, float depth, DXGI_FORMAT format)
 {
 	PNuoModelBoard board = std::make_shared<NuoModelBoard>(width, height, depth);
 	board->CreateBuffer();
 
-	NuoMeshSimple::Init(commandBuffer, intermediate, board, format, sampleCount);
+	NuoMeshSimple::Init(commandBuffer, frameCount, intermediate, board, format);
 }
 
 

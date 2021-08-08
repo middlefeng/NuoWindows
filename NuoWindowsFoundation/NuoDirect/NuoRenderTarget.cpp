@@ -219,6 +219,24 @@ unsigned int NuoRenderTarget::SampleCount() const
 }
 
 
+void NuoRenderTarget::SetSampleCount(unsigned int sampleCount)
+{
+	if (_sampleCount == sampleCount)
+	{
+		return;
+	}
+
+	_sampleCount = sampleCount;
+
+	if (_depthEnabled)
+	{
+		CreateDepth();
+	}
+
+	CreateTextures();
+}
+
+
 unsigned int NuoRenderTarget::Width() const
 {
 	return _width;

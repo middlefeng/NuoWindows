@@ -36,6 +36,15 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> NuoMeshCompound::InputDesc()
 }
 
 
+void NuoMeshCompound::MakePipelineState(const PNuoCommandBuffer& commandBuffer)
+{
+	for (const PNuoMesh& mesh : _meshes)
+	{
+		mesh->MakePipelineState(commandBuffer);
+	}
+}
+
+
 bool NuoMeshCompound::HasTransparency() const
 {
 	for (const PNuoMesh& mesh : _meshes)

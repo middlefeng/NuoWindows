@@ -29,11 +29,13 @@ protected:
 public:
 
     void Init(const PNuoCommandBuffer& commandBuffer,
+              unsigned int frameCount,
               std::vector<PNuoResource>& intermediate,
-              DXGI_FORMAT format, unsigned int sampleCount);
+              DXGI_FORMAT format);
 
     virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
     virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
+    virtual void MakePipelineState(const PNuoCommandBuffer& commandBuffer) override;
 
     // screen-space meshes do not have a transform uniform. that requires an overriding
     // to the default mesh's Draw()

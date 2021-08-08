@@ -38,13 +38,15 @@ class NuoModelLoaderGPU
     PNuoModelLoader _loader;
 
     DXGI_FORMAT _format;
+
+    unsigned int _frameCount;
     unsigned int _sampleCount;
 
     std::vector<PNuoResource> _intermediates;
 
 public:
     
-    NuoModelLoaderGPU(const PNuoModelLoader& loader, DXGI_FORMAT format, unsigned int sampleCount);
+    NuoModelLoaderGPU(const PNuoModelLoader& loader, DXGI_FORMAT format, unsigned int frameCount, unsigned int sampleCount);
     ~NuoModelLoaderGPU();
     
     /**

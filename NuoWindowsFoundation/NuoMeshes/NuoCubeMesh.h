@@ -26,9 +26,9 @@ public:
 	NuoCubeMesh() = default;
 
 	void Init(const PNuoCommandBuffer& commandBuffer,
+			  unsigned int frameCount,
 		  	  std::vector<PNuoResource>& intermediate,
-			  float width, float height, float depth, DXGI_FORMAT format,
-			  unsigned int sampleCount);
+			  float width, float height, float depth, DXGI_FORMAT format);
 
 };
 

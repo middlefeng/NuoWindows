@@ -15,10 +15,10 @@
 
 
 
-void NuoMesh::Init(const PNuoCommandBuffer& commandBuffer)
+void NuoMesh::Init(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount)
 {
 	_transformBuffers = std::make_shared<NuoResourceSwapChain>(commandBuffer->CommandQueue()->Device(),
-															   SampleCount(), (unsigned long)sizeof(NuoMeshUniforms));
+															   frameCount, (unsigned long)sizeof(NuoMeshUniforms));
 }
 
 
@@ -80,6 +80,12 @@ PNuoPipelineState NuoMesh::PipelineState()
 unsigned int NuoMesh::SampleCount()
 {
 	return _sampleCount;
+}
+
+
+void NuoMesh::SetSampleCount(unsigned int sampleCount)
+{
+	_sampleCount = sampleCount;
 }
 
 
@@ -167,20 +173,18 @@ void NuoMesh::DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func)
 
 
 void NuoMeshSimple::Init(const PNuoCommandBuffer& commandBuffer,
+						 unsigned int frameCount,
 						 std::vector<PNuoResource>& intermediate,
 						 const PNuoModelSimple& model,
-						 DXGI_FORMAT format, unsigned int sampleCount)
+						 DXGI_FORMAT format)
 {
 	_format = format;
-	_sampleCount = sampleCount;
 
-	NuoMeshBase<NuoMeshSimpleItem>::Init(commandBuffer, intermediate,
+	NuoMeshBase<NuoMeshSimpleItem>::Init(commandBuffer, frameCount, intermediate,
 										 (NuoMeshSimpleItem*)model->Ptr(),
 										 model->GetVerticesNumber(),
 										 model->IndicesPtr(),
 										 model->IndicesCount());
-
-	_pipelineState = MakePipelineState(commandBuffer, "NuoMeshSimpleVertex", "NuoMeshSimplePixel");
 }
 
 
@@ -214,10 +218,17 @@ PNuoRootSignature NuoMeshSimple::RootSignature(const PNuoCommandBuffer& commandB
 
 
 
+void NuoMeshSimple::MakePipelineState(const PNuoCommandBuffer& commandBuffer)
+{
+	_pipelineState = NuoMesh::MakePipelineState(commandBuffer, "NuoMeshSimpleVertex", "NuoMeshSimplePixel");
+}
+
+
 
 PNuoMesh CreateMesh(const NuoMeshOptions& options,
 					const PNuoCommandBuffer& commandBuffer,
 					const PNuoModelBase& model,
+					unsigned int frameCount,
 					DXGI_FORMAT format, unsigned int sampleCount,
 					std::vector<PNuoResource>& intermediate)
 {
@@ -227,7 +238,7 @@ PNuoMesh CreateMesh(const NuoMeshOptions& options,
 	if (!textured && !options._basicMaterialized)
 	{
 		PNuoMeshSimple mesh = std::make_shared<NuoMeshSimple>();
-		mesh->Init(commandBuffer, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model), format, sampleCount);
+		mesh->Init(commandBuffer, frameCount, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model), format);
 
 		resultMesh = mesh;
 	}
@@ -272,12 +283,15 @@ PNuoMesh CreateMesh(const NuoMeshOptions& options,
 		mesh->SetTransparency(model->HasTransparent());
 		mesh->SetPhysicallyReflection(options._physicallyReflection);
 
-		mesh->Init(commandBuffer, intermediate,
+		mesh->Init(commandBuffer, frameCount, intermediate,
 				   std::dynamic_pointer_cast<NuoModelMaterialed>(model),
-				   format, sampleCount);
+				   format);
 
 		resultMesh = mesh;
 	}
+
+	resultMesh->SetSampleCount(sampleCount);
+	resultMesh->MakePipelineState(commandBuffer);
 
 	return resultMesh;
 }

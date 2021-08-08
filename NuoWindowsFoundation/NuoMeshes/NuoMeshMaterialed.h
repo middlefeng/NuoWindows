@@ -34,13 +34,16 @@ public:
 	virtual ~NuoMeshMaterialed();
 
 	void Init(const PNuoCommandBuffer& commandBuffer,
+			  unsigned int frameCount,
 			  std::vector<PNuoResource>& intermediate,
 			  const PNuoModelMaterialed& model,
-			  DXGI_FORMAT format, unsigned int sampleCount);
+			  DXGI_FORMAT format);
 
 	virtual bool HasTransparency() const override;
 	virtual void SetTransparency(bool transparency) override;
 	virtual void SetPhysicallyReflection(bool physically);
+
+	virtual void MakePipelineState(const PNuoCommandBuffer& commandBuffer) override;
 
 };
 
