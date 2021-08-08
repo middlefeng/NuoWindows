@@ -14,12 +14,9 @@
 #include "NuoDirect/NuoCommandBuffer.h"
 
 
-ModelState::ModelState(const PNuoCommandQueue& commandQueue, unsigned int frameCount,
-                       DXGI_FORMAT format, unsigned int sampleCount)
+ModelState::ModelState(const PNuoCommandQueue& commandQueue, DXGI_FORMAT format)
 	: _commandQueue(commandQueue),
-      _frameCount(frameCount),
-      _format(format),
-      _sampleCount(sampleCount)
+      _format(format)
 {
     _meshOptions = {};
     _sceneRoot = std::make_shared<NuoMeshSceneRoot>();
@@ -32,7 +29,7 @@ void ModelState::LoadMesh(const std::string& path, NuoModelLoaderProgress progre
     loader->LoadModel(path);
 
     PNuoCommandBuffer commandBuffer = _commandQueue->CreateCommandBuffer();
-    _modelLoader = std::make_shared<NuoModelLoaderGPU>(loader, _format, _frameCount, _sampleCount);
+    _modelLoader = std::make_shared<NuoModelLoaderGPU>(loader, _format);
 
     CreateMeshes([&progress](float progressPercent)
         {

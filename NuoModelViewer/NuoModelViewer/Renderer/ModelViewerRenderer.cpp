@@ -31,7 +31,7 @@ ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned in
     //
     auto modelSampleCount = 8;
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, width, height, modelSampleCount, true, true);
-    _modelState = std::make_shared<ModelState>(commandQueue, frameCount, format, modelSampleCount);
+    _modelState = std::make_shared<ModelState>(commandQueue, format);
 
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
     _textureMesh->Init(commandBuffer, frameCount, intermediate, format);

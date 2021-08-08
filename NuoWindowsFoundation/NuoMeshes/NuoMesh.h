@@ -177,6 +177,5 @@ typedef std::shared_ptr<NuoModelBase> PNuoModelBase;
 PNuoMesh CreateMesh(const NuoMeshOptions& options,
 					const PNuoCommandBuffer& commandBuffer,
 					const PNuoModelBase& model,
-				    unsigned int frameCount,
-					DXGI_FORMAT format, unsigned int sampleCount,
+				    DXGI_FORMAT format,
 					std::vector<PNuoResource>& intermediate);

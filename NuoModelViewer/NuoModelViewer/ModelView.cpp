@@ -76,7 +76,7 @@ void ModelView::Init()
     //
     auto modelSampleCount = 8;
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, modelSampleCount, true, true);
-    _modelState = std::make_shared<ModelState>(CommandQueue(), BuffersCount(), format, modelSampleCount);
+    _modelState = std::make_shared<ModelState>(CommandQueue(), format);
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
@@ -187,6 +187,9 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
     options._combineByMaterials = false;
     options._textured = false;
     options._basicMaterialized = true;
+
+    options._frameCount = BuffersCount();
+    options._sampleCount = _intermediateTarget->SampleCount();  // MSAA sample count
 
     _modelState->SetOptions(options);
 

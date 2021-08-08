@@ -228,8 +228,7 @@ void NuoMeshSimple::MakePipelineState(const PNuoCommandBuffer& commandBuffer)
 PNuoMesh CreateMesh(const NuoMeshOptions& options,
 					const PNuoCommandBuffer& commandBuffer,
 					const PNuoModelBase& model,
-					unsigned int frameCount,
-					DXGI_FORMAT format, unsigned int sampleCount,
+					DXGI_FORMAT format,
 					std::vector<PNuoResource>& intermediate)
 {
 	PNuoMesh resultMesh;
@@ -238,7 +237,7 @@ PNuoMesh CreateMesh(const NuoMeshOptions& options,
 	if (!textured && !options._basicMaterialized)
 	{
 		PNuoMeshSimple mesh = std::make_shared<NuoMeshSimple>();
-		mesh->Init(commandBuffer, frameCount, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model), format);
+		mesh->Init(commandBuffer, options._frameCount, intermediate, std::dynamic_pointer_cast<NuoModelSimple>(model), format);
 
 		resultMesh = mesh;
 	}
@@ -283,14 +282,14 @@ PNuoMesh CreateMesh(const NuoMeshOptions& options,
 		mesh->SetTransparency(model->HasTransparent());
 		mesh->SetPhysicallyReflection(options._physicallyReflection);
 
-		mesh->Init(commandBuffer, frameCount, intermediate,
+		mesh->Init(commandBuffer, options._frameCount, intermediate,
 				   std::dynamic_pointer_cast<NuoModelMaterialed>(model),
 				   format);
 
 		resultMesh = mesh;
 	}
 
-	resultMesh->SetSampleCount(sampleCount);
+	resultMesh->SetSampleCount(options._sampleCount);
 	resultMesh->MakePipelineState(commandBuffer);
 
 	return resultMesh;

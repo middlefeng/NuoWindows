@@ -14,10 +14,8 @@
 
 
 
-NuoModelLoaderGPU::NuoModelLoaderGPU(const PNuoModelLoader& loader, DXGI_FORMAT format,
-                                     unsigned int frameCount, unsigned int sampleCount)
-	: _loader(loader), _format(format),
-      _frameCount(frameCount), _sampleCount(sampleCount)
+NuoModelLoaderGPU::NuoModelLoaderGPU(const PNuoModelLoader& loader, DXGI_FORMAT format)
+	: _loader(loader), _format(format)
 {
 }
 
@@ -48,8 +46,7 @@ PNuoMeshCompound NuoModelLoaderGPU::CreateMesh(const NuoMeshOptions& loadOption,
     size_t index = 0;
     for (auto& model : models)
     {
-        PNuoMesh mesh = ::CreateMesh(loadOption, commandBuffer, model, _frameCount,
-                                     _format, _sampleCount, _intermediates);
+        PNuoMesh mesh = ::CreateMesh(loadOption, commandBuffer, model, _format, _intermediates);
 
         NuoMeshBounds bounds;
         bounds.boundingBox = model->GetBoundingBox();
