@@ -16,20 +16,18 @@ NuoMeshMaterialed::~NuoMeshMaterialed()
 
 
 void NuoMeshMaterialed::Init(const PNuoCommandBuffer& commandBuffer,
+							 unsigned int frameCount,
 							 std::vector<PNuoResource>& intermediate,
 							 const PNuoModelMaterialed& model,
-							 DXGI_FORMAT format, unsigned int sampleCount)
+							 DXGI_FORMAT format)
 {
 	_format = format;
-	_sampleCount = sampleCount;
-
-	NuoMeshBase<NuoMaterialedBasicItem>::Init(commandBuffer, intermediate,
+	
+	NuoMeshBase<NuoMaterialedBasicItem>::Init(commandBuffer, frameCount, intermediate,
 											  (NuoMaterialedBasicItem*)model->Ptr(),
 											  model->GetVerticesNumber(),
 											  model->IndicesPtr(),
 											  model->IndicesCount());
-
-	_pipelineState = MakePipelineState(commandBuffer, "NuoMeshMaterialedVertex", "NuoMeshMaterialedPixel");
 }
 
 
@@ -49,6 +47,12 @@ void NuoMeshMaterialed::SetTransparency(bool transparency)
 void NuoMeshMaterialed::SetPhysicallyReflection(bool reflection)
 {
 	_physicallyReflection = reflection;
+}
+
+
+void NuoMeshMaterialed::MakePipelineState(const PNuoCommandBuffer& commandBuffer)
+{
+	_pipelineState = NuoMesh::MakePipelineState(commandBuffer, "NuoMeshMaterialedVertex", "NuoMeshMaterialedPixel");
 }
 
 

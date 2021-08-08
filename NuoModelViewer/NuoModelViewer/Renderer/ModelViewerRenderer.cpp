@@ -18,9 +18,10 @@
 
 
 
-ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, std::vector<PNuoResource>& intermediate, DXGI_FORMAT format,
-                             unsigned int width, unsigned int height, unsigned int sampleCount)
-    : NuoRenderPipelinePass(commandBuffer, intermediate, format, sampleCount)
+ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount,
+                             std::vector<PNuoResource>& intermediate, DXGI_FORMAT format,
+                             unsigned int width, unsigned int height)
+    : NuoRenderPipelinePass(commandBuffer, frameCount, intermediate, format)
 {
     const PNuoCommandQueue& commandQueue = commandBuffer->CommandQueue();
     const PNuoDevice& device = commandQueue->Device();
@@ -30,10 +31,10 @@ ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, std::vector
     //
     auto modelSampleCount = 8;
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, width, height, modelSampleCount, true, true);
-    _modelState = std::make_shared<ModelState>(commandQueue, format, modelSampleCount);
+    _modelState = std::make_shared<ModelState>(commandQueue, format);
 
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
-    _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
+    _textureMesh->Init(commandBuffer, frameCount, intermediate, format);
 
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
     _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));

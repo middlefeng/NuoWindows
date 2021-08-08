@@ -21,6 +21,9 @@ public:
     bool _combineByMaterials;
     
     bool _physicallyReflection;
+
+    unsigned int _frameCount;
+    unsigned int _sampleCount;
 };
 
 

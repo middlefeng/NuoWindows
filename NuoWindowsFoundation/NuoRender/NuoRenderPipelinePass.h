@@ -50,9 +50,9 @@ class NuoRenderPipelinePass : public NuoRenderPass
 public:
 
 	NuoRenderPipelinePass(const PNuoCommandBuffer& commandBuffer,
+						  unsigned int frameCount,
 						  std::vector<PNuoResource>& intermediate,
-						  DXGI_FORMAT format,
-						  unsigned int sampleCount);
+						  DXGI_FORMAT format);
 
 	void SetSourceTextrue(const PNuoTexture& texture);
 

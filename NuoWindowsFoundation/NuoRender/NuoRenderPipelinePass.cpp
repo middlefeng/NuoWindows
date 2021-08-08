@@ -12,12 +12,12 @@
 
 
 NuoRenderPipelinePass::NuoRenderPipelinePass(const PNuoCommandBuffer& commandBuffer,
+                                             unsigned int frameCount,
                                              std::vector<PNuoResource>& intermediate,
-                                             DXGI_FORMAT format,
-                                             unsigned int sampleCount)
+                                             DXGI_FORMAT format)
 {
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
-    _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
+    _textureMesh->Init(commandBuffer, frameCount, intermediate, format);
 }
 
 

@@ -83,7 +83,10 @@ public:
 	virtual void ReleaseRenderPassEncoder();
 
 	DXGI_FORMAT Format() const;
+
 	unsigned int SampleCount() const;
+	void SetSampleCount(unsigned int sampleCount);
+
 	NuoSize DrawableSize() const;
 	virtual void SetDrawableSize(const NuoSize& size);
 

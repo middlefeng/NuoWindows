@@ -40,8 +40,9 @@ class ModelRenderer : public NuoRenderPipelinePass
 
 public:
 
-	ModelRenderer(const PNuoCommandBuffer& commandBuffer, std::vector<PNuoResource>& intermediate, DXGI_FORMAT format,
-				  unsigned int width, unsigned int height, unsigned int sampleCount);
+	ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount,
+				  std::vector<PNuoResource>& intermediate, DXGI_FORMAT format,
+				  unsigned int width, unsigned int height);
 
 	PModelState State() const;
 

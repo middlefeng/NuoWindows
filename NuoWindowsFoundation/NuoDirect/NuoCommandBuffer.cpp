@@ -267,6 +267,11 @@ ID3D12GraphicsCommandList* NuoCommandEncoder::DxEncoder()
 void NuoCommandEncoder::ResourceBarrier(const PNuoResource& resource,
 									    D3D12_RESOURCE_STATES state)
 {
+	if (resource->State() == state)
+	{
+		return;
+	}
+
 	D3D12_RESOURCE_BARRIER barrier;
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;

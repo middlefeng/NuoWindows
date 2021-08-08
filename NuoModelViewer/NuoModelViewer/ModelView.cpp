@@ -76,14 +76,16 @@ void ModelView::Init()
     //
     auto modelSampleCount = 8;
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, modelSampleCount, true, true);
-    _modelState = std::make_shared<ModelState>(CommandQueue(), format, modelSampleCount);
+    _modelState = std::make_shared<ModelState>(CommandQueue(), format);
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     auto sampleCount = renderTarget->SampleCount();
     std::vector<PNuoResource> intermediate;
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
-    _textureMesh->Init(commandBuffer, intermediate, format, sampleCount);
+    _textureMesh->Init(commandBuffer, BuffersCount(), intermediate, format);
+    _textureMesh->SetSampleCount(1);
+    _textureMesh->MakePipelineState(commandBuffer);
 
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
     _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
@@ -185,6 +187,9 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
     options._combineByMaterials = false;
     options._textured = false;
     options._basicMaterialized = true;
+
+    options._frameCount = BuffersCount();
+    options._sampleCount = _intermediateTarget->SampleCount();  // MSAA sample count
 
     _modelState->SetOptions(options);
 
