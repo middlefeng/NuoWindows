@@ -76,7 +76,7 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     if (!_modelState->SceneRoot())
         return;
 
-    PNuoRenderTarget target = _intermediateTarget; // CurrentRenderTarget();
+    PNuoRenderTarget target = _intermediateTarget;
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
