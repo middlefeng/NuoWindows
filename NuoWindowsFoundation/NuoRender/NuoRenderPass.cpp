@@ -20,25 +20,29 @@ bool NuoRenderPass::IsPipelinePass() const
 
 PNuoCommandEncoder NuoRenderPass::RetainDefaultEncoder(const PNuoCommandBuffer& commandBuffer)
 {
-	return _renderTarget->RetainRenderPassEncoder(commandBuffer);
+	return RenderTarget()->RetainRenderPassEncoder(commandBuffer);
 }
 
 
 void NuoRenderPass::ReleaseDefaultEncoder()
 {
-	_renderTarget->ReleaseRenderPassEncoder();
+	RenderTarget()->ReleaseRenderPassEncoder();
 }
 
 
-void NuoRenderPass::SetRenderTarget(const PNuoRenderTarget& renderTarget)
+void NuoRenderPass::SetTransientRenderTarget(const WPNuoRenderTarget& renderTarget)
 {
-	_renderTarget = renderTarget;
+	_renderTargetTransient = renderTarget;
 }
 
 
 PNuoRenderTarget NuoRenderPass::RenderTarget()
 {
-	return _renderTarget;
+	if (_renderTarget)
+		return _renderTarget;
+
+	auto transientTarget = _renderTargetTransient.lock();
+	return transientTarget;
 }
 
 

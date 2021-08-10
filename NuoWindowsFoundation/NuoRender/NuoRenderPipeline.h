@@ -19,6 +19,9 @@ typedef std::shared_ptr<NuoRenderPass> PNuoRenderPass;
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
+class NuoRenderTarget;
+typedef std::shared_ptr<NuoRenderTarget> PNuoRenderTarget;
+typedef std::weak_ptr<NuoRenderTarget> WPNuoRenderTarget;
 
 
 
@@ -34,6 +37,7 @@ class NuoRenderPipeline
 	 */
 	std::vector<PNuoRenderPass> _renderPasses;
 
+	WPNuoRenderTarget _renderTarget;
 
 public:
 
@@ -42,6 +46,8 @@ public:
 	void SetRenderPasses(const std::vector<PNuoRenderPass>& passes);
 	void SetDrawableSize(const NuoSize& size);
 	//void SetSampleCount(unsigned int sampleCount);
+
+	void SetRenderTarget(const PNuoRenderTarget renderTarget);
 
 
 };

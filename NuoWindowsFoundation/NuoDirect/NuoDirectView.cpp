@@ -295,7 +295,11 @@ void NuoDirectView::SetRenderPasses(const std::vector<PNuoRenderPass>& passes)
 
 void NuoDirectView::Render(const PNuoCommandBuffer& commandBuffer)
 {
+    PNuoRenderTarget target = CurrentRenderTarget();
+
+    _renderPipeline->SetRenderTarget(target);
     _renderPipeline->RenderWithCommandBuffer(commandBuffer);
+    _renderPipeline->SetRenderTarget(nullptr);
 }
 
 void NuoDirectView::OnPaint()

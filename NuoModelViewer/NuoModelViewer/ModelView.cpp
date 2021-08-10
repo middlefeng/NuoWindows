@@ -4,7 +4,9 @@
 #include "framework.h"
 
 #include "ModelView.h"
+
 #include "ModelState/ModelState.h"
+#include "Renderer/ModelViewerRenderer.h"
 
 #include "NuoAppInstance.h"
 #include "NuoFile.h"
@@ -41,7 +43,7 @@ ModelView::ModelView(const PNuoDevice& device,
 
 PModelState ModelView::State()
 {
-    return _modelState;
+    return _modelRenderer->State();
 }
 
 
@@ -58,7 +60,8 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
     const PNuoRenderTarget& renderTarget = RenderTarget(0);
     const auto size = renderTarget->DrawableSize();
 
-    _intermediateTarget->SetDrawableSize(size);
+    //_intermediateTarget->SetDrawableSize(size);
+    _modelRenderer->SetDrawableSize(size);
 }
 
 
@@ -71,30 +74,35 @@ void ModelView::Init()
     auto w = renderTarget->Width();
     auto h = renderTarget->Height();
 
+    /*
     // the intermediate target takes the direct render of the model so its sample count is the
     // MSAA sample count
     //
     auto modelSampleCount = 8;
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, modelSampleCount, true, true);
-    _modelState = std::make_shared<ModelState>(CommandQueue(), format);
+    _modelState = std::make_shared<ModelState>(CommandQueue(), format);*/
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
-    auto sampleCount = renderTarget->SampleCount();
+    /*auto sampleCount = renderTarget->SampleCount();*/
     std::vector<PNuoResource> intermediate;
-    _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
+    /*_textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
     _textureMesh->Init(commandBuffer, BuffersCount(), intermediate, format);
     _textureMesh->SetSampleCount(1);
     _textureMesh->MakePipelineState(commandBuffer);
 
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
-    _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
+    _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms)); */
+
+    _modelRenderer = std::make_shared<ModelRenderer>(commandBuffer, BuffersCount(), intermediate, format, w, h);
 
     commandBuffer->Commit();
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
     fence->WaitForGPU(CommandQueue());
+
+    SetRenderPasses({ _modelRenderer });
 }
 
 
@@ -118,10 +126,12 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     if (!_init)
         return;
 
-    if (!_modelState->SceneRoot())
+    NuoDirectView::Render(commandBuffer);
+
+    /*if (!_modelState->SceneRoot())
         return;
 
-    PNuoRenderTarget target = _intermediateTarget; // CurrentRenderTarget();
+    /*PNuoRenderTarget target = _intermediateTarget; // CurrentRenderTarget();
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -177,7 +187,7 @@ void ModelView::Render(const PNuoCommandBuffer& commandBuffer)
     _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
     _textureMesh->Draw(encoder);
 
-    target->ReleaseRenderPassEncoder();
+    target->ReleaseRenderPassEncoder();*/
 }
 
 
@@ -189,12 +199,12 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
     options._basicMaterialized = true;
 
     options._frameCount = BuffersCount();
-    options._sampleCount = _intermediateTarget->SampleCount();  // MSAA sample count
+    options._sampleCount = 8;  // MSAA sample count
 
-    _modelState->SetOptions(options);
-
-    ModelState* modelState = _modelState.get();
+    PModelState modelState = _modelRenderer->State();
     PNuoCommandQueue commandQueue = CommandQueue();
+
+    modelState->SetOptions(options);
 
     ModelView* view = this;
 
@@ -211,7 +221,7 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
     NuoBackgroundTask backgroundTask(task);
 
     std::string documentName = LastPathComponent(path);
-    _modelState->SetDocumentName(documentName);
+    modelState->SetDocumentName(documentName);
 
     float progressRate = 0;
     while (backgroundTask.Resume(&progressRate))
@@ -235,7 +245,8 @@ void ModelView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
     float dx = deltaY * 0.002f * 3.14f;
     float dy = deltaX * 0.002f * 3.14f;
 
-    _modelTransfer = NuoMatrixRotationAppend(_modelTransfer, dx, dy);
+    //_modelTransfer = NuoMatrixRotationAppend(_modelTransfer, dx, dy);
+    _modelRenderer->Rotate(dx, dy);
 
     Update();
 }

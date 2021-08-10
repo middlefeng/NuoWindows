@@ -35,6 +35,8 @@ ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned in
 
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
     _textureMesh->Init(commandBuffer, frameCount, intermediate, format);
+    _textureMesh->SetSampleCount(1);
+    _textureMesh->MakePipelineState(commandBuffer);
 
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
     _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
@@ -52,6 +54,19 @@ PModelState ModelRenderer::State() const
 void ModelRenderer::SetDrawableSize(const NuoSize& size)
 {
     _intermediateTarget->SetDrawableSize(size);
+}
+
+
+
+void ModelRenderer::SetSampleCount(unsigned int sampleCount)
+{
+    // TODO:
+}
+
+
+
+void ModelRenderer::PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
+{
 }
 
 
@@ -110,11 +125,20 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     encoder.reset();
 
     target = RenderTarget();
+
     encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     encoder->SetViewport(NuoViewport());
     _textureMesh->SetTexture(nullptr, _intermediateTarget->ResultTexture());
     _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
     _textureMesh->Draw(encoder);
+
+    target->ReleaseRenderPassEncoder();
+}
+
+
+void ModelRenderer::Rotate(float dx, float dy)
+{
+    _modelTransfer = NuoMatrixRotationAppend(_modelTransfer, dx, dy);
 }
 

@@ -43,6 +43,10 @@ void NuoRenderPipeline::RenderWithCommandBuffer(const PNuoCommandBuffer& command
             PNuoRenderTarget interResult = renderStep->RenderTarget();
             renderStepSuccessor->SetSourceTextrue(interResult->ResultTexture());
         }
+        else 
+        {
+            renderStep->SetTransientRenderTarget(_renderTarget);
+        }
         
         renderStep->DrawWithCommandBuffer(commandBuffer);
     }
@@ -63,6 +67,14 @@ void NuoRenderPipeline::SetDrawableSize(const NuoSize& size)
         render->SetDrawableSize(size);
     }
 }
+
+
+void NuoRenderPipeline::SetRenderTarget(const PNuoRenderTarget renderTarget)
+{
+    _renderTarget = renderTarget;
+}
+
+
 
 /*
 - (void)setSampleCount:(NSUInteger)sampleCount

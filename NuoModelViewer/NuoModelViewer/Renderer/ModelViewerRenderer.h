@@ -47,7 +47,12 @@ public:
 	PModelState State() const;
 
 	virtual void SetDrawableSize(const NuoSize& size) override;
+	virtual void SetSampleCount(unsigned int sampleCount) override;
+
+	virtual void PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+
+	void Rotate(float dx, float dy);
 
 };
 

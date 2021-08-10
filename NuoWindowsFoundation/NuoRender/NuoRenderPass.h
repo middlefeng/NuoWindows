@@ -15,6 +15,7 @@ typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
 class NuoRenderTarget;
 typedef std::shared_ptr<NuoRenderTarget> PNuoRenderTarget;
+typedef std::weak_ptr<NuoRenderTarget> WPNuoRenderTarget;
 
 class NuoCommandEncoder;
 typedef std::shared_ptr<NuoCommandEncoder> PNuoCommandEncoder;
@@ -26,6 +27,11 @@ class NuoRenderPass
 protected:
 
 	PNuoRenderTarget _renderTarget;
+
+	/**
+	 *  The transient target which is managed from outside
+	 */
+	WPNuoRenderTarget _renderTargetTransient;
 
 public:
 
@@ -47,7 +53,7 @@ public:
 	virtual PNuoCommandEncoder RetainDefaultEncoder(const PNuoCommandBuffer& commandBuffer);
 	virtual void ReleaseDefaultEncoder();
 
-	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
+	void SetTransientRenderTarget(const WPNuoRenderTarget& renderTarget);
 	PNuoRenderTarget RenderTarget();
 
 };
