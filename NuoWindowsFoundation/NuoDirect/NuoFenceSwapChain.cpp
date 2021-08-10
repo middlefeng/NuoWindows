@@ -41,17 +41,20 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue)
 
 void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue, unsigned int inFlight)
 {
+    // use a value that is greater than that of any in-flight frames
+    _currentFenceValue += 1;
+
     // Schedule a Signal command in the queue.
-    commandQueue->DxQueue()->Signal(_fence.Get(), _fenceValues[inFlight]);
+    commandQueue->DxQueue()->Signal(_fence.Get(), _currentFenceValue + 1);
 
     // Wait until the fence has been processed.
-    _fence->SetEventOnCompletion(_fenceValues[inFlight], _fenceEvent);
+    _fence->SetEventOnCompletion(_currentFenceValue + 1, _fenceEvent);
     WaitForSingleObjectEx(_fenceEvent, INFINITE, FALSE);
 
     commandQueue->ReleasePendingCommandBuffers();
 
     // Increment the fence value for the current frame.
-    _fenceValues[inFlight] += 1;
+    _fenceValues[inFlight] = _currentFenceValue + 1;
 }
 
 
