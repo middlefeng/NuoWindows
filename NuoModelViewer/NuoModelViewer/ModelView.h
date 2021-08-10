@@ -28,17 +28,7 @@ typedef std::shared_ptr<ModelRenderer> PModelRenderer;
 
 class ModelView : public NuoDirectView
 {
-	/*PModelState _modelState;
-	
-	PNuoTextureMesh _textureMesh;
-	PNuoResourceSwapChain _light;
-	PNuoResourceSwapChain _mvp;
-
-	PNuoRenderTarget _intermediateTarget;*/
-
 	PNuoTimer _refreshTimer;
-
-	//NuoMatrixFloat44 _modelTransfer;
 
 	bool _init;
 
