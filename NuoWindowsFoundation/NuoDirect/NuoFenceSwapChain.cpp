@@ -6,6 +6,11 @@
 #include "NuoCommandQueue.h"
 
 #include <cassert>
+#include <limits>
+
+
+static const UINT64 kCounterLimit = UINT64_MAX * 0.9;
+
 
 
 NuoFenceSwapChain::NuoFenceSwapChain(unsigned int frameCount)
@@ -53,8 +58,11 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue, unsigne
 
     commandQueue->ReleasePendingCommandBuffers();
 
-    // Increment the fence value for the current frame.
-    _fenceValues[inFlight] = _currentFenceValue + 1;
+    // Reset fence value for the current frame.
+    for (auto& value : _fenceValues)
+        value = 0;
+
+    _currentFenceValue = 0;
 }
 
 
@@ -73,6 +81,12 @@ void NuoFenceSwapChain::Present(const PNuoDirectView& view)
 
 void NuoFenceSwapChain::PrepareFrame(const PNuoDirectView& view)
 {
+    if (_currentFenceValue > kCounterLimit)
+    {
+        WaitForGPU(view);
+        return;
+    }
+
     PNuoCommandQueue queue = view->CommandQueue();
     unsigned int nextFrameIndex = view->CurrentBackBufferIndex();
 
