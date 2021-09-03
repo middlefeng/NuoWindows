@@ -26,12 +26,20 @@ typedef std::weak_ptr<NuoDirectView> WPNuoDirectView;
 class NuoSwapChain;
 typedef std::shared_ptr<NuoSwapChain> PNuoSwapChain;
 
+class NuoRenderPipeline;
+typedef std::shared_ptr<NuoRenderPipeline> PNuoRenderPipeline;
+
+class NuoRenderPass;
+typedef std::shared_ptr<NuoRenderPass> PNuoRenderPass;
+
 
 class NuoDirectView : public NuoView
 {
 
 	PNuoSwapChain _swapChain;
 	PNuoCommandQueue _commandQueue;
+
+	PNuoRenderPipeline _renderPipeline;
 
 public:
 
@@ -47,10 +55,12 @@ public:
 	PNuoCommandBuffer CreateCommandBuffer(bool resetAllocator);
 
 	void Present();
+	void PresentWithoutFence();
 	void WaitForGPU();
-	void MoveToNextFrame();
 	unsigned int CurrentBackBufferIndex();
 	unsigned int BuffersCount();
+
+	void SetRenderPasses(const std::vector<PNuoRenderPass>& passes);
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer);
 

@@ -174,4 +174,24 @@ PNuoTexture NuoRenderPassTarget::ResultTexture(unsigned int index) const
 }
 
 
+void NuoRenderPassTarget::SetDrawableSize(const NuoSize& size)
+{
+	if (_width == size.X() && _height == size.Y())
+	{
+		return;
+	}
+
+	_width = (unsigned int)size.X();
+	_height = (unsigned int)size.Y();
+
+	_views.clear();
+
+	Init();
+
+	if (_depthEnabled)
+	{
+		CreateDepth();
+	}
+}
+
 

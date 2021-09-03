@@ -46,6 +46,12 @@
     <Filter Include="Source Files\ModelState">
       <UniqueIdentifier>{4ff698d3-d570-4ec0-8753-7dacda8328ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoRender">
+      <UniqueIdentifier>{753a4121-4f16-4009-ba22-ae694a575ac4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer">
+      <UniqueIdentifier>{288810cd-3c80-4448-91bd-900b0a0049c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
@@ -231,8 +237,20 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoBackgroundTask.cpp">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPass.cpp">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipelinePass.cpp">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderPassTarget.cpp">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipeline.cpp">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\ModelViewerRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -437,8 +455,23 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoBackgroundTask.h">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPass.h">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipelinePass.h">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoSize.h">
+      <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoRenderPassTarget.h">
       <Filter>NuoWindowsFoundation\NuoDirect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipeline.h">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\ModelViewerRenderer.h">
+      <Filter>Source Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

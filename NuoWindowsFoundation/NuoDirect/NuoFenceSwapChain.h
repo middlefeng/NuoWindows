@@ -30,6 +30,10 @@ class NuoFenceSwapChain
 
 	HANDLE _fenceEvent;
 
+	// used for multi-in-flight-frame rotation
+	//
+	UINT64 _currentFenceValue;
+
 public:
 
 	NuoFenceSwapChain(unsigned int frameCount);
@@ -37,7 +41,15 @@ public:
 
 	void WaitForGPU(const PNuoDirectView& view);
 	void WaitForGPU(const PNuoCommandQueue& commandQueue);
-	void MoveToNextFrame(const PNuoDirectView& view);
+
+	// present() calls the view to present the current buffer of its swap-chain
+	// and puts GPU fence
+	//
+	// prepareFrame() checks the GPU fence to make sure a frame's supporting buffers
+	// are not reused until its previous owner has been presented
+	//
+	void Present(const PNuoDirectView& view);
+	void PrepareFrame(const PNuoDirectView& view);
 
 	friend class NuoDevice;
 

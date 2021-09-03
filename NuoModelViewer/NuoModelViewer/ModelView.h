@@ -21,22 +21,21 @@ class NuoMeshSceneRoot;
 typedef std::shared_ptr<NuoMesh> PNuoMesh;
 typedef std::shared_ptr<NuoMeshSceneRoot> PNuoMeshSceneRoot;
 
+class ModelRenderer;
+typedef std::shared_ptr<ModelRenderer> PModelRenderer;
+
 
 
 class ModelView : public NuoDirectView
 {
-	PModelState _modelState;
-	
-	PNuoTextureMesh _textureMesh;
-	PNuoResourceSwapChain _light;
-
-	PNuoRenderTarget _intermediateTarget;
-
 	PNuoTimer _refreshTimer;
 
-	NuoMatrixFloat44 _modelTransfer;
-
 	bool _init;
+
+	// renderers
+	//
+
+	PModelRenderer _modelRenderer;
 
 public:
 
@@ -45,6 +44,8 @@ public:
 	PModelState State();
 
 	void Init();
+	void SetupPipelineSettings();
+
 	void OpenFile(const std::string& path, NuoTaskProgress progress);
 	void LoadMesh(const std::string& path, NuoTaskProgress progress);
 

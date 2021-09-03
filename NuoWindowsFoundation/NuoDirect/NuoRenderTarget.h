@@ -8,8 +8,9 @@
 #include <dxgi1_6.h>
 #include <wrl.h>
 
-#include "NuoDirect/NuoResource.h"
-#include "NuoDirect/NuoCommandBuffer.h"
+#include "NuoResource.h"
+#include "NuoCommandBuffer.h"
+#include "NuoSize.h"
 
 
 
@@ -27,9 +28,15 @@ class NuoRenderTarget : public std::enable_shared_from_this<NuoRenderTarget>
 
 protected:
 
+	PNuoDevice _device;
+
 	unsigned int _width;
 	unsigned int _height;
 	unsigned int _sampleCount;
+	
+	DXGI_FORMAT _format;
+	bool _manageResource;
+	bool _depthEnabled;
 
 	PNuoTexture _resource;
 	PNuoTexture _sampleResource;
@@ -76,14 +83,20 @@ public:
 	virtual void ReleaseRenderPassEncoder();
 
 	DXGI_FORMAT Format() const;
+
 	unsigned int SampleCount() const;
+	void SetSampleCount(unsigned int sampleCount);
+
+	NuoSize DrawableSize() const;
+	virtual void SetDrawableSize(const NuoSize& size);
 
 	unsigned int Width() const;
 	unsigned int Height() const;
 
-private:
+protected:
 
-	void CreateDepth(const PNuoDevice& device);
+	void CreateDepth();
+	void CreateTextures();
 
 };
 

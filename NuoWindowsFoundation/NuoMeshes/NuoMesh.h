@@ -68,12 +68,11 @@ protected:
 	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer);
 	virtual DXGI_FORMAT PipelineFormat();
 	virtual PNuoPipelineState PipelineState();
-	virtual unsigned int SampleCount();
 	virtual bool EnableDepth();
 
 public:
 
-	void Init(const PNuoCommandBuffer& commandBuffer);
+	void Init(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount);
 
 	NuoMeshBounds BoundsLocal() const;
 	void SetBoundsLocal(const NuoMeshBounds& bounds);
@@ -82,6 +81,10 @@ public:
 
 	virtual bool HasTransparency() const = 0;
 	virtual void SetTransparency(bool transparency) = 0;
+
+	virtual unsigned int SampleCount();
+	virtual void SetSampleCount(unsigned int sampleCount);
+	virtual void MakePipelineState(const PNuoCommandBuffer& commandBuffer) = 0;
 
 	virtual void UpdateUniform(unsigned int inFlight, const NuoMatrixFloat44& transform);
 
@@ -109,6 +112,7 @@ public:
 	virtual ~NuoMeshBase();
 	
 	void Init(const PNuoCommandBuffer& commandBuffer,
+			  unsigned int frameCount,
 			  std::vector<PNuoResource>& intermediate,
 			  MeshVertex* buffer, size_t number,
 			  UINT32* indiciesBuffer, size_t indiciesCount);
@@ -124,6 +128,7 @@ NuoMeshBase<MeshVertex>::~NuoMeshBase()
 
 template <class MeshVertex>
 void NuoMeshBase<MeshVertex>::Init(const PNuoCommandBuffer& commandBuffer,
+								   unsigned int frameCount,
 		 						   std::vector<PNuoResource>& intermediate,
 								   MeshVertex* buffer, size_t number,
 								   UINT32* indiciesBuffer, size_t indiciesCount)
@@ -132,7 +137,7 @@ void NuoMeshBase<MeshVertex>::Init(const PNuoCommandBuffer& commandBuffer,
 													  buffer, number * sizeof(MeshVertex), sizeof(MeshVertex),
 													  indiciesBuffer, indiciesCount);
 
-	NuoMesh::Init(commandBuffer);
+	NuoMesh::Init(commandBuffer, frameCount);
 }
 
 
@@ -145,16 +150,18 @@ class NuoMeshSimple : public NuoMeshBase<NuoMeshSimpleItem>
 
 public:
 
-	void Init(const PNuoCommandBuffer& commandBuffer, 
+	void Init(const PNuoCommandBuffer& commandBuffer,
+			  unsigned int frameCount,
 			  std::vector<PNuoResource>& intermediate,
 			  const PNuoModelSimple& model,
-		      DXGI_FORMAT format, unsigned int sampleCount);
+		      DXGI_FORMAT format);
 
 	virtual bool HasTransparency() const override;
 	virtual void SetTransparency(bool transparency) override;
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
 	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
+	virtual void MakePipelineState(const PNuoCommandBuffer& commandBuffer) override;
 
 };
 
@@ -170,5 +177,5 @@ typedef std::shared_ptr<NuoModelBase> PNuoModelBase;
 PNuoMesh CreateMesh(const NuoMeshOptions& options,
 					const PNuoCommandBuffer& commandBuffer,
 					const PNuoModelBase& model,
-					DXGI_FORMAT format, unsigned int sampleCount,
+				    DXGI_FORMAT format,
 					std::vector<PNuoResource>& intermediate);

@@ -6,9 +6,15 @@
 #include "NuoCommandQueue.h"
 
 #include <cassert>
+#include <limits>
+
+
+static const UINT64 kCounterLimit = UINT64_MAX * 0.9;
+
 
 
 NuoFenceSwapChain::NuoFenceSwapChain(unsigned int frameCount)
+    : _currentFenceValue(0)
 {
 	_fenceValues.resize(frameCount, 0);
 	_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
@@ -40,31 +46,48 @@ void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue)
 
 void NuoFenceSwapChain::WaitForGPU(const PNuoCommandQueue& commandQueue, unsigned int inFlight)
 {
+    // use a value that is greater than that of any in-flight frames
+    _currentFenceValue += 1;
+
     // Schedule a Signal command in the queue.
-    commandQueue->DxQueue()->Signal(_fence.Get(), _fenceValues[inFlight]);
+    commandQueue->DxQueue()->Signal(_fence.Get(), _currentFenceValue + 1);
 
     // Wait until the fence has been processed.
-    _fence->SetEventOnCompletion(_fenceValues[inFlight], _fenceEvent);
+    _fence->SetEventOnCompletion(_currentFenceValue + 1, _fenceEvent);
     WaitForSingleObjectEx(_fenceEvent, INFINITE, FALSE);
 
     commandQueue->ReleasePendingCommandBuffers();
 
-    // Increment the fence value for the current frame.
-    _fenceValues[inFlight] += 1;
+    // Reset fence value for the current frame.
+    for (auto& value : _fenceValues)
+        value = 0;
+
+    _currentFenceValue = 0;
 }
 
 
-void NuoFenceSwapChain::MoveToNextFrame(const PNuoDirectView& view)
+void NuoFenceSwapChain::Present(const PNuoDirectView& view)
 {
     PNuoCommandQueue queue = view->CommandQueue();
     unsigned int currentFrameIndex = view->CurrentBackBufferIndex();
 
-    view->Present();
+    view->PresentWithoutFence();
 
     // Schedule a Signal command in the queue.
-    const UINT64 currentFenceValue = _fenceValues[currentFrameIndex];
-    queue->DxQueue()->Signal(_fence.Get(), currentFenceValue);
+    _currentFenceValue = _fenceValues[currentFrameIndex];
+    queue->DxQueue()->Signal(_fence.Get(), _currentFenceValue);
+}
 
+
+void NuoFenceSwapChain::PrepareFrame(const PNuoDirectView& view)
+{
+    if (_currentFenceValue > kCounterLimit)
+    {
+        WaitForGPU(view);
+        return;
+    }
+
+    PNuoCommandQueue queue = view->CommandQueue();
     unsigned int nextFrameIndex = view->CurrentBackBufferIndex();
 
     // If the next frame is not ready to be rendered yet, wait until it is ready.
@@ -75,5 +98,5 @@ void NuoFenceSwapChain::MoveToNextFrame(const PNuoDirectView& view)
     }
 
     // Set the fence value for the next frame.
-    _fenceValues[nextFrameIndex] = currentFenceValue + 1;
+    _fenceValues[nextFrameIndex] = _currentFenceValue + 1;
 }

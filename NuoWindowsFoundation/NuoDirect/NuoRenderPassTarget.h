@@ -80,6 +80,8 @@ public:
 	virtual void ReleaseRenderPassEncoder() override;
 	virtual PNuoTexture ResultTexture(unsigned int index) const override;
 
+	virtual void SetDrawableSize(const NuoSize& size) override;
+
 };
 
 

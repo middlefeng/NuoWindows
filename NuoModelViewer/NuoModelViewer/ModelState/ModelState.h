@@ -11,6 +11,7 @@
 #define __MODEL_STATE_H__
 
 
+
 #include <functional>
 #include <memory>
 
@@ -42,15 +43,13 @@ class ModelState
 
 	PNuoCommandQueue _commandQueue;
 	DXGI_FORMAT _format;
-	unsigned int _sampleCount;
 
 	NuoMeshOptions _meshOptions;
 	PNuoModelLoaderGPU _modelLoader;
 
 public:
 
-	ModelState(const PNuoCommandQueue& commandQueue,
-			   DXGI_FORMAT format, unsigned int sampleCount);
+	ModelState(const PNuoCommandQueue& commandQueue, DXGI_FORMAT format);
 
 	void LoadMesh(const std::string& path, NuoModelLoaderProgress progress);
 	void SetOptions(const NuoMeshOptions& options);

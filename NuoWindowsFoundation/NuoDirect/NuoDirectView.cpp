@@ -6,6 +6,7 @@
 #include "NuoDirect/NuoResourceSwapChain.h"
 #include "NuoDirect/NuoRenderTargetSwapChain.h"
 #include "NuoDirect/NuoFenceSwapChain.h"
+#include "NuoRender/NuoRenderPipeline.h"
 
 #include <cassert>
 
@@ -24,6 +25,7 @@ class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
     PNuoFenceSwapChain _fence;
     
     int _currentBackBufferIndex;
+    int _presentedBufferIndex;
 
 public:
 
@@ -38,8 +40,9 @@ public:
     void ResizeBuffer(unsigned int w, unsigned int h);
 
     void Present();
+    void PresentWithoutFence();
     void WaitForGPU();
-    void MoveToNextFrame();
+    void PrepareFrame();
 
     unsigned int CurrentBackBufferIndex();
     unsigned int BuffersCount();
@@ -55,7 +58,8 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
                            unsigned int frameCount,
                            unsigned int w, unsigned int h)
     : _view(view),
-      _currentBackBufferIndex(-1)
+      _currentBackBufferIndex(-1),
+      _presentedBufferIndex(-1)
 {
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
     swapChainDesc.BufferCount = frameCount;
@@ -102,6 +106,7 @@ void NuoSwapChain::ResizeBuffer(unsigned int w, unsigned int h)
     _renderTargetSwapChain.reset();
     _fence = device->CreateFenceSwapChain(buffersCount);
     _currentBackBufferIndex = -1;
+    _presentedBufferIndex = -1;
     _commandSwapChain.reset();
     
     HRESULT hr = _swapChain->ResizeBuffers(buffersCount, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
@@ -174,6 +179,15 @@ unsigned int NuoSwapChain::BuffersCount()
 
 void NuoSwapChain::Present()
 {
+    PNuoDirectView view = _view.lock();
+    _fence->Present(view);
+}
+
+
+void NuoSwapChain::PresentWithoutFence()
+{
+    _presentedBufferIndex = _currentBackBufferIndex;
+
     _swapChain->Present(1 /* wait for v-sync */ , 0 /* not allow tearing */ );
     _currentBackBufferIndex = -1;
 }
@@ -186,10 +200,13 @@ void NuoSwapChain::WaitForGPU()
 }
 
 
-void NuoSwapChain::MoveToNextFrame()
+void NuoSwapChain::PrepareFrame()
 {
+    if (_presentedBufferIndex < 0)
+        return;
+
     PNuoDirectView view = _view.lock();
-    _fence->MoveToNextFrame(view);
+    _fence->PrepareFrame(view);
 }
 
 
@@ -245,15 +262,15 @@ void NuoDirectView::Present()
 }
 
 
-void NuoDirectView::WaitForGPU()
+void NuoDirectView::PresentWithoutFence()
 {
-    _swapChain->WaitForGPU();
+    _swapChain->PresentWithoutFence();
 }
 
 
-void NuoDirectView::MoveToNextFrame()
+void NuoDirectView::WaitForGPU()
 {
-    _swapChain->MoveToNextFrame();
+    _swapChain->WaitForGPU();
 }
 
 
@@ -269,19 +286,35 @@ unsigned int NuoDirectView::BuffersCount()
 }
 
 
+void NuoDirectView::SetRenderPasses(const std::vector<PNuoRenderPass>& passes)
+{
+    _renderPipeline = std::make_shared<NuoRenderPipeline>();
+    _renderPipeline->SetRenderPasses(passes);
+}
+
+
 void NuoDirectView::Render(const PNuoCommandBuffer& commandBuffer)
 {
+    PNuoRenderTarget target = CurrentRenderTarget();
 
+    _renderPipeline->SetRenderTarget(target);
+    _renderPipeline->RenderWithCommandBuffer(commandBuffer);
+    _renderPipeline->SetRenderTarget(nullptr);
 }
 
 void NuoDirectView::OnPaint()
 {
-    PNuoCommandBuffer commandBuffer = CreateCommandBuffer(true);
+    // check the fence to throttle the encoding according to GPU swap-chain
+    //
+    _swapChain->PrepareFrame();
 
+    PNuoCommandBuffer commandBuffer = CreateCommandBuffer(true);
     Render(commandBuffer);
-    
     commandBuffer->Commit();
-    MoveToNextFrame();
+
+    // preset with setting the fence
+    //
+    Present();
 }
 
 

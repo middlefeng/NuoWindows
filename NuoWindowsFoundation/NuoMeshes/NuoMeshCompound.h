@@ -33,6 +33,7 @@ public:
 	void SetMeshes(const std::vector<PNuoMesh>& meshes);
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
+	virtual void MakePipelineState(const PNuoCommandBuffer& commandBuffer) override;
 
 	virtual bool HasTransparency() const override;
 	virtual void SetTransparency(bool transparency) override;
