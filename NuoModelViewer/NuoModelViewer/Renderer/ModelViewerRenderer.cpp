@@ -93,13 +93,12 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     const float aspectRatio = w / h;
     NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(20), 0.1f, 100.f);
 
-    NuoMatrixFloat44 mvpMatrix = viewMatrix * _modelTransfer;
-    NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(mvpMatrix);
-    mvpMatrix = projectionMatrix * mvpMatrix;
+    NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(viewMatrix);
+    NuoMatrixFloat44 vpMatrix = projectionMatrix * viewMatrix;
 
     NuoUniforms mvp;
-    mvp.viewProjectionMatrix = mvpMatrix._m;
-    mvp.viewMatrix = (viewMatrix * _modelTransfer)._m;
+    mvp.viewProjectionMatrix = vpMatrix._m;
+    mvp.viewMatrix = viewMatrix._m;
 
     const PNuoResourceSwapChain& lightBuffer = _light;
     NuoLightUniforms light;
@@ -139,6 +138,6 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
 
 void ModelRenderer::Rotate(float dx, float dy)
 {
-    _modelTransfer = NuoMatrixRotationAppend(_modelTransfer, dx, dy);
+    _modelState->Rotate(dx, dy);
 }
 

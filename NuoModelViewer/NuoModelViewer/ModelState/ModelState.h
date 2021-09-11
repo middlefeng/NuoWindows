@@ -59,6 +59,8 @@ public:
 	void SetDocumentName(const std::string& name);
 	std::string DocumentName() const;
 
+	void Rotate(float x, float y);
+
 private:
 
 	void CreateMeshes(NuoModelLoaderProgress progress);

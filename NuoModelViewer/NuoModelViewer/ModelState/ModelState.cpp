@@ -64,6 +64,14 @@ std::string ModelState::DocumentName() const
 }
 
 
+void ModelState::Rotate(float x, float y)
+{
+    const NuoMatrixFloat44 matrix = NuoMatrixRotationAppend(_selectedMesh->TransformPoise(), x, y);
+
+    _selectedMesh->SetTransformPoise(matrix);
+}
+
+
 void ModelState::CreateMeshes(NuoModelLoaderProgress progress)
 {
     PNuoCommandBuffer commandBuffer = _commandQueue->CreateCommandBuffer();

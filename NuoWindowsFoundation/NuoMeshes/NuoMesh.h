@@ -93,6 +93,9 @@ public:
 	virtual void DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func);
 	virtual void Draw(const PNuoCommandEncoder& encoder);
 
+	const NuoMatrixFloat44& TransformPoise();
+	void SetTransformPoise(const NuoMatrixFloat44& poise);
+
 	void CenterMesh();
 
 protected:

@@ -36,8 +36,6 @@ class ModelRenderer : public NuoRenderPipelinePass
 
 	PNuoRenderTarget _intermediateTarget;
 
-	NuoMatrixFloat44 _modelTransfer;
-
 public:
 
 	ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount,
@@ -51,6 +49,8 @@ public:
 
 	virtual void PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+
+	void UpdateUniformsForView();
 
 	void Rotate(float dx, float dy);
 

@@ -172,6 +172,18 @@ void NuoMesh::DrawBegin(const PNuoCommandEncoder& encoder, CommonFunc func)
 }
 
 
+const NuoMatrixFloat44& NuoMesh::TransformPoise()
+{
+	return _transformPoise;
+}
+
+
+void NuoMesh::SetTransformPoise(const NuoMatrixFloat44& poise)
+{
+	_transformPoise = poise;
+}
+
+
 void NuoMeshSimple::Init(const PNuoCommandBuffer& commandBuffer,
 						 unsigned int frameCount,
 						 std::vector<PNuoResource>& intermediate,
