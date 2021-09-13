@@ -84,7 +84,7 @@ struct NuoLightUniforms
 
 // constant shared by most of scene meshes
 //
-ConstantBuffer<NuoUniforms> viewProjection   : register(b0);
+ConstantBuffer<NuoUniforms> uniforms         : register(b0);
 ConstantBuffer<NuoLightUniforms> light       : register(b1);
 
 // constant commonly used by scene meshes, but each has its respective value
