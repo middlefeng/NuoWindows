@@ -17,8 +17,8 @@ NuoMaterialedBasicVertexOutput main(NuoMaterialedBasicItem v)
     outVertex._diffuse = v._diffuse;
     outVertex._shinessDisolveIllum = v._shinessDisolveIllum;
 
-    matrix normalMatrix = uniforms.viewMatrix;
-    normalMatrix[3] = float4(0, 0, 0, 1);
+    matrix normalMatrix = meshUniforms.normalTransform;
+    normalMatrix[3] = float4(0, 0, 0, 0);
     outVertex._normal = mul(normalMatrix, v._normal);
 
     return outVertex;
