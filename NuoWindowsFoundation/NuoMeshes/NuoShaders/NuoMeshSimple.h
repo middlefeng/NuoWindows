@@ -16,8 +16,9 @@ struct NuoMeshSimpleItem
 
 struct NuoMeshSimpleVertexShaderOutput
 {
-    float4 _normal    SHADER_SEMATIC(NORMAL);
     float4 _position  SHADER_SEMATIC(SV_Position);
+    float3 _eye       SHADER_SEMATIC(EYE_DIRECTION);
+    float4 _normal    SHADER_SEMATIC(NORMAL);
 };
 
 
