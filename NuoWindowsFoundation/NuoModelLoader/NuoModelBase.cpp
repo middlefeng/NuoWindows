@@ -114,8 +114,8 @@ NuoBounds NuoModelBase::GetBoundingBox()
 
 NuoItemSimple::NuoItemSimple()
 {
-    memset(&_position, sizeof(_position), 0);
-    memset(&_normal, sizeof(_normal), 0);
+    _position = {};
+    _normal = {};
 }
 
 
