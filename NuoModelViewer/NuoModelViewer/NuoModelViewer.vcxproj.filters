@@ -252,6 +252,9 @@
     <ClCompile Include="Renderer\ModelViewerRenderer.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelArrow.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -473,8 +476,8 @@
     <ClInclude Include="Renderer\ModelViewerRenderer.h">
       <Filter>Source Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShadersCommon.h">
-      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelArrow.h">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -523,6 +526,9 @@
     </CustomBuild>
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialedVertex.hlsl">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShadersCommon.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
