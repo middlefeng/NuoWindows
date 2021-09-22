@@ -473,6 +473,9 @@
     <ClInclude Include="Renderer\ModelViewerRenderer.h">
       <Filter>Source Files\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShadersCommon.h">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">

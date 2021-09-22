@@ -4,16 +4,7 @@
 
 #include "NuoUniforms.h"
 #include "NuoMeshMaterialed.h"
-
-
-
-float3 specular_common(float3 materialSpecularColor, float materialSpecularPower,
-                       NuoLightParameterUniformField lightParams,
-                       float3 normal, float3 halfway, float cosTheta)
-{
-    float cosNHPower = pow(saturate(dot(normal, halfway)), materialSpecularPower);
-    return 0.5 * cosNHPower * cosTheta * lightParams.irradiance;
-}
+#include "NuoMeshShadersCommon.h"
 
 
 float4 main(NuoMaterialedBasicVertexOutput inVertex) : SV_Target
