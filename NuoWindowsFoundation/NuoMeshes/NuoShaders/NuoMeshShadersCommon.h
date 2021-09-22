@@ -6,6 +6,15 @@
 #include "NuoUniforms.h"
 
 
+struct Material
+{
+    float3 diffuseColor;
+    float3 specularColor;
+    float specularPower;
+};
+
+
+
 inline float3 specular_common(float3 materialSpecularColor, float materialSpecularPower,
                               NuoLightParameterUniformField lightParams,
                               float3 normal, float3 halfway, float cosTheta)
