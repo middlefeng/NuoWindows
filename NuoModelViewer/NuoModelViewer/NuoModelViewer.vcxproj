@@ -196,6 +196,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipeline.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipelinePass.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoScripting\NuoLua.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoShadowMap\NuoLightSource.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoControl.cpp" />
@@ -428,6 +429,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipeline.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoRenderPipelinePass.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoScripting\NuoLua.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoShadowMap\NuoLightSource.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoAppInstance.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoButton.h" />

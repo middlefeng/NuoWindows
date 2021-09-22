@@ -52,6 +52,9 @@
     <Filter Include="Source Files\Renderer">
       <UniqueIdentifier>{288810cd-3c80-4448-91bd-900b0a0049c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoShadowMap">
+      <UniqueIdentifier>{c7dfd404-5acd-4e2a-8060-3572d252854c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
@@ -254,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelArrow.cpp">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoShadowMap\NuoLightSource.cpp">
+      <Filter>NuoWindowsFoundation\NuoShadowMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,6 +484,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelArrow.h">
       <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoShadowMap\NuoLightSource.h">
+      <Filter>NuoWindowsFoundation\NuoShadowMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
