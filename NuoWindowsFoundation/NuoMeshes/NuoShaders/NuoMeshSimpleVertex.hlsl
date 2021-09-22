@@ -11,10 +11,12 @@ NuoMeshSimpleVertexShaderOutput main(NuoMeshSimpleItem v)
     NuoMeshSimpleVertexShaderOutput outVertex;
 
     float4 meshPosition = mul(meshUniforms.transform, v._position);
+    float4 eyePosition = mul(uniforms.viewMatrixInverse, float4(0.0, 0.0, 0.0, 1.0));
 
-    outVertex._position = mul(viewProjection.viewProjectionMatrix, meshPosition);
+    outVertex._position = mul(uniforms.viewProjectionMatrix, meshPosition);
+    outVertex._eye = eyePosition.xyz - meshPosition.xyz;
 
-    matrix normalMatrix = viewProjection.viewMatrix;
+    matrix normalMatrix = meshUniforms.normalTransform;
     normalMatrix[3] = float4(0, 0, 0, 1);
     outVertex._normal = mul(normalMatrix, v._normal);
 

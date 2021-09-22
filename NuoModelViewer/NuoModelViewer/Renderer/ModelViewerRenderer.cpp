@@ -86,7 +86,8 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     const NuoVectorFloat3 focusPoint(0, 0, 0);
     const NuoVectorFloat3 upDirection(0, 1, 0);
 
-    auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
+    const auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
+    const auto viewMatrixInverse = viewMatrix.Inverse();
 
     const auto w = target->Width();
     const float h = (float)target->Height();
@@ -99,6 +100,7 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     NuoUniforms mvp;
     mvp.viewProjectionMatrix = vpMatrix._m;
     mvp.viewMatrix = viewMatrix._m;
+    mvp.viewMatrixInverse = viewMatrixInverse._m;
 
     const PNuoResourceSwapChain& lightBuffer = _light;
     NuoLightUniforms light;

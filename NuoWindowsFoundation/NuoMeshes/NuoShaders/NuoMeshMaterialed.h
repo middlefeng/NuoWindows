@@ -36,7 +36,8 @@ struct NuoMaterialedBasicItem
 struct NuoMaterialedBasicVertexOutput
 {
     float4 _position                SHADER_SEMATIC(SV_Position);
-    float4 _normal                  SHADER_SEMATIC(NORMAL);
+    float3 _eye                     SHADER_SEMATIC(EYE_DIRECTION);
+    float3 _normal                  SHADER_SEMATIC(NORMAL);
 
     float3 _diffuse                 SHADER_SEMATIC(DIFFUSE);
     float3 _ambient                 SHADER_SEMATIC(AMBIENT);
