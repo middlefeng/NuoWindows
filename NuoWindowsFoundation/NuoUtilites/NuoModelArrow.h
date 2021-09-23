@@ -2,8 +2,9 @@
 //  NuoModelArrow.hpp
 //  ModelViewer
 //
-//  Created by middleware on 8/28/16.
-//  Copyright © 2016 middleware. All rights reserved.
+//  Created by Dong Feng on 8/28/16.
+//  Ported: 9/22/21.
+//  Copyright © 2021 Dong Feng. All rights reserved.
 //
 
 #ifndef NuoModelArrow_hpp

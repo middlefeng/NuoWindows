@@ -2,24 +2,25 @@
 //  NuoLightSource.h
 //  ModelViewer
 //
-//  Created by middleware on 11/19/16.
-//  Copyright © 2020 middleware. All rights reserved.
+//  Created by Dong Feng on 11/19/16.
+//  Ported: 9/22/21
+//  Copyright © 2021 Dong Feng. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #include "NuoMathVector.h"
 
 
-@interface NuoLightSource : NSObject
+struct NuoLightSource
+{
+	NuoMatrixFloat44 _lightDirection;
 
-@property (nonatomic, assign) NuoMatrixFloat44 lightDirection;
+	float _lightingIrradiance;
+	float _lightingSpecular;
 
-@property (nonatomic, assign) float lightingIrradiance;
-@property (nonatomic, assign) float lightingSpecular;
+	bool _enableShadow;
+	float _shadowSoften;
+	float _shadowOccluderRadius;
+	float _shadowBias;
 
-@property (nonatomic, assign) bool enableShadow;
-@property (nonatomic, assign) float shadowSoften;
-@property (nonatomic, assign) float shadowOccluderRadius;
-@property (nonatomic, assign) float shadowBias;
-
-@end
+	NuoLightSource();
+};
