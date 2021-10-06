@@ -207,6 +207,13 @@ void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoReso
 }
 
 
+void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoResource& buffer)
+{
+	const D3D12_GPU_VIRTUAL_ADDRESS addr = buffer->DxResource()->GetGPUVirtualAddress();
+	_commandList->SetGraphicsRootConstantBufferView(index, addr);
+}
+
+
 void NuoCommandEncoder::SetDescriptorTable(unsigned int index, const PNuoDescriptorHeap& table)
 {
 	ID3D12DescriptorHeap* pHeaps[] = { table->DxHeap() };

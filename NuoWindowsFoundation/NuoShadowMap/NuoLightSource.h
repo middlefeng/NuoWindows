@@ -7,6 +7,11 @@
 //  Copyright © 2021 Dong Feng. All rights reserved.
 //
 
+
+#ifndef __NUO_LIGHT_SOURCE_H__
+#define __NUO_LIGHT_SOURCE_H__
+
+
 #include "NuoMathVector.h"
 
 
@@ -24,3 +29,7 @@ struct NuoLightSource
 
 	NuoLightSource();
 };
+
+
+#endif
+

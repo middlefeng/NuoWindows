@@ -3,34 +3,58 @@
 //  ModelViewer
 //
 //  Created by middleware on 11/13/16.
-//  Copyright © 2020 middleware. All rights reserved.
+//  Ported: 9/23/21
+//  Copyright © 2021 Dong Feng. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <Metal/Metal.h>
 
-#include "NuoMeshBounds.h"
+#include "NuoUI/NuoRect.h"
+#include "NuoMeshes/NuoMeshBounds.h"
+#include "NuoShadowMap/NuoLightSource.h"
+#include "NuoMeshes/NuoMesh.h"
 
-
-@class NuoLightSource;
-@class NuoRenderPassEncoder;
-
-
-@interface NotationLight : NSObject
+#include <memory>
+#include <vector>
 
 
-@property (nonatomic, weak) NuoLightSource* lightSourceDesc;
+class NuoCommandQueue;
+typedef std::shared_ptr<NuoCommandQueue> PNuoCommandQueue;
 
-@property (nonatomic, assign) BOOL selected;
+class NuoCommandBuffer;
+typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
+
+class NuoCommandEncoder;
+typedef std::shared_ptr<NuoCommandEncoder> PNuoCommandEncoder;
+
+class NotationLightMesh;
+typedef std::shared_ptr<NotationLightMesh> PNotationLightMesh;
+
+class NuoResource;
+typedef std::shared_ptr<NuoResource> PNuoResource;
 
 
-- (instancetype)initWithCommandQueue:(id<MTLCommandQueue>)commandQueue isBold:(BOOL)bold;
+class NotationLight
+{
+	PNuoCommandQueue _commandQueue;
 
-- (void)drawWithRenderPass:(NuoRenderPassEncoder*)renderPass;
+	NuoLightSource _lightSourceDesc;
+	PNotationLightMesh _lightVector;
 
+	bool _selected;
 
-- (NuoMeshBounds)bounds;
-- (CGPoint)headPointProjectedWithView:(const NuoMatrixFloat44&)view;
+public:
 
+	NotationLight(const PNuoCommandBuffer& commandBuffer,
+				  unsigned int frameCount,
+				  std::vector<PNuoResource>& intermediate,
+				  DXGI_FORMAT format, bool bold);
 
-@end
+	NuoPoint<float> HeadPointProjectedWithView(const NuoMatrixFloat44& view);
+
+	void DrawWithRenderPass(const PNuoCommandEncoder& renderPass);
+
+private:
+
+	void UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer);
+
+};

@@ -80,16 +80,31 @@ struct NuoLightUniforms
 };
 
 
+struct NuoModelCharacterUniforms
+{
+    float opacity;
+};
+
+
 #if __SHADER_REGISTERS__
+
+// parameters match signature defined by NuoMesh::RootSignature()
 
 // constant shared by most of scene meshes
 //
 ConstantBuffer<NuoUniforms> uniforms         : register(b0);
 ConstantBuffer<NuoLightUniforms> light       : register(b1);
 
+//
 // constant commonly used by scene meshes, but each has its respective value
 //
-ConstantBuffer<NuoMeshUniforms> meshUniforms : register(b2);
+
+ConstantBuffer<NuoMeshUniforms> meshUniforms                        : register(b2);
+
+// ignored (i.e. always 1.0) in a model scene
+// used by notation rendering, to depict things like selection
+//
+ConstantBuffer<NuoModelCharacterUniforms> modelCharacterUniforms    : register(b3)
 
 #endif
 
