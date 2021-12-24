@@ -104,7 +104,7 @@ ConstantBuffer<NuoMeshUniforms> meshUniforms                        : register(b
 // ignored (i.e. always 1.0) in a model scene
 // used by notation rendering, to depict things like selection
 //
-ConstantBuffer<NuoModelCharacterUniforms> modelCharacterUniforms    : register(b3)
+ConstantBuffer<NuoModelCharacterUniforms> modelCharacterUniforms    : register(b3);
 
 #endif
 

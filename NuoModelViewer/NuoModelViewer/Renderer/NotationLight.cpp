@@ -35,7 +35,8 @@ public:
     virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;
     virtual void Draw(const PNuoCommandEncoder& encoder) override;
 
-    void UpdatePrivateBuffer(const PNuoCommandBuffer& commandBuffer, bool selected);
+    void UpdatePrivateBuffer(const PNuoCommandBuffer& commandBuffer,
+                             std::vector<PNuoResource>& intermediate, bool selected);
 
 };
 
@@ -63,42 +64,22 @@ void NotationLightMesh::Draw(const PNuoCommandEncoder& encoder)
 }
 
 
-void NotationLightMesh::UpdatePrivateBuffer(const PNuoCommandBuffer& commandBuffer, bool selected)
+void NotationLightMesh::UpdatePrivateBuffer(const PNuoCommandBuffer& commandBuffer,
+                                            std::vector<PNuoResource>& intermediatePool,
+                                            bool selected)
 {
     NuoModelCharacterUniforms uniforms;
     uniforms.opacity = selected ? 1.0f : 0.1f;
 
-    //[NuoMesh updatePrivateBuffer:_characterUniformBuffer withCommandQueue:self.commandQueue
-    //                    withData:&uniforms withSize:sizeof(NuoModelCharacterUniforms)];
-
     PNuoDevice device = commandBuffer->CommandQueue()->Device();
 
     auto intermediate = device->CreateBuffer(&uniforms, sizeof(NuoModelCharacterUniforms));
-    //_characterUniformBuffer = device->CreatePrivateBuffer(sizeof(NuoModelCharacterUniforms));
-    //intermediatePool.push_back(intermediate);
+    intermediatePool.push_back(intermediate);
     commandBuffer->CopyResource(intermediate, _characterUniformBuffer);
 }
 
 
 
-
-
-
-/*
-@interface NotationLight()
-
-
-@property (nonatomic, strong) id<MTLBuffer> characterUniformBuffer;
-@property (nonatomic, weak) id<MTLCommandQueue> commandQueue;
-
-@property (nonatomic, strong) NuoMesh* lightVector;
-
-
-@end
-
-
-
-@implementation NotationLight*/
 
 
 NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
@@ -108,8 +89,6 @@ NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
 {
     // _commandQueue = commandQueue;
         
-    this->UpdatePrivateUniform(commandBuffer);
-
     const float bodyLength = bold ? 1.2f : 1.0f;
     const float bodyRadius = bold ? 0.24f : 0.2f;
     const float headLength = bold ? 1.2f : 1.0f;
@@ -122,13 +101,14 @@ NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
     meshBounds.boundingBox = arrow->GetBoundingBox();
     meshBounds.boundingSphere = NuoSphere();
     
+    _lightVector = std::make_shared<NotationLightMesh>(commandBuffer);
     _lightVector->Init(commandBuffer, frameCount, intermediate, arrow, format);
+    _lightVector->SetSampleCount(8);
 
-    // if no MSAA, shoud uncomment the following line
-    // pipelineDesc.sampleCount = 1;
-    
     _lightVector->SetBoundsLocal(meshBounds);
     _lightVector->MakePipelineState(commandBuffer);
+
+    this->UpdatePrivateUniform(commandBuffer, intermediate);
 
     // TODO: depth stencil state is not a renderpass state, but a pipeline state
     //       need to implement later for transparency
@@ -173,9 +153,18 @@ void makeResources
 }*/
 
 
-void NotationLight::UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer)
+void NotationLight::UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,
+                                         std::vector<PNuoResource>& intermediate)
 {
-    _lightVector->UpdatePrivateBuffer(commandBuffer, _selected);
+    _lightVector->UpdatePrivateBuffer(commandBuffer, intermediate, _selected);
+}
+
+
+void NotationLight::UpdateUniformsForView(const PNuoCommandEncoder& renderPass)
+{
+    NuoMatrixFloat44 viewMatrix = NuoMatrixFloat44Identity;
+
+    _lightVector->UpdateUniform(renderPass->InFlight(), viewMatrix);
 }
 
 
@@ -203,28 +192,12 @@ NuoPoint<float> NotationLight::HeadPointProjectedWithView(const NuoMatrixFloat44
 }
 
 
-void NotationLight::DrawWithRenderPass(const PNuoCommandEncoder& renderPass)
+void NotationLight::DrawWithRenderPass(const PNuoCommandEncoder& renderPass, NuoMesh::CommonFunc func)
 {
+    UpdateUniformsForView(renderPass);
+
+    _lightVector->DrawBegin(renderPass, func); 
     _lightVector->Draw(renderPass);
 }
-/*
-- (void)drawWithRenderPass:(NuoRenderPassEncoder*)renderPass
-{
-    [renderPass pushParameterState:@"NotationLight"];
-    
-    [self updateUniformsForView:renderPass];
-    [renderPass setFragmentBuffer:self.characterUniformBuffer offset:0 atIndex:1];
-    
-    // the light vector notation does not have varying uniform,
-    // use only the 0th buffer
-    //
-    [_lightVector drawMesh:renderPass];
-    
-    [renderPass popParameterState];
-}
 
 
-
-@end
-
-*/

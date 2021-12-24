@@ -51,10 +51,17 @@ public:
 
 	NuoPoint<float> HeadPointProjectedWithView(const NuoMatrixFloat44& view);
 
-	void DrawWithRenderPass(const PNuoCommandEncoder& renderPass);
+	void DrawWithRenderPass(const PNuoCommandEncoder& renderPass,
+							NuoMesh::CommonFunc func);
 
 private:
 
-	void UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer);
+	void UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,
+							  std::vector<PNuoResource>& intermediate);
+
+	void UpdateUniformsForView(const PNuoCommandEncoder& renderPass);
 
 };
+
+
+typedef std::shared_ptr<NotationLight> PNotationLight;

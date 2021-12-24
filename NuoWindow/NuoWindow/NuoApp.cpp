@@ -42,7 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     PNuoMenuBar menu = std::make_shared<NuoMenuBar>();
     
-    PNuoMenu fileMenu = std::make_shared<NuoMenu>("  &File ");
+    PNuoMenu fileMenu = std::make_shared<NuoMenu>("&File");
     PNuoMenuItem exitItem = std::make_shared<NuoMenuItem>(IDM_EXIT, "E&xit");
     PNuoMenuItem iconTools = std::make_shared<NuoMenuItem>(IDM_ICONTOOLS, "Icon Tools ...");
     PNuoMenuItem listView = std::make_shared<NuoMenuItem>(IDM_LISTVIEW, "List View ...");
@@ -51,7 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     fileMenu->AppenMenuItem(exitItem);
     fileMenu->Update();
 
-    PNuoMenu aboutMenu = std::make_shared<NuoMenu>(" &About ");
+    PNuoMenu aboutMenu = std::make_shared<NuoMenu>("&About");
     PNuoMenuItem aboutItem = std::make_shared<NuoMenuItem>(IDM_ABOUT, "About");
     aboutMenu->AppenMenuItem(aboutItem);
     aboutMenu->Update();
