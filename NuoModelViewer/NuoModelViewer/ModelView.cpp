@@ -84,13 +84,13 @@ void ModelView::Init()
     PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
     fence->WaitForGPU(CommandQueue());
 
-    SetRenderPasses({ _modelRenderer });
+    SetupPipelineSettings();
 }
 
 
 void ModelView::SetupPipelineSettings()
 {
-    
+    SetRenderPasses({ _modelRenderer });
 }
 
 
