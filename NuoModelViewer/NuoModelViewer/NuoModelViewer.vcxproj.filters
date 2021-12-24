@@ -264,6 +264,9 @@
     <ClCompile Include="Renderer\NotationLight.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\NotationRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -492,6 +495,9 @@
       <Filter>NuoWindowsFoundation\NuoShadowMap</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\NotationLight.h">
+      <Filter>Source Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\NotationRenderer.h">
       <Filter>Source Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>

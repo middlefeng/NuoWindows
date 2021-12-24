@@ -232,6 +232,7 @@
     <ClCompile Include="ModelViewerMain.cpp" />
     <ClCompile Include="Renderer\ModelViewerRenderer.cpp" />
     <ClCompile Include="Renderer\NotationLight.cpp" />
+    <ClCompile Include="Renderer\NotationRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\d3dx12.h" />
@@ -468,6 +469,7 @@
     <ClInclude Include="ModelViewerMain.h" />
     <ClInclude Include="Renderer\ModelViewerRenderer.h" />
     <ClInclude Include="Renderer\NotationLight.h" />
+    <ClInclude Include="Renderer\NotationRenderer.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
