@@ -88,6 +88,19 @@ void NuoDevice::EnableDebugInfoQueue()
         dxInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, TRUE);
         dxInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
         //dxInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, TRUE);
+
+        D3D12_MESSAGE_ID hide[] =
+        {
+            // Windows 11 Dx debug layer bug workaround
+            // https://stackoverflow.com/questions/69805245/directx-12-application-is-crashing-in-windows-11
+            //
+            D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE,
+        };
+
+        D3D12_INFO_QUEUE_FILTER filter = {};
+        filter.DenyList.NumIDs = static_cast<UINT>(std::size(hide));
+        filter.DenyList.pIDList = hide;
+        dxInfoQueue->AddStorageFilterEntries(&filter);
     }
 #endif
 }
