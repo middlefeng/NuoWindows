@@ -8,22 +8,6 @@
 #include <cassert>
 
 
-NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device,
-	                             unsigned int sampleCount, bool depthEnabled)
-	: _encoderCount(0), _device(device),
-	  _format(DXGI_FORMAT_UNKNOWN),
-	  _depthEnabled(depthEnabled),
-
-	  // except the single-buffer target which might be tied to a surface, all types of
-	  // targets manage its own resources
-	  //
-	  _manageResource(true),
-
-	  _width(0), _height(0),
-	  _sampleCount(sampleCount)
-{
-}
-
 
 NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
 								 unsigned int sampleCount, bool depthEnabled, bool manageResource)

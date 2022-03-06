@@ -80,7 +80,9 @@ void NuoRenderPassAttachment::ResourceUseEnd(const PNuoCommandEncoder& encoder)
 
 NuoRenderPassTarget::NuoRenderPassTarget(const PNuoDevice& device,
 										 unsigned int sampleCount, bool depthEnabled)
-	: NuoRenderTarget(device, sampleCount, depthEnabled),
+	: NuoRenderTarget(device, DXGI_FORMAT_UNKNOWN /* the format is in the attachment instead */,
+					  sampleCount, depthEnabled,
+					  true /* manage resource by itself, but not directly (through the attachments instead) */),
 	  _device(device)
 {
 }
