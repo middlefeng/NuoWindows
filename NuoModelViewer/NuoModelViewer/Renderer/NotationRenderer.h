@@ -23,10 +23,21 @@
 
 
 
-class Notation : public NuoRenderPipelinePass
+class NotationRenderer : public NuoRenderPipelinePass
 {
 
 public:
+
+	NotationRenderer(const PNuoCommandBuffer& commandBuffer,
+					 unsigned int frameCount,
+					 std::vector<PNuoResource>& intermediate,
+					 DXGI_FORMAT format);
+
+	virtual void SetDrawableSize(const NuoSize& size) override;
+	virtual void SetSampleCount(unsigned int sampleCount) override;
+
+	virtual void PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 
 };
 

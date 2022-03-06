@@ -63,6 +63,10 @@ public:
 
 	virtual bool IsPipelinePass() const override;
 
+protected:
+
+	void Init(const PNuoCommandBuffer& commandBuffer, unsigned int sampleCount);
+
 };
 
 typedef std::shared_ptr<NuoRenderPipelinePass> PNuoRenderPipelinePass;

@@ -30,6 +30,11 @@ void NuoRenderPass::ReleaseDefaultEncoder()
 }
 
 
+void NuoRenderPass::SetRenderTarget(const PNuoRenderTarget& renderTarget)
+{
+	_renderTarget = renderTarget;
+}
+
 void NuoRenderPass::SetTransientRenderTarget(const WPNuoRenderTarget& renderTarget)
 {
 	_renderTargetTransient = renderTarget;

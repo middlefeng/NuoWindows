@@ -7,6 +7,7 @@
 
 #include "ModelState/ModelState.h"
 #include "Renderer/ModelViewerRenderer.h"
+#include "Renderer/NotationRenderer.h"
 
 #include "NuoAppInstance.h"
 #include "NuoFile.h"
@@ -14,6 +15,8 @@
 
 #include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoResourceSwapChain.h"
+#include "NuoDirect/NuoRenderPassTarget.h"
+
 #include "NuoMeshes/NuoMeshSceneRoot.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
 
@@ -78,6 +81,11 @@ void ModelView::Init()
     std::vector<PNuoResource> intermediate;
     _modelRenderer = std::make_shared<ModelRenderer>(commandBuffer, BuffersCount(), intermediate, format, w, h);
 
+    PNuoRenderTarget modelRenderTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, 1, true, true);
+    _modelRenderer->SetRenderTarget(modelRenderTarget);
+
+    _notationRenderer = std::make_shared<NotationRenderer>(commandBuffer, BuffersCount(), intermediate, format);
+
     commandBuffer->Commit();
 
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
@@ -90,7 +98,7 @@ void ModelView::Init()
 
 void ModelView::SetupPipelineSettings()
 {
-    SetRenderPasses({ _modelRenderer });
+    SetRenderPasses({ _modelRenderer, _notationRenderer });
 }
 
 
