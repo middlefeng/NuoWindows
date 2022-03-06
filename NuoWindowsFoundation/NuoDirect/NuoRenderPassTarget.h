@@ -67,7 +67,6 @@ class NuoRenderPassTarget : public NuoRenderTarget
 public:
 
 	NuoRenderPassTarget(const PNuoDevice& device,
-						unsigned int width, unsigned int height,
 						unsigned int sampleCount, bool depthEnabled);
 
 	void AddAttachment(DXGI_FORMAT format);

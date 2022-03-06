@@ -17,8 +17,8 @@ NuoRenderTargetSwapChain::NuoRenderTargetSwapChain(const PNuoDevice& device, DXG
     auto h = backBuffer->Height();
 
     _rtvHeap = device->CreateRenderTargetHeap(_backBuffers->Count());
-    _renderTarget = std::make_shared<NuoRenderTarget>(device, format,
-                                                      w, h, sampleCount, true, false);
+    _renderTarget = std::make_shared<NuoRenderTarget>(device, format, sampleCount, true, false);
+    _renderTarget->SetDrawableSize(NuoSize(w, h));
 
     if (sampleCount == 1)
     {

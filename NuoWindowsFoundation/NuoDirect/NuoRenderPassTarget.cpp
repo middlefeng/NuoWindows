@@ -79,9 +79,8 @@ void NuoRenderPassAttachment::ResourceUseEnd(const PNuoCommandEncoder& encoder)
 
 
 NuoRenderPassTarget::NuoRenderPassTarget(const PNuoDevice& device,
-										 unsigned int width, unsigned int height,
 										 unsigned int sampleCount, bool depthEnabled)
-	: NuoRenderTarget(device, width, height, sampleCount, depthEnabled),
+	: NuoRenderTarget(device, sampleCount, depthEnabled),
 	  _device(device)
 {
 }
