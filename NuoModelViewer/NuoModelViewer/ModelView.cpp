@@ -76,7 +76,7 @@ void ModelView::Init()
     std::vector<PNuoResource> intermediate;
     _modelRenderer = std::make_shared<ModelRenderer>(commandBuffer, BuffersCount(), intermediate, format);
 
-    PNuoRenderTarget modelRenderTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, 1, true, true);
+    PNuoRenderTarget modelRenderTarget = std::make_shared<NuoRenderTarget>(device, format, 1, true, true);
     _modelRenderer->SetRenderTarget(modelRenderTarget);
 
     _notationRenderer = std::make_shared<NotationRenderer>(commandBuffer, BuffersCount(), intermediate, format);
