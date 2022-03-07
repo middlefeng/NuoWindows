@@ -61,6 +61,7 @@ public:
 	unsigned int BuffersCount();
 
 	void SetRenderPasses(const std::vector<PNuoRenderPass>& passes);
+	void UpdateRenderPassesDrawable();
 
 	virtual void Render(const PNuoCommandBuffer& commandBuffer);
 

@@ -57,10 +57,7 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
         _init = true;
     }
     
-    const PNuoRenderTarget& renderTarget = RenderTarget(0);
-    const auto size = renderTarget->DrawableSize();
-
-    _modelRenderer->SetDrawableSize(size);
+    UpdateRenderPassesDrawable();
 }
 
 
