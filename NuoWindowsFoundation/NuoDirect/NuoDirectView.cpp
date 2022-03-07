@@ -293,6 +293,15 @@ void NuoDirectView::SetRenderPasses(const std::vector<PNuoRenderPass>& passes)
 }
 
 
+void NuoDirectView::UpdateRenderPassesDrawable()
+{
+    const PNuoRenderTarget& renderTarget = RenderTarget(0);
+    const auto size = renderTarget->DrawableSize();
+
+    _renderPipeline->SetDrawableSize(size);
+}
+
+
 void NuoDirectView::Render(const PNuoCommandBuffer& commandBuffer)
 {
     PNuoRenderTarget target = CurrentRenderTarget();

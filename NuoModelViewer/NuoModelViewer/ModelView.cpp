@@ -60,10 +60,7 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
         _init = true;
     }
     
-    const PNuoRenderTarget& renderTarget = RenderTarget(0);
-    const auto size = renderTarget->DrawableSize();
-
-    _modelRenderer->SetDrawableSize(size);
+    UpdateRenderPassesDrawable();
 }
 
 
@@ -73,13 +70,11 @@ void ModelView::Init()
     const PNuoDevice& device = CommandQueue()->Device();
 
     auto format = renderTarget->Format();
-    auto w = renderTarget->Width();
-    auto h = renderTarget->Height();
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     std::vector<PNuoResource> intermediate;
-    _modelRenderer = std::make_shared<ModelRenderer>(commandBuffer, BuffersCount(), intermediate, format, w, h);
+    _modelRenderer = std::make_shared<ModelRenderer>(commandBuffer, BuffersCount(), intermediate, format);
 
     PNuoRenderTarget modelRenderTarget = std::make_shared<NuoRenderTarget>(device, format, w, h, 1, true, true);
     _modelRenderer->SetRenderTarget(modelRenderTarget);

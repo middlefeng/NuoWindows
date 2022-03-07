@@ -52,17 +52,9 @@ protected:
 	unsigned int _encoderCount;
 	PNuoCommandEncoder _renderPassEncoder;
 
-	// used by subclass only as a subclass would provide its own approach of manage resources.
-	// so far only the NuoRenderPassTarget uses this
-	//
-	NuoRenderTarget(const PNuoDevice& device,
-				    unsigned int width, unsigned int height,
-		            unsigned int sampleCount, bool depthEnabled);
-
 public:
 
 	NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
-					unsigned int width, unsigned int height,
 					unsigned int sampleCount, bool depthEnabled, bool manageResource);
 
 	virtual D3D12_CPU_DESCRIPTOR_HANDLE* View();

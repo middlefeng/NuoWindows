@@ -19,8 +19,7 @@
 
 
 ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount,
-                             std::vector<PNuoResource>& intermediate, DXGI_FORMAT format,
-                             unsigned int width, unsigned int height)
+                             std::vector<PNuoResource>& intermediate, DXGI_FORMAT format)
     : NuoRenderPipelinePass(commandBuffer, frameCount, intermediate, format)
 {
     const PNuoCommandQueue& commandQueue = commandBuffer->CommandQueue();
@@ -30,7 +29,7 @@ ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned in
     // MSAA sample count
     //
     auto modelSampleCount = 8;
-    _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, width, height, modelSampleCount, true, true);
+    _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, modelSampleCount, true, true);
     _modelState = std::make_shared<ModelState>(commandQueue, format);
 
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
@@ -55,6 +54,7 @@ PModelState ModelRenderer::State() const
 
 void ModelRenderer::SetDrawableSize(const NuoSize& size)
 {
+    NuoRenderPipelinePass::SetDrawableSize(size);
     _intermediateTarget->SetDrawableSize(size);
 }
 
