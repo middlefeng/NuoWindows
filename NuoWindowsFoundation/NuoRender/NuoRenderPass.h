@@ -35,7 +35,7 @@ protected:
 
 public:
 
-	virtual void SetDrawableSize(const NuoSize& size) = 0;
+	virtual void SetDrawableSize(const NuoSize& size);
 	virtual void SetSampleCount(unsigned int sampleCount) = 0;
 
 	/**

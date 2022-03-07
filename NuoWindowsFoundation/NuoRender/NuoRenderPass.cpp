@@ -12,6 +12,14 @@
 
 
 
+void NuoRenderPass::SetDrawableSize(const NuoSize& size)
+{
+	if (_renderTarget)
+		_renderTarget->SetDrawableSize(size);
+}
+
+
+
 bool NuoRenderPass::IsPipelinePass() const
 {
 	return false;

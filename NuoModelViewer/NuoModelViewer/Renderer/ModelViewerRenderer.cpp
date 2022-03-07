@@ -52,6 +52,7 @@ PModelState ModelRenderer::State() const
 
 void ModelRenderer::SetDrawableSize(const NuoSize& size)
 {
+    NuoRenderPipelinePass::SetDrawableSize(size);
     _intermediateTarget->SetDrawableSize(size);
 }
 
