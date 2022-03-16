@@ -78,11 +78,11 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     if (!_modelState->SceneRoot())
         return;
 
-    PNuoRenderTarget target = _intermediateTarget;
+    PNuoRenderTarget target = RenderTarget();// _intermediateTarget;
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     {
-        const auto w = target->Width();
+        const float w = (float)target->Width();
         const float h = (float)target->Height();
 
         NuoViewport viewport(0, 0, w, h, 0, 1.0);
@@ -133,7 +133,7 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     _modelState->SceneRoot()->Draw(encoder);
 
     {
-        const auto w = target->Width();
+        const float w = (float)target->Width();
         const float h = (float)target->Height();
 
         NuoViewport viewport(0, 0, w/2, h/2, 0, 1.0);
