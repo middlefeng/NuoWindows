@@ -27,9 +27,12 @@ class NuoSwapChain : public std::enable_shared_from_this<NuoSwapChain>
     int _currentBackBufferIndex;
     int _presentedBufferIndex;
 
+    DXGI_FORMAT _format;
+
 public:
 
     NuoSwapChain(const PNuoDirectView& view,
+                 DXGI_FORMAT format,
                  unsigned int frameCount,
                  unsigned int w, unsigned int h);
 
@@ -47,6 +50,8 @@ public:
     unsigned int CurrentBackBufferIndex();
     unsigned int BuffersCount();
 
+    DXGI_FORMAT Format();
+
 private:
 
     void UpdateBuffer();
@@ -55,6 +60,7 @@ private:
 
 
 NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
+                           DXGI_FORMAT format,
                            unsigned int frameCount,
                            unsigned int w, unsigned int h)
     : _view(view),
@@ -65,7 +71,7 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
     swapChainDesc.BufferCount = frameCount;
     swapChainDesc.Width = w;
     swapChainDesc.Height = h;
-    swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    swapChainDesc.Format = format;
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc.SampleDesc.Count = 1;
@@ -177,6 +183,15 @@ unsigned int NuoSwapChain::BuffersCount()
 }
 
 
+DXGI_FORMAT NuoSwapChain::Format()
+{
+    DXGI_SWAP_CHAIN_DESC1 desc;
+    _swapChain->GetDesc1(&desc);
+
+    return desc.Format;
+}
+
+
 void NuoSwapChain::Present()
 {
     PNuoDirectView view = _view.lock();
@@ -229,9 +244,14 @@ void NuoDirectView::CreateSwapChain(unsigned int frameCount,
                                     unsigned int w, unsigned int h)
 {
     PNuoDirectView view = std::dynamic_pointer_cast<NuoDirectView>(shared_from_this());
-    _swapChain = std::make_shared<NuoSwapChain>(view, frameCount, w, h);
+    _swapChain = std::make_shared<NuoSwapChain>(view, DXGI_FORMAT_R8G8B8A8_UNORM, frameCount, w, h);
 }
 
+
+DXGI_FORMAT NuoDirectView::Format()
+{
+    return _swapChain->Format();
+}
 
 
 PNuoRenderTarget NuoDirectView::RenderTarget(unsigned int inFlight)

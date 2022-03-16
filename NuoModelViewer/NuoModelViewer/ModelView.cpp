@@ -66,10 +66,10 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
 
 void ModelView::Init()
 {
-    const PNuoRenderTarget& renderTarget = RenderTarget(0);
+    //const PNuoRenderTarget& renderTarget = RenderTarget(0);
     const PNuoDevice& device = CommandQueue()->Device();
 
-    auto format = renderTarget->Format();
+    const auto format = Format();
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 

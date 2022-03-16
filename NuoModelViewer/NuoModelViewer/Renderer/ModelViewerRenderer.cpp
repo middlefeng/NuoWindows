@@ -78,7 +78,7 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     if (!_modelState->SceneRoot())
         return;
 
-    PNuoRenderTarget target = RenderTarget();// _intermediateTarget;
+    PNuoRenderTarget target = _intermediateTarget;
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     {
