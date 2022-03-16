@@ -66,9 +66,7 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
 
 void ModelView::Init()
 {
-    //const PNuoRenderTarget& renderTarget = RenderTarget(0);
     const PNuoDevice& device = CommandQueue()->Device();
-
     const auto format = Format();
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
@@ -80,6 +78,11 @@ void ModelView::Init()
     _modelRenderer->SetRenderTarget(modelRenderTarget);
 
     _notationRenderer = std::make_shared<NotationRenderer>(commandBuffer, BuffersCount(), intermediate, format);
+
+    /**
+     *  match the sample of the last renderer's end-pipeline
+     */
+    SetSampleCount(8);
 
     commandBuffer->Commit();
 

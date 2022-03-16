@@ -19,12 +19,28 @@
 
 #include "NuoUtilites/NuoMathVector.h"
 
+#include "NotationLight.h"
+
 #include <dxgi1_6.h>
+#include <memory>
+
+
+class NuoRenderInFlight;
+typedef std::shared_ptr<NuoRenderInFlight> PNuoRenderInFlight;
 
 
 
 class NotationRenderer : public NuoRenderPipelinePass
 {
+
+	PNotationLight _lightNotation;
+
+	// light to illuminate the notations
+	//
+	PNuoResourceSwapChain _lightBuffer;
+	PNuoResourceSwapChain _transforms;
+
+	PNuoRenderTarget _resolvedTarget;
 
 public:
 
@@ -38,6 +54,10 @@ public:
 
 	virtual void PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+
+private:
+
+	void UpdateUniformsForView(const PNuoRenderInFlight& inFlight);
 
 };
 

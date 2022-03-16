@@ -39,6 +39,8 @@ class NuoDirectView : public NuoView
 	PNuoSwapChain _swapChain;
 	PNuoCommandQueue _commandQueue;
 
+	unsigned int _sampleCount;
+
 	PNuoRenderPipeline _renderPipeline;
 
 public:
@@ -58,6 +60,8 @@ public:
 	 *   (noticeably the buffer-resize) could be performed.
 	 */
 	DXGI_FORMAT Format();
+
+	void SetSampleCount(unsigned int sampleCount);
 
 	PNuoRenderTarget RenderTarget(unsigned int inFlight);
 	PNuoRenderTarget CurrentRenderTarget();

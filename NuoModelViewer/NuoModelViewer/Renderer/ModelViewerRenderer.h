@@ -23,8 +23,6 @@ typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
-// TODO:
-#include "NotationLight.h" 
 
 
 class ModelRenderer : public NuoRenderPipelinePass
@@ -39,8 +37,6 @@ class ModelRenderer : public NuoRenderPipelinePass
 	PNuoRenderTarget _intermediateTarget;
 
 public:
-
-	PNotationLight _lightNotation;
 
 	ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount,
 				  std::vector<PNuoResource>& intermediate, DXGI_FORMAT format);

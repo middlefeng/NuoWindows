@@ -34,13 +34,14 @@ public:
     NuoSwapChain(const PNuoDirectView& view,
                  DXGI_FORMAT format,
                  unsigned int frameCount,
+                 unsigned int sample,
                  unsigned int w, unsigned int h);
 
     PNuoResourceSwapChain Buffer();
     PNuoRenderTargetSwapChain RenderTargetSwapChain();
     PNuoCommandSwapChain CommandBuffers();
 
-    void ResizeBuffer(unsigned int w, unsigned int h);
+    void ResizeBuffer(unsigned int w, unsigned int h, unsigned int sample);
 
     void Present();
     void PresentWithoutFence();
@@ -49,19 +50,19 @@ public:
 
     unsigned int CurrentBackBufferIndex();
     unsigned int BuffersCount();
-
+    unsigned int SampleCount();
     DXGI_FORMAT Format();
 
 private:
 
-    void UpdateBuffer();
+    void UpdateBuffer(unsigned int sample);
 
 };
 
 
 NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
                            DXGI_FORMAT format,
-                           unsigned int frameCount,
+                           unsigned int frameCount, unsigned int sample,
                            unsigned int w, unsigned int h)
     : _view(view),
       _currentBackBufferIndex(-1),
@@ -91,13 +92,13 @@ NuoSwapChain::NuoSwapChain(const PNuoDirectView& view,
     factory->MakeWindowAssociation(view->Handle(), DXGI_MWA_NO_ALT_ENTER);
     _fence = device->CreateFenceSwapChain(frameCount);
 
-    UpdateBuffer();
+    UpdateBuffer(sample);
 
     _commandSwapChain = std::make_shared<NuoCommandSwapChain>(queue, frameCount);
 }
 
 
-void NuoSwapChain::ResizeBuffer(unsigned int w, unsigned int h)
+void NuoSwapChain::ResizeBuffer(unsigned int w, unsigned int h, unsigned int sample)
 {
     PNuoDirectView view = _view.lock();
     PNuoCommandQueue queue = view->CommandQueue();
@@ -118,11 +119,11 @@ void NuoSwapChain::ResizeBuffer(unsigned int w, unsigned int h)
     HRESULT hr = _swapChain->ResizeBuffers(buffersCount, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
     assert(hr == S_OK);
 
-    UpdateBuffer();
+    UpdateBuffer(sample);
 }
 
 
-void NuoSwapChain::UpdateBuffer()
+void NuoSwapChain::UpdateBuffer(unsigned int sample)
 {
     unsigned int buffersCount = BuffersCount();
 
@@ -142,7 +143,7 @@ void NuoSwapChain::UpdateBuffer()
     PNuoCommandQueue queue = view->CommandQueue();
 
     _buffer = std::make_shared<NuoResourceSwapChain>(buffers);
-    _renderTargetSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), (*_buffer)[0]->Format(), _buffer, 1));
+    _renderTargetSwapChain.reset(new NuoRenderTargetSwapChain(queue->Device(), (*_buffer)[0]->Format(), _buffer, sample));
     _commandSwapChain = std::make_shared<NuoCommandSwapChain>(queue, buffersCount);
 }
 
@@ -180,6 +181,15 @@ unsigned int NuoSwapChain::BuffersCount()
     _swapChain->GetDesc(&desc);
 
     return desc.BufferCount;
+}
+
+
+unsigned int NuoSwapChain::SampleCount()
+{
+    DXGI_SWAP_CHAIN_DESC1 desc;
+    _swapChain->GetDesc1(&desc);
+
+    return desc.SampleDesc.Count;
 }
 
 
@@ -228,7 +238,8 @@ void NuoSwapChain::PrepareFrame()
 
 NuoDirectView::NuoDirectView(const PNuoDevice& device,
                              const PNuoWindow& parent)
-	: NuoView(parent)
+	: NuoView(parent),
+      _sampleCount(1)
 {
     _commandQueue = std::make_shared<NuoCommandQueue>(device);
 }
@@ -244,7 +255,28 @@ void NuoDirectView::CreateSwapChain(unsigned int frameCount,
                                     unsigned int w, unsigned int h)
 {
     PNuoDirectView view = std::dynamic_pointer_cast<NuoDirectView>(shared_from_this());
-    _swapChain = std::make_shared<NuoSwapChain>(view, DXGI_FORMAT_R8G8B8A8_UNORM, frameCount, w, h);
+    _swapChain = std::make_shared<NuoSwapChain>(view, DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                frameCount, _sampleCount, w, h);
+}
+
+
+
+void NuoDirectView::SetSampleCount(unsigned int sampleCount)
+{
+    if (_sampleCount == sampleCount)
+    {
+        return;
+    }
+
+    _sampleCount = sampleCount;
+
+    if (_swapChain)
+    {
+        NuoRect<long> rect = ClientRectDevice();
+
+        WaitForGPU();
+        _swapChain->ResizeBuffer(rect.W(), rect.H(), _sampleCount);
+    }
 }
 
 
@@ -354,7 +386,7 @@ void NuoDirectView::OnSize(unsigned int x, unsigned int y)
     if (_swapChain)
     {
         WaitForGPU();
-        _swapChain->ResizeBuffer(rect.W(), rect.H());
+        _swapChain->ResizeBuffer(rect.W(), rect.H(), _sampleCount);
     }
     else
     {

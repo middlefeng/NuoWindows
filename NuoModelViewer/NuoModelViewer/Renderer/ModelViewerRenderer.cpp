@@ -39,8 +39,6 @@ ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned in
 
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
     _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
-
-    _lightNotation = std::make_shared<NotationLight>(commandBuffer, frameCount, intermediate, format, true);
 }
 
 
@@ -81,17 +79,10 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     PNuoRenderTarget target = _intermediateTarget;
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
-    {
-        const float w = (float)target->Width();
-        const float h = (float)target->Height();
-
-        NuoViewport viewport(0, 0, w, h, 0, 1.0);
-
-        encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
-        encoder->ClearDepth();
-        encoder->SetViewport(viewport);
-
-    }
+    NuoViewport viewport;
+    encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
+    encoder->ClearDepth();
+    encoder->SetViewport(viewport);
 
     const NuoVectorFloat3 eyePosition(0, 0, 30);
     const NuoVectorFloat3 focusPoint(0, 0, 0);
@@ -132,18 +123,6 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
 
     _modelState->SceneRoot()->DrawBegin(encoder, commFunc);
     _modelState->SceneRoot()->Draw(encoder);
-
-    {
-        const float w = (float)target->Width();
-        const float h = (float)target->Height();
-
-        NuoViewport viewport(0, 0, w/2, h/2, 0, 1.0);
-
-        encoder->SetViewport(viewport);
-
-    }
-
-    _lightNotation->DrawWithRenderPass(encoder, commFunc);
 
     target->ReleaseRenderPassEncoder();
     encoder.reset();

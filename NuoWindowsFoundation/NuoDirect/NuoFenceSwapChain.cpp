@@ -9,7 +9,7 @@
 #include <limits>
 
 
-static const UINT64 kCounterLimit = UINT64_MAX * 0.9;
+static const UINT64 kCounterLimit = (UINT64)(UINT64_MAX * 0.9);
 
 
 
