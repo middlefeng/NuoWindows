@@ -40,6 +40,12 @@ void NuoRenderPipelinePass::DrawWithCommandBuffer(const PNuoCommandBuffer& comma
 
     encoder->SetViewport(NuoViewport());
 
+    /**
+     *   clear depth. an alternate isto have TextureMesh write in the depth as 1.0 (which
+     *   it is not doing though)
+     */
+    encoder->ClearDepth();
+
     _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
     _textureMesh->Draw(encoder);
 

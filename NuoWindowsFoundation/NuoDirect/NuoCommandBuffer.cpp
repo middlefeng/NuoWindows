@@ -171,7 +171,11 @@ void NuoCommandEncoder::SetClearColor(const NuoVectorFloat4& color)
 
 	for (unsigned int i = 0; i < _renderTarget->AttachmentNumber(); ++i)
 		_commandList->ClearRenderTargetView(_renderTarget->View()[i], acolor, 0, nullptr);
-	
+}
+
+
+void NuoCommandEncoder::ClearDepth()
+{
 	_commandList->ClearDepthStencilView(_renderTarget->DepthView(), D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
 }
 

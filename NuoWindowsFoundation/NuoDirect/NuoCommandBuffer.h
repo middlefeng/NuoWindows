@@ -115,6 +115,7 @@ class NuoCommandEncoder : public NuoRenderInFlight
 public:
 
 	void SetClearColor(const NuoVectorFloat4& color);
+	void ClearDepth();
 	void SetViewport(const NuoViewport& viewport);
 
 	void SetRootConstant(unsigned int index, size_t size, void* constant);

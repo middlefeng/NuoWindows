@@ -88,6 +88,7 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
         NuoViewport viewport(0, 0, w, h, 0, 1.0);
 
         encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
+        encoder->ClearDepth();
         encoder->SetViewport(viewport);
 
     }
