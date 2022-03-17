@@ -7,6 +7,7 @@
 
 #include "ModelState/ModelState.h"
 #include "Renderer/ModelViewerRenderer.h"
+#include "Renderer/NotationRenderer.h"
 
 #include "NuoAppInstance.h"
 #include "NuoFile.h"
@@ -14,6 +15,8 @@
 
 #include "NuoDirect/NuoDevice.h"
 #include "NuoDirect/NuoResourceSwapChain.h"
+#include "NuoDirect/NuoRenderPassTarget.h"
+
 #include "NuoMeshes/NuoMeshSceneRoot.h"
 #include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
 
@@ -63,15 +66,23 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
 
 void ModelView::Init()
 {
-    const PNuoRenderTarget& renderTarget = RenderTarget(0);
     const PNuoDevice& device = CommandQueue()->Device();
-
-    auto format = renderTarget->Format();
+    const auto format = Format();
 
     PNuoCommandBuffer commandBuffer = CommandQueue()->CreateCommandBuffer();
 
     std::vector<PNuoResource> intermediate;
     _modelRenderer = std::make_shared<ModelRenderer>(commandBuffer, BuffersCount(), intermediate, format);
+
+    PNuoRenderTarget modelRenderTarget = std::make_shared<NuoRenderTarget>(device, format, 1, true, true);
+    _modelRenderer->SetRenderTarget(modelRenderTarget);
+
+    _notationRenderer = std::make_shared<NotationRenderer>(commandBuffer, BuffersCount(), intermediate, format);
+
+    /**
+     *  match the sample of the last renderer's end-pipeline
+     */
+    SetSampleCount(8);
 
     commandBuffer->Commit();
 
@@ -79,13 +90,13 @@ void ModelView::Init()
     PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
     fence->WaitForGPU(CommandQueue());
 
-    SetRenderPasses({ _modelRenderer });
+    SetupPipelineSettings();
 }
 
 
 void ModelView::SetupPipelineSettings()
 {
-    
+    SetRenderPasses({ _modelRenderer, _notationRenderer });
 }
 
 

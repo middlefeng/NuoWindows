@@ -57,6 +57,9 @@ PNuoRootSignature NuoMesh::RootSignature(const PNuoCommandBuffer& commandBuffer)
 	PNuoRootSignature rootSignature = std::make_shared<NuoRootSignature>(device,
 																		 D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
+	// parameters defined in NuoUniforms
+	//
+
 	rootSignature->AddRootConstantBuffer(0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 	rootSignature->AddRootConstantBuffer(1, 0, D3D12_SHADER_VISIBILITY_PIXEL);	// light
 	rootSignature->AddRootConstantBuffer(2, 0, D3D12_SHADER_VISIBILITY_VERTEX);	// mesh transform

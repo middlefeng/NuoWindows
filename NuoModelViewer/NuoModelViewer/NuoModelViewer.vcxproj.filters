@@ -52,6 +52,9 @@
     <Filter Include="Source Files\Renderer">
       <UniqueIdentifier>{288810cd-3c80-4448-91bd-900b0a0049c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NuoWindowsFoundation\NuoShadowMap">
+      <UniqueIdentifier>{c7dfd404-5acd-4e2a-8060-3572d252854c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
@@ -250,6 +253,18 @@
       <Filter>NuoWindowsFoundation\NuoRender</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\ModelViewerRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelArrow.cpp">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoShadowMap\NuoLightSource.cpp">
+      <Filter>NuoWindowsFoundation\NuoShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\NotationLight.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\NotationRenderer.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -473,8 +488,17 @@
     <ClInclude Include="Renderer\ModelViewerRenderer.h">
       <Filter>Source Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShadersCommon.h">
-      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUtilites\NuoModelArrow.h">
+      <Filter>NuoWindowsFoundation\NuoUtilites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoShadowMap\NuoLightSource.h">
+      <Filter>NuoWindowsFoundation\NuoShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\NotationLight.h">
+      <Filter>Source Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\NotationRenderer.h">
+      <Filter>Source Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -523,6 +547,9 @@
     </CustomBuild>
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshMaterialedVertex.hlsl">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShadersCommon.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

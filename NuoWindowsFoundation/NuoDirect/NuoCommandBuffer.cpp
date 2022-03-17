@@ -171,7 +171,11 @@ void NuoCommandEncoder::SetClearColor(const NuoVectorFloat4& color)
 
 	for (unsigned int i = 0; i < _renderTarget->AttachmentNumber(); ++i)
 		_commandList->ClearRenderTargetView(_renderTarget->View()[i], acolor, 0, nullptr);
-	
+}
+
+
+void NuoCommandEncoder::ClearDepth()
+{
 	_commandList->ClearDepthStencilView(_renderTarget->DepthView(), D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
 }
 
@@ -203,6 +207,13 @@ void NuoCommandEncoder::SetRootConstant(unsigned int index, size_t size, void* c
 void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoResourceSwapChain& cb)
 {
 	const D3D12_GPU_VIRTUAL_ADDRESS addr = cb->GPUAddress(InFlight());
+	_commandList->SetGraphicsRootConstantBufferView(index, addr);
+}
+
+
+void NuoCommandEncoder::SetRootConstantBuffer(unsigned int index, const PNuoResource& buffer)
+{
+	const D3D12_GPU_VIRTUAL_ADDRESS addr = buffer->DxResource()->GetGPUVirtualAddress();
 	_commandList->SetGraphicsRootConstantBufferView(index, addr);
 }
 

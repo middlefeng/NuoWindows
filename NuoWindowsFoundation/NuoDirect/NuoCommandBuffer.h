@@ -115,10 +115,12 @@ class NuoCommandEncoder : public NuoRenderInFlight
 public:
 
 	void SetClearColor(const NuoVectorFloat4& color);
+	void ClearDepth();
 	void SetViewport(const NuoViewport& viewport);
 
 	void SetRootConstant(unsigned int index, size_t size, void* constant);
 	void SetRootConstantBuffer(unsigned int index, const PNuoResourceSwapChain& cb);
+	void SetRootConstantBuffer(unsigned int index, const PNuoResource& buffer);
 	void SetDescriptorTable(unsigned int index, const PNuoDescriptorHeap& table);
 	
 	void SetRenderTarget(const PNuoRenderTarget& renderTarget);

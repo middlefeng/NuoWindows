@@ -21,6 +21,13 @@ NuoRenderPipelinePass::NuoRenderPipelinePass(const PNuoCommandBuffer& commandBuf
 }
 
 
+void NuoRenderPipelinePass::Init(const PNuoCommandBuffer& commandBuffer, unsigned int sampleCount)
+{
+    _textureMesh->SetSampleCount(sampleCount);
+    _textureMesh->MakePipelineState(commandBuffer);
+}
+
+
 void NuoRenderPipelinePass::SetSourceTextrue(const PNuoTexture& texture)
 {
     _textureMesh->SetTexture(nullptr, texture);
@@ -30,6 +37,14 @@ void NuoRenderPipelinePass::SetSourceTextrue(const PNuoTexture& texture)
 void NuoRenderPipelinePass::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
 {
     PNuoCommandEncoder encoder = RetainDefaultEncoder(commandBuffer);
+
+    encoder->SetViewport(NuoViewport());
+
+    /**
+     *   clear depth. an alternate isto have TextureMesh write in the depth as 1.0 (which
+     *   it is not doing though)
+     */
+    encoder->ClearDepth();
 
     _textureMesh->DrawBegin(encoder, [](NuoCommandEncoder* encoder) {});
     _textureMesh->Draw(encoder);

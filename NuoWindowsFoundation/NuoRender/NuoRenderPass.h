@@ -53,6 +53,7 @@ public:
 	virtual PNuoCommandEncoder RetainDefaultEncoder(const PNuoCommandBuffer& commandBuffer);
 	virtual void ReleaseDefaultEncoder();
 
+	void SetRenderTarget(const PNuoRenderTarget& renderTarget);
 	void SetTransientRenderTarget(const WPNuoRenderTarget& renderTarget);
 	PNuoRenderTarget RenderTarget();
 

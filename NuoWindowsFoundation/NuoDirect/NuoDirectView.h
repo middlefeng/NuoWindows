@@ -39,6 +39,8 @@ class NuoDirectView : public NuoView
 	PNuoSwapChain _swapChain;
 	PNuoCommandQueue _commandQueue;
 
+	unsigned int _sampleCount;
+
 	PNuoRenderPipeline _renderPipeline;
 
 public:
@@ -49,6 +51,17 @@ public:
 
 	void CreateSwapChain(unsigned int frameCount,
 						 unsigned int w, unsigned int h);
+
+	/**
+	 *   the code used to get the format by query it from a target (usually the 0th target in the
+	 *   swap-chain). that method is problematic as it touch the swap-chain resources unncessary.
+	 *   when a swap-chain is associated with some resources, it has to be presented and then 
+	 *   destroy all those resources associated with the previous frame, before some operation
+	 *   (noticeably the buffer-resize) could be performed.
+	 */
+	DXGI_FORMAT Format();
+
+	void SetSampleCount(unsigned int sampleCount);
 
 	PNuoRenderTarget RenderTarget(unsigned int inFlight);
 	PNuoRenderTarget CurrentRenderTarget();

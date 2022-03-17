@@ -79,8 +79,10 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     PNuoRenderTarget target = _intermediateTarget;
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
+    NuoViewport viewport;
     encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
-    encoder->SetViewport(NuoViewport());
+    encoder->ClearDepth();
+    encoder->SetViewport(viewport);
 
     const NuoVectorFloat3 eyePosition(0, 0, 30);
     const NuoVectorFloat3 focusPoint(0, 0, 0);

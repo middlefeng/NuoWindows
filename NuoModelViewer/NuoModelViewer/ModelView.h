@@ -21,8 +21,13 @@ class NuoMeshSceneRoot;
 typedef std::shared_ptr<NuoMesh> PNuoMesh;
 typedef std::shared_ptr<NuoMeshSceneRoot> PNuoMeshSceneRoot;
 
+
+
 class ModelRenderer;
 typedef std::shared_ptr<ModelRenderer> PModelRenderer;
+
+class NotationRenderer;
+typedef std::shared_ptr<NotationRenderer> PNotationRenderer;
 
 
 
@@ -36,6 +41,7 @@ class ModelView : public NuoDirectView
 	//
 
 	PModelRenderer _modelRenderer;
+	PNotationRenderer _notationRenderer;
 
 public:
 
