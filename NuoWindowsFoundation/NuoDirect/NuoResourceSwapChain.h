@@ -18,6 +18,9 @@ typedef std::weak_ptr<NuoResourceSwapChain> WPNuoResourceSwapChain;
 class NuoDevice;
 typedef std::shared_ptr<NuoDevice> PNuoDevice;
 
+class NuoRenderInFlight;
+typedef std::shared_ptr <NuoRenderInFlight> PNuoRenderInFlight;
+
 
 class NuoResourceSwapChain
 {
@@ -34,6 +37,7 @@ public:
 	unsigned int Count() const;
 
 	void UpdateResource(void* data, unsigned long size, unsigned int inFlight);
+	void UpdateResource(void* data, unsigned long size, const PNuoRenderInFlight& inFlight);
 	D3D12_GPU_VIRTUAL_ADDRESS GPUAddress(unsigned int inFlight);
 
 };

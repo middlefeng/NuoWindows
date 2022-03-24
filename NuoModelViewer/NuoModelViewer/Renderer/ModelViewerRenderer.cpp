@@ -108,10 +108,10 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     NuoLightUniforms light;
     light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
     light.lightParams[0].irradiance = 1.0;
-    lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder->InFlight());
+    lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder);
 
     const PNuoResourceSwapChain& mvpBuffer = _mvp;
-    _mvp->UpdateResource(&mvp, sizeof(NuoUniforms), encoder->InFlight());
+    _mvp->UpdateResource(&mvp, sizeof(NuoUniforms), encoder);
 
     _modelState->SceneRoot()->UpdateUniform(encoder->InFlight(), NuoMatrixFloat44Identity);
 

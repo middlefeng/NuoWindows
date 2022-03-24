@@ -1,7 +1,9 @@
 ﻿
 
 #include "NuoResourceSwapChain.h"
+
 #include "NuoDevice.h"
+#include "NuoCommandBuffer.h"
 
 
 
@@ -36,6 +38,12 @@ void NuoResourceSwapChain::UpdateResource(void* data, unsigned long size, unsign
 {
 	void* dst = _resources[inFlight]->Map();
 	memcpy(dst, data, size);
+}
+
+
+void NuoResourceSwapChain::UpdateResource(void* data, unsigned long size, const PNuoRenderInFlight& inFlight)
+{
+	UpdateResource(data, size, inFlight->InFlight());
 }
 
 
