@@ -201,7 +201,7 @@ inline NuoMatrix<float, 4>
 operator * (const NuoMatrix<float, 4>& m1, const NuoMatrix<float, 4>& m2)
 {
     /**
-     *  reverse the order in ordre to mantain code parity on the CPU side with the code using column-major matricies.
+     *  reverse the order in order to mantain code parity on the CPU side with the code using column-major matricies.
      *  on the shader side, the order must still follow the rules of row-major.
      */
     return m2._m * m1._m;

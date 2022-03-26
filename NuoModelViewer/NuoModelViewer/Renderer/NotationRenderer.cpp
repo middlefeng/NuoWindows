@@ -22,7 +22,24 @@ NotationRenderer::NotationRenderer(const PNuoCommandBuffer& commandBuffer,
 {
 	Init(commandBuffer, 8);
 
-	_lightNotation = std::make_shared<NotationLight>(commandBuffer, frameCount, intermediate, format, true);
+    for (unsigned int index = 0; index < 4; ++index)
+    {
+        PNotationLight lightNotation = std::make_shared<NotationLight>(commandBuffer, frameCount, intermediate, format,
+                                                                       index < 2 /* the first two with shadow casting */ );
+        _lightVectors.push_back(lightNotation);
+
+        /*NuoLightSource* lightSource = [[NuoLightSource alloc]init];
+        lightSource.enableShadow = (index < 2);
+
+        lightNotation.lightSourceDesc = lightSource;
+        [lightSourcesDesc addObject : lightSource] ;*/
+    }
+
+    // for debug
+    NuoMatrixFloat44 updateMatrix = NuoMatrixRotation(0, 0.8);
+    _lightVectors[1]->UpdateLightTransform(updateMatrix);
+    updateMatrix = NuoMatrixRotation(0.8, 0.8);
+    _lightVectors[2]->UpdateLightTransform(updateMatrix);
 
     const PNuoCommandQueue& commandQueue = commandBuffer->CommandQueue();
     const PNuoDevice& device = commandQueue->Device();
@@ -71,7 +88,10 @@ void NotationRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuf
 
     UpdateUniformsForView(encoder);
 
-	_lightNotation->DrawWithRenderPass(encoder, commFunc);
+    for (PNotationLight notationLight : _lightVectors)
+    {
+        notationLight->DrawWithRenderPass(encoder, commFunc);
+    }
 
     target->ReleaseRenderPassEncoder();
 }

@@ -162,9 +162,20 @@ void NotationLight::UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,
 
 void NotationLight::UpdateUniformsForView(const PNuoCommandEncoder& renderPass)
 {
-    NuoMatrixFloat44 viewMatrix = NuoMatrixFloat44Identity;
+    NuoLightSource& desc = _lightSourceDesc;
+    const NuoBounds bounds = _lightVector->BoundsLocal().boundingBox;
 
-    _lightVector->UpdateUniform(renderPass->InFlight(), viewMatrix);
+    const NuoVectorFloat3 translationToCenter
+    (
+        -bounds._center.x(),
+        -bounds._center.y(),
+        -bounds._center.z() + bounds._span.z() / 2.0f
+    );
+
+    const NuoMatrixFloat44 modelCenteringMatrix = NuoMatrixTranslation(translationToCenter);
+    const NuoMatrixFloat44 modelMatrix = desc._lightDirection * modelCenteringMatrix;
+
+    _lightVector->UpdateUniform(renderPass->InFlight(), modelMatrix);
 }
 
 
@@ -200,4 +211,10 @@ void NotationLight::DrawWithRenderPass(const PNuoCommandEncoder& renderPass, Nuo
     _lightVector->Draw(renderPass);
 }
 
+
+
+void NotationLight::UpdateLightTransform(const NuoMatrixFloat44& delta)
+{
+    _lightSourceDesc._lightDirection = delta * _lightSourceDesc._lightDirection;
+}
 

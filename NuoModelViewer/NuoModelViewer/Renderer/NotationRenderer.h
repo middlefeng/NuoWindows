@@ -33,7 +33,8 @@ typedef std::shared_ptr<NuoRenderInFlight> PNuoRenderInFlight;
 class NotationRenderer : public NuoRenderPipelinePass
 {
 
-	PNotationLight _lightNotation;
+	std::vector<PNotationLight> _lightVectors;
+	std::weak_ptr<NotationLight> _currentLightVector;
 
 	// light to illuminate the notations
 	//

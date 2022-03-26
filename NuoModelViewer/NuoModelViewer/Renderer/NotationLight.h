@@ -54,6 +54,8 @@ public:
 	void DrawWithRenderPass(const PNuoCommandEncoder& renderPass,
 							NuoMesh::CommonFunc func);
 
+	void UpdateLightTransform(const NuoMatrixFloat44& delta);
+
 private:
 
 	void UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,
