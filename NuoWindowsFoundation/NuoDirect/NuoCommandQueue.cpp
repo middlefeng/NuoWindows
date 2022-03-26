@@ -41,9 +41,11 @@ PNuoCommandBuffer NuoCommandQueue::CreateCommandBuffer()
     assert(hr == S_OK);
 
     PNuoCommandBuffer commandBuffer = std::make_shared<NuoCommandBuffer>();
-    commandBuffer->_inFlight = 0;
     commandBuffer->_commandAllocator = allocator;
     commandBuffer->_commandQueue = shared_from_this();
+    
+    // this is not an in-flight command buffer
+    commandBuffer->SetInFlight(0, 0);
 
     _pendingCommandBuffers.push_back(commandBuffer);
 

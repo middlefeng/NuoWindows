@@ -85,10 +85,7 @@ void ModelView::Init()
     SetSampleCount(8);
 
     commandBuffer->Commit();
-
-    // Create synchronization objects and wait until assets have been uploaded to the GPU.
-    PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
-    fence->WaitForGPU(CommandQueue());
+    commandBuffer->WaitUntilComplete(intermediate);
 
     SetupPipelineSettings();
 }

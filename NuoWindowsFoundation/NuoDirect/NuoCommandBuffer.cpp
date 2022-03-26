@@ -158,6 +158,21 @@ void NuoCommandBuffer::Commit()
 }
 
 
+void NuoCommandBuffer::WaitUntilComplete(std::vector<PNuoResource>& intermediate)
+{
+	// must be non-in-flight
+	assert(_frameCount == 0);
+
+	PNuoCommandQueue commandQueue = CommandQueue();
+	PNuoDevice device = commandQueue->Device();
+
+	PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
+	fence->WaitForGPU(commandQueue);
+
+	intermediate.clear();
+}
+
+
 PNuoCommandQueue NuoCommandBuffer::CommandQueue() const
 {
 	return _commandQueue;
