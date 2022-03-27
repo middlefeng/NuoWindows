@@ -85,10 +85,7 @@ void ModelView::Init()
     SetSampleCount(8);
 
     commandBuffer->Commit();
-
-    // Create synchronization objects and wait until assets have been uploaded to the GPU.
-    PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
-    fence->WaitForGPU(CommandQueue());
+    commandBuffer->WaitUntilComplete(intermediate);
 
     SetupPipelineSettings();
 }
@@ -129,20 +126,13 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
     options._sampleCount = 8;  // MSAA sample count
 
     PModelState modelState = _modelRenderer->State();
-    PNuoCommandQueue commandQueue = CommandQueue();
-
     modelState->SetOptions(options);
 
     ModelView* view = this;
 
-    NuoTask task = [modelState, path, commandQueue, view](NuoTaskProgress progress)
+    NuoTask task = [modelState, path](NuoTaskProgress progress)
     {
         modelState->LoadMesh(path, progress);
-
-        // Create synchronization objects and wait until assets have been uploaded to the GPU.
-        PNuoDevice device = commandQueue->Device();
-        PNuoFenceSwapChain fence = device->CreateFenceSwapChain(1);
-        fence->WaitForGPU(commandQueue);
     };
 
     NuoBackgroundTask backgroundTask(task);

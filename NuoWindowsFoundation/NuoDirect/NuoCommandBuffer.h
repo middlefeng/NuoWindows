@@ -74,6 +74,7 @@ public:
 	PNuoCommandEncoder CreateRenderPassEncoder();
 	void CopyResource(const PNuoResource& src, const PNuoResource& dst);
 	void Commit();
+	void WaitUntilComplete(std::vector<PNuoResource>& intermediate);
 
 	PNuoCommandQueue CommandQueue() const;
 

@@ -28,7 +28,6 @@ void ModelState::LoadMesh(const std::string& path, NuoModelLoaderProgress progre
     PNuoModelLoader loader = std::make_shared<NuoModelLoader>();
     loader->LoadModel(path);
 
-    PNuoCommandBuffer commandBuffer = _commandQueue->CreateCommandBuffer();
     _modelLoader = std::make_shared<NuoModelLoaderGPU>(loader, _format);
 
     CreateMeshes([&progress](float progressPercent)
@@ -74,14 +73,10 @@ void ModelState::Rotate(float x, float y)
 
 void ModelState::CreateMeshes(NuoModelLoaderProgress progress)
 {
-    PNuoCommandBuffer commandBuffer = _commandQueue->CreateCommandBuffer();
-
-    PNuoMesh mesh = _modelLoader->CreateMesh(_meshOptions, commandBuffer, progress);
+    PNuoMesh mesh = _modelLoader->CreateMesh(_meshOptions, _commandQueue, progress);
     _sceneRoot->ReplaceMesh(_mainModelMesh, mesh);
 
     _mainModelMesh = std::dynamic_pointer_cast<NuoMeshCompound>(mesh);
     _selectedMesh = mesh;
-
-    commandBuffer->Commit();
 }
 
