@@ -28,9 +28,12 @@ NuoModelLoaderGPU::~NuoModelLoaderGPU()
 
 
 PNuoMeshCompound NuoModelLoaderGPU::CreateMesh(const NuoMeshOptions& loadOption,
-                                               const PNuoCommandBuffer& commandBuffer,
+                                               const PNuoCommandQueue& commandQueue,
                                                NuoModelLoaderProgress progress)
 {
+    std::vector<PNuoResource> intermediate;
+    PNuoCommandBuffer commandBuffer = commandQueue->CreateCommandBuffer();
+
     const float loadingPortionModelBuffer = loadOption._textured ? 0.70f : 0.85f;
     const float loadingPortionModelGPU = (1 - loadingPortionModelBuffer);
 
@@ -46,7 +49,7 @@ PNuoMeshCompound NuoModelLoaderGPU::CreateMesh(const NuoMeshOptions& loadOption,
     size_t index = 0;
     for (auto& model : models)
     {
-        PNuoMesh mesh = ::CreateMesh(loadOption, commandBuffer, model, _format, _intermediates);
+        PNuoMesh mesh = ::CreateMesh(loadOption, commandBuffer, model, _format, intermediate);
 
         NuoMeshBounds bounds;
         bounds.boundingBox = model->GetBoundingBox();
@@ -58,14 +61,12 @@ PNuoMeshCompound NuoModelLoaderGPU::CreateMesh(const NuoMeshOptions& loadOption,
             progress(++index / (float)models.size() * loadingPortionModelGPU + loadingPortionModelBuffer);
     }
 
+    commandBuffer->Commit();
+    commandBuffer->WaitUntilComplete(intermediate);
+
     PNuoMeshCompound resultObj = std::make_shared<NuoMeshCompound>(result);
 
     return resultObj;
 }
 
-
-void NuoModelLoaderGPU::ClearIntermediates()
-{
-    _intermediates.clear();
-}
 

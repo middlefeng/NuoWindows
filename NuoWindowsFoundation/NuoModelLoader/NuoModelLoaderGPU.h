@@ -22,8 +22,8 @@
 typedef std::shared_ptr<NuoModelBase> PNuoModelBase;
 typedef std::function<void(float)> NuoModelLoaderProgress;
 
-class NuoCommandBuffer;
-typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
+class NuoCommandQueue;
+typedef std::shared_ptr<NuoCommandQueue> PNuoCommandQueue;
 
 class NuoMeshCompound;
 typedef std::shared_ptr<NuoMeshCompound> PNuoMeshCompound;
@@ -39,8 +39,6 @@ class NuoModelLoaderGPU
 
     DXGI_FORMAT _format;
 
-    std::vector<PNuoResource> _intermediates;
-
 public:
     
     NuoModelLoaderGPU(const PNuoModelLoader& loader, DXGI_FORMAT format);
@@ -51,11 +49,9 @@ public:
      *  is stored, the associated textures, and the associated pipeline state used for rendering.
      */
     PNuoMeshCompound CreateMesh(const NuoMeshOptions& loadOption,
-                                const PNuoCommandBuffer& commandBuffer,
+                                const PNuoCommandQueue& commandQueue,
                                 NuoModelLoaderProgress progress);
 
-    void ClearIntermediates();
-    
 };
 
 typedef std::shared_ptr<NuoModelLoaderGPU> PNuoModelLoaderGPU;
