@@ -8,7 +8,8 @@
 
 
 NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
-                                   DXGI_FORMAT format, bool depthEnabled,
+                                   DXGI_FORMAT format,
+                                   bool depthEnabled, bool depthWrite,
                                    unsigned int sampleCount,
                                    NuoBlendingMode blendingMode,
                                    const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
@@ -25,7 +26,7 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
 
     D3D12_DEPTH_STENCIL_DESC depthDesc;
     depthDesc.DepthEnable = depthEnabled;
-    depthDesc.DepthWriteMask = depthEnabled ? D3D12_DEPTH_WRITE_MASK_ALL : D3D12_DEPTH_WRITE_MASK_ZERO;
+    depthDesc.DepthWriteMask = depthWrite ? D3D12_DEPTH_WRITE_MASK_ALL : D3D12_DEPTH_WRITE_MASK_ZERO;
     depthDesc.DepthFunc = depthEnabled ? D3D12_COMPARISON_FUNC_LESS : D3D12_COMPARISON_FUNC_ALWAYS;
     depthDesc.StencilEnable = false;
     depthDesc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
