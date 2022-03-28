@@ -25,7 +25,7 @@ NotationRenderer::NotationRenderer(const PNuoCommandBuffer& commandBuffer,
 								   std::vector<PNuoResource>& intermediate,
 								   DXGI_FORMAT format)
 	: NuoRenderPipelinePass(commandBuffer, frameCount, intermediate, format),
-      _notationWidthCap(500)
+      _notationWidthCap(0)
 {
 	Init(commandBuffer, 8);
 
@@ -96,15 +96,15 @@ void NotationRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuf
 	const float w = (float)target->Width();
 	const float h = (float)target->Height();
 
-    const float viewPortWidth = fmin(w * lightSettingAreaFactor, _notationWidthCap);
-    const float viewPortHeight = fmin(h * lightSettingAreaFactor, _notationWidthCap);
+    const float viewPortWidth = fmin(w * lightSettingAreaFactor, _notationWidthCap * _dpiFactor);
+    const float viewPortHeight = fmin(h * lightSettingAreaFactor, _notationWidthCap * _dpiFactor);
     const float viewPortOriginX = w - viewPortWidth;
-    const float viewPortOriginY = h - viewPortHeight + 60;
+    const float viewPortOriginY = h - viewPortHeight;
 
     _notationArea.SetW(viewPortWidth);
     _notationArea.SetH(viewPortHeight);
 
-	NuoViewport viewport(0, 0, //viewPortOriginX, viewPortOriginY,
+	NuoViewport viewport(viewPortOriginX, viewPortOriginY,
                          viewPortWidth, viewPortHeight, 0, 1.0);
    
     encoder->SetViewport(viewport);
@@ -132,6 +132,12 @@ void NotationRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuf
 void NotationRenderer::SetNotationWidthCap(float cap)
 {
     _notationWidthCap = cap;
+}
+
+
+void NotationRenderer::SetDPI(float dpi)
+{
+    _dpiFactor = dpi;
 }
 
 

@@ -60,6 +60,8 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
         _init = true;
     }
     
+    _notationRenderer->SetDPI(DPI());
+    
     UpdateRenderPassesDrawable();
 }
 
@@ -78,6 +80,7 @@ void ModelView::Init()
     _modelRenderer->SetRenderTarget(modelRenderTarget);
 
     _notationRenderer = std::make_shared<NotationRenderer>(commandBuffer, BuffersCount(), intermediate, format);
+    _notationRenderer->SetNotationWidthCap(250);
 
     /**
      *  match the sample of the last renderer's end-pipeline

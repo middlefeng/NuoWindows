@@ -46,6 +46,7 @@ class NotationRenderer : public NuoRenderPipelinePass
 
 	float _notationWidthCap;
 	NuoRect<float> _notationArea;
+	float _dpiFactor;
 
 public:
 
@@ -61,6 +62,7 @@ public:
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 
 	void SetNotationWidthCap(float cap);
+	void SetDPI(float dpi);
 
 private:
 
