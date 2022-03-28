@@ -13,12 +13,19 @@
 #include "NuoDirect/NuoRenderTarget.h"
 #include "NuoDirect/NuoResourceSwapChain.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+
+static NuoLightUniforms* kLightUniform = 0;
+
 
 NotationRenderer::NotationRenderer(const PNuoCommandBuffer& commandBuffer,
 								   unsigned int frameCount,
 								   std::vector<PNuoResource>& intermediate,
 								   DXGI_FORMAT format)
-	: NuoRenderPipelinePass(commandBuffer, frameCount, intermediate, format)
+	: NuoRenderPipelinePass(commandBuffer, frameCount, intermediate, format),
+      _notationWidthCap(500)
 {
 	Init(commandBuffer, 8);
 
@@ -40,6 +47,18 @@ NotationRenderer::NotationRenderer(const PNuoCommandBuffer& commandBuffer,
     _lightVectors[1]->UpdateLightTransform(updateMatrix);
     updateMatrix = NuoMatrixRotation(0.8, 0.8);
     _lightVectors[2]->UpdateLightTransform(updateMatrix);
+
+    // the direction of light used to render the "light vector"
+    //
+    if (!kLightUniform)
+    {
+        kLightUniform = new NuoLightUniforms;
+        memset(kLightUniform, 0, sizeof(NuoLightUniforms));
+
+        kLightUniform->lightParams[0].direction = { 0.13f, 0.72f, 0.68f, 0.0f };
+        kLightUniform->lightParams[0].irradiance = 1.0f;
+        kLightUniform->lightParams[0].specular = 0.6f;
+    }
 
     const PNuoCommandQueue& commandQueue = commandBuffer->CommandQueue();
     const PNuoDevice& device = commandQueue->Device();
@@ -71,10 +90,23 @@ void NotationRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuf
 
 	NuoRenderPipelinePass::DrawWithCommandBuffer(commandBuffer);
 
+    const float lightSettingAreaFactor = 0.28;
+    //const float lightSlidersHeight = 140;
+
 	const float w = (float)target->Width();
 	const float h = (float)target->Height();
 
-	NuoViewport viewport(w/2, h/2, w / 2, h / 2, 0, 1.0);
+    const float viewPortWidth = fmin(w * lightSettingAreaFactor, _notationWidthCap);
+    const float viewPortHeight = fmin(h * lightSettingAreaFactor, _notationWidthCap);
+    const float viewPortOriginX = w - viewPortWidth;
+    const float viewPortOriginY = h - viewPortHeight + 60;
+
+    _notationArea.SetW(viewPortWidth);
+    _notationArea.SetH(viewPortHeight);
+
+	NuoViewport viewport(0, 0, //viewPortOriginX, viewPortOriginY,
+                         viewPortWidth, viewPortHeight, 0, 1.0);
+   
     encoder->SetViewport(viewport);
 
     const PNuoResourceSwapChain& lightBuffer = _lightBuffer;
@@ -97,36 +129,50 @@ void NotationRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuf
 }
 
 
+void NotationRenderer::SetNotationWidthCap(float cap)
+{
+    _notationWidthCap = cap;
+}
+
+
 void NotationRenderer::UpdateUniformsForView(const PNuoRenderInFlight& inFlight)
 {
     PNuoRenderTarget target = RenderTarget();
 
-    const NuoVectorFloat3 eyePosition(0, 0, 30);
-    const NuoVectorFloat3 focusPoint(0, 0, 0);
-    const NuoVectorFloat3 upDirection(0, 1, 0);
+    const NuoMeshBounds meshBounds = _lightVectors[0]->Bounds();
+    const NuoBounds& bounds = meshBounds.boundingBox;
+    const float modelSpan = bounds.MaxDimension();
 
-    const auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
-    const auto viewMatrixInverse = viewMatrix.Inverse();
+    const float zoom = -200.0;
 
-    const auto w = target->Width();
-    const float h = (float)target->Height();
-    const float aspectRatio = w / h;
-    NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(20), 0.1f, 100.f);
+    const float modelNearest = -modelSpan;
+    const float cameraDefaultDistance = (modelNearest - modelSpan);
+    const float cameraDistance = cameraDefaultDistance + zoom * modelSpan / 20.0f;
 
-    NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(viewMatrix);
-    NuoMatrixFloat44 vpMatrix = projectionMatrix * viewMatrix;
+    const NuoVectorFloat3 cameraTranslation(0, 0, cameraDistance);
+    const NuoMatrixFloat44 viewMatrix = NuoMatrixTranslation(cameraTranslation); // TODO: *_modelState.viewRotationMatrix;
 
-    NuoUniforms mvp;
-    mvp.viewProjectionMatrix = vpMatrix._m;
-    mvp.viewMatrix = viewMatrix._m;
-    mvp.viewMatrixInverse = viewMatrixInverse._m;
+    const float aspect = _notationArea.W() / _notationArea.H();
+    const float nearBound = -cameraDistance - modelSpan;
+    const float farBound = nearBound + modelSpan * 2.0;
+    const NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspect, (2 * M_PI) / 30, nearBound, farBound);
 
-    const PNuoResourceSwapChain& lightBuffer = _lightBuffer;
-    NuoLightUniforms light;
-    light.lightParams[0].direction = NuoVectorFloat4(0.13f, 0.72f, 0.68f, 0.f)._vector;
-    light.lightParams[0].irradiance = 1.0;
-    lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), inFlight->InFlight());
+    NuoUniforms uniforms;
+    uniforms.viewMatrix = viewMatrix._m;
+    uniforms.viewMatrixInverse = viewMatrix.Inverse()._m;
+    uniforms.viewProjectionMatrix = (projectionMatrix * viewMatrix)._m;
 
-    const PNuoResourceSwapChain& mvpBuffer = _transforms;
-    mvpBuffer->UpdateResource(&mvp, sizeof(NuoUniforms), inFlight->InFlight());
+    _transforms->UpdateResource(&uniforms, sizeof(NuoUniforms), inFlight);
+
+    NuoLightUniforms lightUniforms = *kLightUniform;
+
+    /* TODO: view rotation handling
+     * 
+    auto vector = lightUniforms.lightParams[0].direction;
+    NuoVectorFloat4 lightVector(vector.x, vector.y, vector.z, 0.0);
+
+    lightVector = _modelState.viewRotationMatrix.Inverse() * lightVector;
+    lightUniforms.lightParams[0].direction = lightVector._vector; */
+    
+    _lightBuffer->UpdateResource(&lightUniforms, sizeof(NuoLightUniforms), inFlight);
 }

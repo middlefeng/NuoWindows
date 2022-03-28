@@ -202,6 +202,12 @@ void NotationLight::SetSelected(bool selected)
 }
 
 
+NuoMeshBounds NotationLight::Bounds()
+{
+    return _lightVector->WorldBounds(NuoMatrixFloat44Identity);
+}
+
+
 NuoPoint<float> NotationLight::HeadPointProjectedWithView(const NuoMatrixFloat44& view)
 {
     const NuoVectorFloat4 startVec(0, 0, 1, 1);

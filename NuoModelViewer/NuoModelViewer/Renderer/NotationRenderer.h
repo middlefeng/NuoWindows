@@ -20,6 +20,7 @@
 #include "NuoUtilites/NuoMathVector.h"
 
 #include "NotationLight.h"
+#include "NuoRect.h"
 
 #include <dxgi1_6.h>
 #include <memory>
@@ -43,6 +44,9 @@ class NotationRenderer : public NuoRenderPipelinePass
 
 	PNuoRenderTarget _resolvedTarget;
 
+	float _notationWidthCap;
+	NuoRect<float> _notationArea;
+
 public:
 
 	NotationRenderer(const PNuoCommandBuffer& commandBuffer,
@@ -55,6 +59,8 @@ public:
 
 	virtual void PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+
+	void SetNotationWidthCap(float cap);
 
 private:
 

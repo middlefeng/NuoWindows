@@ -58,6 +58,8 @@ public:
 
 	void SetSelected(bool selected);
 
+	NuoMeshBounds Bounds();
+
 private:
 
 	void UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,
