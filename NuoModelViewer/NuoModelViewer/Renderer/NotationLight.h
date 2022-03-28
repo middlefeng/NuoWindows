@@ -56,6 +56,8 @@ public:
 
 	void UpdateLightTransform(const NuoMatrixFloat44& delta);
 
+	void SetSelected(bool selected);
+
 private:
 
 	void UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,

@@ -17,6 +17,7 @@
 
 void NuoMesh::Init(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount)
 {
+	_hasTransparency = false;
 	_transformBuffers = std::make_shared<NuoResourceSwapChain>(commandBuffer->CommandQueue()->Device(),
 															   frameCount, (unsigned long)sizeof(NuoMeshUniforms));
 }
@@ -149,6 +150,18 @@ NuoMeshBounds NuoMesh::WorldBounds(const NuoMatrixFloat44& transform)
 	};
 
 	return worldMeshBounds;
+}
+
+
+bool NuoMesh::HasTransparency() const
+{
+	return _hasTransparency;
+}
+
+
+void NuoMesh::SetTransparency(bool transparency)
+{
+	_hasTransparency = transparency;
 }
 
 

@@ -64,6 +64,7 @@ void NotationLightMesh::Draw(const PNuoCommandEncoder& encoder)
 }
 
 
+
 void NotationLightMesh::UpdatePrivateBuffer(const PNuoCommandBuffer& commandBuffer,
                                             std::vector<PNuoResource>& intermediatePool,
                                             bool selected)
@@ -86,8 +87,9 @@ NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
                              unsigned int frameCount,
                              std::vector<PNuoResource>& intermediate,
                              DXGI_FORMAT format, bool bold)
+    : _selected(false)
 {
-    // _commandQueue = commandQueue;
+    _commandQueue = commandBuffer->CommandQueue();
         
     const float bodyLength = bold ? 1.2f : 1.0f;
     const float bodyRadius = bold ? 0.24f : 0.2f;
@@ -179,19 +181,25 @@ void NotationLight::UpdateUniformsForView(const PNuoCommandEncoder& renderPass)
 }
 
 
-/*
-- (void)setSelected:(BOOL)selected
+void NotationLight::SetSelected(bool selected)
 {
     BOOL changed = (_selected != selected);
     
     _selected = selected;
     
     if (changed)
-        [self updatePrivateUniform];
-    
-    [_lightVector setTransparency:!_selected];
-    [_lightVector makeDepthStencilState];
-}*/
+    {
+        std::vector<PNuoResource> intermediate;
+
+        PNuoCommandBuffer commandBuffer = _commandQueue->CreateCommandBuffer();
+        UpdatePrivateUniform(commandBuffer, intermediate);
+
+        _lightVector->SetTransparency(!_selected);
+        _lightVector->MakePipelineState(commandBuffer);
+
+        commandBuffer->WaitUntilComplete(intermediate);
+    }
+}
 
 
 NuoPoint<float> NotationLight::HeadPointProjectedWithView(const NuoMatrixFloat44& view)

@@ -36,6 +36,8 @@ class NuoMesh
 
 protected:
 
+	bool _hasTransparency;
+
 	NuoMeshRotation _rotation;
 
 	// mesh transform about the poise (rotation around model center).
@@ -79,8 +81,8 @@ public:
 	
 	NuoMeshBounds WorldBounds(const NuoMatrixFloat44& transform);
 
-	virtual bool HasTransparency() const = 0;
-	virtual void SetTransparency(bool transparency) = 0;
+	virtual bool HasTransparency() const;
+	virtual void SetTransparency(bool transparency);
 
 	virtual unsigned int SampleCount();
 	virtual void SetSampleCount(unsigned int sampleCount);
