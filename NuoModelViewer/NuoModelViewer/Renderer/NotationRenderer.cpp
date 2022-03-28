@@ -101,6 +101,8 @@ void NotationRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuf
     const float viewPortOriginX = w - viewPortWidth;
     const float viewPortOriginY = h - viewPortHeight;
 
+    _notationArea.SetX(viewPortOriginX);
+    _notationArea.SetY(viewPortOriginY);
     _notationArea.SetW(viewPortWidth);
     _notationArea.SetH(viewPortHeight);
 
@@ -138,6 +140,12 @@ void NotationRenderer::SetNotationWidthCap(float cap)
 void NotationRenderer::SetDPI(float dpi)
 {
     _dpiFactor = dpi;
+}
+
+
+NuoRect<float> NotationRenderer::NotationArea() const
+{
+    return _notationArea;
 }
 
 

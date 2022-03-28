@@ -37,6 +37,8 @@ class ModelView : public NuoDirectView
 
 	bool _init;
 
+	bool _trackingLighting;
+
 	// renderers
 	//
 

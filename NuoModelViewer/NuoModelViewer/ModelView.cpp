@@ -38,7 +38,8 @@ struct InputParamType
 ModelView::ModelView(const PNuoDevice& device,
 					 const PNuoWindow& parent)
 	: NuoDirectView(device, parent),
-      _init(false)
+      _init(false),
+      _trackingLighting(false)
 {
 }
 
@@ -155,6 +156,11 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
 
 void ModelView::OnMouseDown(short x, short y)
 {
+    auto lightSettingArea = _notationRenderer->NotationArea();
+    NuoPoint<short> location(x, y);
+
+    _trackingLighting = NuoRectContainsPoint(lightSettingArea, location);
+
     EnableMouseDrag();
     NuoDirectView::OnMouseDown(x, y);
 }

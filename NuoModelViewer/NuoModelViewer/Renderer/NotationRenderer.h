@@ -64,6 +64,8 @@ public:
 	void SetNotationWidthCap(float cap);
 	void SetDPI(float dpi);
 
+	NuoRect<float> NotationArea() const;
+
 private:
 
 	void UpdateUniformsForView(const PNuoRenderInFlight& inFlight);
