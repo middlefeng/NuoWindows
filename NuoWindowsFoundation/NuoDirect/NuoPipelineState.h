@@ -38,7 +38,8 @@ class NuoPipelineState
 public:
 
 	NuoPipelineState(const PNuoDevice& device,
-					 DXGI_FORMAT format, bool depthEnabled,
+					 DXGI_FORMAT format,
+					 bool depthEnabled, bool depthWrite,
 					 unsigned int sampleCount,
 					 NuoBlendingMode blendingMode,
 					 const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,

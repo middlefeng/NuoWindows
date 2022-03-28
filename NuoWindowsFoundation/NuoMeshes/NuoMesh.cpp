@@ -45,7 +45,11 @@ PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuf
 	NuoBlendingMode blendingMode = HasTransparency() ? kNuoBlending_Alpha : kNuoBlending_None;
 
 	const PNuoDevice& device = commandBuffer->CommandQueue()->Device();
-	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), EnableDepth(), SampleCount(), blendingMode,
+
+	const bool depthEnable = EnableDepth();
+	const bool depthWrite = !HasTransparency();
+
+	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), depthEnable, depthWrite, SampleCount(), blendingMode,
 											  inputElementDescs, vertexShader, pixelShader, rootSignature);
 }
 
