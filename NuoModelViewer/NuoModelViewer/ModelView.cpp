@@ -161,6 +161,11 @@ void ModelView::OnMouseDown(short x, short y)
 
     _trackingLighting = NuoRectContainsPoint(lightSettingArea, location);
 
+    if (_trackingLighting)
+    {
+        _notationRenderer->SelectCurrentLightVector(location);
+    }
+
     EnableMouseDrag();
     NuoDirectView::OnMouseDown(x, y);
 }
@@ -171,7 +176,23 @@ void ModelView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
     float dx = deltaY * 0.002f * 3.14f;
     float dy = deltaX * 0.002f * 3.14f;
 
-    _modelRenderer->Rotate(dx, dy);
+    if (_trackingLighting)
+    {
+        _notationRenderer->UpdateRotation(dx, dy);
+    }
+    else
+    {
+        _modelRenderer->Rotate(dx, dy);
+    }
 
     Update();
 }
+
+
+void ModelView::OnMouseUp(short x, short y)
+{
+    NuoDirectView::OnMouseUp(x, y);
+
+    _trackingLighting = false;
+}
+

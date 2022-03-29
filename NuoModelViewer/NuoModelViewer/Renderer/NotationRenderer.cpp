@@ -42,11 +42,8 @@ NotationRenderer::NotationRenderer(const PNuoCommandBuffer& commandBuffer,
         [lightSourcesDesc addObject : lightSource] ;*/
     }
 
-    // for debug
-    NuoMatrixFloat44 updateMatrix = NuoMatrixRotation(0, 0.8);
-    _lightVectors[1]->UpdateLightTransform(updateMatrix);
-    updateMatrix = NuoMatrixRotation(0.8, 0.8);
-    _lightVectors[2]->UpdateLightTransform(updateMatrix);
+    _currentLightVector = _lightVectors[0];
+    _currentLightVector.lock()->SetSelected(true);
 
     // the direction of light used to render the "light vector"
     //
@@ -66,6 +63,39 @@ NotationRenderer::NotationRenderer(const PNuoCommandBuffer& commandBuffer,
     _transforms = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
 }
 
+
+void NotationRenderer::SelectCurrentLightVector(const NuoPoint<short>& point)
+{
+    const NuoPoint normalized
+    (
+        ((point.X() - _notationArea.X()) / _notationArea.W() * 2.0 - 1.0),
+        ((point.Y() - _notationArea.Y()) / _notationArea.H() * 2.0 - 1.0) * (-.1)   /* window-coordinate has Y pointing down,
+                                                                                       directx NDC has Y pointing up */
+    );
+
+    double minDistance = 2.0;
+    PNotationLight deselected = _currentLightVector.lock();
+    PNotationLight selected;
+
+    for (size_t i = 0; i < _lightVectors.size(); ++i)
+    {
+        NuoPoint<float> headProjected = _lightVectors[i]->HeadPointProjectedWithView(NuoMatrixFloat44Identity /*_modelState.viewRotationMatrix */);
+        double distance = sqrt((headProjected.X() - normalized.X()) * (headProjected.X() - normalized.X()) +
+                              (headProjected.Y() - normalized.Y()) * (headProjected.Y() - normalized.Y()));
+        if (distance < minDistance)
+        {
+            minDistance = distance;
+            _currentLightVector = _lightVectors[i];
+            selected = _lightVectors[i];
+        }
+    }
+
+    if (deselected != selected)
+    {
+        selected->SetSelected(true);
+        deselected->SetSelected(false);
+    }
+}
 
 
 void NotationRenderer::SetDrawableSize(const NuoSize& size)
@@ -90,7 +120,7 @@ void NotationRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuf
 
 	NuoRenderPipelinePass::DrawWithCommandBuffer(commandBuffer);
 
-    const float lightSettingAreaFactor = 0.28;
+    const float lightSettingAreaFactor = 0.28f;
     //const float lightSlidersHeight = 140;
 
 	const float w = (float)target->Width();
@@ -149,6 +179,17 @@ NuoRect<float> NotationRenderer::NotationArea() const
 }
 
 
+void NotationRenderer::UpdateRotation(float deltaX, float deltaY)
+{
+    const NuoMatrixFloat44 updateMatrix = NuoMatrixRotation(deltaX, deltaY);
+    const NuoMatrixFloat44 viewRotation = NuoMatrixFloat44Identity; // TODO: _modelState.viewRotationMatrix;
+
+    PNotationLight currentLight = _currentLightVector.lock();
+
+    currentLight->UpdateLightTransform(viewRotation.Inverse() * updateMatrix * viewRotation);
+}
+
+
 void NotationRenderer::UpdateUniformsForView(const PNuoRenderInFlight& inFlight)
 {
     PNuoRenderTarget target = RenderTarget();
@@ -168,8 +209,8 @@ void NotationRenderer::UpdateUniformsForView(const PNuoRenderInFlight& inFlight)
 
     const float aspect = _notationArea.W() / _notationArea.H();
     const float nearBound = -cameraDistance - modelSpan;
-    const float farBound = nearBound + modelSpan * 2.0;
-    const NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspect, (2 * M_PI) / 30, nearBound, farBound);
+    const float farBound = nearBound + modelSpan * 2.0f;
+    const NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspect, (float)((2 * M_PI) / 30.f), nearBound, farBound);
 
     NuoUniforms uniforms;
     uniforms.viewMatrix = viewMatrix._m;

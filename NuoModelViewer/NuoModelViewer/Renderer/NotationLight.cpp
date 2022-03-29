@@ -119,10 +119,6 @@ NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
 
 
 /*
-- (NuoMeshBounds)bounds
-{
-    return [_lightVector worldBounds:NuoMatrixFloat44Identity];
-}
 
 
 void makeResources
@@ -133,26 +129,7 @@ void makeResources
 }
 
 
-/
-- (void)updateUniformsForView:(id<NuoRenderInFlight>)inFlight
-{
-    NuoLightSource* desc = _lightSourceDesc;
-    const NuoBounds bounds = _lightVector.boundsLocal.boundingBox;
-    
-    const NuoVectorFloat3 translationToCenter
-    (
-        - bounds._center.x(),
-        - bounds._center.y(),
-        - bounds._center.z() + bounds._span.z() / 2.0f
-    );
-    
-    const NuoMatrixFloat44 modelCenteringMatrix = NuoMatrixTranslation(translationToCenter);
-    const NuoMatrixFloat44 modelMatrix = desc.lightDirection * modelCenteringMatrix;
-    [_lightVector updateUniform:inFlight withTransform:modelMatrix._m];
-    
-    NuoModelCharacterUniforms characters;
-    characters.opacity = _selected ? 1.0f : 0.1f;
-}*/
+*/
 
 
 void NotationLight::UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,
@@ -176,8 +153,13 @@ void NotationLight::UpdateUniformsForView(const PNuoCommandEncoder& renderPass)
 
     const NuoMatrixFloat44 modelCenteringMatrix = NuoMatrixTranslation(translationToCenter);
     const NuoMatrixFloat44 modelMatrix = desc._lightDirection * modelCenteringMatrix;
-
     _lightVector->UpdateUniform(renderPass->InFlight(), modelMatrix);
+
+    /* TODO: selection transparency
+     * 
+    NuoModelCharacterUniforms characters;
+    characters.opacity = _selected ? 1.0f : 0.1f;
+     */
 }
 
 

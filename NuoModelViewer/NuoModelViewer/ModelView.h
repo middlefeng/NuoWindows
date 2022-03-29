@@ -62,6 +62,7 @@ public:
 
 	virtual void OnMouseDown(short x, short y) override;
 	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY) override;
+	virtual void OnMouseUp(short x, short y) override;
 
 };
 
