@@ -238,8 +238,8 @@ PNuoResource NuoDevice::CreateDepthStencil(size_t width, size_t height, unsigned
                                 D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 }
 
-PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format,
-                                     unsigned int width, unsigned int height, unsigned int sampleCount)
+PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format, unsigned int width, unsigned int height,
+                                     unsigned int sampleCount, const NuoVectorFloat4& clearColor)
 {
     D3D12_HEAP_PROPERTIES heapProps;
     heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
@@ -261,12 +261,19 @@ PNuoTexture NuoDevice::CreateTexture(DXGI_FORMAT format,
     resourceDesc.Width = (UINT)width;
     resourceDesc.Height = (UINT)height;
 
+    D3D12_CLEAR_VALUE clearValue;
+    clearValue.Format = format;
+    clearValue.Color[0] = clearColor[0];
+    clearValue.Color[1] = clearColor[1];
+    clearValue.Color[2] = clearColor[2];
+    clearValue.Color[3] = clearColor[3];
+
     Microsoft::WRL::ComPtr<ID3D12Resource> result;
     D3D12_RESOURCE_STATES state = sampleCount == 1 ? D3D12_RESOURCE_STATE_RENDER_TARGET : D3D12_RESOURCE_STATE_RESOLVE_SOURCE;
 
     HRESULT hr = _dxDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE,
                                                     &resourceDesc, state,
-                                                    nullptr, IID_PPV_ARGS(&result));
+                                                    &clearValue, IID_PPV_ARGS(&result));
     assert(hr == S_OK);
 
     PNuoTexture texture = std::make_shared<NuoTexture>();

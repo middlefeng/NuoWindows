@@ -30,6 +30,7 @@ ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned in
     //
     auto modelSampleCount = 8;
     _intermediateTarget = std::make_shared<NuoRenderTarget>(device, format, modelSampleCount, true, true);
+    _intermediateTarget->SetClearColor(NuoVectorFloat4(1.0, 1.0, 1.0, 1.0));
     _modelState = std::make_shared<ModelState>(commandQueue, format);
 
     _textureMesh = std::make_shared<NuoTextureMesh>(commandBuffer, 1);
@@ -80,7 +81,6 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     PNuoCommandEncoder encoder = target->RetainRenderPassEncoder(commandBuffer);
 
     NuoViewport viewport;
-    encoder->SetClearColor(NuoVectorFloat4(1.0f, 1.0f, 1.0f, 1.0f));
     encoder->ClearDepth();
     encoder->SetViewport(viewport);
 

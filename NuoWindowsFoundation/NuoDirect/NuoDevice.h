@@ -8,6 +8,7 @@
 #include <dxgi1_6.h>
 #include <wrl.h>
 
+#include "NuoUtilites/NuoMathVector.h"
 #include "NuoDirect/NuoDescriptorHeap.h"
 #include "NuoDirect/NuoFenceSwapChain.h"
 
@@ -55,8 +56,8 @@ public:
 	PNuoResource CreateUploadBuffer(size_t size);
 	PNuoResource CreateDepthStencil(size_t width, size_t height, unsigned int sampleCount);
 
-	PNuoTexture CreateTexture(DXGI_FORMAT format,
-							  unsigned int width, unsigned int height, unsigned int sampleCount);
+	PNuoTexture CreateTexture(DXGI_FORMAT format, unsigned int width, unsigned int height,
+							  unsigned int sampleCount, const NuoVectorFloat4& clearColor);
 
 	ID3D12Device* DxDevice() const;
 	IDXGIFactory6* DxFactory() const;

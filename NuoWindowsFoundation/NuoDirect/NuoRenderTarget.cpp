@@ -21,6 +21,19 @@ NuoRenderTarget::NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
 }
 
 
+void NuoRenderTarget::SetClearColor(const NuoVectorFloat4& color)
+{
+	_clearColor = color;
+}
+
+
+
+NuoVectorFloat4 NuoRenderTarget::ClearColor() const
+{
+	return _clearColor;
+}
+
+
 void NuoRenderTarget::CreateDepth()
 {
 	_dsvHeap = _device->CreateDepthStencilHeap();
@@ -41,10 +54,10 @@ void NuoRenderTarget::CreateDepth()
 void NuoRenderTarget::CreateTextures()
 {
 	if (_sampleCount > 1)
-		_sampleResource = _device->CreateTexture(_format, _width, _height, _sampleCount);
+		_sampleResource = _device->CreateTexture(_format, _width, _height, _sampleCount, _clearColor);
 
 	if (_manageResource)
-		_resource = _device->CreateTexture(_format, _width, _height, 1);
+		_resource = _device->CreateTexture(_format, _width, _height, 1, _clearColor);
 
 
 	if (_sampleCount > 1 || _manageResource)
@@ -140,6 +153,8 @@ PNuoCommandEncoder NuoRenderTarget::RetainRenderPassEncoder(const PNuoCommandBuf
 
 	encoder->ResourceBarrier(RenderBuffer(),
 							 D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	encoder->SetClearColor(_clearColor);
 
 	_encoderCount += 1;
 	_renderPassEncoder = encoder;

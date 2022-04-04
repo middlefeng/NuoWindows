@@ -40,10 +40,15 @@ class NuoRenderPassAttachment
 	PNuoTexture _resource;
 	PNuoTexture _sampleResource;
 
+	NuoVectorFloat4 _clearColor;
+
 public:
 
 	NuoRenderPassAttachment(const PNuoDevice& device,
 		                    DXGI_FORMAT format, NuoRenderPassTarget* renderTarget);
+
+	void SetClearColor(const NuoVectorFloat4& color);
+	NuoVectorFloat4 ClearColor() const;
 
 	void MakeTexture();
 	PNuoResource RenderBuffer();
@@ -71,6 +76,8 @@ public:
 
 	void AddAttachment(DXGI_FORMAT format);
 	void Init();
+
+	virtual void SetClearColor(const NuoVectorFloat4& color) override;
 
 	virtual unsigned int AttachmentNumber() const override;
 	virtual D3D12_CPU_DESCRIPTOR_HANDLE* View() override;

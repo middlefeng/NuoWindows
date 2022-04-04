@@ -23,6 +23,19 @@ NuoRenderPassAttachment::NuoRenderPassAttachment(const PNuoDevice& device,
 }
 
 
+void NuoRenderPassAttachment::SetClearColor(const NuoVectorFloat4& color)
+{
+	_clearColor = color;
+}
+
+
+
+NuoVectorFloat4 NuoRenderPassAttachment::ClearColor() const
+{
+	return _clearColor;
+}
+
+
 void NuoRenderPassAttachment::MakeTexture()
 {
 	unsigned int sampleCount = _renderTarget->SampleCount();
@@ -30,9 +43,9 @@ void NuoRenderPassAttachment::MakeTexture()
 	unsigned int height = _renderTarget->Height();
 
 	if (sampleCount > 1)
-		_sampleResource = _device->CreateTexture(_format, width, height, sampleCount);
+		_sampleResource = _device->CreateTexture(_format, width, height, sampleCount, _clearColor);
 
-	_resource = _device->CreateTexture(_format, width, height, 1);
+	_resource = _device->CreateTexture(_format, width, height, 1, _clearColor);
 }
 
 
@@ -132,6 +145,17 @@ void NuoRenderPassTarget::Init()
 }
 
 
+void NuoRenderPassTarget::SetClearColor(const NuoVectorFloat4& color)
+{
+	NuoRenderTarget::SetClearColor(color);
+
+	for (PNuoRenderPassAttachment attachment : _attachments)
+	{
+		attachment->SetClearColor(color);
+	}
+}
+
+
 PNuoCommandEncoder NuoRenderPassTarget::RetainRenderPassEncoder(const PNuoCommandBuffer& commandBuffer)
 {
 	if (_renderPassEncoder)
@@ -145,6 +169,8 @@ PNuoCommandEncoder NuoRenderPassTarget::RetainRenderPassEncoder(const PNuoComman
 
 	for (PNuoRenderPassAttachment attachment : _attachments)
 		attachment->ResourceUseBegin(encoder);
+
+	encoder->SetClearColor(_clearColor);
 
 	_encoderCount += 1;
 	_renderPassEncoder = encoder;

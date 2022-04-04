@@ -79,6 +79,7 @@ void ModelView::Init()
 
     PNuoRenderTarget modelRenderTarget = std::make_shared<NuoRenderTarget>(device, format, 1, true, true);
     _modelRenderer->SetRenderTarget(modelRenderTarget);
+    modelRenderTarget->SetClearColor(NuoVectorFloat4(1.0, 1.0, 1.0, 1.0));
 
     _notationRenderer = std::make_shared<NotationRenderer>(commandBuffer, BuffersCount(), intermediate, format);
     _notationRenderer->SetNotationWidthCap(250);
