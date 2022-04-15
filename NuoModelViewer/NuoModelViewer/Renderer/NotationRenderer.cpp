@@ -69,7 +69,7 @@ void NotationRenderer::SelectCurrentLightVector(const NuoPoint<short>& point)
     const NuoPoint normalized
     (
         ((point.X() - _notationArea.X()) / _notationArea.W() * 2.0 - 1.0),
-        ((point.Y() - _notationArea.Y()) / _notationArea.H() * 2.0 - 1.0) * (-.1)   /* window-coordinate has Y pointing down,
+        ((point.Y() - _notationArea.Y()) / _notationArea.H() * 2.0 - 1.0) * (-1.)   /* window-coordinate has Y pointing down,
                                                                                        directx NDC has Y pointing up */
     );
 
