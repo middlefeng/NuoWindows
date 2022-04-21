@@ -163,6 +163,29 @@ void NotationLight::UpdateUniformsForView(const PNuoCommandEncoder& renderPass)
 }
 
 
+void NotationLight::SetSelected(bool selected,
+                                const PNuoCommandBuffer& commandBuffer,
+                                std::vector<PNuoResource>& intermediate)
+{
+    BOOL changed = (_selected != selected);
+
+    _selected = selected;
+
+    if (changed)
+    {
+        char msg[1024];
+        sprintf_s(msg, 1024, "Selection Changed.\n");
+        std::wstring result = StringToUTF16(msg);
+        OutputDebugString(result.c_str());
+
+        UpdatePrivateUniform(commandBuffer, intermediate);
+
+        _lightVector->SetTransparency(!_selected);
+        _lightVector->MakePipelineState(commandBuffer);
+    }
+}
+
+
 void NotationLight::SetSelected(bool selected)
 {
     BOOL changed = (_selected != selected);
@@ -179,6 +202,7 @@ void NotationLight::SetSelected(bool selected)
         _lightVector->SetTransparency(!_selected);
         _lightVector->MakePipelineState(commandBuffer);
 
+        commandBuffer->Commit();
         commandBuffer->WaitUntilComplete(intermediate);
     }
 }

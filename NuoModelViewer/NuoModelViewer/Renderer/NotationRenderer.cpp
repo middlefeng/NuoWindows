@@ -43,7 +43,7 @@ NotationRenderer::NotationRenderer(const PNuoCommandBuffer& commandBuffer,
     }
 
     _currentLightVector = _lightVectors[0];
-    _currentLightVector.lock()->SetSelected(true);
+    _currentLightVector.lock()->SetSelected(true, commandBuffer, intermediate);
 
     // the direction of light used to render the "light vector"
     //
@@ -81,7 +81,7 @@ void NotationRenderer::SelectCurrentLightVector(const NuoPoint<short>& point)
     {
         NuoPoint<float> headProjected = _lightVectors[i]->HeadPointProjectedWithView(NuoMatrixFloat44Identity /*_modelState.viewRotationMatrix */);
         double distance = sqrt((headProjected.X() - normalized.X()) * (headProjected.X() - normalized.X()) +
-                              (headProjected.Y() - normalized.Y()) * (headProjected.Y() - normalized.Y()));
+                               (headProjected.Y() - normalized.Y()) * (headProjected.Y() - normalized.Y()));
         if (distance < minDistance)
         {
             minDistance = distance;

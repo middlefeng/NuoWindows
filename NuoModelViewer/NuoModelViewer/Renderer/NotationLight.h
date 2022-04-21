@@ -56,6 +56,10 @@ public:
 
 	void UpdateLightTransform(const NuoMatrixFloat44& delta);
 
+	void SetSelected(bool selected,
+					 const PNuoCommandBuffer& commandBuffer,
+					 std::vector<PNuoResource>& intermediate);
+
 	void SetSelected(bool selected);
 
 	NuoMeshBounds Bounds();

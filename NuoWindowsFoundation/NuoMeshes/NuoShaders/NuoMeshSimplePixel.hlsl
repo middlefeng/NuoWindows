@@ -20,6 +20,8 @@ float4 main(NuoMeshSimpleVertexShaderOutput inVertex) : SV_Target
 {
     float3 lightVector = normalize(light.lightParams[0].direction.xyz);
     float3 normal = normalize(inVertex._normal.xyz);
+    float opacity = modelCharacterUniforms.opacity;
+
     float cosTheta = saturate(dot(normal, lightVector));
     float3 diffuseTerm = light.lightParams[0].irradiance * cosTheta * material.diffuseColor;
 
@@ -31,5 +33,5 @@ float4 main(NuoMeshSimpleVertexShaderOutput inVertex) : SV_Target
 
     float3 colorForLights = diffuseTerm + specularTerm;
 
-    return float4(colorForLights, 1.0);
+    return float4(colorForLights, opacity);
 }
