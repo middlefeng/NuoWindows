@@ -7,11 +7,32 @@
 #include <cassert>
 
 
+
+static D3D12_CULL_MODE CullModeDx(NuoCullMode mode)
+{
+    switch (mode)
+    {
+    case kNuoCull_None:
+        return D3D12_CULL_MODE_NONE;
+    case kNuoCull_Back:
+        return D3D12_CULL_MODE_BACK;
+    case kNuoCull_Front:
+        return D3D12_CULL_MODE_FRONT;
+    default:
+        ;
+    }
+
+    return D3D12_CULL_MODE_NONE;
+}
+
+
+
 NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
                                    DXGI_FORMAT format,
                                    bool depthEnabled, bool depthWrite,
                                    unsigned int sampleCount,
                                    NuoBlendingMode blendingMode,
+                                   NuoCullMode cullMode,
                                    const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 								   const PNuoShader& vertex,
 								   const PNuoShader& pixel,
@@ -42,7 +63,7 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
 
     D3D12_RASTERIZER_DESC rasterizerDesc;
     rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-    rasterizerDesc.CullMode = D3D12_CULL_MODE_FRONT;
+    rasterizerDesc.CullMode = CullModeDx(cullMode);
     rasterizerDesc.FrontCounterClockwise = FALSE;
     rasterizerDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
     rasterizerDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;

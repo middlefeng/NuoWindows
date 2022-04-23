@@ -70,7 +70,9 @@ void NotationLightMesh::UpdatePrivateBuffer(const PNuoCommandBuffer& commandBuff
                                             bool selected)
 {
     NuoModelCharacterUniforms uniforms;
-    uniforms.opacity = selected ? 1.0f : 0.1f;
+    uniforms.opacity = selected ? 1.0f : 0.15f; /* 0.15 is a slight increase from 0.1 of the Metal version 
+                                                 * in the Metal version the culling is accidentially off so
+                                                 * the render is darker than it is here, where culling is on. */
 
     PNuoDevice device = commandBuffer->CommandQueue()->Device();
 
@@ -106,6 +108,7 @@ NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
     _lightVector = std::make_shared<NotationLightMesh>(commandBuffer);
     _lightVector->Init(commandBuffer, frameCount, intermediate, arrow, format);
     _lightVector->SetSampleCount(8);
+    _lightVector->SetTransparency(true);
 
     _lightVector->SetBoundsLocal(meshBounds);
     _lightVector->MakePipelineState(commandBuffer);
@@ -173,11 +176,6 @@ void NotationLight::SetSelected(bool selected,
 
     if (changed)
     {
-        char msg[1024];
-        sprintf_s(msg, 1024, "Selection Changed.\n");
-        std::wstring result = StringToUTF16(msg);
-        OutputDebugString(result.c_str());
-
         UpdatePrivateUniform(commandBuffer, intermediate);
 
         _lightVector->SetTransparency(!_selected);
@@ -190,18 +188,14 @@ void NotationLight::SetSelected(bool selected)
 {
     BOOL changed = (_selected != selected);
     
-    _selected = selected;
-    
     if (changed)
     {
         std::vector<PNuoResource> intermediate;
 
         PNuoCommandBuffer commandBuffer = _commandQueue->CreateCommandBuffer();
-        UpdatePrivateUniform(commandBuffer, intermediate);
 
-        _lightVector->SetTransparency(!_selected);
-        _lightVector->MakePipelineState(commandBuffer);
-
+        SetSelected(selected, commandBuffer, intermediate);
+        
         commandBuffer->Commit();
         commandBuffer->WaitUntilComplete(intermediate);
     }

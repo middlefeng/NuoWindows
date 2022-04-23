@@ -18,6 +18,10 @@
 void NuoMesh::Init(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount)
 {
 	_hasTransparency = false;
+	_blendMode = kNuoBlending_Accumulate;
+	_cullMode = kNuoCull_Front;	/* DirectX defines clockwise as front-face winding order.
+								 * OpenGL/Metal defines counter-clockwise as such */
+
 	_transformBuffers = std::make_shared<NuoResourceSwapChain>(commandBuffer->CommandQueue()->Device(),
 															   frameCount, (unsigned long)sizeof(NuoMeshUniforms));
 }
@@ -43,14 +47,15 @@ PNuoPipelineState NuoMesh::MakePipelineState(const PNuoCommandBuffer& commandBuf
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs = InputDesc();
 
-	NuoBlendingMode blendingMode = HasTransparency() ? kNuoBlending_Alpha : kNuoBlending_None;
+	NuoBlendingMode blendingMode = HasTransparency() ? BlendMode() : kNuoBlending_None;
 
 	const PNuoDevice& device = commandBuffer->CommandQueue()->Device();
 
 	const bool depthEnable = EnableDepth();
 	const bool depthWrite = !HasTransparency();
 
-	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), depthEnable, depthWrite, SampleCount(), blendingMode,
+	return std::make_shared<NuoPipelineState>(device, PipelineFormat(), depthEnable, depthWrite, SampleCount(),
+											  blendingMode, CullMode(),
 											  inputElementDescs, vertexShader, pixelShader, rootSignature);
 }
 
@@ -68,6 +73,7 @@ PNuoRootSignature NuoMesh::RootSignature(const PNuoCommandBuffer& commandBuffer)
 	rootSignature->AddRootConstantBuffer(0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 	rootSignature->AddRootConstantBuffer(1, 0, D3D12_SHADER_VISIBILITY_PIXEL);	// light
 	rootSignature->AddRootConstantBuffer(2, 0, D3D12_SHADER_VISIBILITY_VERTEX);	// mesh transform
+	rootSignature->AddRootConstantBuffer(3, 0, D3D12_SHADER_VISIBILITY_PIXEL);	// mesh model character (opacity)
 
 	return rootSignature;
 }
@@ -99,7 +105,7 @@ void NuoMesh::SetSampleCount(unsigned int sampleCount)
 
 bool NuoMesh::EnableDepth()
 {
-	return true;
+	return !HasTransparency();
 }
 
 
@@ -165,6 +171,30 @@ void NuoMesh::SetTransparency(bool transparency)
 }
 
 
+void NuoMesh::SetBlendMode(NuoBlendingMode mode)
+{
+	_blendMode = mode;
+}
+
+
+NuoBlendingMode NuoMesh::BlendMode() const
+{
+	return _blendMode;
+}
+
+
+void NuoMesh::SetCullMode(NuoCullMode mode)
+{
+	_cullMode = mode;
+}
+
+
+NuoCullMode NuoMesh::CullMode() const
+{
+	return _cullMode;
+}
+
+
 void NuoMesh::UpdateUniform(unsigned int inFlight, const NuoMatrixFloat44& transform)
 {
 	NuoMatrixFloat44 transformWorld = transform * MeshTransform();
@@ -217,17 +247,6 @@ void NuoMeshSimple::Init(const PNuoCommandBuffer& commandBuffer,
 										 model->GetVerticesNumber(),
 										 model->IndicesPtr(),
 										 model->IndicesCount());
-}
-
-
-bool NuoMeshSimple::HasTransparency() const
-{
-	return false;
-}
-
-
-void NuoMeshSimple::SetTransparency(bool transparency)
-{
 }
 
 

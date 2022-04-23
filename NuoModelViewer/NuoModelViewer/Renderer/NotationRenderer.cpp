@@ -16,6 +16,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include "NuoMeshes/NuoAuxilliaryMeshes/NuoScreenSpaceMesh.h"
+
 
 static NuoLightUniforms* kLightUniform = 0;
 
@@ -152,10 +154,19 @@ void NotationRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuf
 
     UpdateUniformsForView(encoder);
 
+    auto currentLightVector = _currentLightVector.lock();
     for (PNotationLight notationLight : _lightVectors)
     {
-        notationLight->DrawWithRenderPass(encoder, commFunc);
+        if (notationLight != currentLightVector)
+            notationLight->DrawWithRenderPass(encoder, commFunc);
     }
+
+    /*   draw the selected vector at last, making sure it's not covered by
+     *   non-selected vectors. since the depth-test and depth-write are all
+     *   disabled, this is necessary to make sure the selected vector is on
+     *   the top
+     */
+    currentLightVector->DrawWithRenderPass(encoder, commFunc);
 
     target->ReleaseRenderPassEncoder();
 }
