@@ -157,12 +157,6 @@ void NotationLight::UpdateUniformsForView(const PNuoCommandEncoder& renderPass)
     const NuoMatrixFloat44 modelCenteringMatrix = NuoMatrixTranslation(translationToCenter);
     const NuoMatrixFloat44 modelMatrix = desc._lightDirection * modelCenteringMatrix;
     _lightVector->UpdateUniform(renderPass->InFlight(), modelMatrix);
-
-    /* TODO: selection transparency
-     * 
-    NuoModelCharacterUniforms characters;
-    characters.opacity = _selected ? 1.0f : 0.1f;
-     */
 }
 
 
