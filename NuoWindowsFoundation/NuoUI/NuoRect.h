@@ -51,6 +51,25 @@ public:
 };
 
 
+template <class S, class T>
+bool NuoRectContainsPoint(const NuoRect<S>& rect, const NuoPoint<T>& point)
+{
+	if (point.X() < rect.X())
+		return false;
+
+	if (point.X() > rect.X() + rect.W())
+		return false;
+
+	if (point.Y() < rect.Y())
+		return false;
+
+	if (point.Y() > rect.Y() + rect.H())
+		return false;
+
+	return true;
+}
+
+
 
 template <class T>
 class NuoInset

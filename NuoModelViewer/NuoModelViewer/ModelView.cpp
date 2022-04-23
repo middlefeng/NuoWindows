@@ -38,7 +38,8 @@ struct InputParamType
 ModelView::ModelView(const PNuoDevice& device,
 					 const PNuoWindow& parent)
 	: NuoDirectView(device, parent),
-      _init(false)
+      _init(false),
+      _trackingLighting(false)
 {
 }
 
@@ -60,6 +61,8 @@ void ModelView::OnSize(unsigned int x, unsigned int y)
         _init = true;
     }
     
+    _notationRenderer->SetDPI(DPI());
+    
     UpdateRenderPassesDrawable();
 }
 
@@ -76,8 +79,10 @@ void ModelView::Init()
 
     PNuoRenderTarget modelRenderTarget = std::make_shared<NuoRenderTarget>(device, format, 1, true, true);
     _modelRenderer->SetRenderTarget(modelRenderTarget);
+    modelRenderTarget->SetClearColor(NuoVectorFloat4(1.0, 1.0, 1.0, 1.0));
 
     _notationRenderer = std::make_shared<NotationRenderer>(commandBuffer, BuffersCount(), intermediate, format);
+    _notationRenderer->SetNotationWidthCap(250);
 
     /**
      *  match the sample of the last renderer's end-pipeline
@@ -152,6 +157,16 @@ void ModelView::LoadMesh(const std::string& path, NuoTaskProgress progress)
 
 void ModelView::OnMouseDown(short x, short y)
 {
+    auto lightSettingArea = _notationRenderer->NotationArea();
+    NuoPoint<short> location(x, y);
+
+    _trackingLighting = NuoRectContainsPoint(lightSettingArea, location);
+
+    if (_trackingLighting)
+    {
+        _notationRenderer->SelectCurrentLightVector(location);
+    }
+
     EnableMouseDrag();
     NuoDirectView::OnMouseDown(x, y);
 }
@@ -162,7 +177,23 @@ void ModelView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
     float dx = deltaY * 0.002f * 3.14f;
     float dy = deltaX * 0.002f * 3.14f;
 
-    _modelRenderer->Rotate(dx, dy);
+    if (_trackingLighting)
+    {
+        _notationRenderer->UpdateRotation(dx, dy);
+    }
+    else
+    {
+        _modelRenderer->Rotate(dx, dy);
+    }
 
     Update();
 }
+
+
+void ModelView::OnMouseUp(short x, short y)
+{
+    NuoDirectView::OnMouseUp(x, y);
+
+    _trackingLighting = false;
+}
+

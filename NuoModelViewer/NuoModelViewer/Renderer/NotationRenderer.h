@@ -20,6 +20,7 @@
 #include "NuoUtilites/NuoMathVector.h"
 
 #include "NotationLight.h"
+#include "NuoRect.h"
 
 #include <dxgi1_6.h>
 #include <memory>
@@ -33,7 +34,8 @@ typedef std::shared_ptr<NuoRenderInFlight> PNuoRenderInFlight;
 class NotationRenderer : public NuoRenderPipelinePass
 {
 
-	PNotationLight _lightNotation;
+	std::vector<PNotationLight> _lightVectors;
+	std::weak_ptr<NotationLight> _currentLightVector;
 
 	// light to illuminate the notations
 	//
@@ -42,6 +44,10 @@ class NotationRenderer : public NuoRenderPipelinePass
 
 	PNuoRenderTarget _resolvedTarget;
 
+	float _notationWidthCap;
+	NuoRect<float> _notationArea;
+	float _dpiFactor;
+
 public:
 
 	NotationRenderer(const PNuoCommandBuffer& commandBuffer,
@@ -49,11 +55,23 @@ public:
 					 std::vector<PNuoResource>& intermediate,
 					 DXGI_FORMAT format);
 
+	void SelectCurrentLightVector(const NuoPoint<short>& point);
+
 	virtual void SetDrawableSize(const NuoSize& size) override;
 	virtual void SetSampleCount(unsigned int sampleCount) override;
 
 	virtual void PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
+
+	void SetNotationWidthCap(float cap);
+	void SetDPI(float dpi);
+
+	NuoRect<float> NotationArea() const;
+
+
+	// manipulator to the current selected light source
+
+	void UpdateRotation(float deltaX, float deltaY);
 
 private:
 

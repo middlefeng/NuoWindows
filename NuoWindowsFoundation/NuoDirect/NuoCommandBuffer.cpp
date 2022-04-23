@@ -105,6 +105,8 @@ PNuoCommandEncoder NuoCommandBuffer::CreateRenderPassEncoder()
 
 void NuoCommandEncoder::CopyResource(const PNuoResource& src, const PNuoResource& dst)
 {
+	ResourceBarrier(dst, D3D12_RESOURCE_STATE_COPY_DEST);
+
 	_commandList->CopyResource(dst->DxResource(), src->DxResource());
 
 	ResourceBarrier(dst, D3D12_RESOURCE_STATE_GENERIC_READ);

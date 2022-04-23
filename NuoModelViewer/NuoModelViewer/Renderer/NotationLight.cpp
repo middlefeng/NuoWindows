@@ -64,12 +64,15 @@ void NotationLightMesh::Draw(const PNuoCommandEncoder& encoder)
 }
 
 
+
 void NotationLightMesh::UpdatePrivateBuffer(const PNuoCommandBuffer& commandBuffer,
                                             std::vector<PNuoResource>& intermediatePool,
                                             bool selected)
 {
     NuoModelCharacterUniforms uniforms;
-    uniforms.opacity = selected ? 1.0f : 0.1f;
+    uniforms.opacity = selected ? 1.0f : 0.15f; /* 0.15 is a slight increase from 0.1 of the Metal version 
+                                                 * in the Metal version the culling is accidentially off so
+                                                 * the render is darker than it is here, where culling is on. */
 
     PNuoDevice device = commandBuffer->CommandQueue()->Device();
 
@@ -86,8 +89,9 @@ NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
                              unsigned int frameCount,
                              std::vector<PNuoResource>& intermediate,
                              DXGI_FORMAT format, bool bold)
+    : _selected(false)
 {
-    // _commandQueue = commandQueue;
+    _commandQueue = commandBuffer->CommandQueue();
         
     const float bodyLength = bold ? 1.2f : 1.0f;
     const float bodyRadius = bold ? 0.24f : 0.2f;
@@ -104,6 +108,7 @@ NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
     _lightVector = std::make_shared<NotationLightMesh>(commandBuffer);
     _lightVector->Init(commandBuffer, frameCount, intermediate, arrow, format);
     _lightVector->SetSampleCount(8);
+    _lightVector->SetTransparency(true);
 
     _lightVector->SetBoundsLocal(meshBounds);
     _lightVector->MakePipelineState(commandBuffer);
@@ -117,10 +122,6 @@ NotationLight::NotationLight(const PNuoCommandBuffer& commandBuffer,
 
 
 /*
-- (NuoMeshBounds)bounds
-{
-    return [_lightVector worldBounds:NuoMatrixFloat44Identity];
-}
 
 
 void makeResources
@@ -131,26 +132,7 @@ void makeResources
 }
 
 
-/
-- (void)updateUniformsForView:(id<NuoRenderInFlight>)inFlight
-{
-    NuoLightSource* desc = _lightSourceDesc;
-    const NuoBounds bounds = _lightVector.boundsLocal.boundingBox;
-    
-    const NuoVectorFloat3 translationToCenter
-    (
-        - bounds._center.x(),
-        - bounds._center.y(),
-        - bounds._center.z() + bounds._span.z() / 2.0f
-    );
-    
-    const NuoMatrixFloat44 modelCenteringMatrix = NuoMatrixTranslation(translationToCenter);
-    const NuoMatrixFloat44 modelMatrix = desc.lightDirection * modelCenteringMatrix;
-    [_lightVector updateUniform:inFlight withTransform:modelMatrix._m];
-    
-    NuoModelCharacterUniforms characters;
-    characters.opacity = _selected ? 1.0f : 0.1f;
-}*/
+*/
 
 
 void NotationLight::UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,
@@ -162,25 +144,68 @@ void NotationLight::UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,
 
 void NotationLight::UpdateUniformsForView(const PNuoCommandEncoder& renderPass)
 {
-    NuoMatrixFloat44 viewMatrix = NuoMatrixFloat44Identity;
+    NuoLightSource& desc = _lightSourceDesc;
+    const NuoBounds bounds = _lightVector->BoundsLocal().boundingBox;
 
-    _lightVector->UpdateUniform(renderPass->InFlight(), viewMatrix);
+    const NuoVectorFloat3 translationToCenter
+    (
+        -bounds._center.x(),
+        -bounds._center.y(),
+        -bounds._center.z() + bounds._span.z() / 2.0f
+    );
+
+    const NuoMatrixFloat44 modelCenteringMatrix = NuoMatrixTranslation(translationToCenter);
+    const NuoMatrixFloat44 modelMatrix = desc._lightDirection * modelCenteringMatrix;
+    _lightVector->UpdateUniform(renderPass->InFlight(), modelMatrix);
+
+    /* TODO: selection transparency
+     * 
+    NuoModelCharacterUniforms characters;
+    characters.opacity = _selected ? 1.0f : 0.1f;
+     */
 }
 
 
-/*
-- (void)setSelected:(BOOL)selected
+void NotationLight::SetSelected(bool selected,
+                                const PNuoCommandBuffer& commandBuffer,
+                                std::vector<PNuoResource>& intermediate)
+{
+    BOOL changed = (_selected != selected);
+
+    _selected = selected;
+
+    if (changed)
+    {
+        UpdatePrivateUniform(commandBuffer, intermediate);
+
+        _lightVector->SetTransparency(!_selected);
+        _lightVector->MakePipelineState(commandBuffer);
+    }
+}
+
+
+void NotationLight::SetSelected(bool selected)
 {
     BOOL changed = (_selected != selected);
     
-    _selected = selected;
-    
     if (changed)
-        [self updatePrivateUniform];
-    
-    [_lightVector setTransparency:!_selected];
-    [_lightVector makeDepthStencilState];
-}*/
+    {
+        std::vector<PNuoResource> intermediate;
+
+        PNuoCommandBuffer commandBuffer = _commandQueue->CreateCommandBuffer();
+
+        SetSelected(selected, commandBuffer, intermediate);
+        
+        commandBuffer->Commit();
+        commandBuffer->WaitUntilComplete(intermediate);
+    }
+}
+
+
+NuoMeshBounds NotationLight::Bounds()
+{
+    return _lightVector->WorldBounds(NuoMatrixFloat44Identity);
+}
 
 
 NuoPoint<float> NotationLight::HeadPointProjectedWithView(const NuoMatrixFloat44& view)
@@ -200,4 +225,10 @@ void NotationLight::DrawWithRenderPass(const PNuoCommandEncoder& renderPass, Nuo
     _lightVector->Draw(renderPass);
 }
 
+
+
+void NotationLight::UpdateLightTransform(const NuoMatrixFloat44& delta)
+{
+    _lightSourceDesc._lightDirection = delta * _lightSourceDesc._lightDirection;
+}
 

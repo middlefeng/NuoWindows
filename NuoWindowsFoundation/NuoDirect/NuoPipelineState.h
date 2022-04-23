@@ -27,6 +27,14 @@ enum NuoBlendingMode
 };
 
 
+enum NuoCullMode
+{
+	kNuoCull_None,
+	kNuoCull_Front,
+	kNuoCull_Back,
+};
+
+
 
 class NuoPipelineState
 {
@@ -42,6 +50,7 @@ public:
 					 bool depthEnabled, bool depthWrite,
 					 unsigned int sampleCount,
 					 NuoBlendingMode blendingMode,
+					 NuoCullMode cullMode,
 					 const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputDesc,
 				  	 const PNuoShader& vertex,
 					 const PNuoShader& pixel,

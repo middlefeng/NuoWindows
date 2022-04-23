@@ -54,6 +54,16 @@ public:
 	void DrawWithRenderPass(const PNuoCommandEncoder& renderPass,
 							NuoMesh::CommonFunc func);
 
+	void UpdateLightTransform(const NuoMatrixFloat44& delta);
+
+	void SetSelected(bool selected,
+					 const PNuoCommandBuffer& commandBuffer,
+					 std::vector<PNuoResource>& intermediate);
+
+	void SetSelected(bool selected);
+
+	NuoMeshBounds Bounds();
+
 private:
 
 	void UpdatePrivateUniform(const PNuoCommandBuffer& commandBuffer,

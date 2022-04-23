@@ -36,6 +36,11 @@ class NuoMesh
 
 protected:
 
+	bool _hasTransparency;
+	
+	NuoBlendingMode _blendMode;
+	NuoCullMode _cullMode;
+
 	NuoMeshRotation _rotation;
 
 	// mesh transform about the poise (rotation around model center).
@@ -79,8 +84,13 @@ public:
 	
 	NuoMeshBounds WorldBounds(const NuoMatrixFloat44& transform);
 
-	virtual bool HasTransparency() const = 0;
-	virtual void SetTransparency(bool transparency) = 0;
+	virtual bool HasTransparency() const;
+	virtual void SetTransparency(bool transparency);
+
+	void SetBlendMode(NuoBlendingMode mode);
+	NuoBlendingMode BlendMode() const;
+	void SetCullMode(NuoCullMode mode);
+	NuoCullMode CullMode() const;
 
 	virtual unsigned int SampleCount();
 	virtual void SetSampleCount(unsigned int sampleCount);
@@ -158,9 +168,6 @@ public:
 			  std::vector<PNuoResource>& intermediate,
 			  const PNuoModelSimple& model,
 		      DXGI_FORMAT format);
-
-	virtual bool HasTransparency() const override;
-	virtual void SetTransparency(bool transparency) override;
 
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
 	virtual PNuoRootSignature RootSignature(const PNuoCommandBuffer& commandBuffer) override;

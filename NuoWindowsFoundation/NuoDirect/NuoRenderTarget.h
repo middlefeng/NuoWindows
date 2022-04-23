@@ -52,10 +52,15 @@ protected:
 	unsigned int _encoderCount;
 	PNuoCommandEncoder _renderPassEncoder;
 
+	NuoVectorFloat4 _clearColor;
+
 public:
 
 	NuoRenderTarget(const PNuoDevice& device, DXGI_FORMAT format,
 					unsigned int sampleCount, bool depthEnabled, bool manageResource);
+
+	virtual void SetClearColor(const NuoVectorFloat4& color);
+	NuoVectorFloat4 ClearColor() const;
 
 	virtual D3D12_CPU_DESCRIPTOR_HANDLE* View();
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthView();
