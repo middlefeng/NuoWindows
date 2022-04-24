@@ -12,6 +12,8 @@
 #include <cassert>
 #include <wrl.h>
 
+#include "NuoAppInstance.h"
+
 
 // code on https://faithlife.codes/blog/2008/09/displaying_a_splash_screen_with_c_part_i/
 
@@ -467,6 +469,12 @@ static void WriteIconDirectoryEntry(NuoFile& file, int nIdx, HICON hIcon, UINT n
 NuoIcon::NuoIcon(HICON icon)
     : _hIcon(icon)
 {
+}
+
+
+NuoIcon::NuoIcon(int iconId)
+{
+    _hIcon = LoadIcon(NuoAppInstance::GetInstance()->Instance(), MAKEINTRESOURCE(iconId));
 }
 
 

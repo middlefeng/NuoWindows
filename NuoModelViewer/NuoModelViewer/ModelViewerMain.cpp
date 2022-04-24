@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "ModelViewerMain.h"
 
+#include "NuoImage.h"
 #include "NuoAppInstance.h"
 
 #include "ModelViewerWindow.h"
@@ -22,6 +23,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     PNuoDirectWindow window = std::make_shared<ModelViewerWindow>("  Model Viewer");
     window->Init();
+
+    PNuoIcon icon = std::make_shared<NuoIcon>(IDI_NUODIRECT);
+    window->SetIcon(icon);
 
     auto exitFunc = []()
     {

@@ -247,7 +247,7 @@ SIZE NuoWindow::TextSize(const std::string& text, const PNuoFont& font)
 
     SIZE size;
     SelectFont(hDC, font->Handle());
-    GetTextExtentPoint32(hDC, wtext.c_str(), wtext.length(), &size);
+    GetTextExtentPoint32(hDC, wtext.c_str(), (int)wtext.length(), &size);
 
     ReleaseDC(_hWnd, hDC);
 
