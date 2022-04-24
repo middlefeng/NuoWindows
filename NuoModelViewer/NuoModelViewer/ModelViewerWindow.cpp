@@ -8,6 +8,7 @@
 
 #include "NuoMenu.h"
 #include "NuoProgressBar.h"
+#include "NuoSlider.h"
 #include "NuoOpenFileDialog.h"
 #include "NuoDropdownList.h"
 #include "NuoAppInstance.h"
@@ -84,6 +85,18 @@ void ModelViewerWindow::Init()
 			PModelViewConfiguration pConfiguration = configuration.lock();
 			pConfiguration->SelectDevice(pList->SelectedItem());
 		});
+
+	NuoInset<float> backgroundColorMargin(0, 200, 0, 20);
+	NuoRect<float> backgroundColorPos(0, 0, 150, 20);
+	_backgroundColorSlider = std::make_shared<NuoSlider>(shared_from_this(), "Background Color");
+
+	Add(_backgroundColorSlider);
+
+	_backgroundColorSlider->Init(0);
+	_backgroundColorSlider->SetAutoPosition(kNuoControl_RT);
+	_backgroundColorSlider->SetMargin(backgroundColorMargin);
+	_backgroundColorSlider->SetPosition(backgroundColorPos, false);
+	_backgroundColorSlider->SetFont(NuoFont::MenuFont(16.5));
 
 	UpdateControls();
 

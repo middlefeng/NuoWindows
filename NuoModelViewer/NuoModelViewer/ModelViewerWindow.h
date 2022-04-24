@@ -14,6 +14,9 @@ typedef std::shared_ptr<NuoDropdownList> PNuoDropdownList;
 class NuoProgressBar;
 typedef std::shared_ptr<NuoProgressBar> PNuoProgressBar;
 
+class NuoSlider;
+typedef std::shared_ptr<NuoSlider> PNuoSlider;
+
 
 class ModelViewerWindow : public NuoWindow
 {
@@ -24,6 +27,8 @@ class ModelViewerWindow : public NuoWindow
 	PModelViewConfiguration _configuration;
 	PNuoDropdownList _deviceList;
 	PNuoProgressBar _loadingProgress;
+
+	PNuoSlider _backgroundColorSlider;
 
 public:
 
