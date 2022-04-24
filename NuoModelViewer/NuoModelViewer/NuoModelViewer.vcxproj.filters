@@ -513,6 +513,9 @@
     <Image Include="NuoDirect.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resources\NuoModelViewer.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
