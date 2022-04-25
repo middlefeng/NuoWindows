@@ -78,6 +78,11 @@ protected:
 
 	PNuoFont _font;
 
+	/**
+	 *   used by commctrls background, WM_CTLCOLORSTATIC 
+	 */
+	HBRUSH _backgroundBrush;
+
 	short _mouseX;
 	short _mouseY;
 

@@ -118,6 +118,15 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
         }
         break;
     }
+    case WM_CTLCOLORSTATIC:
+    {
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+
+        if (window->_backgroundBrush == NULL)
+            window->_backgroundBrush = CreateSolidBrush(RGB(255, 255, 255));
+
+        return (INT_PTR)window->_backgroundBrush;
+    }
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -456,6 +465,13 @@ void NuoWindow::Detach()
 
 void NuoWindow::Destroy()
 {
+
+    if (_backgroundBrush)
+    {
+        ::DeleteObject(_backgroundBrush);
+        _backgroundBrush = 0;
+    }
+
     for (auto child : _children)
         child->Detach();
 
