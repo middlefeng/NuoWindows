@@ -58,15 +58,18 @@ void ModelViewerWindow::Init()
 
 	currentDevice->EnableDebugInfoQueue();
 
+	const int rightPanelWidth = 220;
+	const int rightPanelControlWidth = rightPanelWidth - 50;
+
 	_dxView = std::make_shared<ModelView>(currentDevice, shared_from_this());
 	Add(_dxView);
 
-	NuoInset<float> margin(0, 0, 0, 200);
+	NuoInset<float> margin(0, 0, 0, rightPanelWidth);
 	_dxView->SetAutoPosition(kNuoControl_Stretch_ALL);
 	_dxView->SetMargin(margin);
 
 	NuoInset<float> deivceListMargin(0, 0, 20, 20);
-	NuoRect<float> deviceListPos(0, 0, 150, 100);
+	NuoRect<float> deviceListPos(0, 0, rightPanelControlWidth, 100);
 	_deviceList = std::make_shared<NuoDropdownList>(shared_from_this(),
 													_configuration->DeviceNames());
 	Add(_deviceList);
@@ -87,16 +90,17 @@ void ModelViewerWindow::Init()
 		});
 
 	NuoInset<float> backgroundColorMargin(0, 200, 0, 20);
-	NuoRect<float> backgroundColorPos(0, 0, 150, 20);
-	_backgroundColorSlider = std::make_shared<NuoSlider>(shared_from_this(), "Background Color");
+	NuoRect<float> backgroundColorPos(0, 0, rightPanelControlWidth, 25);
+	_backgroundColorSlider = std::make_shared<NuoSlider>(shared_from_this());
 
 	Add(_backgroundColorSlider);
 
-	_backgroundColorSlider->Init(0);
+	_backgroundColorSlider->Init(0, 0, 100);
 	_backgroundColorSlider->SetAutoPosition(kNuoControl_RT);
 	_backgroundColorSlider->SetMargin(backgroundColorMargin);
 	_backgroundColorSlider->SetPosition(backgroundColorPos, false);
 	_backgroundColorSlider->SetFont(NuoFont::MenuFont(16.5));
+	_backgroundColorSlider->SetValue(70);
 
 	UpdateControls();
 
