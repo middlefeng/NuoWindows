@@ -37,7 +37,7 @@ protected:
 
 public:
 
-	NuoSlider(const PNuoWindow& parent, const std::string& title);
+	NuoSlider(const PNuoWindow& parent);
 	virtual ~NuoSlider();
 
 	void Init(int controlID, int rangeMin, int rangMax);

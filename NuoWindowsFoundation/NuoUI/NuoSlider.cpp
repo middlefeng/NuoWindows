@@ -17,8 +17,8 @@
 #include "NuoDialog.h"
 
 
-NuoSlider::NuoSlider(const PNuoWindow& parent, const std::string& title)
-	: NuoControl(title, parent)
+NuoSlider::NuoSlider(const PNuoWindow& parent)
+	: NuoControl("", parent)
 {
 }
 
@@ -32,13 +32,12 @@ NuoSlider::NuoSlider(const PNuoDialog& parent, int controlID)
 
 void NuoSlider::Init(int controlID, int rangeMin, int rangeMax)
 {
-    std::wstring wtitle = StringToUTF16(_title);
     PNuoWindow parent = _parent.lock();
 
     _hWnd = CreateWindow(TRACKBAR_CLASS,        // Predefined class; Unicode assumed 
-                         wtitle.c_str(),        // Button text 
+                         L"",                   // text 
                          WS_TABSTOP | WS_VISIBLE | WS_CHILD | TBS_NOTICKS,  // Styles 
-                         10, 10, 300, 40,       // Button height
+                         10, 10, 300, 40,       // height
                          parent->Handle(),      // Parent window
                          (HMENU)controlID,             
                          NuoAppInstance::GetInstance()->Instance(),
