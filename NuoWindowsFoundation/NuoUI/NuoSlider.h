@@ -33,13 +33,20 @@ protected:
 
 	NuoSlider(const PNuoDialog& parent, int controlID);
 
+	CommandFunc _onScroll;
+
 public:
 
 	NuoSlider(const PNuoWindow& parent, const std::string& title);
 	virtual ~NuoSlider();
 
-	void Init(int controlID);
+	void Init(int controlID, int rangeMin, int rangMax);
 
+	void SetOnScroll(CommandFunc onScroll);
+	virtual void OnScroll(int msg);
+
+	void SetValue(int value);
+	int Value() const;
 
 	friend NuoDialog;
 

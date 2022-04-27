@@ -6,6 +6,7 @@
 #include "NuoStrings.h"
 #include "NuoMenu.h"
 #include "NuoImage.h"
+#include "NuoSlider.h"
 
 #include <windows.h>
 #include <windowsx.h>
@@ -36,6 +37,26 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
         processed = window->OnCommand(wmId, notification);
 
+        if (!processed)
+            return DefWindowProc(hWnd, message, wParam, lParam);
+
+        break;
+    }
+    case WM_HSCROLL:
+    {
+        bool processed = false;
+
+        if (lParam)
+        {
+            NuoWindow* window = (NuoWindow*)GetWindowLongPtr((HWND)lParam, kWindowPtr);
+            NuoSlider* slider = dynamic_cast<NuoSlider*>(window);
+            if (slider)
+            {
+                slider->OnScroll(wParam);
+                processed = true;
+            }
+        }
+        
         if (!processed)
             return DefWindowProc(hWnd, message, wParam, lParam);
 

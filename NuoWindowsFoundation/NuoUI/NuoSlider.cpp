@@ -10,6 +10,7 @@
 #include "NuoSlider.h"
 
 #include <CommCtrl.h>
+#include <windowsx.h>
 
 #include "NuoStrings.h"
 #include "NuoAppInstance.h"
@@ -29,7 +30,7 @@ NuoSlider::NuoSlider(const PNuoDialog& parent, int controlID)
 }
 
 
-void NuoSlider::Init(int controlID)
+void NuoSlider::Init(int controlID, int rangeMin, int rangeMax)
 {
     std::wstring wtitle = StringToUTF16(_title);
     PNuoWindow parent = _parent.lock();
@@ -43,6 +44,11 @@ void NuoSlider::Init(int controlID)
                          NuoAppInstance::GetInstance()->Instance(),
                          NULL);
 
+    SendMessage(_hWnd, (UINT)TBM_SETRANGEMIN, (WPARAM)(BOOL)FALSE, (LPARAM)rangeMin);
+    SendMessage(_hWnd, (UINT)TBM_SETRANGEMAX, (WPARAM)(BOOL)FALSE, (LPARAM)rangeMax);
+
+    ScrollBar_SetRange(_hWnd, rangeMin, rangeMax, false);
+
     _id = controlID;
 
     SetWindowLongPtr(_hWnd, kWindowPtr, (LONG_PTR)this);
@@ -50,6 +56,32 @@ void NuoSlider::Init(int controlID)
 
     Update();
     Show();
+}
+
+
+void NuoSlider::SetOnScroll(CommandFunc onScroll)
+{
+    _onScroll = onScroll;
+}
+
+
+void NuoSlider::OnScroll(int msg)
+{
+    if (_onScroll)
+        _onScroll(msg);
+}
+
+
+void NuoSlider::SetValue(int value)
+{
+    SendMessage(_hWnd, (UINT)TBM_SETPOS, (WPARAM)(BOOL)true, (LPARAM)value);
+}
+
+
+int NuoSlider::Value() const
+{
+    const auto value = SendMessage(_hWnd, (UINT)TBM_GETPOS, (WPARAM)0, (LPARAM)0);
+    return value;
 }
 
 
