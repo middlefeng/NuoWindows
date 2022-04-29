@@ -41,6 +41,8 @@ public:
 	void Init(int controlID);
 
 	void SetContentHeight(float height);
+	int ScrollPosDevice() const;
+	void SetScrollPosDevice(int pos);
 
 	friend NuoDialog;
 
