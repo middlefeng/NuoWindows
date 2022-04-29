@@ -6,6 +6,8 @@
 #include "NuoStrings.h"
 #include "NuoMenu.h"
 #include "NuoImage.h"
+#include "NuoSlider.h"
+#include "NuoScrollView.h"
 
 #include <windows.h>
 #include <windowsx.h>
@@ -36,6 +38,26 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
         processed = window->OnCommand(wmId, notification);
 
+        if (!processed)
+            return DefWindowProc(hWnd, message, wParam, lParam);
+
+        break;
+    }
+    case WM_HSCROLL:
+    {
+        bool processed = false;
+
+        if (lParam)
+        {
+            NuoWindow* window = (NuoWindow*)GetWindowLongPtr((HWND)lParam, kWindowPtr);
+            NuoSlider* slider = dynamic_cast<NuoSlider*>(window);
+            if (slider)
+            {
+                slider->OnScroll(wParam);
+                processed = true;
+            }
+        }
+        
         if (!processed)
             return DefWindowProc(hWnd, message, wParam, lParam);
 
@@ -72,6 +94,46 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
             window->OnPaint();
 
         EndPaint(hWnd, &lc);
+
+        break;
+    }
+    case WM_VSCROLL:
+    {
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        bool processed = false;
+        
+        if (window)
+        {
+            NuoScrollView* scrollWindow = dynamic_cast<NuoScrollView*>(window);
+            if (scrollWindow)
+            {
+                scrollWindow->OnScroll(message, wParam, lParam);
+                processed = true;
+            }
+        }
+
+        if (!processed)
+            return DefWindowProc(hWnd, message, wParam, lParam);
+
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        bool processed = false;
+
+        if (window)
+        {
+            NuoScrollView* scrollWindow = dynamic_cast<NuoScrollView*>(window);
+            if (scrollWindow)
+            {
+                scrollWindow->OnScrollWheel(message, wParam, lParam);
+                processed = true;
+            }
+        }
+
+        if (!processed)
+            return DefWindowProc(hWnd, message, wParam, lParam);
 
         break;
     }
@@ -117,6 +179,15 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
             }
         }
         break;
+    }
+    case WM_CTLCOLORSTATIC:
+    {
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+
+        if (window->_backgroundBrush == NULL)
+            window->_backgroundBrush = CreateSolidBrush(RGB(255, 255, 255));
+
+        return (INT_PTR)window->_backgroundBrush;
     }
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -456,6 +527,13 @@ void NuoWindow::Detach()
 
 void NuoWindow::Destroy()
 {
+
+    if (_backgroundBrush)
+    {
+        ::DeleteObject(_backgroundBrush);
+        _backgroundBrush = 0;
+    }
+
     for (auto child : _children)
         child->Detach();
 

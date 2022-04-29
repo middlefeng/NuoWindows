@@ -8,6 +8,8 @@
 
 #include "NuoMenu.h"
 #include "NuoProgressBar.h"
+#include "NuoSlider.h"
+#include "NuoScrollView.h"
 #include "NuoOpenFileDialog.h"
 #include "NuoDropdownList.h"
 #include "NuoAppInstance.h"
@@ -57,15 +59,18 @@ void ModelViewerWindow::Init()
 
 	currentDevice->EnableDebugInfoQueue();
 
+	const int rightPanelWidth = 250;
+	const int rightPanelControlWidth = rightPanelWidth - 50;
+
 	_dxView = std::make_shared<ModelView>(currentDevice, shared_from_this());
 	Add(_dxView);
 
-	NuoInset<float> margin(0, 0, 0, 200);
+	NuoInset<float> margin(0, 0, 0, rightPanelWidth);
 	_dxView->SetAutoPosition(kNuoControl_Stretch_ALL);
 	_dxView->SetMargin(margin);
 
 	NuoInset<float> deivceListMargin(0, 0, 20, 20);
-	NuoRect<float> deviceListPos(0, 0, 150, 100);
+	NuoRect<float> deviceListPos(0, 0, rightPanelControlWidth, 100);
 	_deviceList = std::make_shared<NuoDropdownList>(shared_from_this(),
 													_configuration->DeviceNames());
 	Add(_deviceList);
@@ -84,6 +89,31 @@ void ModelViewerWindow::Init()
 			PModelViewConfiguration pConfiguration = configuration.lock();
 			pConfiguration->SelectDevice(pList->SelectedItem());
 		});
+
+	NuoInset<float> scrollViewMargin(0, 20, 0, 20);
+	NuoRect<float> scrollViewPos(0, 0, rightPanelControlWidth, 180);
+	_modelPanel = std::make_shared<NuoScrollView>(shared_from_this(), "Scroll View");
+
+	Add(_backgroundColorSlider);
+
+	_modelPanel->Init(0);
+	_modelPanel->SetAutoPosition(kNuoControl_RT);
+	_modelPanel->SetMargin(scrollViewMargin);
+	_modelPanel->SetPosition(scrollViewPos, false);
+	_modelPanel->SetContentHeight(360);
+	_modelPanel->SetFont(NuoFont::MenuFont(16.5));
+
+	NuoInset<float> backgroundColorMargin(0, 50, 0, 20);
+	NuoRect<float> backgroundColorPos(0, 20, rightPanelControlWidth, 25);
+	_backgroundColorSlider = std::make_shared<NuoSlider>(_modelPanel);
+
+	_modelPanel->Add(_backgroundColorSlider);
+
+	_backgroundColorSlider->Init(0, 0, 100);
+	_backgroundColorSlider->SetAutoPosition(kNuoControl_RT);
+	_backgroundColorSlider->SetMargin(backgroundColorMargin);
+	_backgroundColorSlider->SetPosition(backgroundColorPos, false);
+	_backgroundColorSlider->SetValue(70);
 
 	UpdateControls();
 

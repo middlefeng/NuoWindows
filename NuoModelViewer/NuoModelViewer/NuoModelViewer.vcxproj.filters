@@ -267,6 +267,12 @@
     <ClCompile Include="Renderer\NotationRenderer.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoSlider.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoScrollView.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -499,6 +505,12 @@
     </ClInclude>
     <ClInclude Include="Renderer\NotationRenderer.h">
       <Filter>Source Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoSlider.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoScrollView.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
