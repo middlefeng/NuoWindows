@@ -40,8 +40,16 @@ public:
 
 	void Init(int controlID);
 
+	void SetContentHeight(float height);
 
 	friend NuoDialog;
+
+private:
+
+	void OnScroll(UINT message, WPARAM wParam, LPARAM lParam);
+	void OnScrollWheel(UINT message, WPARAM wParam, LPARAM lParam);
+
+	friend NuoWindow;
 
 };
 

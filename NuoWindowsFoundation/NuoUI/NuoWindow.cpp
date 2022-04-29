@@ -7,6 +7,7 @@
 #include "NuoMenu.h"
 #include "NuoImage.h"
 #include "NuoSlider.h"
+#include "NuoScrollView.h"
 
 #include <windows.h>
 #include <windowsx.h>
@@ -93,6 +94,46 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
             window->OnPaint();
 
         EndPaint(hWnd, &lc);
+
+        break;
+    }
+    case WM_VSCROLL:
+    {
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        bool processed = false;
+        
+        if (window)
+        {
+            NuoScrollView* scrollWindow = dynamic_cast<NuoScrollView*>(window);
+            if (scrollWindow)
+            {
+                scrollWindow->OnScroll(message, wParam, lParam);
+                processed = true;
+            }
+        }
+
+        if (!processed)
+            return DefWindowProc(hWnd, message, wParam, lParam);
+
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
+        bool processed = false;
+
+        if (window)
+        {
+            NuoScrollView* scrollWindow = dynamic_cast<NuoScrollView*>(window);
+            if (scrollWindow)
+            {
+                scrollWindow->OnScrollWheel(message, wParam, lParam);
+                processed = true;
+            }
+        }
+
+        if (!processed)
+            return DefWindowProc(hWnd, message, wParam, lParam);
 
         break;
     }
