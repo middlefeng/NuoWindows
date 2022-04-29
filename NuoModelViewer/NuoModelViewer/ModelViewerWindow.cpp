@@ -9,6 +9,7 @@
 #include "NuoMenu.h"
 #include "NuoProgressBar.h"
 #include "NuoSlider.h"
+#include "NuoScrollView.h"
 #include "NuoOpenFileDialog.h"
 #include "NuoDropdownList.h"
 #include "NuoAppInstance.h"
@@ -58,7 +59,7 @@ void ModelViewerWindow::Init()
 
 	currentDevice->EnableDebugInfoQueue();
 
-	const int rightPanelWidth = 220;
+	const int rightPanelWidth = 250;
 	const int rightPanelControlWidth = rightPanelWidth - 50;
 
 	_dxView = std::make_shared<ModelView>(currentDevice, shared_from_this());
@@ -89,17 +90,29 @@ void ModelViewerWindow::Init()
 			pConfiguration->SelectDevice(pList->SelectedItem());
 		});
 
-	NuoInset<float> backgroundColorMargin(0, 200, 0, 20);
-	NuoRect<float> backgroundColorPos(0, 0, rightPanelControlWidth, 25);
-	_backgroundColorSlider = std::make_shared<NuoSlider>(shared_from_this());
+	NuoInset<float> scrollViewMargin(0, 20, 0, 20);
+	NuoRect<float> scrollViewPos(0, 0, rightPanelControlWidth, 180);
+	_modelPanel = std::make_shared<NuoScrollView>(shared_from_this(), "Scroll View");
 
 	Add(_backgroundColorSlider);
+
+	_modelPanel->Init(0);
+	_modelPanel->SetAutoPosition(kNuoControl_RT);
+	_modelPanel->SetMargin(scrollViewMargin);
+	_modelPanel->SetPosition(scrollViewPos, false);
+	_modelPanel->SetContentHeight(360);
+	_modelPanel->SetFont(NuoFont::MenuFont(16.5));
+
+	NuoInset<float> backgroundColorMargin(0, 50, 0, 20);
+	NuoRect<float> backgroundColorPos(0, 20, rightPanelControlWidth, 25);
+	_backgroundColorSlider = std::make_shared<NuoSlider>(_modelPanel);
+
+	_modelPanel->Add(_backgroundColorSlider);
 
 	_backgroundColorSlider->Init(0, 0, 100);
 	_backgroundColorSlider->SetAutoPosition(kNuoControl_RT);
 	_backgroundColorSlider->SetMargin(backgroundColorMargin);
 	_backgroundColorSlider->SetPosition(backgroundColorPos, false);
-	_backgroundColorSlider->SetFont(NuoFont::MenuFont(16.5));
 	_backgroundColorSlider->SetValue(70);
 
 	UpdateControls();
