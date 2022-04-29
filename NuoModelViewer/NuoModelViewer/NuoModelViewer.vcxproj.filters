@@ -55,6 +55,9 @@
     <Filter Include="NuoWindowsFoundation\NuoShadowMap">
       <UniqueIdentifier>{c7dfd404-5acd-4e2a-8060-3572d252854c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Interface">
+      <UniqueIdentifier>{390b099e-ba76-4167-98c4-fc5a8cc4c51d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.cpp">
@@ -272,6 +275,9 @@
     </ClCompile>
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoScrollView.cpp">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\ModelOperationPanel.cpp">
+      <Filter>Source Files\Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +517,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoScrollView.h">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\ModelOperationPanel.h">
+      <Filter>Source Files\Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
