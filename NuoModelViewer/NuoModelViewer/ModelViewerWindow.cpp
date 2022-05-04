@@ -15,6 +15,8 @@
 #include "NuoAppInstance.h"
 #include "NuoStrings.h"
 
+#include "UserInterface/ModelOperationPanel.h"
+
 #include "ModelState/ModelState.h"
 #include "ModelState/ModelViewConfiguration.h"
 
@@ -73,7 +75,6 @@ void ModelViewerWindow::Init()
 	NuoRect<float> deviceListPos(0, 0, rightPanelControlWidth, 100);
 	_deviceList = std::make_shared<NuoDropdownList>(shared_from_this(),
 													_configuration->DeviceNames());
-	Add(_deviceList);
 
 	std::weak_ptr<ModelViewConfiguration> configuration = _configuration;
 	std::weak_ptr<NuoDropdownList> list = _deviceList;
@@ -91,36 +92,19 @@ void ModelViewerWindow::Init()
 		});
 
 	NuoInset<float> scrollViewMargin(0, 20, 0, 20);
-	NuoRect<float> scrollViewPos(0, 0, rightPanelControlWidth, 180);
-	_modelPanel = std::make_shared<NuoScrollView>(shared_from_this(), "Scroll View");
-
-	Add(_backgroundColorSlider);
-
-	_modelPanel->Init(0);
+	NuoRect<float> scrollViewPos(0, 0, rightPanelControlWidth, 500);
+	_modelPanel = std::make_shared<ModelOperationPanel>(shared_from_this());
+	_modelPanel->Init();
 	_modelPanel->SetAutoPosition(kNuoControl_RT);
 	_modelPanel->SetMargin(scrollViewMargin);
 	_modelPanel->SetPosition(scrollViewPos, false);
-	_modelPanel->SetContentHeight(360);
 	_modelPanel->SetFont(NuoFont::MenuFont(16.5));
-
-	NuoInset<float> backgroundColorMargin(0, 50, 0, 20);
-	NuoRect<float> backgroundColorPos(0, 20, rightPanelControlWidth, 25);
-	_backgroundColorSlider = std::make_shared<NuoSlider>(_modelPanel);
-
-	_modelPanel->Add(_backgroundColorSlider);
-
-	_backgroundColorSlider->Init(0, 0, 100);
-	_backgroundColorSlider->SetAutoPosition(kNuoControl_RT);
-	_backgroundColorSlider->SetMargin(backgroundColorMargin);
-	_backgroundColorSlider->SetPosition(backgroundColorPos, false);
-	_backgroundColorSlider->SetValue(70);
 
 	UpdateControls();
 
 	NuoInset<float> loadingProgressMaring(20, 0, 20, 0);
 	NuoRect<float> loadingProgressPos(0, 0, 150, 30);
 	_loadingProgress = std::make_shared<NuoProgressBar>(shared_from_this(), "");
-	Add(_loadingProgress);
 
 	_loadingProgress->Init(0);
 	_loadingProgress->SetAutoPosition(kNuoControl_LB);

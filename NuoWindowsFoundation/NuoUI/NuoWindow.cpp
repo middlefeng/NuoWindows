@@ -198,13 +198,13 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
 
 
 NuoWindow::NuoWindow()
-    : _hWnd(0), _inDPIChange(false), _savedDPI(1.0), _inDragging(false)
+    : _hWnd(0), _inDPIChange(false), _savedDPI(1.0), _inDragging(false), _backgroundBrush(0)
 {
 }
 
 
 NuoWindow::NuoWindow(const std::string& title)
-    : _title(title), _hWnd(0), _inDPIChange(false), _savedDPI(1.0), _inDragging(false)
+    : _title(title), _hWnd(0), _inDPIChange(false), _savedDPI(1.0), _inDragging(false), _backgroundBrush(0)
 {
     std::wstring wtitle = StringToUTF16(title);
     HINSTANCE hInstance = NuoAppInstance::GetInstance()->Instance();
@@ -336,7 +336,11 @@ void NuoWindow::SetPositionDevice(const NuoRect<long>& pos, bool activate)
 {
     UINT flag = 0;
     if (!activate)
+    {
+        // looks like the only way working for a child, non-free-framed window
+        //
         flag = SWP_NOZORDER | SWP_NOACTIVATE;
+    }
 
     SetWindowPos(_hWnd, HWND_NOTOPMOST, pos.X(), pos.Y(), pos.W(), pos.H(), flag);
 }
