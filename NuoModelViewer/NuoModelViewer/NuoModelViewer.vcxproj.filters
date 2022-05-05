@@ -579,7 +579,7 @@
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShadersCommon.h">
-      <Filter>Header Files</Filter>
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
