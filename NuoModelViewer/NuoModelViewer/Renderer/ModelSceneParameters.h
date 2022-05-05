@@ -13,14 +13,31 @@
 
 #pragma once
 
+#include <memory>
+#include <vector>
 
+
+class NuoResourceSwapChain;
+typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
+
+class NuoDevice;
+typedef std::shared_ptr<NuoDevice> PNuoDevice;
+
+class NuoCommandBuffer;
+typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
 
 
 class ModelSceneParameters
 {
 
+	PNuoResourceSwapChain _transUniformBuffers;
+
 public:
+
+	ModelSceneParameters(const PNuoDevice& device);
+
+	void UpdateUniforms(const PNuoCommandBuffer& commandBuffer);
 
 };
 
