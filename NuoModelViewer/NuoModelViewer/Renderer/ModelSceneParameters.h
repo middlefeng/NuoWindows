@@ -16,6 +16,9 @@
 #include <memory>
 #include <vector>
 
+#include "NuoDirect/NuoSize.h"
+#include "NuoUtilites/NuoMathVector.h"
+
 
 class NuoResourceSwapChain;
 typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
@@ -26,12 +29,22 @@ typedef std::shared_ptr<NuoDevice> PNuoDevice;
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
+class NuoMeshSceneRoot;
+typedef std::shared_ptr<NuoMeshSceneRoot> PNuoMeshSceneRoot;
+
 
 
 class ModelSceneParameters
 {
 
 	PNuoResourceSwapChain _transUniformBuffers;
+
+	PNuoMeshSceneRoot _sceneRoot;
+
+	float _fieldOfView;
+	NuoSize _drawableSize;
+	NuoMatrixFloat44 _viewMatrix;
+	NuoMatrixFloat44 _projection;
 
 public:
 
