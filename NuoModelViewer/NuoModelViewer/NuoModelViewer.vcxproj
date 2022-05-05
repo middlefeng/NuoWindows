@@ -232,6 +232,7 @@
     <ClCompile Include="ModelView.cpp" />
     <ClCompile Include="ModelViewerWindow.cpp" />
     <ClCompile Include="ModelViewerMain.cpp" />
+    <ClCompile Include="Renderer\ModelSceneParameters.cpp" />
     <ClCompile Include="Renderer\ModelViewerRenderer.cpp" />
     <ClCompile Include="Renderer\NotationLight.cpp" />
     <ClCompile Include="Renderer\NotationRenderer.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshCompound.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshMaterialed.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshOptions.h" />
+    <ClInclude Include="Renderer\ModelSceneParameters.h" />
     <ClInclude Include="UserInterface\ModelOperationPanel.h" />
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DeploymentContent>

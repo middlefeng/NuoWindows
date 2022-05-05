@@ -279,6 +279,9 @@
     <ClCompile Include="UserInterface\ModelOperationPanel.cpp">
       <Filter>Source Files\Interface</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\ModelSceneParameters.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -520,6 +523,9 @@
     </ClInclude>
     <ClInclude Include="UserInterface\ModelOperationPanel.h">
       <Filter>Source Files\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\ModelSceneParameters.h">
+      <Filter>Source Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
