@@ -82,7 +82,7 @@ public:
 	NuoMeshBounds BoundsLocal() const;
 	void SetBoundsLocal(const NuoMeshBounds& bounds);
 	
-	NuoMeshBounds WorldBounds(const NuoMatrixFloat44& transform);
+	virtual NuoMeshBounds WorldBounds(const NuoMatrixFloat44& transform);
 
 	virtual bool HasTransparency() const;
 	virtual void SetTransparency(bool transparency);

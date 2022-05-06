@@ -31,6 +31,7 @@ typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
 
 class NuoMeshSceneRoot;
 typedef std::shared_ptr<NuoMeshSceneRoot> PNuoMeshSceneRoot;
+typedef std::weak_ptr<NuoMeshSceneRoot> WPNuoMeshSceneRoot;
 
 
 
@@ -39,7 +40,7 @@ class ModelSceneParameters
 
 	PNuoResourceSwapChain _transUniformBuffers;
 
-	PNuoMeshSceneRoot _sceneRoot;
+	WPNuoMeshSceneRoot _sceneRoot;
 
 	float _fieldOfView;
 	NuoSize _drawableSize;
@@ -50,7 +51,15 @@ public:
 
 	ModelSceneParameters(const PNuoDevice& device);
 
+	void SetSceneRoot(const PNuoMeshSceneRoot& sceneRoot);
+	void SetDrawableSize(const NuoSize& size);
+	void SetViewMatrix(const NuoMatrixFloat44& viewMatrix);
+
 	void UpdateUniforms(const PNuoCommandBuffer& commandBuffer);
+
+	// TODO: should be part of interface NuoMeshSceneParametersProvider
+
+	PNuoResourceSwapChain TransUniformBuffers();
 
 };
 

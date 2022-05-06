@@ -30,6 +30,30 @@ void NuoMeshCompound::SetMeshes(const std::vector<PNuoMesh>& meshes)
 }
 
 
+NuoMeshBounds NuoMeshCompound::WorldBounds(const NuoMatrixFloat44& transform)
+{
+    if (!_meshes.size())
+        return { NuoBounds(), NuoSphere() };
+
+    NuoMatrixFloat44 transformLocal = _transformTranslate * _transformPoise;
+    NuoMatrixFloat44 transformWorld = transform * transformLocal;
+
+    NuoMeshBounds meshBounds = _meshes[0]->WorldBounds(transformWorld);
+    NuoBounds bounds = meshBounds.boundingBox;
+    NuoSphere sphere = meshBounds.boundingSphere;
+
+    for (size_t i = 1; i < _meshes.size(); ++i)
+    {
+        NuoMeshBounds meshBoundsItem = _meshes[i]->WorldBounds(transformWorld);
+
+        bounds = bounds.Union(meshBoundsItem.boundingBox);
+        sphere = sphere.Union(meshBoundsItem.boundingSphere);
+    }
+
+    return { bounds, sphere };
+}
+
+
 std::vector<D3D12_INPUT_ELEMENT_DESC> NuoMeshCompound::InputDesc()
 {
 	return {};

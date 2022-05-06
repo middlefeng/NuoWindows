@@ -11,6 +11,9 @@
 
 #include "ModelSceneParameters.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 #include "NuoModelLoader/NuoBounds.h"
 #include "NuoMeshes/NuoMeshSceneRoot.h"
 #include "NuoMeshes/NuoShaders/NuoUniforms.h"
@@ -21,8 +24,27 @@ ModelSceneParameters::ModelSceneParameters(const PNuoDevice& device)
     : _drawableSize(0, 0)
 {
 	_transUniformBuffers = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
+
+    _fieldOfView = (float)(2.f * M_PI) / 8.f;
 }
 
+
+void ModelSceneParameters::SetSceneRoot(const PNuoMeshSceneRoot& sceneRoot)
+{
+    _sceneRoot = sceneRoot;
+}
+
+
+void ModelSceneParameters::SetDrawableSize(const NuoSize& size)
+{
+    _drawableSize = size;
+}
+
+
+void ModelSceneParameters::SetViewMatrix(const NuoMatrixFloat44& viewMatrix)
+{
+    _viewMatrix = viewMatrix;
+}
 
 
 void ModelSceneParameters::UpdateUniforms(const PNuoCommandBuffer& commandBuffer)
@@ -34,12 +56,12 @@ void ModelSceneParameters::UpdateUniforms(const PNuoCommandBuffer& commandBuffer
 
     // bounding box transform and determining the near/far
     //
-    NuoBounds bounds = _sceneRoot->WorldBounds(viewTrans).boundingBox;
+    NuoBounds bounds = _sceneRoot.lock()->WorldBounds(viewTrans).boundingBox;
 
-    float nearPlane = -bounds._center.z() - bounds._span.z() / 2.0 + 0.01;
-    float farPlane = nearPlane + bounds._span.z() + 0.02;
-    nearPlane = std::max<float>(0.001, nearPlane);
-    farPlane = std::max<float>(nearPlane + 0.001, farPlane);
+    float nearPlane = -bounds._center.z() - bounds._span.z() / 2.0f + 0.01f;
+    float farPlane = nearPlane + bounds._span.z() + 0.02f;
+    nearPlane = std::max<float>(0.001f, nearPlane);
+    farPlane = std::max<float>(nearPlane + 0.001f, farPlane);
 
     _projection = NuoMatrixPerspective(aspect, _fieldOfView, nearPlane, farPlane);
 
@@ -71,3 +93,8 @@ void ModelSceneParameters::UpdateUniforms(const PNuoCommandBuffer& commandBuffer
     [_lightingUniformBuffers updateBufferWithInFlight : commandBuffer withContent : &lighting]; */
 }
 
+
+PNuoResourceSwapChain ModelSceneParameters::TransUniformBuffers()
+{
+    return _transUniformBuffers;
+}
