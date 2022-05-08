@@ -129,6 +129,12 @@ void NuoMesh::SetBoundsLocal(const NuoMeshBounds& bounds)
 }
 
 
+void NuoMesh::SetTransformTranslate(const NuoMatrixFloat44& translate)
+{
+	_transformTranslate = translate;
+}
+
+
 void NuoMesh::CenterMesh()
 {
 	const NuoBounds& bounds = _boundsLocal.boundingBox;

@@ -36,6 +36,14 @@ void ModelState::LoadMesh(const std::string& path, NuoModelLoaderProgress progre
         });
 
     _mainModelMesh->CenterMesh();
+
+    // move model from camera for a default distance (3 times of r)
+    //
+    const NuoBounds bounds = _mainModelMesh->WorldBounds(NuoMatrixFloat44Identity).boundingBox;
+    const float radius = bounds.MaxDimension() / 2.0;
+    const float defaultDistance = -3.0 * radius;
+    const NuoVectorFloat3 defaultDistanceVec(0, 0, defaultDistance);
+    _mainModelMesh->SetTransformTranslate(NuoMatrixTranslation(defaultDistanceVec));
 }
 
 

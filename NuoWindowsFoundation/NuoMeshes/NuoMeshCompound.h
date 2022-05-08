@@ -32,6 +32,8 @@ public:
 
 	void SetMeshes(const std::vector<PNuoMesh>& meshes);
 
+	virtual NuoMeshBounds WorldBounds(const NuoMatrixFloat44& transform) override;
+
 	virtual std::vector<D3D12_INPUT_ELEMENT_DESC> InputDesc() override;
 	virtual void MakePipelineState(const PNuoCommandBuffer& commandBuffer) override;
 

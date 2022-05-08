@@ -15,13 +15,14 @@
 class ModelState;
 typedef std::shared_ptr<ModelState> PModelState;
 
-
 class NuoResourceSwapChain;
 typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
 
-
 class NuoCommandBuffer;
 typedef std::shared_ptr<NuoCommandBuffer> PNuoCommandBuffer;
+
+class ModelSceneParameters;
+typedef std::shared_ptr<ModelSceneParameters> PModelSceneParameters;
 
 
 
@@ -29,6 +30,8 @@ class ModelRenderer : public NuoRenderPipelinePass
 {
 
 	PModelState _modelState;
+
+	PModelSceneParameters _sceneParameters;
 
 	PNuoTextureMesh _textureMesh;
 	PNuoResourceSwapChain _light;
