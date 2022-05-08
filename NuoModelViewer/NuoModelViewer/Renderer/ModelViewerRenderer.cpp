@@ -94,21 +94,7 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     const NuoVectorFloat3 focusPoint(0, 0, 0);
     const NuoVectorFloat3 upDirection(0, 1, 0);
 
-    const auto viewMatrix = NuoMatrixLookAt(eyePosition, focusPoint, upDirection);
-    /*const auto viewMatrixInverse = viewMatrix.Inverse();
-
-    const auto w = target->Width();
-    const float h = (float)target->Height();
-    const float aspectRatio = w / h;
-    NuoMatrixFloat44 projectionMatrix = NuoMatrixPerspective(aspectRatio, DirectX::XMConvertToRadians(20), 0.1f, 100.f);*/
-
-    //NuoMatrixFloat44 normalMatrix = NuoMatrixExtractLinear(viewMatrix);
-    //NuoMatrixFloat44 vpMatrix = projectionMatrix * viewMatrix;
-
-    /*NuoUniforms mvp;
-    mvp.viewProjectionMatrix = vpMatrix._m;
-    mvp.viewMatrix = viewMatrix._m;
-    mvp.viewMatrixInverse = viewMatrixInverse._m;*/
+    const auto viewMatrix = NuoMatrixFloat44Identity; // TODO:
 
     _sceneParameters->SetViewMatrix(viewMatrix);
     _sceneParameters->UpdateUniforms(commandBuffer);
@@ -119,11 +105,9 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     light.lightParams[0].irradiance = 1.0;
     lightBuffer->UpdateResource(&light, sizeof(NuoLightUniforms), encoder);
 
-    const PNuoResourceSwapChain& transUniformBuffers = _sceneParameters->TransUniformBuffers();
-    //_mvp->UpdateResource(&mvp, sizeof(NuoUniforms), encoder);
-
     _modelState->SceneRoot()->UpdateUniform(encoder->InFlight(), NuoMatrixFloat44Identity);
 
+    const PNuoResourceSwapChain& transUniformBuffers = _sceneParameters->TransUniformBuffers();
     NuoMesh::CommonFunc commFunc = [&transUniformBuffers, &lightBuffer](NuoCommandEncoder* encoder)
     {
         encoder->SetRootConstantBuffer(0, transUniformBuffers);

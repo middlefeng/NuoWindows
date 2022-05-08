@@ -81,6 +81,7 @@ public:
 
 	NuoMeshBounds BoundsLocal() const;
 	void SetBoundsLocal(const NuoMeshBounds& bounds);
+	void SetTransformTranslate(const NuoMatrixFloat44& translate);
 	
 	virtual NuoMeshBounds WorldBounds(const NuoMatrixFloat44& transform);
 
