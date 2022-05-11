@@ -52,6 +52,8 @@ public:
 	ModelSceneParameters(const PNuoDevice& device);
 
 	void SetSceneRoot(const PNuoMeshSceneRoot& sceneRoot);
+	
+	void SetFieldOfView(float fieldOfView);
 	void SetDrawableSize(const NuoSize& size);
 	void SetViewMatrix(const NuoMatrixFloat44& viewMatrix);
 

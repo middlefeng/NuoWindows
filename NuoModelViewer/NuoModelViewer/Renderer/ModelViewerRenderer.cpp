@@ -56,6 +56,12 @@ PModelState ModelRenderer::State() const
 
 
 
+void ModelRenderer::SetFieldOfView(float fieldOfView)
+{
+    _sceneParameters->SetFieldOfView(fieldOfView);
+}
+
+
 void ModelRenderer::SetDrawableSize(const NuoSize& size)
 {
     NuoRenderPipelinePass::SetDrawableSize(size);

@@ -7,6 +7,10 @@
 //
 
 
+#ifndef __MODEL_OPERATION_PANEL_H__
+#define __MODEL_OPERATION_PANEL_H__
+
+
 #include "NuoUI/NuoView.h"
 
 
@@ -21,6 +25,10 @@ typedef std::weak_ptr<NuoSlider> WPNuoSlider;
 class NuoLabel;
 typedef std::weak_ptr<NuoLabel> WPNuoLabel;
 
+class ModelOptionUpdate;
+typedef std::weak_ptr<ModelOptionUpdate> WPModelOptionUpdate;
+typedef std::shared_ptr<ModelOptionUpdate> PModelOptionUpdate;
+
 
 class ModelOperationPanel : public NuoView
 {
@@ -29,6 +37,8 @@ class ModelOperationPanel : public NuoView
 
 	WPNuoLabel _fieldOfViewLabel;
 	WPNuoSlider _fieldOfView;
+
+	WPModelOptionUpdate _optionUpdateDelegate;
 	
 
 public:
@@ -40,8 +50,13 @@ public:
 
 	virtual void SetPosition(const NuoRect<float>& pos, bool activate) override;
 
+	float FieldOfViewRadian();
+
+	void SetOptionUpdateDelegate(const PModelOptionUpdate& delegate);
+
 private:
 
 
 };
 
+#endif

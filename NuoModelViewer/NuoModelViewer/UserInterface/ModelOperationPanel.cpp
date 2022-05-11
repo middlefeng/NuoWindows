@@ -8,9 +8,18 @@
 
 #include "ModelOperationPanel.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 #include "NuoUI/NuoLabel.h"
 #include "NuoUI/NuoSlider.h"
 #include "NuoUI/NuoScrollView.h"
+
+#include "ModelOptionUpdate.h"
+
+
+static const float sFieldOfViewMax = 10000.0f;
+static const float sFieldOfViewAngleMax = ((2 * M_PI) / 8.0f);
 
 
 ModelOperationPanel::ModelOperationPanel(const PNuoWindow& parent)
@@ -63,8 +72,29 @@ void ModelOperationPanel::Init()
 	_fieldOfViewLabel = fieldOfViewLabel;
 
 	PNuoSlider fieldOfView = std::make_shared<NuoSlider>(scrollView);
-	fieldOfView->Init(0, 0, 100);
-	fieldOfView->SetValue(70);
+	fieldOfView->Init(0, 0, (int)sFieldOfViewMax);
+	fieldOfView->SetValue(10000);
+	fieldOfView->SetOnScroll([this](int)
+		{
+			auto updateDelegate = _optionUpdateDelegate.lock();
+			updateDelegate->ModelOptionUpdated();
+		});
 	_fieldOfView = fieldOfView;
+}
+
+
+float ModelOperationPanel::FieldOfViewRadian()
+{
+	PNuoSlider fieldOfView = _fieldOfView.lock();
+
+	float value = fieldOfView->Value();
+	value = value / sFieldOfViewMax * sFieldOfViewAngleMax;
+	return std::max<float>(3e-5, value);
+}
+
+
+void ModelOperationPanel::SetOptionUpdateDelegate(const PModelOptionUpdate& delegate)
+{
+	_optionUpdateDelegate = delegate;
 }
 

@@ -99,6 +99,8 @@ void ModelViewerWindow::Init()
 	_modelPanel->SetMargin(scrollViewMargin);
 	_modelPanel->SetPosition(scrollViewPos, false);
 	_modelPanel->SetFont(NuoFont::MenuFont(16.5));
+	_modelPanel->SetOptionUpdateDelegate(_dxView);
+	_dxView->SetModelPanel(_modelPanel);
 
 	UpdateControls();
 

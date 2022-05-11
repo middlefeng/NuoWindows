@@ -6,6 +6,7 @@
 #include "ModelView.h"
 
 #include "ModelState/ModelState.h"
+#include "UserInterface/ModelOperationPanel.h"
 #include "Renderer/ModelViewerRenderer.h"
 #include "Renderer/NotationRenderer.h"
 
@@ -93,6 +94,13 @@ void ModelView::Init()
     commandBuffer->WaitUntilComplete(intermediate);
 
     SetupPipelineSettings();
+    ModelOptionUpdated();
+}
+
+
+void ModelView::SetModelPanel(const PModelOperationPanel& panel)
+{
+    _modelPanel = panel;
 }
 
 
@@ -196,4 +204,16 @@ void ModelView::OnMouseUp(short x, short y)
 
     _trackingLighting = false;
 }
+
+
+void ModelView::ModelOptionUpdated()
+{
+    PModelOperationPanel modelPanel = _modelPanel.lock();
+
+    _modelRenderer->SetFieldOfView(modelPanel->FieldOfViewRadian());
+    
+    if (_init)
+        Update();
+}
+
 

@@ -25,13 +25,21 @@ ModelSceneParameters::ModelSceneParameters(const PNuoDevice& device)
 {
 	_transUniformBuffers = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
 
-    _fieldOfView = (float)(2.f * M_PI) / 8.f;
+    // merely to initialize the member with a determined value
+    //
+    _fieldOfView = 0.1;
 }
 
 
 void ModelSceneParameters::SetSceneRoot(const PNuoMeshSceneRoot& sceneRoot)
 {
     _sceneRoot = sceneRoot;
+}
+
+
+void ModelSceneParameters::SetFieldOfView(float fieldOfView)
+{
+    _fieldOfView = fieldOfView;
 }
 
 

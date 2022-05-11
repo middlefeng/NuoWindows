@@ -267,6 +267,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshOptions.h" />
     <ClInclude Include="Renderer\ModelSceneParameters.h" />
     <ClInclude Include="UserInterface\ModelOperationPanel.h" />
+    <ClInclude Include="UserInterface\ModelOptionUpdate.h" />
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShaderType.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</DeploymentContent>

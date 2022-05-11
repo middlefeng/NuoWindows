@@ -3,6 +3,8 @@
 #include "NuoDirect/NuoDirectView.h"
 #include "NuoModelLoader/NuoModelLoader.h"
 
+#include "UserInterface/ModelOptionUpdate.h"
+
 #include <functional>
 #include <DirectXMath.h>
 
@@ -30,8 +32,12 @@ class NotationRenderer;
 typedef std::shared_ptr<NotationRenderer> PNotationRenderer;
 
 
+class ModelOperationPanel;
+typedef std::weak_ptr<ModelOperationPanel> WPModelOperationPanel;
+typedef std::shared_ptr<ModelOperationPanel> PModelOperationPanel;
 
-class ModelView : public NuoDirectView
+
+class ModelView : public NuoDirectView, public ModelOptionUpdate
 {
 	PNuoTimer _refreshTimer;
 
@@ -45,6 +51,8 @@ class ModelView : public NuoDirectView
 	PModelRenderer _modelRenderer;
 	PNotationRenderer _notationRenderer;
 
+	WPModelOperationPanel _modelPanel;
+
 public:
 
 	ModelView(const PNuoDevice& device, const PNuoWindow& parent);
@@ -52,6 +60,7 @@ public:
 	PModelState State();
 
 	void Init();
+	void SetModelPanel(const PModelOperationPanel& panel);
 	void SetupPipelineSettings();
 
 	void OpenFile(const std::string& path, NuoTaskProgress progress);
@@ -63,6 +72,11 @@ public:
 	virtual void OnMouseDown(short x, short y) override;
 	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY) override;
 	virtual void OnMouseUp(short x, short y) override;
+
+	
+	// Interface ModelOptionUpdate
+
+	virtual void ModelOptionUpdated() override;
 
 };
 
