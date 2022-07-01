@@ -37,7 +37,7 @@ void NuoDropdownList::Init(int controlID)
                          CBS_DROPDOWNLIST | CBS_HASSTRINGS,  // Styles 
                          10, 10, 300, 40,       // Button height
                          parent->Handle(),      // Parent window
-                         (HMENU)controlID,             
+                         (HMENU)((long long)controlID),             
                          NuoAppInstance::GetInstance()->Instance(),
                          NULL);
 

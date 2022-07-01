@@ -168,7 +168,7 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
                 window->OnMouseDown(x, y);
                 break;
             case WM_MOUSEMOVE:
-                window->OnMouseMessage(x, y);
+                window->OnMouseMessage(x, y, wParam);
                 break;
             case WM_LBUTTONUP:
                 window->OnMouseUp(x, y);
@@ -509,8 +509,10 @@ void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float ol
 }
 
 
-void NuoWindow::OnMouseMessage(short x, short y)
+void NuoWindow::OnMouseMessage(short x, short y, WPARAM wParam)
 {
+    MK_SHIFT;
+
     if (_inDragging)
     {
         short deltaX = x - _mouseX;

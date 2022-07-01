@@ -141,7 +141,7 @@ private:
 
 	static LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	void OnMouseMessage(short x, short y);
+	void OnMouseMessage(short x, short y, WPARAM wParam);
 
 };
 
