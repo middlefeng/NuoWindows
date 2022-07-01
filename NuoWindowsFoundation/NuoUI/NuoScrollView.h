@@ -49,7 +49,7 @@ public:
 private:
 
 	void OnScroll(UINT message, WPARAM wParam, LPARAM lParam);
-	void OnScrollWheel(UINT message, WPARAM wParam, LPARAM lParam);
+	virtual bool OnScrollWheel(short keyState, short delta) override;
 
 	friend NuoWindow;
 

@@ -117,19 +117,18 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
 
         break;
     }
-    case WM_MOUSEWHEEL:
+    case WM_MOUSEWHEEL
+        :
     {
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
         bool processed = false;
 
         if (window)
         {
-            NuoScrollView* scrollWindow = dynamic_cast<NuoScrollView*>(window);
-            if (scrollWindow)
-            {
-                scrollWindow->OnScrollWheel(message, wParam, lParam);
-                processed = true;
-            }
+            short iDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+            short keyState = GET_KEYSTATE_WPARAM(wParam);
+
+            processed = window->OnScrollWheel(keyState, iDelta);
         }
 
         if (!processed)
@@ -469,6 +468,12 @@ void NuoWindow::OnMouseUp(short x, short y)
 
         PostQuitMessage(0);
     }
+}
+
+
+bool NuoWindow::OnScrollWheel(short keyState, short delta)
+{
+    return false;
 }
 
 

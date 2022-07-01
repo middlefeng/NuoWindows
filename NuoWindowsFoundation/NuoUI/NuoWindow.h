@@ -102,6 +102,7 @@ public:
 	virtual void OnMouseDown(short x, short y);
 	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY);
 	virtual void OnMouseUp(short x, short y);
+	virtual bool OnScrollWheel(short keyState, short delta);
 	virtual void OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI);
 
 	HWND Handle() const;

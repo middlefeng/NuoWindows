@@ -16,7 +16,8 @@
 
 ModelState::ModelState(const PNuoCommandQueue& commandQueue, DXGI_FORMAT format)
 	: _commandQueue(commandQueue),
-      _format(format)
+      _format(format),
+      _transMode(kTransformMode_Model)
 {
     _meshOptions = {};
     _sceneRoot = std::make_shared<NuoMeshSceneRoot>();
@@ -40,8 +41,8 @@ void ModelState::LoadMesh(const std::string& path, NuoModelLoaderProgress progre
     // move model from camera for a default distance (3 times of r)
     //
     const NuoBounds bounds = _mainModelMesh->WorldBounds(NuoMatrixFloat44Identity).boundingBox;
-    const float radius = bounds.MaxDimension() / 2.0;
-    const float defaultDistance = -3.0 * radius;
+    const float radius = bounds.MaxDimension() / 2.0f;
+    const float defaultDistance = -3.0f * radius;
     const NuoVectorFloat3 defaultDistanceVec(0, 0, defaultDistance);
     _mainModelMesh->SetTransformTranslate(NuoMatrixTranslation(defaultDistanceVec));
 }
@@ -76,6 +77,20 @@ void ModelState::Rotate(float x, float y)
     const NuoMatrixFloat44 matrix = NuoMatrixRotationAppend(_selectedMesh->TransformPoise(), x, y);
 
     _selectedMesh->SetTransformPoise(matrix);
+}
+
+
+void ModelState::Translate(const NuoVectorFloat3& translation)
+{
+    if (_transMode == kTransformMode_View)
+    {
+        _viewTranslation = NuoMatrixTranslation(translation) * _viewTranslation;
+    }
+    else
+    {
+        const NuoMatrixFloat44 transMatrix = NuoMatrixTranslation(translation) * _selectedMesh->TransformTranslate();
+        _selectedMesh->SetTransformTranslate(transMatrix);
+    }
 }
 
 

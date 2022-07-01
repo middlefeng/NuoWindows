@@ -33,6 +33,17 @@ class NuoCommandQueue;
 typedef std::shared_ptr<NuoCommandQueue> PNuoCommandQueue;
 
 
+
+typedef enum
+{
+	kTransformMode_Model,
+	kTransformMode_View,
+}
+TransformMode;
+
+
+
+
 class ModelState
 {
 	std::string _documentName;
@@ -47,6 +58,9 @@ class ModelState
 	NuoMeshOptions _meshOptions;
 	PNuoModelLoaderGPU _modelLoader;
 
+	TransformMode _transMode;
+	NuoMatrixFloat44 _viewTranslation;
+
 public:
 
 	ModelState(const PNuoCommandQueue& commandQueue, DXGI_FORMAT format);
@@ -60,6 +74,7 @@ public:
 	std::string DocumentName() const;
 
 	void Rotate(float x, float y);
+	void Translate(const NuoVectorFloat3& translate);
 
 private:
 

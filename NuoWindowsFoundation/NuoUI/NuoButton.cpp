@@ -29,7 +29,7 @@ void NuoButton::Init(int controlID)
                          WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_FLAT | BS_PUSHBUTTON,  // Styles 
                          10, 10, 300, 40,       // Button height
                          parent->Handle(),      // Parent window
-                         (HMENU)controlID,             
+                         (HMENU)((long long)controlID),             
                          NuoAppInstance::GetInstance()->Instance(),
                          NULL);
 
