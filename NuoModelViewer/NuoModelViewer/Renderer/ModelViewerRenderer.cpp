@@ -80,6 +80,7 @@ void ModelRenderer::SetSampleCount(unsigned int sampleCount)
 
 void ModelRenderer::PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
 {
+    UpdateUniformsForView(commandBuffer);
 }
 
 
@@ -95,11 +96,6 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     NuoViewport viewport;
     encoder->ClearDepth();
     encoder->SetViewport(viewport);
-
-    const auto viewMatrix = _modelState->ViewMatrix();
-
-    _sceneParameters->SetViewMatrix(viewMatrix);
-    _sceneParameters->UpdateUniforms(commandBuffer);
 
     const PNuoResourceSwapChain& lightBuffer = _light;
     NuoLightUniforms light;
@@ -143,5 +139,8 @@ void ModelRenderer::Rotate(float dx, float dy)
 
 void ModelRenderer::UpdateUniformsForView(const PNuoCommandBuffer& commandBuffer)
 {
+    const auto viewMatrix = _modelState->ViewMatrix();
 
+    _sceneParameters->SetViewMatrix(viewMatrix);
+    _sceneParameters->UpdateUniforms(commandBuffer);
 }
