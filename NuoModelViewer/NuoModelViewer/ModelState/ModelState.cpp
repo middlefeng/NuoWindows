@@ -94,6 +94,15 @@ void ModelState::Translate(const NuoVectorFloat3& translation)
 }
 
 
+NuoMatrixFloat44 ModelState::ViewMatrix() const
+{
+    // rotation is around the center of a previous scene snapshot
+    //
+    const NuoMatrixFloat44 viewTrans = NuoMatrixRotationAround(_viewRotation, _sceneCenter);
+    return _viewTranslation * viewTrans;
+}
+
+
 void ModelState::CreateMeshes(NuoModelLoaderProgress progress)
 {
     PNuoMesh mesh = _modelLoader->CreateMesh(_meshOptions, _commandQueue, progress);

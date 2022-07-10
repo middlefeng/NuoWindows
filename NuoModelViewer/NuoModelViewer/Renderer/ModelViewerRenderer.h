@@ -56,6 +56,10 @@ public:
 
 	void Rotate(float dx, float dy);
 
+private:
+
+	void UpdateUniformsForView(const PNuoCommandBuffer& commandBuffer);
+
 };
 
 

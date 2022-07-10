@@ -96,11 +96,7 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     encoder->ClearDepth();
     encoder->SetViewport(viewport);
 
-    const NuoVectorFloat3 eyePosition(0, 0, 30);
-    const NuoVectorFloat3 focusPoint(0, 0, 0);
-    const NuoVectorFloat3 upDirection(0, 1, 0);
-
-    const auto viewMatrix = NuoMatrixFloat44Identity; // TODO:
+    const auto viewMatrix = _modelState->ViewMatrix();
 
     _sceneParameters->SetViewMatrix(viewMatrix);
     _sceneParameters->UpdateUniforms(commandBuffer);
@@ -144,3 +140,8 @@ void ModelRenderer::Rotate(float dx, float dy)
     _modelState->Rotate(dx, dy);
 }
 
+
+void ModelRenderer::UpdateUniformsForView(const PNuoCommandBuffer& commandBuffer)
+{
+
+}
