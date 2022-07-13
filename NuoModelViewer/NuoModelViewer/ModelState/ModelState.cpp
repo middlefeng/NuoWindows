@@ -72,6 +72,16 @@ std::string ModelState::DocumentName() const
 }
 
 
+NuoBounds ModelState::SelectedMeshBounds(const NuoMatrixFloat44& viewMatrix)
+{
+    NuoBounds bounds;
+    if (_selectedMesh)
+        bounds = _selectedMesh->WorldBounds(viewMatrix).boundingBox;
+
+    return bounds;
+}
+
+
 void ModelState::Rotate(float x, float y)
 {
     const NuoMatrixFloat44 matrix = NuoMatrixRotationAppend(_selectedMesh->TransformPoise(), x, y);

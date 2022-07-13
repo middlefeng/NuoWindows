@@ -62,7 +62,7 @@ void NuoDropdownList::SelectItem(const std::string& item)
     auto pos = std::find(_itemList.begin(), _itemList.end(), item);
     if (pos != _itemList.end())
     {
-        unsigned int i = pos - _itemList.begin();
+        long long i = pos - _itemList.begin();
         SendMessage(_hWnd, CB_SETCURSEL, i, 0);
 
         _selectedItem = item;

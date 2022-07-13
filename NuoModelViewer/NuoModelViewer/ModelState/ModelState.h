@@ -82,6 +82,8 @@ public:
 	void SetDocumentName(const std::string& name);
 	std::string DocumentName() const;
 
+	NuoBounds SelectedMeshBounds(const NuoMatrixFloat44& viewMatrix);
+
 	void Rotate(float x, float y);
 	void Translate(const NuoVectorFloat3& translate);
 
