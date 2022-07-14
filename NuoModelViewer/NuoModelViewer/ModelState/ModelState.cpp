@@ -84,6 +84,9 @@ NuoBounds ModelState::SelectedMeshBounds(const NuoMatrixFloat44& viewMatrix)
 
 void ModelState::Rotate(float x, float y)
 {
+    if (!_selectedMesh)
+        return;
+
     const NuoMatrixFloat44 matrix = NuoMatrixRotationAppend(_selectedMesh->TransformPoise(), x, y);
 
     _selectedMesh->SetTransformPoise(matrix);

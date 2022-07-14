@@ -70,7 +70,7 @@ public:
 	virtual void OnSize(unsigned int x, unsigned int y) override;
 
 	virtual void OnMouseDown(short x, short y) override;
-	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY) override;
+	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY, const NuoMouseModifer& modifier) override;
 	virtual void OnMouseUp(short x, short y) override;
 
 	

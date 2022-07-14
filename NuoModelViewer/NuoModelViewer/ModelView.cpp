@@ -180,7 +180,7 @@ void ModelView::OnMouseDown(short x, short y)
 }
 
 
-void ModelView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
+void ModelView::OnMouseDrag(short x, short y, short deltaX, short deltaY, const NuoMouseModifer& modifier)
 {
     float dx = deltaY * 0.002f * 3.14f;
     float dy = deltaX * 0.002f * 3.14f;
@@ -191,7 +191,7 @@ void ModelView::OnMouseDrag(short x, short y, short deltaX, short deltaY)
     }
     else
     {
-        _modelRenderer->Rotate(dx, dy);
+        _modelRenderer->SetRotationDelta(dx, dy);
     }
 
     Update();
