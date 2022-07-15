@@ -135,10 +135,12 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
 
 void ModelRenderer::HandleDeltaPosition()
 {
-    //if (_modelState.transMode == kTransformMode_Model && [_modelState viewTransformReset])
-    //    [_modelState caliberateSceneCenter];
+    // TODO: view translation
+    // 
+    // if (_modelState.transMode == kTransformMode_Model && [_modelState viewTransformReset])
+    //     [_modelState caliberateSceneCenter];
 
-    /*NuoBounds bounds = _modelState->SelectedMeshBounds(_modelState->ViewMatrix());
+    NuoBounds bounds = _modelState->SelectedMeshBounds(_modelState->ViewMatrix());
     float radius = bounds.MaxDimension();
 
     // simply using "z" works until the view matrix is no longer an identitiy
@@ -148,7 +150,7 @@ void ModelRenderer::HandleDeltaPosition()
     const float distanceDelta = _zoomDelta * radius / 10.0f;
     const float cameraDistance = distanceDelta + distance;
     const float bilateralFactor = cameraDistance / 750.0f;
-    _zoomDelta = 0;*/
+    _zoomDelta = 0;
 
     // accumulate delta rotation into matrix
     //
@@ -159,7 +161,7 @@ void ModelRenderer::HandleDeltaPosition()
 
     // accumulate delta translation into matrix
     //
-    /*const float doTransX = _transXDelta * bilateralFactor;
+    const float doTransX = _transXDelta * bilateralFactor;
     const float doTransY = _transYDelta * bilateralFactor;
     _transXDelta = 0;
     _transYDelta = 0;
@@ -170,7 +172,7 @@ void ModelRenderer::HandleDeltaPosition()
         distanceDelta
     );
 
-    [_modelState tanslate : translation] ;*/
+    _modelState->Translate(translation);
 }
 
 
@@ -178,6 +180,13 @@ void ModelRenderer::SetRotationDelta(float dx, float dy)
 {
     _rotationXDelta = dx;
     _rotationYDelta = dy;
+}
+
+
+void ModelRenderer::SetTransDelta(float dx, float dy)
+{
+    _transXDelta = dx;
+    _transYDelta = dy;
 }
 
 

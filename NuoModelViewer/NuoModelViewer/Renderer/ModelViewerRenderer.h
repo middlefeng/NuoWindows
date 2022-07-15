@@ -42,6 +42,8 @@ class ModelRenderer : public NuoRenderPipelinePass
 	float _zoomDelta;
 	float _rotationXDelta;
 	float _rotationYDelta;
+	float _transXDelta;
+	float _transYDelta;
 
 public:
 
@@ -61,6 +63,7 @@ public:
 	void HandleDeltaPosition();
 
 	void SetRotationDelta(float dx, float dy);
+	void SetTransDelta(float dx, float dy);
 
 private:
 

@@ -182,16 +182,28 @@ void ModelView::OnMouseDown(short x, short y)
 
 void ModelView::OnMouseDrag(short x, short y, short deltaX, short deltaY, const NuoMouseModifer& modifier)
 {
-    float dx = deltaY * 0.002f * 3.14f;
-    float dy = deltaX * 0.002f * 3.14f;
+    const bool controlHeld = modifier._holdControl;
 
-    if (_trackingLighting)
+    if (controlHeld)
     {
-        _notationRenderer->UpdateRotation(dx, dy);
+        float dx = -0.3f * deltaX;
+        float dy =  0.3f * deltaY;
+
+        _modelRenderer->SetTransDelta(dx, dy);
     }
     else
     {
-        _modelRenderer->SetRotationDelta(dx, dy);
+        float dx = deltaY * 0.002f * 3.14f;
+        float dy = deltaX * 0.002f * 3.14f;
+
+        if (_trackingLighting)
+        {
+            _notationRenderer->UpdateRotation(dx, dy);
+        }
+        else
+        {
+            _modelRenderer->SetRotationDelta(dx, dy);
+        }
     }
 
     Update();

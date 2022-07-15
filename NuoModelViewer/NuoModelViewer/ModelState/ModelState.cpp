@@ -99,7 +99,7 @@ void ModelState::Translate(const NuoVectorFloat3& translation)
     {
         _viewTranslation = NuoMatrixTranslation(translation) * _viewTranslation;
     }
-    else
+    else if (_selectedMesh)
     {
         const NuoMatrixFloat44 transMatrix = NuoMatrixTranslation(translation) * _selectedMesh->TransformTranslate();
         _selectedMesh->SetTransformTranslate(transMatrix);
