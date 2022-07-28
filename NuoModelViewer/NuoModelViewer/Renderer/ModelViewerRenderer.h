@@ -62,6 +62,7 @@ public:
 
 	void HandleDeltaPosition();
 
+	void SetZoomDelta(float z);
 	void SetRotationDelta(float dx, float dy);
 	void SetTransDelta(float dx, float dy);
 

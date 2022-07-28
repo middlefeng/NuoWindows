@@ -176,6 +176,12 @@ void ModelRenderer::HandleDeltaPosition()
 }
 
 
+void ModelRenderer::SetZoomDelta(float z)
+{
+    _zoomDelta = z;
+}
+
+
 void ModelRenderer::SetRotationDelta(float dx, float dy)
 {
     _rotationXDelta = dx;

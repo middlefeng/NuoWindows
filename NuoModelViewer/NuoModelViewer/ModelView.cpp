@@ -217,6 +217,15 @@ void ModelView::OnMouseUp(short x, short y)
     _trackingLighting = false;
 }
 
+bool ModelView::OnScrollWheel(short keyState, short delta)
+{
+    _modelRenderer->SetZoomDelta(0.01 * delta);
+
+    Update();
+
+    return true;
+}
+
 
 void ModelView::ModelOptionUpdated()
 {
