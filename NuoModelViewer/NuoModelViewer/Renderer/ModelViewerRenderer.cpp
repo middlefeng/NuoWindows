@@ -22,7 +22,10 @@
 
 ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount,
                              std::vector<PNuoResource>& intermediate, DXGI_FORMAT format)
-    : NuoRenderPipelinePass(commandBuffer, frameCount, intermediate, format)
+    : NuoRenderPipelinePass(commandBuffer, frameCount, intermediate, format),
+      _zoomDelta(0.0f),
+      _rotationXDelta(0.0f),
+      _rotationYDelta(0.0f)
 {
     const PNuoCommandQueue& commandQueue = commandBuffer->CommandQueue();
     const PNuoDevice& device = commandQueue->Device();
@@ -80,8 +83,8 @@ void ModelRenderer::SetSampleCount(unsigned int sampleCount)
 
 void ModelRenderer::PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
 {
+    UpdateUniformsForView(commandBuffer);
 }
-
 
 
 void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer)
@@ -95,15 +98,6 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     NuoViewport viewport;
     encoder->ClearDepth();
     encoder->SetViewport(viewport);
-
-    const NuoVectorFloat3 eyePosition(0, 0, 30);
-    const NuoVectorFloat3 focusPoint(0, 0, 0);
-    const NuoVectorFloat3 upDirection(0, 1, 0);
-
-    const auto viewMatrix = NuoMatrixFloat44Identity; // TODO:
-
-    _sceneParameters->SetViewMatrix(viewMatrix);
-    _sceneParameters->UpdateUniforms(commandBuffer);
 
     const PNuoResourceSwapChain& lightBuffer = _light;
     NuoLightUniforms light;
@@ -139,8 +133,69 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
 }
 
 
-void ModelRenderer::Rotate(float dx, float dy)
+void ModelRenderer::HandleDeltaPosition()
 {
-    _modelState->Rotate(dx, dy);
+    // TODO: view translation
+    // 
+    // if (_modelState.transMode == kTransformMode_Model && [_modelState viewTransformReset])
+    //     [_modelState caliberateSceneCenter];
+
+    NuoBounds bounds = _modelState->SelectedMeshBounds(_modelState->ViewMatrix());
+    float radius = bounds.MaxDimension();
+
+    // simply using "z" works until the view matrix is no longer an identitiy
+    //
+    float distance = bounds._center.z();
+
+    const float distanceDelta = _zoomDelta * radius / 10.0f;
+    const float cameraDistance = distanceDelta + distance;
+    const float bilateralFactor = cameraDistance / 750.0f;
+    _zoomDelta = 0;
+
+    // accumulate delta rotation into matrix
+    //
+    _modelState->Rotate(_rotationXDelta, _rotationYDelta);
+
+    _rotationXDelta = 0;
+    _rotationYDelta = 0;
+
+    // accumulate delta translation into matrix
+    //
+    const float doTransX = _transXDelta * bilateralFactor;
+    const float doTransY = _transYDelta * bilateralFactor;
+    _transXDelta = 0;
+    _transYDelta = 0;
+
+    const NuoVectorFloat3 translation
+    (
+        doTransX, doTransY,
+        distanceDelta
+    );
+
+    _modelState->Translate(translation);
 }
 
+
+void ModelRenderer::SetRotationDelta(float dx, float dy)
+{
+    _rotationXDelta = dx;
+    _rotationYDelta = dy;
+}
+
+
+void ModelRenderer::SetTransDelta(float dx, float dy)
+{
+    _transXDelta = dx;
+    _transYDelta = dy;
+}
+
+
+void ModelRenderer::UpdateUniformsForView(const PNuoCommandBuffer& commandBuffer)
+{
+    HandleDeltaPosition();
+
+    const auto viewMatrix = _modelState->ViewMatrix();
+
+    _sceneParameters->SetViewMatrix(viewMatrix);
+    _sceneParameters->UpdateUniforms(commandBuffer);
+}

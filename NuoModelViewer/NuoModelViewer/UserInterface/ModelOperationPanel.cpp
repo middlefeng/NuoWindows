@@ -19,7 +19,7 @@
 
 
 static const float sFieldOfViewMax = 10000.0f;
-static const float sFieldOfViewAngleMax = ((2 * M_PI) / 8.0f);
+static const float sFieldOfViewAngleMax = ((2 * (float)M_PI) / 8.0f);
 
 
 ModelOperationPanel::ModelOperationPanel(const PNuoWindow& parent)

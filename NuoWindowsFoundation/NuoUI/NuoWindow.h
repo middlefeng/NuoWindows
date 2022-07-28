@@ -10,6 +10,7 @@
 
 #include "NuoRect.h"
 #include "NuoTimer.h"
+#include "NuoMouse.h"
 
 
 extern const int kWindowPtr;
@@ -100,8 +101,9 @@ public:
 	virtual void OnSize(unsigned int x, unsigned int y);
 	virtual void OnMouseMove(short x, short y);
 	virtual void OnMouseDown(short x, short y);
-	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY);
+	virtual void OnMouseDrag(short x, short y, short deltaX, short deltaY, const NuoMouseModifer& modifier);
 	virtual void OnMouseUp(short x, short y);
+	virtual bool OnScrollWheel(short keyState, short delta);
 	virtual void OnDPIChange(const NuoRect<long>& newRect, float newDPI, float oldDPI);
 
 	HWND Handle() const;
@@ -140,7 +142,7 @@ private:
 
 	static LRESULT CALLBACK NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	void OnMouseMessage(short x, short y);
+	void OnMouseMessage(short x, short y, WPARAM wParam);
 
 };
 

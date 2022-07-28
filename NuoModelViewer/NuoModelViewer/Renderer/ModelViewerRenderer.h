@@ -39,6 +39,12 @@ class ModelRenderer : public NuoRenderPipelinePass
 
 	PNuoRenderTarget _intermediateTarget;
 
+	float _zoomDelta;
+	float _rotationXDelta;
+	float _rotationYDelta;
+	float _transXDelta;
+	float _transYDelta;
+
 public:
 
 	ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned int frameCount,
@@ -54,7 +60,14 @@ public:
 	virtual void PredrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 	virtual void DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer) override;
 
-	void Rotate(float dx, float dy);
+	void HandleDeltaPosition();
+
+	void SetRotationDelta(float dx, float dy);
+	void SetTransDelta(float dx, float dy);
+
+private:
+
+	void UpdateUniformsForView(const PNuoCommandBuffer& commandBuffer);
 
 };
 

@@ -156,13 +156,13 @@ void NuoScrollView::OnScroll(UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
-void NuoScrollView::OnScrollWheel(UINT message, WPARAM wParam, LPARAM lParam)
+bool NuoScrollView::OnScrollWheel(short keyState, short delta)
 {
-    short iDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-
     // Compute how many lines to scroll.
     int nOldPos = ScrollPosDevice();
-    int nPos = nOldPos + iDelta * (-0.2);
+    int nPos = nOldPos + delta * (-0.2);
 
     SetScrollPosDevice(nPos);
+
+    return true;
 }

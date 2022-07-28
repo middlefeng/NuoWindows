@@ -117,19 +117,18 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
 
         break;
     }
-    case WM_MOUSEWHEEL:
+    case WM_MOUSEWHEEL
+        :
     {
         NuoWindow* window = (NuoWindow*)GetWindowLongPtr(hWnd, kWindowPtr);
         bool processed = false;
 
         if (window)
         {
-            NuoScrollView* scrollWindow = dynamic_cast<NuoScrollView*>(window);
-            if (scrollWindow)
-            {
-                scrollWindow->OnScrollWheel(message, wParam, lParam);
-                processed = true;
-            }
+            short iDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+            short keyState = GET_KEYSTATE_WPARAM(wParam);
+
+            processed = window->OnScrollWheel(keyState, iDelta);
         }
 
         if (!processed)
@@ -169,7 +168,7 @@ LRESULT CALLBACK NuoWindow::NuoWindowProc(HWND hWnd, UINT message, WPARAM wParam
                 window->OnMouseDown(x, y);
                 break;
             case WM_MOUSEMOVE:
-                window->OnMouseMessage(x, y);
+                window->OnMouseMessage(x, y, wParam);
                 break;
             case WM_LBUTTONUP:
                 window->OnMouseUp(x, y);
@@ -455,7 +454,7 @@ void NuoWindow::OnMouseDown(short x, short y)
 }
 
 
-void NuoWindow::OnMouseDrag(short x, short y, short deltaX, short deltaY)
+void NuoWindow::OnMouseDrag(short x, short y, short deltaX, short deltaY, const NuoMouseModifer& modifier)
 {
 }
 
@@ -469,6 +468,12 @@ void NuoWindow::OnMouseUp(short x, short y)
 
         PostQuitMessage(0);
     }
+}
+
+
+bool NuoWindow::OnScrollWheel(short keyState, short delta)
+{
+    return false;
 }
 
 
@@ -504,7 +509,7 @@ void NuoWindow::OnDPIChange(const NuoRect<long>& newRect, float newDPI, float ol
 }
 
 
-void NuoWindow::OnMouseMessage(short x, short y)
+void NuoWindow::OnMouseMessage(short x, short y, WPARAM wParam)
 {
     if (_inDragging)
     {
@@ -514,7 +519,12 @@ void NuoWindow::OnMouseMessage(short x, short y)
         _mouseX = x;
         _mouseY = y;
 
-        OnMouseDrag(x, y, deltaX, deltaY);
+        NuoMouseModifer modifier;
+
+        modifier._holdControl = wParam & MK_CONTROL;
+        modifier._holdShift = wParam & MK_SHIFT;
+
+        OnMouseDrag(x, y, deltaX, deltaY, modifier);
     }
     else
     {

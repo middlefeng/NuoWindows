@@ -33,6 +33,17 @@ class NuoCommandQueue;
 typedef std::shared_ptr<NuoCommandQueue> PNuoCommandQueue;
 
 
+
+typedef enum
+{
+	kTransformMode_Model,
+	kTransformMode_View,
+}
+TransformMode;
+
+
+
+
 class ModelState
 {
 	std::string _documentName;
@@ -47,6 +58,18 @@ class ModelState
 	NuoMeshOptions _meshOptions;
 	PNuoModelLoaderGPU _modelLoader;
 
+	TransformMode _transMode;
+
+	// transform data. "viewRotation" is relative to the scene's center
+	//
+	NuoMatrixFloat44 _viewRotation;
+	NuoMatrixFloat44 _viewTranslation;
+
+	// need store the center of a snapshot of the scene as the meshes in the scene
+	// keep moving
+	//
+	NuoVectorFloat3 _sceneCenter;
+
 public:
 
 	ModelState(const PNuoCommandQueue& commandQueue, DXGI_FORMAT format);
@@ -59,7 +82,12 @@ public:
 	void SetDocumentName(const std::string& name);
 	std::string DocumentName() const;
 
+	NuoBounds SelectedMeshBounds(const NuoMatrixFloat44& viewMatrix);
+
 	void Rotate(float x, float y);
+	void Translate(const NuoVectorFloat3& translate);
+
+	NuoMatrixFloat44 ViewMatrix() const;
 
 private:
 

@@ -211,6 +211,7 @@
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoLabel.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMenu.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMonitorScale.cpp" />
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMouse.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoOpenFileDialog.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoProgressBar.cpp" />
     <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoRect.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshCompound.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshMaterialed.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshOptions.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMouse.h" />
     <ClInclude Include="Renderer\ModelSceneParameters.h" />
     <ClInclude Include="UserInterface\ModelOperationPanel.h" />
     <ClInclude Include="UserInterface\ModelOptionUpdate.h" />

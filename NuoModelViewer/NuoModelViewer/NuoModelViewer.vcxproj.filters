@@ -282,6 +282,9 @@
     <ClCompile Include="Renderer\ModelSceneParameters.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\NuoWindowsFoundation\NuoUI\NuoMouse.cpp">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoDirect\NuoCommandBuffer.h">
@@ -529,6 +532,9 @@
     </ClInclude>
     <ClInclude Include="UserInterface\ModelOptionUpdate.h">
       <Filter>Source Files\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMouse.h">
+      <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
