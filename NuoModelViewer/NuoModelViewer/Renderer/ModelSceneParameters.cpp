@@ -20,14 +20,23 @@
 #include "NuoDirect/NuoResourceSwapChain.h"
 
 
-ModelSceneParameters::ModelSceneParameters(const PNuoDevice& device)
+ModelSceneParameters::ModelSceneParameters(const PNuoCommandBuffer& commandBuffer, std::vector<PNuoResource>& intermediatePool)
     : _drawableSize(0, 0)
 {
+    PNuoDevice device = commandBuffer->CommandQueue()->Device();
+
 	_transUniformBuffers = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
+
+    NuoModelCharacterUniforms modelCharacter;
+    modelCharacter.opacity = 1.0f;
+    _modelCharacterUnfiromBuffer = device->CreatePrivateBuffer(sizeof(NuoModelCharacterUniforms));
+    auto intermediate = device->CreateBuffer(&modelCharacter, sizeof(NuoModelCharacterUniforms));
+    intermediatePool.push_back(intermediate);
+    commandBuffer->CopyResource(intermediate, _modelCharacterUnfiromBuffer);
 
     // merely to initialize the member with a determined value
     //
-    _fieldOfView = 0.1;
+    _fieldOfView = 0.1f;
 }
 
 

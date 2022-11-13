@@ -46,7 +46,7 @@ ModelRenderer::ModelRenderer(const PNuoCommandBuffer& commandBuffer, unsigned in
     _light = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoLightUniforms));
     _mvp = std::make_shared<NuoResourceSwapChain>(device, 3, (unsigned long)sizeof(NuoUniforms));
 
-    _sceneParameters = std::make_shared<ModelSceneParameters>(device);
+    _sceneParameters = std::make_shared<ModelSceneParameters>(commandBuffer, intermediate);
     _sceneParameters->SetSceneRoot(_modelState->SceneRoot());
 }
 

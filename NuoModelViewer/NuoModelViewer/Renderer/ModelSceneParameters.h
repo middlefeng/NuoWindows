@@ -23,6 +23,9 @@
 class NuoResourceSwapChain;
 typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
 
+class NuoResource;
+typedef std::shared_ptr<NuoResource> PNuoResource;
+
 class NuoDevice;
 typedef std::shared_ptr<NuoDevice> PNuoDevice;
 
@@ -39,6 +42,7 @@ class ModelSceneParameters
 {
 
 	PNuoResourceSwapChain _transUniformBuffers;
+	PNuoResource _modelCharacterUnfiromBuffer;
 
 	WPNuoMeshSceneRoot _sceneRoot;
 
@@ -49,7 +53,7 @@ class ModelSceneParameters
 
 public:
 
-	ModelSceneParameters(const PNuoDevice& device);
+	ModelSceneParameters(const PNuoCommandBuffer& commandBuffer, std::vector<PNuoResource>& intermediate);
 
 	void SetSceneRoot(const PNuoMeshSceneRoot& sceneRoot);
 	

@@ -536,6 +536,9 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMouse.h">
       <Filter>NuoWindowsFoundation\NuoUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoMeshSceneRenderPass.h">
+      <Filter>NuoWindowsFoundation\NuoRender</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\NuoWindowsFoundation\NuoUI\FoundationResource.rc">

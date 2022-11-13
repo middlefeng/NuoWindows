@@ -266,6 +266,7 @@
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshCompound.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshMaterialed.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoMeshOptions.h" />
+    <ClInclude Include="..\..\NuoWindowsFoundation\NuoRender\NuoMeshSceneRenderPass.h" />
     <ClInclude Include="..\..\NuoWindowsFoundation\NuoUI\NuoMouse.h" />
     <ClInclude Include="Renderer\ModelSceneParameters.h" />
     <ClInclude Include="UserInterface\ModelOperationPanel.h" />
