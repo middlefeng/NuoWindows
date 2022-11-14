@@ -276,7 +276,10 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> NuoMeshSimple::InputDesc()
 
 PNuoRootSignature NuoMeshSimple::RootSignature(const PNuoCommandBuffer& commandBuffer)
 {
-	return NuoMesh::RootSignature(commandBuffer);
+	PNuoRootSignature signature = NuoMesh::RootSignature(commandBuffer);
+	
+	//signature->AddRootConstantBuffer(3, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+	return signature;
 }
 
 

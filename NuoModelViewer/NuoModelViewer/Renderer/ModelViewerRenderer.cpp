@@ -108,10 +108,13 @@ void ModelRenderer::DrawWithCommandBuffer(const PNuoCommandBuffer& commandBuffer
     _modelState->SceneRoot()->UpdateUniform(encoder->InFlight(), NuoMatrixFloat44Identity);
 
     const PNuoResourceSwapChain& transUniformBuffers = _sceneParameters->TransUniformBuffers();
-    NuoMesh::CommonFunc commFunc = [&transUniformBuffers, &lightBuffer](NuoCommandEncoder* encoder)
+    const PNuoResource& modelCharacterUnfiromBuffer = _sceneParameters->ModelCharacterUnfiromBuffer();
+
+    NuoMesh::CommonFunc commFunc = [&transUniformBuffers, &modelCharacterUnfiromBuffer, &lightBuffer](NuoCommandEncoder* encoder)
     {
         encoder->SetRootConstantBuffer(0, transUniformBuffers);
         encoder->SetRootConstantBuffer(1, lightBuffer);
+        encoder->SetRootConstantBuffer(3, modelCharacterUnfiromBuffer);
     };
 
     _modelState->SceneRoot()->DrawBegin(encoder, commFunc);

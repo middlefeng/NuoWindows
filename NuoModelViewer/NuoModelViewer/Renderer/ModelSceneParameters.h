@@ -18,6 +18,7 @@
 
 #include "NuoDirect/NuoSize.h"
 #include "NuoUtilites/NuoMathVector.h"
+#include "NuoRender/NuoMeshSceneRenderPass.h"
 
 
 class NuoResourceSwapChain;
@@ -38,7 +39,7 @@ typedef std::weak_ptr<NuoMeshSceneRoot> WPNuoMeshSceneRoot;
 
 
 
-class ModelSceneParameters
+class ModelSceneParameters : public NuoMeshSceneParametersProvider
 {
 
 	PNuoResourceSwapChain _transUniformBuffers;
@@ -63,9 +64,10 @@ public:
 
 	void UpdateUniforms(const PNuoCommandBuffer& commandBuffer);
 
-	// TODO: should be part of interface NuoMeshSceneParametersProvider
+	// interface NuoMeshSceneParametersProvider
 
-	PNuoResourceSwapChain TransUniformBuffers();
+	virtual PNuoResourceSwapChain TransUniformBuffers() override;
+	virtual PNuoResource ModelCharacterUnfiromBuffer() override;
 
 };
 

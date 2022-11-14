@@ -52,7 +52,7 @@ PNuoRootSignature NotationLightMesh::RootSignature(const PNuoCommandBuffer& comm
 {
     PNuoRootSignature signature = NuoMeshSimple::RootSignature(commandBuffer);
 
-    signature->AddRootConstantBuffer(3, 0, D3D12_SHADER_VISIBILITY_VERTEX);	// mesh character (e.g. transparency)
+    //signature->AddRootConstantBuffer(3, 0, D3D12_SHADER_VISIBILITY_VERTEX);	// mesh character (e.g. transparency)
     return signature;
 }
 

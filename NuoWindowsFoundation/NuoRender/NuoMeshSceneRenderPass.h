@@ -9,6 +9,7 @@
 
 #include "NuoRenderPipelinePass.h"
 
+#include <memory>
 
 
 /*@class NuoShadowMapRenderer;
@@ -21,27 +22,28 @@ typedef enum
     kNuoSceneMask_Translucent
 }
 NuoSceneMask;
+*/
+
+
+class NuoResourceSwapChain;
+typedef std::shared_ptr<NuoResourceSwapChain> PNuoResourceSwapChain;
 
 
 
-@class NuoBufferSwapChain;
 
+class NuoMeshSceneParametersProvider
+{
 
+    virtual PNuoResourceSwapChain TransUniformBuffers() = 0;
+//  -(NuoBufferSwapChain*)lightCastBuffers;
+//  -(NuoBufferSwapChain*)lightingUniformBuffers;
+    virtual PNuoResource ModelCharacterUnfiromBuffer() = 0;
+//  -(BOOL)cullEnabled;
 
-@protocol NuoMeshSceneParametersProvider
+//  -(id<MTLTexture>)shadowMap:(uint)index withMask : (NuoSceneMask)mask;
+//  -(id<MTLTexture>)depthMap;
 
-
-- (NuoBufferSwapChain*)transUniformBuffers;
-- (NuoBufferSwapChain*)lightCastBuffers;
-- (NuoBufferSwapChain*)lightingUniformBuffers;
-- (id<MTLBuffer>)modelCharacterUnfiromBuffer;
-- (BOOL)cullEnabled;
-
-- (id<MTLTexture>)shadowMap:(uint)index withMask:(NuoSceneMask)mask;
-- (id<MTLTexture>)depthMap;
-
-
-@end*/
+};
 
 
 

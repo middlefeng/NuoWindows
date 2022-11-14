@@ -115,3 +115,9 @@ PNuoResourceSwapChain ModelSceneParameters::TransUniformBuffers()
 {
     return _transUniformBuffers;
 }
+
+
+PNuoResource ModelSceneParameters::ModelCharacterUnfiromBuffer()
+{
+    return _modelCharacterUnfiromBuffer;
+}
