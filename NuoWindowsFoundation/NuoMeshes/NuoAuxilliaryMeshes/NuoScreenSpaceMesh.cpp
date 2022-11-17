@@ -125,10 +125,11 @@ PNuoRootSignature NuoTextureMesh::RootSignature(const PNuoCommandBuffer& command
     PNuoRootSignature rootSignature = NuoScreenSpaceMesh::RootSignature(commandBuffer);
 
     rootSignature->AddSampler(0, 0, D3D12_SHADER_VISIBILITY_PIXEL);
-    rootSignature->AddDescriptorTable(1 /* range - one texture */, D3D12_SHADER_VISIBILITY_PIXEL);
-    rootSignature->AddTextures(0 /* first table */, 0 /* first range */,
-                               1 /* one texture */,
-                               0, 0 /* register t0, space 0 */);
+    int indexOfTable = rootSignature->AddDescriptorTable(1 /* range - one range of textures */, D3D12_SHADER_VISIBILITY_PIXEL);
+
+    rootSignature->AddTexturesToDescriptorTable(indexOfTable, 0 /* first range */,
+                                                1 /* one texture */,
+                                                0, 0 /* register t0, space 0 */);
     return rootSignature;
 }
 

@@ -22,6 +22,11 @@ class NuoRootSignature
 	std::vector<D3D12_ROOT_PARAMETER1> _parameters;
 	std::vector<D3D12_STATIC_SAMPLER_DESC> _samplers;
 
+	// store the ranges of all descriptor tables
+	// 
+	// indices in this map might not be continous (so a map, instead of a vector, is used), because
+	// the descriptor tables might coexist with other root-level parameters in arbitrary layout
+	//
 	std::map<size_t, std::vector<D3D12_DESCRIPTOR_RANGE1>> _descriptorTableRanges;
 
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> _signature;
@@ -39,9 +44,10 @@ public:
 	void AddRootResource(unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility);
 	void AddSampler(unsigned int shaderRegister, unsigned int space, D3D12_SHADER_VISIBILITY visibility);
 
-	void AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VISIBILITY visibility);
-	void AddTextures(unsigned int index, unsigned int rangeIndex, unsigned int num,
-					 unsigned int shaderRegister, unsigned int space);
+	int AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VISIBILITY visibility);
+
+	void AddTexturesToDescriptorTable(unsigned int tableIndex, unsigned int rangeIndex, unsigned int num,
+									  unsigned int shaderRegister, unsigned int space);
 
 	ID3D12RootSignature* DxSignature();
 

@@ -10,7 +10,7 @@ NuoRootSignature::NuoRootSignature(const PNuoDevice& device,
 								   D3D12_ROOT_SIGNATURE_FLAGS flags)
 	: _device(device)
 {
-	D3D12_ROOT_SIGNATURE_DESC1 desc;
+	D3D12_ROOT_SIGNATURE_DESC1 desc = {};
 	desc.NumParameters = 0;
 	desc.pParameters = nullptr;
 	desc.NumStaticSamplers = 0;
@@ -94,7 +94,7 @@ void NuoRootSignature::AddSampler(unsigned int shaderRegister, unsigned int spac
 }
 
 
-void NuoRootSignature::AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VISIBILITY visibility)
+int NuoRootSignature::AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VISIBILITY visibility)
 {
 	D3D12_ROOT_PARAMETER1 param = {};
 
@@ -102,27 +102,39 @@ void NuoRootSignature::AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VI
 	param.ShaderVisibility = visibility;
 	param.DescriptorTable.NumDescriptorRanges = rangeNum;
 
-	size_t index = _parameters.size();
-	_descriptorTableRanges.insert(std::make_pair(index, std::vector<D3D12_DESCRIPTOR_RANGE1>(rangeNum)));
-	param.DescriptorTable.pDescriptorRanges = _descriptorTableRanges[index].data();
+	// the descriptor table is next to the last existing parameter of the root signature,
+	// this indexOfDescriptorTableInRootSignature is used to track all the table descriptor ranges
+	// in the _descriptorTableRanges map
+	//
+	size_t indexOfDescriptorTableInRootSignature = _parameters.size();
+	_descriptorTableRanges.insert(std::make_pair(indexOfDescriptorTableInRootSignature,
+												 std::vector<D3D12_DESCRIPTOR_RANGE1>(rangeNum)));
+
+	param.DescriptorTable.pDescriptorRanges = _descriptorTableRanges[indexOfDescriptorTableInRootSignature].data();
 	
+	// again, this confirms that the table is next to the last existing param
+	//
 	_parameters.push_back(param);
 
 	UpdateDesc();
+
+	return (int)indexOfDescriptorTableInRootSignature;
 }
 
 
-void NuoRootSignature::AddTextures(unsigned int index, unsigned int rangeIndex, unsigned int num,
-								   unsigned int shaderRegister, unsigned int space)
+void NuoRootSignature::AddTexturesToDescriptorTable(unsigned int tableIndex, unsigned int rangeIndex, unsigned int textureNum,
+													unsigned int shaderRegister, unsigned int space)
 {
-	auto ranges = &_descriptorTableRanges.find(index)->second;
-	auto range = (ranges->begin() + rangeIndex);
+	auto ranges = &_descriptorTableRanges.find(tableIndex)->second;
+
+	assert(ranges->begin() + rangeIndex < ranges->end());
+	std::vector<D3D12_DESCRIPTOR_RANGE1>::iterator range = (ranges->begin() + rangeIndex);
 
 	range->BaseShaderRegister = shaderRegister;
 	range->RegisterSpace = space;
 	range->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	range->Flags = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
-	range->NumDescriptors = num;
+	range->NumDescriptors = textureNum;
 	range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 }
 
