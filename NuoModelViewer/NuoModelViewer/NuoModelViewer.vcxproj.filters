@@ -590,5 +590,8 @@
     <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoMeshShadersCommon.h">
       <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\NuoWindowsFoundation\NuoMeshes\NuoShaders\NuoGenerateMips.hlsl">
+      <Filter>NuoWindowsFoundation\NuoMeshes\NuoShaders</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

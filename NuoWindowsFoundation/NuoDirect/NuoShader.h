@@ -8,6 +8,8 @@
 #include <dxgi1_6.h>
 #include <wrl.h>
 
+// Microsoft DXC (DirectXCompiler) APIs
+//
 #include <dxcapi.h>
 
 #include "NuoDevice.h"
@@ -16,6 +18,9 @@ class NuoShader;
 typedef std::shared_ptr<NuoShader> PNuoShader;
 typedef std::weak_ptr<NuoShader> WPNuoShader;
 
+
+// shaders code compiled at runtime based on DXC
+//
 
 class NuoShader
 {
