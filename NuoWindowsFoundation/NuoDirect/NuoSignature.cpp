@@ -125,6 +125,23 @@ int NuoRootSignature::AddDescriptorTable(unsigned int rangeNum, D3D12_SHADER_VIS
 void NuoRootSignature::AddTexturesToDescriptorTable(unsigned int tableIndex, unsigned int rangeIndex, unsigned int textureNum,
 													unsigned int shaderRegister, unsigned int space)
 {
+	AddItemToDescriptorTable(tableIndex, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, rangeIndex, textureNum,
+							 shaderRegister, space);
+}
+
+
+void NuoRootSignature::AddUAVsToDescriptorTable(unsigned int tableIndex, unsigned int rangeIndex, unsigned int uavNum,
+											    unsigned int shaderRegister, unsigned int space)
+{
+	AddItemToDescriptorTable(tableIndex, D3D12_DESCRIPTOR_RANGE_TYPE_UAV, rangeIndex, uavNum,
+							 shaderRegister, space);
+}
+
+
+void NuoRootSignature::AddItemToDescriptorTable(unsigned int tableIndex, D3D12_DESCRIPTOR_RANGE_TYPE type,
+												unsigned int rangeIndex, unsigned int num,
+												unsigned int shaderRegister, unsigned int space)
+{
 	auto ranges = &_descriptorTableRanges.find(tableIndex)->second;
 
 	assert(ranges->begin() + rangeIndex < ranges->end());
@@ -132,9 +149,9 @@ void NuoRootSignature::AddTexturesToDescriptorTable(unsigned int tableIndex, uns
 
 	range->BaseShaderRegister = shaderRegister;
 	range->RegisterSpace = space;
-	range->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	range->RangeType = type;
 	range->Flags = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
-	range->NumDescriptors = textureNum;
+	range->NumDescriptors = num;
 	range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 }
 

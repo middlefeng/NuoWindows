@@ -132,6 +132,20 @@ NuoPipelineState::NuoPipelineState(const PNuoDevice& device,
 }
 
 
+NuoPipelineState::NuoPipelineState(const PNuoDevice& device, const PNuoShader& shader,
+                                   const PNuoRootSignature& rootSignature)
+    : _rootSignature(rootSignature)
+{
+    D3D12_COMPUTE_PIPELINE_STATE_DESC desc = {};
+
+    desc.CS = shader->ByteCode();
+    desc.pRootSignature = _rootSignature->DxSignature();
+
+    HRESULT hr = device->DxDevice()->CreateComputePipelineState(&desc, IID_PPV_ARGS(&_dxPipelineState));
+    assert(hr == S_OK);
+}
+
+
 ID3D12PipelineState* NuoPipelineState::DxPipeline() const
 {
     return _dxPipelineState.Get();

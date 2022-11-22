@@ -49,6 +49,9 @@ public:
 	void AddTexturesToDescriptorTable(unsigned int tableIndex, unsigned int rangeIndex, unsigned int num,
 									  unsigned int shaderRegister, unsigned int space);
 
+	void AddUAVsToDescriptorTable(unsigned int tableIndex, unsigned int rangeIndex, unsigned int num,
+								  unsigned int shaderRegister, unsigned int space);
+
 	ID3D12RootSignature* DxSignature();
 
 private:
@@ -56,6 +59,10 @@ private:
 	void UpdateDesc();
 	void AddConstantView(unsigned int shaderRegister, unsigned int space,
 						 D3D12_SHADER_VISIBILITY visibility, D3D12_ROOT_PARAMETER_TYPE type);
+
+	void AddItemToDescriptorTable(unsigned int tableIndex, D3D12_DESCRIPTOR_RANGE_TYPE type,
+								  unsigned int rangeIndex, unsigned int num,
+								  unsigned int shaderRegister, unsigned int space);
 
 };
 
