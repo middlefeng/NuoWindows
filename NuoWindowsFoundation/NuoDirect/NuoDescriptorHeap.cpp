@@ -77,10 +77,24 @@ void NuoDescriptorHeap::SetTexture(unsigned int index,
 }
 
 
+void NuoDescriptorHeap::SetTextureMipSlice(unsigned int index,
+                                           const PNuoTexture& texture,
+                                           unsigned int mipSlice)
+{
+    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+    uavDesc.Format = texture->Format();
+    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+    uavDesc.Texture2D.MipSlice = mipSlice;
+
+    _device->DxDevice()->CreateUnorderedAccessView(texture->DxResource(), nullptr,
+                                                   &uavDesc, DxCPUHandle(index));
+}
+
+
 void NuoDescriptorHeap::SetConstantBuffer(unsigned int index,
                                           const PNuoResource& buffer)
 {
-    D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
+    D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
     desc.BufferLocation = buffer->DxResource()->GetGPUVirtualAddress();
     desc.SizeInBytes = buffer->Size();
 

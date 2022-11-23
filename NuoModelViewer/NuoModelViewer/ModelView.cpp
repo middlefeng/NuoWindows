@@ -219,7 +219,7 @@ void ModelView::OnMouseUp(short x, short y)
 
 bool ModelView::OnScrollWheel(short keyState, short delta)
 {
-    _modelRenderer->SetZoomDelta(0.01 * delta);
+    _modelRenderer->SetZoomDelta(0.01f * delta);
 
     Update();
 

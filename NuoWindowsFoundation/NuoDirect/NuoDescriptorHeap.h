@@ -55,6 +55,10 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE DxHeapGPUHandle();
 
 	void SetTexture(unsigned int index, const PNuoTexture& texture);
+	void SetTextureMipSlice(unsigned int index,
+						    const PNuoTexture& texture,
+						    unsigned int mipSlice);
+
 	void SetConstantBuffer(unsigned int index, const PNuoResource& buffer);
 
 	ID3D12DescriptorHeap* DxHeap() const;

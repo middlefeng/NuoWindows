@@ -229,8 +229,8 @@ std::vector<PNuoModelBase> NuoModelLoader::CreateMeshWithOptions(const NuoMeshOp
     std::vector<PNuoModelBase> models;
     std::vector<uint32_t> indices;
     
-    unsigned long vertexNumTotal = 0;
-    unsigned long vertexNumLoaded = 0;
+    size_t vertexNumTotal = 0;
+    size_t vertexNumLoaded = 0;
     for (tinyobj::shape_t shape : _internal->_shapes)
          vertexNumTotal += shape.mesh.indices.size();
     
